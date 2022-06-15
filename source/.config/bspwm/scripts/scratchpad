@@ -1,31 +1,32 @@
 #!/bin/sh
-# Dependencies: grep, tr, wmctrl
-# scratchpads should be hidden, sticky, and floating
+# Dependencies: alacritty, bspc (duh), grep, tr, wmctrl
+# Scratchpads should be hidden, sticky, and floating
 
-Name=$1
+Name="$1"
 case $Name in
   sFiles) Program="ranger $HOME"; break;;
   sMusic) Program=spotify_player; break;;
   sCalc)  Program='bc -q'; break;;
+  *) e    exit 1;
 esac
 
 # currently visible scratchpad (if any)
 Visible=$(bspc query -N -n .\!hidden.sticky.floating | tr [:upper:] [:lower:])
 
-# target scratchpad to focus / toggle
+# target scratchpad window id
 TargetWid="$(wmctrl -l | grep $Name)"
 
 # run scratchpad if not currently running; sleep required because wmctrl is slow
-[ -z "$TargetWid" ] && { (alacritty -t $Name -e $Program &); sleep 0.3; }
+[ -z "$TargetWid" ] && { (alacritty -t $Name -e $Program &); sleep 0.3; \
+                          TargetWid="$(wmctrl -l | grep $Name)"; }
 
-TargetWid="$(wmctrl -l | grep $Name)"
 TargetWid=${TargetWid%% *}
 
-# toggle visible if it's not the target (i.e. no overlapping scratchpads)
+# toggle $Visible if it's not the target (-> no overlapping scratchpads)
 [ -n "$Visible" ] && [ $Visible != $TargetWid ] \
   && bspc node $Visible -g hidden -f
 
 # toggle target scratchpad on / off
-# parameter expansion to prevent window toggling with script errors
+# parameter expansion to prevent window toggling with potential script errors
 bspc node ${TargetWid:-0} -g hidden -d focused -f
 
