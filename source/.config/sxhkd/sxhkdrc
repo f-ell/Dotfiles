@@ -25,10 +25,11 @@ mode_switch + t
   dunstify -u low -h string:x-dunst-stack-tag:time \
   "$(date +%a.\ %d.%m.%Y\ %I:%M\ %p)"
 mode_switch + b
-  ~/Scripts/python/mouse_battery.py
+  dunstify -u low -h string:x-dunst-stack-tag:bat \
+  "$(~/Scripts/source/python/mouse_battery.py)"
 mode_switch + u
   dunstify -u low -h string:x-dunst-stack-tag:util \
-  "$(~/Scripts/perl/sysload_dirty.pl)"
+  "$(~/Scripts/source/perl/sysload_dirty.pl)"
 
 
 
