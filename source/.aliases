@@ -1,0 +1,23 @@
+#COMMAND ALIASES
+alias -- -='z -'
+alias drr='pkill dunst; dunst &; disown dunst'
+alias e='exa'
+alias e1='exa -1'
+alias el='exa -la'
+alias hist='tail -10 <(history)'
+alias hml='himalaya'
+alias less='less -cmNS'
+alias lock='slock &'
+
+alias orphan-remove='doas pacman -Qtdq | doas pacman -Rns -'
+alias pquery='pacman -Q | rg $1 2>/dev/null'
+alias pcount='pacman -Q | wc -l'
+alias ping='ping -c1 "${1:-archlinux.org}"'
+alias sxr='pkill sxhkd; sxhkd &; disown sxhkd'
+alias um='udisksctl mount -b /dev/sdd1'
+alias uu='udisksctl unmount -b /dev/sdd1'
+alias v='nvim'
+alias va='nvim ~/.aliases && source ~/.aliases'
+alias vt='nvim ~/.config/alacritty/alacritty.yml'
+
+# unalias which-command

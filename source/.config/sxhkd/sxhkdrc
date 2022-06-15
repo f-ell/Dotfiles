@@ -1,0 +1,80 @@
+# [MODIFIER + ]*[@|!]KEYSYM
+#   COMMAND
+
+control + Escape
+  slock
+
+super + Return
+  /usr/bin/alacritty --working-directory ~
+
+super + {_, shift +} r
+  {rofi -show,rofi -show window}
+
+super + {_, shift +} m
+  scrot -i -q 100 -F ~/Pictures/Screenshots/scrot_$(date +%Y%m%d-%H%M%S).png \
+  {-s -l style=dash\,width=2\,opacity=100, -a 0\,0\,1920\,1080}
+
+super + o; {b,c,g}
+  /home/nico/Scripts/lof {qutebrowser,code,gimp}
+
+mode_switch + k
+  dunstctl close
+mode_switch + t
+  dunstify -u low -h string:x-dunst-stack-tag:time \
+  "$(date +%a.\ %d.%m.%Y\ %I:%M\ %p)"
+mode_switch + b
+  ~/Scripts/python/mouse_battery.py
+mode_switch + u
+  dunstify -u low -h string:x-dunst-stack-tag:util \
+  "$(~/Scripts/perl/sysload_dirty.pl)"
+
+
+
+# BSPWM BINDINGS
+# kill window
+super + w
+  bspc node focused -c
+
+# restart bspwm / quit X
+super + control + {r,q}
+  bspc {wm -r,quit}
+
+# focus / layout / float
+super + {_, shift +} {1-5}
+  bspc {desktop -f, node focused -d} {1-5}
+super + {_, shift +} {h,j,k,l}
+  bspc node -{f,s} {west,south,north,east}
+super + Tab
+  ~/.config/bspwm/scripts/hide
+super + f
+  bspc node -f -t \~floating
+
+# resize
+super + control + n
+  bspc node @/ -E
+
+super + control + {h,j,k,l}
+  bspc node -z {left -50 0, bottom 0 50, top 0 -50, right 50 0}
+super + control + shift + {h,j,k,l}
+  bspc node -z {left 50 0, bottom 0 -50, top 0 50, right -50 0}
+
+# preselect
+super + mode_switch + {h,j,k,l}
+  bspc node -p {west,south,north,east}
+super + mode_switch + {1-9}
+  bspc node -o 0.{1-9}
+super + mode_switch + Escape
+  bspc node -p cancel
+
+# receptacles
+super + i; i
+  bspc node -i
+super + i; m
+  bspc node -n next.leaf.\!window.local
+super + i; s
+  bspc node -s next.leaf.\!window.local
+
+# scratchpads
+mode_switch + {1,2,3}
+  ~/.config/bspwm/scripts/scratchpad {sFiles,sMusic,sCalc}
+
