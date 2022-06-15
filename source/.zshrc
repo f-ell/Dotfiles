@@ -7,32 +7,31 @@
 # |__| \____| | Author: Nico Pareigis
 #          |__| Zsh
 
-# might be causing some issues, need to verify
+# might be causing some issues, need to do further testing:
 # source $HOME/.config/himalaya/himalaya-completions.zsh 2>/dev/null 
 
 [[ -t 0 && $- = *i* ]] && stty -ixon # alt: stty stop ''
 
 set -o autocd -o extendedglob -o histexpiredupsfirst -o histignoredups\
-  -o histignorespace -o incappendhistory -o pipefail -o promptsubst\
+  -o histignorespace -o incappendhistory -o kshglob -o pipefail -o promptsubst\
   +o automenu +o autoremoveslash
 
 SAVEHIST=5000; HISTSIZE=$(($SAVEHIST + 100)); HISTFILE=$HOME/.zsh_history
 
-eval "`zoxide init zsh`"
+eval "$(zoxide init zsh)"
 source $HOME/.aliases
 source $HOME/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
   ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=20
   ZSH_AUTOSUGGEST_MANUAL_REBIND=True
 source $HOME/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-# source ~/.config/p10k/.p10k.zsh
-# source /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme
 
 export VISUAL='nvim'
 export EDITOR=$VISUAL
-export PATH='/usr/bin:/usr/local/bin:/usr/local/sbin:/usr/bin/core_perl:/usr/bin/site_perl:/usr/bin/vendor_perl:/opt:/home/nico/.cargo/bin:/home/nico/.local/bin:/home/nico/Scripts'
-export FZF_DEFAULT_COMMAND="fd -E .cache -E .cargo -E .local -E .vscode -E Games -tf -H -d10 ."
+export PATH='/usr/bin:/usr/local/bin:/usr/local/sbin:/usr/bin/core_perl:/usr/bin/site_perl:/usr/bin/vendor_perl:/opt:/home/nico/.cargo/bin:/home/nico/.local/bin:/home/nico/Scripts/source'
+export FZF_DEFAULT_COMMAND="fd -E .cache -E .cargo -E .local -E .git -E .vscode -E Games -tf -H -d10 ."
 export FZF_DEFAULT_OPTS='-i --tiebreak=begin,length --scroll-off=1 --prompt="$ " --reverse --height=25% --border=none --color=bw --no-bold'
 _ZO_FZF_OPTS="$FZF_DEFAULT_OPTS"
+# needed because Firefox acts up when being killed by bspwm :)
 export MOZ_CRASHREPORTER_DISABLE=1
 
 
@@ -67,7 +66,6 @@ Prompt() {
 }
 precmd() {
   Prompt $?;
-  # precmd() { echo; }
 }
 # zle-keymap-select() {
   # # echo -ne $KEYMAP
@@ -77,7 +75,7 @@ precmd() {
 
 
 # Colours
-set_colors(){
+set_colours(){
   local F C GEN AUD PIC VID FILE CODE ARCH R W X FS UG TS
   F="38;5;"
   GEN="di=${F}228;01:ln=${F}122;01:or=${F}234;01:ex=${F}197;04:*.bak=${F}200;04:*.iso=${F}158;04:*.otf=${F}200:*.ttf=${F}200"
@@ -85,7 +83,7 @@ set_colors(){
   C="${F}42"      PIC="*.gif=${C}:*.jpg=${C}:*.png=${C}:*.svg=${C}:*.webp=${C}"
   C="${F}63"      VID="*.mov=${C}:*.mp4=${C}"
   C="${F}182"     FILE="*.css=${C}:*.docx=${C}:*.html=${C}:*.md=${C}:*.odf=${C}:*.odt=${C}:*.pdf=${C}:*.sty=${C}:*.tex=${C}:*.txt=${C}:*.yml=${C}"
-  C="${F}197"     CODE="*.class=${C}:*.java=${C}:*.js=${C}:*.json=${C}:*.py=${C}:*.sh=${C}:*.ts=${C}"
+  C="${F}197"     CODE="*.class=${C}:*.java=${C}:*.js=${C}:*.json=${C}:*.pl=${C}:*.py=${C}:*.sh=${C}:*.ts=${C}"
   C="${F}225;01"  ARCH="*.7z=${C}:*.bz2=${C}:*.gz=${C}:*.jar=${C}:*.rar=${C}:*.tar=${C}:*.xz=${C}:*.zip=${C}"
   C="${F}42"      R="ur=${C}:ue=${C}:gr=${C}:tr=${C}"
                   W="uw=${C}:gw=${C}:tw=${C}"
@@ -115,7 +113,7 @@ set_colors(){
   ZSH_HIGHLIGHT_STYLES[single-quoted-argument]="fg=$_2"
   ZSH_HIGHLIGHT_STYLES[unknown-token]='fg=196,bold'
 }
-set_colors
+set_colours
 export LS_COLORS EXA_COLORS
 
 export LESS_TERMCAP_mb=$'\e[1;31m'
@@ -128,5 +126,5 @@ export LESS_TERMCAP_us=$'\e[1;4;32m'
 export LESSHISTFILE=-
 
 # Run fetch ONLY when X-Server is running, not on TTY
-# [[ `xset q 2>/dev/null` ]] && starfetch
+# [[ $(xset q 2>/dev/null) ]] && starfetch
 
