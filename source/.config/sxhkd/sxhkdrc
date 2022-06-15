@@ -1,6 +1,7 @@
 # [MODIFIER + ]*[@|!]KEYSYM
 #   COMMAND
 
+# UNIVERSAL BINDINGS
 control + Escape
   slock
 
@@ -17,6 +18,7 @@ super + {_, shift +} m
 super + o; {b,c,g}
   /home/nico/Scripts/lof {qutebrowser,code,gimp}
 
+# notifications
 mode_switch + k
   dunstctl close
 mode_switch + t
@@ -31,11 +33,10 @@ mode_switch + u
 
 
 # BSPWM BINDINGS
-# kill window
+# kill window / restart bspwm + quit X
 super + w
   bspc node focused -c
 
-# restart bspwm / quit X
 super + control + {r,q}
   bspc {wm -r,quit}
 
@@ -44,12 +45,14 @@ super + {_, shift +} {1-5}
   bspc {desktop -f, node focused -d} {1-5}
 super + {_, shift +} {h,j,k,l}
   bspc node -{f,s} {west,south,north,east}
+
 super + Tab
   ~/.config/bspwm/scripts/hide
+
 super + f
   bspc node -f -t \~floating
 
-# resize
+# equalize / resize
 super + control + n
   bspc node @/ -E
 

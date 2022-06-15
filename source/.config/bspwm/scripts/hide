@@ -1,26 +1,26 @@
 #!/bin/bash
-# This script (un-)hides all windows but the focused one. This resembles the
-# builtin monocle layout, but prevents any other windows from showing up behind
-# the focused one, which can be distracting when using transparency.
+# (Un-)Hides all windows but the focused one. Acts like a toggle for the builtin
+# monocle layout, but prevents other windows from showing behind the focused
+# one, as is the case when using transparency.
 # The windows to (un-)hide are, as of now, expected to be non-sticky (in order
 # to not affect scratchpads), and tiled.
 
-active=$(bspc query -N -n .focused)
+Active=$(bspc query -N -n .focused)
 
-readarray -t nodes < <(bspc query -N -n .\!hidden.\!sticky.tiled -d .focused)
-(( ${#nodes[@]} > 1 )) && hide=1 || hide=0
+readarray -t Nodes < <(bspc query -N -n .\!hidden.\!sticky.tiled -d .focused)
+(( ${#Nodes[@]} > 1 )) && Hide=1 || Hide=0
 
-if (( $hide == 1 )); then
-  for node in ${nodes[@]}; do
-    [[ $node == $active ]] && continue
-    bspc node $node -g hidden=on
+if (( $Hide == 1 )); then
+  for Node in ${Nodes[@]}; do
+    [[ $Node == $Active ]] && continue
+    bspc node $Node -g hidden=on
   done
 fi
 
-if (( $hide == 0 )); then
-  readarray -t nodes < <(bspc query -N -n .hidden.\!sticky.tiled -d .focused)
-  for node in ${nodes[@]}; do
-    bspc node $node -g hidden=off
+if (( $Hide == 0 )); then
+  readarray -t Nodes < <(bspc query -N -n .hidden.\!sticky.tiled -d .focused)
+  for Node in ${Nodes[@]}; do
+    bspc node $Node -g hidden=off
   done
 fi
 
