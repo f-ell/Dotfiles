@@ -10,19 +10,19 @@ case $Name in
   *)      exit 1;;
 esac
 
-# currently visible scratchpad (if any)
+# visible scratchpad (if any)
 Visible=$(bspc query -N -n .\!hidden.sticky.floating | tr [:upper:] [:lower:])
 
-# target scratchpad to toggle
+# target scratchpad window id
 TargetWid="$(wmctrl -l | grep $Name)"
 
-# run scratchpad if not currently running; sleep required because wmctrl is slow
+# run scratchpad if not running; sleep required because wmctrl is slow
 [ -z "$TargetWid" ] && { (alacritty -t $Name -e $Program &); sleep 0.3; \
                           TargetWid="$(wmctrl -l | grep $Name)"; }
 
 TargetWid=${TargetWid%% *}
 
-# toggle visible if it's not the target (i.e. no overlapping scratchpads)
+# toggle visible if it's not the target (-> no overlapping scratchpads)
 [ -n "$Visible" ] && [ $Visible != $TargetWid ] \
   && bspc node $Visible -g hidden -f
 
