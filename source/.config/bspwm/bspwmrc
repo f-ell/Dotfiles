@@ -72,7 +72,7 @@ bspc rule -a *:*:Picture-in-Picture state=floating
 [ $(ps -x | rg sFiles | wc -l) -eq 1 ] \
   && alacritty -t sFiles -e ranger &
 [ $(ps -x | rg sMusic | wc -l) -eq 1 ] \
-  && alacritty -t sMusic -e spotify_player &
+  && alacritty -t sMusic -e ~/.cargo/binspotify_player &
 [ $(ps -x | rg sCalc  | wc -l) -eq 1 ] \
   && alacritty -t sCalc -e bc -q &
 
