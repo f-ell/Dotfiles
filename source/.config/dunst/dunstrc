@@ -1,0 +1,66 @@
+[global]
+title           = Dunst
+class           = Dunst
+font            = Azeret Mono 10
+history_length  = 3
+sticky_history  = no
+show_indicators = false
+icon_path       = /usr/share/icons/Adwaita/16x16/status/:/usr/share/icons/Adwaita/16x16/devices/:/usr/share/icons/Adwaita/16x16/legacy/
+
+width  = (0, 640)
+height = 100
+origin = top-center
+offset = 15x40
+follow = keyboard
+
+padding            = 8
+horizontal_padding = 8
+frame_width        = 2
+corner_radius      = 4
+transparency       = 10
+
+ellipsize          = end
+alignment          = center
+vertical_alignment = center
+
+foreground  = "#e0e0e0"
+
+[urgency_low]
+timeout = 4s
+foreground  = "#f4eeee"
+# background  = "#703040"
+# frame_color = "#502020"
+# foreground  = "#70a0b0"
+# background  = "#205060"
+# frame_color = "#205060"
+# background  = "#303030"
+# frame_color = "#282828"
+# background  = "#3a7271"
+# frame_color = "#4a8281"
+background  = "#263846"
+frame_color = "#203240"
+
+[urgency_normal]
+timeout = 3s
+[urgency_critical]
+timeout = 8s
+
+[discord]
+appname     = "discord"
+timeout     = 3s
+background  = "#2f3136"
+frame_color = "#292b2f"
+
+[hightemp]
+appname     = "highTemp"
+timeout     = 8s
+background  = "#6f0000"
+frame_color = "#9f0000"
+
+[crittemp]
+appname     = "critTemp"
+timeout     = 20s
+foreground  = "#3f0000"
+background  = "#ff0000"
+frame_color = "#ff0000"
+
