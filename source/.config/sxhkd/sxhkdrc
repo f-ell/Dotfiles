@@ -16,7 +16,7 @@ super + {_, shift +} m
   {-s -l style=dash\,width=2\,opacity=100, -a 0\,0\,1920\,1080}
 
 super + o; {b,c,g}
-  /home/nico/Scripts/shell/lof {qutebrowser,code,gimp}
+  /home/nico/Scripts/lof {qutebrowser,code,gimp}
 
 # notifications
 mode_switch + k
@@ -26,10 +26,10 @@ mode_switch + t
   "$(date +%a.\ %d.%m.%Y\ %I:%M\ %p)"
 mode_switch + b
   dunstify -u low -h string:x-dunst-stack-tag:bat \
-  "$(~/Scripts/source/python/mouse_battery.py)"
+  "$(~/Git/Scripts/source/python/mouse_battery.py)"
 mode_switch + u
   dunstify -u low -h string:x-dunst-stack-tag:util \
-  "$(~/Scripts/source/perl/system_monitors/sysload_dirty.pl)"
+  "$(~/Git/Scripts/source/perl/system_monitors/sysload_dirty.pl)"
 
 
 
