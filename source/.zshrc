@@ -27,7 +27,7 @@ source $HOME/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 export VISUAL='nvim'
 export EDITOR=$VISUAL
-export PATH='/usr/bin:/usr/local/bin:/usr/local/sbin:/usr/bin/core_perl:/usr/bin/site_perl:/usr/bin/vendor_perl:/opt:/home/nico/.cargo/bin:/home/nico/.local/bin:/home/nico/Scripts/source'
+export PATH='/usr/bin:/usr/local/bin:/usr/local/sbin:/opt:/home/nico/.local/bin:/home/nico/Scripts'
 export FZF_DEFAULT_COMMAND="fd -E .cache -E .cargo -E .local -E .git -E .vscode -E Games -tf -H -d10 ."
 export FZF_DEFAULT_OPTS='-i --tiebreak=begin,length --scroll-off=1 --prompt="$ " --reverse --height=25% --border=none --color=bw --no-bold'
 _ZO_FZF_OPTS="$FZF_DEFAULT_OPTS"
@@ -59,7 +59,7 @@ Prompt() {
 
   GitCheck=`git rev-parse --is-inside-work-tree 2>&1`
   if [[ "$GitCheck" == true ]]; then
-    PS1=$PS1$'%{\e[0;38;5;208m%}G%{\e[0m%} '
+    PS1=$PS1$'%{\e[0;38;5;214m%}G%{\e[0m%} '
   fi
 
   PS1=$PS1$'%{\e[0;38;5;248m%}$%{\e[0m%} '
@@ -83,7 +83,7 @@ set_colours(){
   C="${F}42"      PIC="*.gif=${C}:*.jpg=${C}:*.png=${C}:*.svg=${C}:*.webp=${C}"
   C="${F}63"      VID="*.mov=${C}:*.mp4=${C}"
   C="${F}182"     FILE="*.css=${C}:*.docx=${C}:*.html=${C}:*.md=${C}:*.odf=${C}:*.odt=${C}:*.pdf=${C}:*.sty=${C}:*.tex=${C}:*.txt=${C}:*.yml=${C}"
-  C="${F}197"     CODE="*.class=${C}:*.java=${C}:*.js=${C}:*.json=${C}:*.pl=${C}:*.py=${C}:*.sh=${C}:*.ts=${C}"
+  C="${F}204"     CODE="*.class=${C}:*.java=${C}:*.js=${C}:*.json=${C}:*.pl=${C}:*.py=${C}:*.sh=${C}:*.ts=${C}"
   C="${F}225;01"  ARCH="*.7z=${C}:*.bz2=${C}:*.gz=${C}:*.jar=${C}:*.rar=${C}:*.tar=${C}:*.xz=${C}:*.zip=${C}"
   C="${F}42"      R="ur=${C}:ue=${C}:gr=${C}:tr=${C}"
                   W="uw=${C}:gw=${C}:tw=${C}"
