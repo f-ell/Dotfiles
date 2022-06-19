@@ -57,8 +57,8 @@ bspc config pointer_follows_focus   false
 bspc config pointer_follows_monitor false
 
 bspc rule -r "*"
-bspc rule -a discord  desktop='5' follow=off
-bspc rule -a Steam    desktop='4' follow=off      state=floating
+bspc rule -a discord  desktop='^5' follow=off
+bspc rule -a Steam    desktop='^4' follow=off      state=floating
 bspc rule -a *:*:'GNU Image Manipulation Program' state=floating
 bspc rule -a *:*:Picture-in-Picture               state=floating
 
@@ -82,3 +82,10 @@ bspc rule -a *:*:sCalc  hidden=on sticky=on locked=on state=floating rectangle=3
 [ $(ps -x | rg sCalc  | wc -l) -eq 1 ] \
   && alacritty -t sCalc -e bc -q &
 
+# FLOAT windows on desktop '^4'
+TargetDeskId=$(bspc query -D -d '^4')
+bspc subscribe node_add | while read NodeInfo; do
+  DeskId=${NodeInfo#node_add 0x* }
+  NodeId=${NodeInfo##* }
+  [ $TargetDeskId = $DeskId ] && bspc node $NodeId -t floating
+done
