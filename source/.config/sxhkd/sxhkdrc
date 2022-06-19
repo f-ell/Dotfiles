@@ -9,14 +9,14 @@ super + Return
   /usr/bin/alacritty --working-directory ~
 
 super + {_, shift +} r
-  {rofi -show,rofi -show window}
+  rofi -monitor -4 -show {_, window}
 
 super + {_, shift +} m
   scrot -i -q 100 -F ~/Pictures/Screenshots/scrot_$(date +%Y%m%d-%H%M%S).png \
   {-s -l style=dash\,width=2\,opacity=100, -a 0\,0\,1920\,1080}
 
 super + o; {b,c,g}
-  /home/nico/Scripts/lof {qutebrowser,code,gimp}
+  /home/nico/Scripts/lof {firefox,code,gimp}
 
 # notifications
 mode_switch + k
@@ -29,7 +29,7 @@ mode_switch + b
   "$(~/Git/Scripts/source/python/mouse_battery.py)"
 mode_switch + u
   dunstify -u low -h string:x-dunst-stack-tag:util \
-  "$(~/Git/Scripts/source/perl/system_monitors/sysload_dirty.pl)"
+  "$(~/Git/Scripts/source/perl/system_monitors/sysload_dirty)"
 
 
 
