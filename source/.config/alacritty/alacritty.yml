@@ -64,7 +64,8 @@ colors:
     # background: '#1d1d1d' # sakura
     # background: '#102b34' # cthulu
     # background: '#3c4746' # everforest
-    background: '#20323e'
+    # background: '#20323e' # aenami
+    background: '#212121'
     foreground: '#e0e0e0'
 
 live_config_reload: true

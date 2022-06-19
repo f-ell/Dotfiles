@@ -14,46 +14,16 @@
     padding:          2px;
     spacing:          2px;
 
-    /* nor-fg:  #787878; */
-    /* nor-bg:  #3b3b3b; */
-    /* alt-fg:  #787878; */
-    /* alt-bg:  #3b3b3b; */
-    /* sel-fg:  #404040; */
-    /* sel-bg:  #ababab; */
-    /* win-fg:  #e0e0e0; */
-    /* win-bg:  #303030; */
-    /* outline: #606060; */
-
-    /* scr-fg:  #e0e0e0; */
-    /* nor-fg:  #909090; */
-    /* nor-bg:  #642434; */
-    /* alt-fg:  #909090; */
-    /* alt-bg:  #642434; */
-    /* sel-fg:  #ffffff; */
-    /* sel-bg:  #804050; */
-    /* win-fg:  #e0e0e0; */
-    /* win-bg:  #703040; */
-    /* outline: #e0e0e0; */
-
-    /* nor-fg:  #ffbf21; */
-    /* nor-bg:  #3a7271; */
-    /* alt-fg:  #ffbf21; */
-    /* alt-bg:  #3a7271; */
-    /* sel-fg:  #3a7271; */
-    /* sel-bg:  #ffbf21; */
-    /* win-fg:  #ffbf21; */
-    /* win-bg:  #2a6261; */
-    /* outline: #4a8281; */
-
-    nor-fg:  #fa486a;
-    nor-bg:  #263846;
-    alt-fg:  #fa486a;
-    alt-bg:  #263846;
-    sel-fg:  #263846;
-    sel-bg:  #fa486a;
-    win-fg:  #fa486a;
-    win-bg:  #20323e;
-    outline: #2d3f4d;
+    scr-fg:  #ffffff;
+    nor-fg:  #787878;
+    nor-bg:  #f8f8f8;
+    alt-fg:  #787878;
+    alt-bg:  #f8f8f8;
+    sel-fg:  #f0f0f0;
+    sel-bg:  #484848;
+    win-fg:  #585858;
+    win-bg:  #f0f0f0;
+    outline: #e0e0e0;
 
     normal-fg: var(nor-fg);
     normal-bg: var(nor-bg);
