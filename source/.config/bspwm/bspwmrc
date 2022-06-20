@@ -9,8 +9,12 @@
 #           |__| bspwm
 
 # CONFIGURATION
-bspc monitor DP-2 -d 1 2 3 4
-bspc monitor DP-0 -d 5
+if [ $MACHINE = 'DT' ]; then
+  bspc monitor DP-2 -d 1 2 3 4
+  bspc monitor DP-0 -d 5
+else
+  bspc monitor eDP1 -d 1 2 3 4
+fi
 
 bspc config window_gap      12
 bspc config border_width    2
@@ -20,6 +24,11 @@ bspc config right_padding   0
 bspc config bottom_padding  0
 bspc config left_padding    0
 
+# normal_border_color   unfocused window
+# focused_border_color  active window; focused monitor
+# presel_feedback_color preselect preview
+
+if [ $MACHINE = 'DT' ]; then
 # cthulu
 #   bspc config focused_border_color  '#6090a0'
 #   bspc config active_border_color   '#205060'
@@ -45,8 +54,16 @@ bspc config left_padding    0
   bspc config active_border_color   '#212121'
   bspc config normal_border_color   '#212121'
   bspc config presel_feedback_color '#fafafa'
+  Wallpaper=~/Pictures/monochrome/saturn.png
+else
+# cubes
+  bspc config normal_border_color   '#303030'
+  bspc config focused_border_color  '#e8e8e8'
+  bspc config presel_feedback_color '#e8e8e8'
+  Wallpaper=~/Pictures/monochrome/cubes.png
+fi
 
-bspc config single_monocle          true
+bspc config single_monocle          false
 bspc config pointer_modifier        shift
 bspc config pointer_action1         move
 bspc config pointer_action2         none
@@ -58,7 +75,7 @@ bspc config pointer_follows_monitor false
 
 bspc rule -r "*"
 bspc rule -a discord  desktop='^5' follow=off
-bspc rule -a Steam    desktop='^4' follow=off      state=floating
+bspc rule -a Steam    desktop='^4' follow=off     state=floating
 bspc rule -a *:*:'GNU Image Manipulation Program' state=floating
 bspc rule -a *:*:Picture-in-Picture               state=floating
 
@@ -66,9 +83,11 @@ bspc rule -a *:*:Picture-in-Picture               state=floating
 dunst &
 pgrep sxhkd || sxhkd &
 picom --experimental-backends --unredir-if-possible &
-feh --no-fehbg --bg-fill ~/Pictures/monochrome/saturn.png &
-pgrep conky || { conky -c ~/.config/conky/conky.conf; \
-  conky -c ~/.config/conky/clock.conf; bspc monitor -f primary; } &
+feh --no-fehbg --bg-fill $Wallpaper &
+if [ $MACHINE = 'DT' ]; then
+  pgrep conky || { conky -c ~/.config/conky/conky.conf; \
+      conky -c ~/.config/conky/clock.conf; bspc monitor -f primary; } &
+fi
 
 # SCRATCHPADS
 bspc rule -a *:*:sFiles hidden=on sticky=on locked=on state=floating rectangle=1280x720+320+180
@@ -77,7 +96,7 @@ bspc rule -a *:*:sCalc  hidden=on sticky=on locked=on state=floating rectangle=3
 
 [ $(ps -x | rg sFiles | wc -l) -eq 1 ] \
   && alacritty -t sFiles -e ranger &
-[ $(ps -x | rg sMusic | wc -l) -eq 1 ] \
+[ $MACHINE = 'DT' ] && [ $(ps -x | rg sMusic | wc -l) -eq 1 ] \
   && alacritty -t sMusic -e ~/.cargo/bin/spotify_player &
 [ $(ps -x | rg sCalc  | wc -l) -eq 1 ] \
   && alacritty -t sCalc -e bc -q &

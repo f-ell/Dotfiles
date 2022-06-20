@@ -25,6 +25,7 @@ source $HOME/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
   ZSH_AUTOSUGGEST_MANUAL_REBIND=True
 source $HOME/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
+export MACHINE=`< $HOME/Git/machine`
 export VISUAL='nvim'
 export EDITOR=$VISUAL
 export PATH='/usr/bin:/usr/local/bin:/usr/local/sbin:/opt:/home/nico/.local/bin:/home/nico/Scripts'
@@ -57,9 +58,9 @@ Prompt() {
     PS1=$PS1$'%{\e[0;38;5;160m%}%B$X%b%{\e[0m%} '
   fi
 
-  GitCheck=`git rev-parse --is-inside-work-tree 2>&1`
-  if [[ "$GitCheck" == true ]]; then
-    PS1=$PS1$'%{\e[0;38;5;214m%}G%{\e[0m%} '
+  Branch=$(git branch --show-current 2>/dev/null)
+  if [[ -n "$Branch" ]]; then
+    PS1=$PS1$'%{\e[0;38;5;214m%}$Branch%{\e[0m%} '
   fi
 
   PS1=$PS1$'%{\e[0;38;5;248m%}$%{\e[0m%} '
@@ -127,4 +128,3 @@ export LESSHISTFILE=-
 
 # Run fetch ONLY when X-Server is running, not on TTY
 # [[ $(xset q 2>/dev/null) ]] && starfetch
-
