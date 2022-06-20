@@ -1,6 +1,6 @@
 // ____   ____
 // |   \  |  |______
-// |    \ |  | ___  \ 
+// |    \ |  | ___  \
 // |     \|  | |  \  |
 // |  \   \  | |__/  |
 // |  |\     | _____/
@@ -91,7 +91,7 @@ element {
 window {
     background-color: var(win-bg);
     transparency:     "real";
-    width:            25%;
+    width:            25%; /*18%;*/
 }
 
   mainbox {
@@ -108,7 +108,7 @@ window {
       border-radius: 0px;
       padding:       4px 0px 0px 0px;
       fixed-height:  0;
-      lines:         6;
+      lines:         4;
       scrollbar:     true;
       border-color:  var(separatorcolor);
   }

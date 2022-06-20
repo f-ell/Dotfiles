@@ -1,16 +1,15 @@
 [global]
-title           = Dunst
-class           = Dunst
-font            = Azeret Mono 10
-history_length  = 3
-sticky_history  = no
-show_indicators = false
-icon_path       = /usr/share/icons/Adwaita/16x16/status/:/usr/share/icons/Adwaita/16x16/devices/:/usr/share/icons/Adwaita/16x16/legacy/
+title          = Dunst
+class          = Dunst
+font           = Azeret Mono 12
+history_length = 3
+sticky_history = no
+icon_path = /usr/share/icons/Adwaita/16x16/status/:/usr/share/icons/Adwaita/16x16/devices/:/usr/share/icons/Adwaita/16x16/legacy/
 
-width  = (0, 640)
-height = 100
+width  = (0, 1920)
+height = 35
 origin = top-center
-offset = 15x40
+offset = 15x50
 follow = keyboard
 
 padding            = 8
@@ -26,7 +25,7 @@ vertical_alignment = center
 foreground  = "#e0e0e0"
 
 [urgency_low]
-timeout = 4s
+timeout     = 4s
 # background  = "#303030"
 # frame_color = "#282828"
 foreground  = "#303030"
@@ -34,15 +33,13 @@ background  = "#f4f4f4"
 frame_color = "#d4d4d4"
 
 [urgency_normal]
-timeout = 3s
-[urgency_critical]
-timeout = 8s
-
-[discord]
-appname     = "discord"
 timeout     = 3s
-background  = "#2f3136"
-frame_color = "#292b2f"
+foreground  = "#303030"
+background  = "#d4d4d4"
+frame_color = "#b4b4b4"
+
+[urgency_critical]
+timeout     = 8s
 
 [hightemp]
 appname     = "highTemp"
@@ -52,8 +49,7 @@ frame_color = "#9f0000"
 
 [crittemp]
 appname     = "critTemp"
-timeout     = 20s
+timeout     = 14s
 foreground  = "#3f0000"
 background  = "#ff0000"
 frame_color = "#ff0000"
-
