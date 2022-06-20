@@ -12,7 +12,7 @@ configuration {
   drun-display-format: "{name}";
   font: "Azeret Mono 10";
   location: 0;
-  yoffset: -50;
+  yoffset: -20;
   fixed-num-lines: false;
   sort: true;
   cycle: false;
