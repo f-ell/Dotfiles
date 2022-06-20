@@ -24,7 +24,7 @@ window:
 cursor:
   style:
     shape: Block
-    blinking: On
+    blinking: on
   blink_interval: 1000
   unfocused_hollow: true
   thickness: 0.1
@@ -49,7 +49,7 @@ font:
   bold_italic:
     family: Azeret Mono
     style:  Bold Italic
-  size: 11
+  size: 10
 draw_bold_text_with_bright_colors: true
 
 colors:
@@ -60,11 +60,11 @@ colors:
     text:   CellBackground
     cursor: CellForeground
   primary:
-    # background: '#423a49' # dreaming
-    # background: '#1d1d1d' # sakura
-    # background: '#102b34' # cthulu
-    # background: '#3c4746' # everforest
     # background: '#20323e' # aenami
+    # background: '#102b34' # cthulu
+    # background: '#423a49' # dreaming
+    # background: '#3c4746' # everforest
+    # background: '#1d1d1d' # sakura
     background: '#212121'
     foreground: '#e0e0e0'
 
