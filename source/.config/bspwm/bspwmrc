@@ -63,7 +63,7 @@ else
   Wallpaper=~/Pictures/monochrome/cubes.png
 fi
 
-bspc config single_monocle          false
+bspc config single_monocle          true
 bspc config pointer_modifier        shift
 bspc config pointer_action1         move
 bspc config pointer_action2         none
