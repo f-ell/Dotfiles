@@ -1,5 +1,6 @@
 alias -- -='z -'
 alias dcr='pkill dunst; dunst &; disown dunst'
+alias dots='z ~/Git/Dotfiles/source'
 alias e='exa'
 alias e1='exa -1'
 alias el='exa -la'
