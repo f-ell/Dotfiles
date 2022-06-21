@@ -1,13 +1,13 @@
 [global]
 title          = Dunst
 class          = Dunst
-font           = Azeret Mono 12
+font           = Azeret Mono 10
 history_length = 3
 sticky_history = no
 icon_path = /usr/share/icons/Adwaita/16x16/status/:/usr/share/icons/Adwaita/16x16/devices/:/usr/share/icons/Adwaita/16x16/legacy/
 
 width  = (0, 1920)
-height = 35
+height = 30
 origin = top-center
 offset = 15x50
 follow = keyboard
