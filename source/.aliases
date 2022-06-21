@@ -14,8 +14,10 @@ alias hml='himalaya'
 alias less='less -cmNS'
 alias lock='slock &'
 
-alias netstart='rfkill unblock wifi; doas systemctl start NetworkManager iwd'
-alias netstop='doas systemctl stop NetworkManager iwd; rfkill block wifi'
+if [ $MACHINE = 'LT' ]; then
+  alias netstart='rfkill unblock wifi; doas systemctl start NetworkManager iwd'
+  alias netstop='doas systemctl stop NetworkManager iwd; rfkill block wifi'
+fi
 alias orphan-remove='doas pacman -Qtdq | doas pacman -Rns -'
 alias pquery='pacman -Q | rg $1 2>/dev/null'
 alias pcount='pacman -Q | wc -l'
