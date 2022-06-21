@@ -16,7 +16,7 @@ c.fonts.default_family        = 'Azeret Mono'
 c.messages.timeout          = 3000
 c.editor.command            = ['nvim', '{file}']
 #  c.colors.webpage.darkmode.enabled       = True
-c.colors.webpage.preferred_color_scheme = 'dark'
+#  c.colors.webpage.preferred_color_scheme = 'dark'
 c.colors.webpage.bg                     = '#374247'
 
 c.window.title_format = 'qutebrowser'
