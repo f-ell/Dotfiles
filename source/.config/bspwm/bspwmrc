@@ -80,7 +80,11 @@ bspc rule -a *:*:'GNU Image Manipulation Program' state=floating
 bspc rule -a *:*:Picture-in-Picture               state=floating
 
 # AUTOSTART
-dunst &
+if [ $MACHINE = 'DT' ]; then
+  dunst &
+else
+  dunst -conf ~/.config/dunst/dunstrc.laptop &
+fi
 pgrep sxhkd || sxhkd &
 picom --experimental-backends --unredir-if-possible &
 feh --no-fehbg --bg-fill $Wallpaper &
