@@ -4,10 +4,11 @@ class          = Dunst
 font           = Azeret Mono 9
 history_length = 3
 sticky_history = no
+show_indicators = false
 icon_path = /usr/share/icons/Adwaita/16x16/status/:/usr/share/icons/Adwaita/16x16/devices/:/usr/share/icons/Adwaita/16x16/legacy/
 
 width  = (0, 1920)
-height = 30
+height = 38
 origin = top-center
 offset = 15x50
 follow = keyboard
@@ -40,6 +41,13 @@ frame_color = "#b4b4b4"
 
 [urgency_critical]
 timeout     = 8s
+
+[discord]
+appname     = "discord"
+timeout     = 6s
+foreground  = "#9d9fa2"
+background  = "#2f3136"
+frame_color = "#292b2f"
 
 [hightemp]
 appname     = "highTemp"
