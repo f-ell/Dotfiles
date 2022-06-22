@@ -19,13 +19,13 @@ set -o autocd -o extendedglob -o histexpiredupsfirst -o histignoredups\
 SAVEHIST=5000; HISTSIZE=$(($SAVEHIST + 100)); HISTFILE=$HOME/.zsh_history
 
 eval "$(zoxide init zsh)"
+export MACHINE=`< $HOME/Git/machine`
 source $HOME/.aliases
 source $HOME/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
   ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=20
   ZSH_AUTOSUGGEST_MANUAL_REBIND=True
 source $HOME/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
-export MACHINE=`< $HOME/Git/machine`
 export VISUAL='nvim'
 export EDITOR=$VISUAL
 export PATH='/usr/bin:/usr/local/bin:/usr/local/sbin:/opt:/home/nico/.local/bin:/home/nico/Scripts'
