@@ -82,10 +82,11 @@ bspc rule -a *:*:Picture-in-Picture               state=floating
 # AUTOSTART
 if [ $MACHINE = 'DT' ]; then
   dunst &
+  pgrep sxhkd || sxhkd ~/.config/sxhkd/sxhkdrc.desktop &
 else
   dunst -conf ~/.config/dunst/dunstrc.laptop &
+  pgrep sxhkd || sxhkd ~/.config/sxhkd/sxhkdrc.laptop &
 fi
-pgrep sxhkd || sxhkd &
 picom --experimental-backends --unredir-if-possible &
 feh --no-fehbg --bg-fill $Wallpaper &
 if [ $MACHINE = 'DT' ]; then

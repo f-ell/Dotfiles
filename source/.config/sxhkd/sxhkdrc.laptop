@@ -1,0 +1,8 @@
+# [MODIFIER + ]*[@|!]KEYSYM
+#   COMMAND
+
+super + {F12, F11}
+  bl {u,d} 5
+
+mode_switch + b
+  ~/Git/Scripts/source/perl/system_monitors/battery

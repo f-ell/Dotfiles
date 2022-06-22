@@ -1,0 +1,6 @@
+# [MODIFIER + ]*[@|!]KEYSYM
+#   COMMAND
+
+mode_switch + b
+  dunstify -u low -h string:x-dunst-stack-tag:bat \
+  "$(~/Git/Scripts/source/python/mouse_battery.py)"
