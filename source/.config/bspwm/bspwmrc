@@ -82,10 +82,10 @@ bspc rule -a *:*:Picture-in-Picture               state=floating
 # AUTOSTART
 if [ $MACHINE = 'DT' ]; then
   dunst &
-  pgrep sxhkd || sxhkd ~/.config/sxhkd/sxhkdrc.desktop &
+  pgrep sxhkd || sxhkd ~/.config/sxhkd/sxhkdrc.dt &
 else
-  dunst -conf ~/.config/dunst/dunstrc.laptop &
-  pgrep sxhkd || sxhkd ~/.config/sxhkd/sxhkdrc.laptop &
+  dunst -conf ~/.config/dunst/dunstrc.lt &
+  pgrep sxhkd || sxhkd ~/.config/sxhkd/sxhkdrc.lt &
 fi
 picom --experimental-backends --unredir-if-possible &
 feh --no-fehbg --bg-fill $Wallpaper &
@@ -110,6 +110,7 @@ bspc rule -a *:*:sCalc  hidden=on sticky=on locked=on state=floating rectangle=3
 TargetDeskId=$(bspc query -D -d '^4')
 bspc subscribe node_add | while read NodeInfo; do
   DeskId=${NodeInfo#node_add 0x* }
+  DeskId=${DeskId%% *}
   NodeId=${NodeInfo##* }
   [ $TargetDeskId = $DeskId ] && bspc node $NodeId -t floating
 done
