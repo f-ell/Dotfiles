@@ -30,7 +30,7 @@ export VISUAL='nvim'
 export EDITOR=$VISUAL
 export PATH='/usr/bin:/usr/local/bin:/usr/local/sbin:/opt:/home/nico/.local/bin:/home/nico/Scripts'
 export FZF_DEFAULT_COMMAND="fd -E .cache -E .cargo -E .local -E .git -E .vscode -E Games -tf -H -d10 ."
-export FZF_DEFAULT_OPTS='-i --tiebreak=begin,length --scroll-off=1 --prompt="$ " --reverse --height=25% --border=none --color=bw --no-bold'
+export FZF_DEFAULT_OPTS='-i --tiebreak=begin,length --scroll-off=1 --reverse --prompt="$ " --height=25% --color=bw'
 _ZO_FZF_OPTS="$FZF_DEFAULT_OPTS"
 # needed because Firefox acts up when being killed by bspwm :)
 export MOZ_CRASHREPORTER_DISABLE=1
