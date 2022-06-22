@@ -13,6 +13,7 @@ xset r rate 250 55 &
 # xset m 1 0 &
 
 polkit-dumb-agent &
+noisetorch -i -s alsa_input.usb-Generic_Blue_Microphones_201701110001-00.analog-stereo -t 95 &
 
 exec bspwm
 # exec qtile start
