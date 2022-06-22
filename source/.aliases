@@ -23,6 +23,7 @@ alias pquery='pacman -Q | rg $1 2>/dev/null'
 alias pcount='pacman -Q | wc -l'
 alias ping='ping -c1 "${1:-archlinux.org}"'
 alias scr='pkill sxhkd; sxhkd &; disown sxhkd'
+alias scripts='z ~/Git/Scripts/source'
 alias um='udisksctl mount -b /dev/sdd1'   # not particularly smart
 alias uu='udisksctl unmount -b /dev/sdd1' # not particularly smart either
 alias v='nvim'
