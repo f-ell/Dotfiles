@@ -8,7 +8,7 @@
 //          |__| Rofi - Config
 
 configuration {
-  modi: "drun,window";
+  modi: "window";
   drun-display-format: "{name}";
   font: "Azeret Mono 10";
   location: 0;
@@ -19,21 +19,22 @@ configuration {
   matching: "regex";
   scroll-method: 0;
   max-history-size: 30;
-  kb-clear-line: "Control+u";
-  kb-move-char-back: "Left";
+  kb-accept-entry:      "Return";
+  kb-cancel:            "Escape";
+  kb-clear-line:        "Control+u";
+  kb-delete-entry:      "Control+BackSpace";
+  kb-mode-complete:     "";
+  kb-move-char-back:    "Left";
   kb-move-char-forward: "Right";
-  kb-remove-word-back: "Control+w";
-  kb-remove-char-back: "BackSpace";
-  kb-remove-to-eol: "";
-  kb-remove-to-sol: "";
-  kb-accept-entry: "Return";
-  kb-mode-complete: "";
-  kb-row-up: "Control+k";
-  kb-row-down: "Control+j";
-  kb-page-prev: "Control+b";
-  kb-page-next: "Control+f";
-  kb-row-first: "Control+h";
-  kb-row-last: "Control+l";
-  kb-cancel: "Escape";
+  kb-page-next:         "Control+f";
+  kb-page-prev:         "Control+b";
+  kb-remove-char-back:  "BackSpace";
+  kb-remove-to-eol:     "";
+  kb-remove-to-sol:     "";
+  kb-remove-word-back:  "Control+w";
+  kb-row-down:          "Control+j";
+  kb-row-first:         "Control+h";
+  kb-row-last:          "Control+l";
+  kb-row-up:            "Control+k";
 }
 @theme "theme.rasi"

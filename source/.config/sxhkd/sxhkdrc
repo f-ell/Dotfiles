@@ -8,15 +8,17 @@ control + Escape
 super + Return
   /usr/bin/alacritty --working-directory ~
 
-super + {_, shift +} r
-  rofi -monitor -4 -show {_, window}
+super + r
+  ~/.config/rofi/rofi_custom.sh
+super + shift + r
+  rofi -monitor -4 -disable-history -sort -show window
 
 super + {_, shift +} m
   scrot -i -q 100 -F ~/Pictures/Screenshots/scrot_$(date +%Y%m%d-%H%M%S).png \
   {-s -l style=dash\,width=2\,opacity=100, -a 0\,0\,1920\,1080}
 
 super + o; {b,c,d,g}
-  /home/nico/Scripts/lof {qutebrowser,code,discord,gimp}
+  ~/Scripts/lof {qutebrowser,code,discord,gimp}
 
 # notifications
 mode_switch + k
