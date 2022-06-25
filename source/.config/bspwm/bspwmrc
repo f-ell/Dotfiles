@@ -85,7 +85,6 @@ if [ $MACHINE = 'DT' ]; then
   pgrep sxhkd || sxhkd ~/.config/sxhkd/sxhkdrc.dt &
   pgrep conky || { conky -c ~/.config/conky/conky.conf; \
       conky -c ~/.config/conky/clock.conf; bspc monitor -f primary; } &
-  noisetorch -i -s alsa_input.usb-Generic_Blue_Microphones_201701110001-00.analog-stereo -t 95 &
 else
   dunst -conf ~/.config/dunst/dunstrc.lt &
   pgrep sxhkd || sxhkd ~/.config/sxhkd/sxhkdrc.lt &
@@ -98,13 +97,6 @@ bspc rule -a *:*:sFiles hidden=on sticky=on locked=on state=floating rectangle=1
 bspc rule -a *:*:sMusic hidden=on sticky=on locked=on state=floating rectangle=1280x720+320+180
 bspc rule -a *:*:sCalc  hidden=on sticky=on locked=on state=floating rectangle=300x400+50+50
 
-[ $(ps -x | rg sFiles | wc -l) -eq 1 ] \
-  && alacritty -t sFiles -e ranger &
-[ $MACHINE = 'DT' ] && [ $(ps -x | rg sMusic | wc -l) -eq 1 ] \
-  && alacritty -t sMusic -e ~/.cargo/bin/spotify_player &
-[ $(ps -x | rg sCalc  | wc -l) -eq 1 ] \
-  && alacritty -t sCalc -e bc -q &
-
 # FLOAT windows on desktop '^4'
 TargetDeskId=$(bspc query -D -d '^4')
 bspc subscribe node_add | while read NodeInfo; do
@@ -113,3 +105,7 @@ bspc subscribe node_add | while read NodeInfo; do
   NodeId=${NodeInfo##* }
   [ $TargetDeskId = $DeskId ] && bspc node $NodeId -t floating
 done
+
+sleep 4 && noisetorch -i \
+  -s alsa_input.usb-Generic_Blue_Microphones_201701110001-00.analog-stereo \
+  -t 95 &
