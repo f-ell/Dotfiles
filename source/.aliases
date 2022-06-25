@@ -1,14 +1,18 @@
+Ping() {
+  ping -c1 "${1:-archlinux.org}"
+}
+
 alias -- -='z -'
-alias dcr='pkill dunst; dunst &; disown dunst'
+
+if [ $MACHINE = 'LT' ]; then
+  Conf='-conf ~/.config/dunst/dunstrc.lt' 
+fi
+alias dcr="pkill dunst $Conf; dunst &; disown dunst"
+
 alias dots='z ~/Git/Dotfiles/source'
 alias e='exa'
 alias e1='exa -1'
 alias el='exa -la'
-alias gcheck='git checkout'
-alias gcomm='git commit'
-alias gpush='git push'
-alias gpull='git pull'
-alias gstat='git status'
 alias hist='tail -10 <(history)'
 alias hml='himalaya'
 alias less='less -cmNS'
@@ -18,11 +22,19 @@ if [ $MACHINE = 'LT' ]; then
   alias netstart='rfkill unblock wifi; doas systemctl start NetworkManager iwd'
   alias netstop='doas systemctl stop NetworkManager iwd; rfkill block wifi'
 fi
+
 alias orphan-remove='doas pacman -Qtdq | doas pacman -Rns -'
 alias pquery='pacman -Q | rg $1 2>/dev/null'
 alias pcount='pacman -Q | wc -l'
-alias ping='ping -c1 "${1:-archlinux.org}"'
-alias scr='pkill sxhkd; sxhkd &; disown sxhkd'
+alias ping=Ping
+
+if [ $MACHINE = 'DT' ]; then
+  Conf='~/.config/sxhkd/sxhkdrc.dt'
+else
+  Conf='~/.config/sxhkd/sxhkdrc.lt'
+fi
+alias scr="pkill sxhkd; sxhkd $Conf &; disown sxhkd"
+
 alias scripts='z ~/Git/Scripts/source'
 alias um='udisksctl mount -b /dev/sdd1'   # not particularly smart
 alias uu='udisksctl unmount -b /dev/sdd1' # not particularly smart either
