@@ -2,7 +2,7 @@
 title          = Dunst
 class          = Dunst
 font           = Azeret Mono 9
-history_length = 3
+history_length = 0
 sticky_history = no
 show_indicators = false
 icon_path = /usr/share/icons/Adwaita/16x16/status/:/usr/share/icons/Adwaita/16x16/devices/:/usr/share/icons/Adwaita/16x16/legacy/
@@ -48,6 +48,10 @@ timeout     = 6s
 foreground  = "#9d9fa2"
 background  = "#2f3136"
 frame_color = "#292b2f"
+
+[spotify]
+appname     = "Spotify"
+skip_display= true
 
 [hightemp]
 appname     = "highTemp"
