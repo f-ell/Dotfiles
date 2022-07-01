@@ -1,3 +1,4 @@
+.gitignore
 __pycache__
 __init__*
 vim-plug
