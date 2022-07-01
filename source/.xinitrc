@@ -10,7 +10,7 @@ fi
 
 setxkbmap de -option caps:swapescape &
 xsetroot -cursor_name left_ptr &
-xset r rate 250 55 &
+xset r rate 220 65 &
 # xset m 1 0 &
 
 polkit-dumb-agent &
