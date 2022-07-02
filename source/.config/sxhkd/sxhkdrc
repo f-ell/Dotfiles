@@ -17,8 +17,8 @@ super + {_, shift +} m
   scrot -i -q 100 -F ~/Pictures/Screenshots/scrot_$(date +%Y%m%d-%H%M%S).png \
   {-s -l style=dash\,width=2\,opacity=100, -a 0\,0\,1920\,1080}
 
-super + o; {b,c,d,g}
-  ~/Scripts/lof {qutebrowser,code,discord,gimp}
+super + o; {b,c,d,g,s}
+  ~/Scripts/lof {qutebrowser,code,discord,gimp,steamwrap}
 
 # notifications
 mode_switch + k
