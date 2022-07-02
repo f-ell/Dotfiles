@@ -9,7 +9,7 @@ if [ $MACHINE = 'LT' ]; then
 fi
 alias dcr="pkill dunst; dunst $Conf &; disown dunst"
 
-alias dots='z ~/Git/Dotfiles/source'
+alias dots='z ~/Git/Dotfiles/'
 alias e='exa'
 alias e1='exa -1'
 alias el='exa -la'
@@ -36,9 +36,10 @@ else
 fi
 alias scr="pkill sxhkd; sxhkd $Conf &; disown sxhkd"
 
-alias scripts='z ~/Git/Scripts/source'
+alias scripts='z ~/Git/Scripts/'
 alias um='udisksctl mount -b /dev/sdd1'   # not particularly smart
 alias uu='udisksctl unmount -b /dev/sdd1' # not particularly smart either
 alias v='nvim'
 alias va='nvim ~/.aliases && source ~/.aliases'
+alias zath='zathura --fork'
 
