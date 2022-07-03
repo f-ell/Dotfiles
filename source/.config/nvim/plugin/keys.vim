@@ -5,7 +5,7 @@
 let mapleader = " "
 
 " qol
-nnoremap <Esc> :w<Enter>
+nnoremap -- :w<Enter>
 nnoremap <C-l> :noh<Enter>
 nnoremap <S-h> :call ToggleHiddenAll()<Return>
 " markdown code-block mappings

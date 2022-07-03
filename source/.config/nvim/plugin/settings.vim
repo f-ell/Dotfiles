@@ -13,7 +13,11 @@ set wildmenu
 set number relativenumber numberwidth=4
 set tabstop=2 expandtab
 set scrolloff=1
+set mouse=a
+set confirm
 set clipboard=unnamed
+set timeoutlen=500 ttimeoutlen=0
+set undofile undodir=~/.config/nvim/undo
 
 syntax on
 filetype plugin indent on
