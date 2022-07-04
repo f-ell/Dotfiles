@@ -29,6 +29,7 @@ source $HOME/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 export VISUAL='nvim'
 export EDITOR=$VISUAL
 export PATH='/usr/bin:/usr/local/bin:/usr/local/sbin:/opt:/home/nico/.local/bin:/home/nico/Scripts'
+export XDG_DESKTOP_DIR=$HOME
 export FZF_DEFAULT_COMMAND="fd -E .cache -E .cargo -E .local -E .git -E .vscode -E Games -tf -H -d10 ."
 export FZF_DEFAULT_OPTS='-i --tiebreak=begin,length --scroll-off=1 --reverse --prompt="$ " --height=25% --color=bw'
 _ZO_FZF_OPTS="$FZF_DEFAULT_OPTS"
@@ -49,30 +50,34 @@ bindkey '^ ' autosuggest-accept
 # Prompt
 Prompt() {
   X=$1
+  C=$2
   (( $X == 0 )) && unset X
 
   PS1=$'%{\e[1;38;5;255m%}%~ %{\e[0m%}\n'
 
-  if [[ -n $X ]]; then
+  if [[ -n "$X" ]]; then
     (( $X == 130 )) && X=INT
     PS1=$PS1$'%{\e[0;38;5;160m%}%B$X%b%{\e[0m%} '
   fi
 
-  Branch=$(git branch --show-current 2>/dev/null)
-  if [[ -n "$Branch" ]]; then
-    PS1=$PS1$'%{\e[0;38;5;214m%}$Branch%{\e[0m%} '
+  B=$(git branch --show-current 2>/dev/null)
+  if [[ -n "$B" ]]; then
+    PS1=$PS1$'%{\e[0;38;5;214m%}$B%{\e[0m%} '
   fi
 
-  PS1=$PS1$'%{\e[0;38;5;248m%}$%{\e[0m%} '
+  PS1=$PS1$'%{\e[0;38;5;248m%}$C%{\e[0m%} '
 }
+
 precmd() {
-  Prompt $?;
+  LAST_EXIT=$?
+  Prompt $LAST_EXIT '$' 
 }
-# zle-keymap-select() {
-  # # echo -ne $KEYMAP
-  # [[ $KEYMAP == main ]] && PS1=${PS1/:/$}
-  # [[ $KEYMAP == vicmd ]] && PS1=${PS1/$/:}
-# }; zle -N zle-keymap-select
+
+zle-keymap-select() {
+  [[ $KEYMAP == main ]]   && Prompt $LAST_EXIT '$' 
+  [[ $KEYMAP == vicmd ]]  && Prompt $LAST_EXIT ':' 
+  zle reset-prompt
+}; zle -N zle-keymap-select
 
 
 # Colours
