@@ -1,5 +1,11 @@
-Ping() {
-  ping -c1 "${1:-archlinux.org}"
+Ping=$(command -v ping)
+ping() {
+  $Ping -c1 ${1:-archlinux.org}
+}
+owns() {
+  Program=$(command -v $1)
+  [[ -n "$Program" ]] && pacman -Qo $Program \
+    || printf "Error: no command specified!\n"
 }
 
 alias -- -='z -'
@@ -26,7 +32,6 @@ fi
 alias orphan-remove='doas pacman -Qtdq | doas pacman -Rns -'
 alias pquery='pacman -Q | rg $1 2>/dev/null'
 alias pcount='pacman -Q | wc -l'
-alias ping=Ping
 
 Conf='~/.config/sxhkd/sxhkdrc.'
 if [ $MACHINE = 'DT' ]; then
