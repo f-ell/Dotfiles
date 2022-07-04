@@ -7,31 +7,33 @@ let mapleader = " "
 " qol
 nnoremap -- :w<Enter>
 nnoremap <C-l> :noh<Enter>
-nnoremap <S-h> :call ToggleHiddenAll()<Return>
+nnoremap <S-h> :call ToggleHiddenAll()<Enter>
 " markdown code-block mappings
 nnoremap <leader>" a``<Esc>
-nnoremap <leader>' o```<Return>```<Esc>kA
+nnoremap <leader>' o```<Enter>```<Esc>kA
 
 " fuzzy search
 nnoremap         <A-f> :FZF ~<Enter>
 nnoremap <leader><A-f> :FZF .
 
-" new panes
-nnoremap         <C-n> :vsp ~/.config/nvim/newpane<Enter>:FZF ~<Enter>
-nnoremap <leader><C-n>  :sp ~/.config/nvim/newpane<Enter>:FZF ~<Enter>
-
-" resize panes
-nnoremap <C-j> <C-w>4<
-nnoremap <C-k> <C-w>4>
-nnoremap <leader>h <C-w>\|
-nnoremap <leader>l <C-w>_
-nnoremap <leader>n <C-w>=
+" create panes
+nnoremap         <A-Enter> :vsp ~/.config/nvim/newpane<Enter>:FZF ~<Enter>
+nnoremap <leader><A-Enter>  :sp ~/.config/nvim/newpane<Enter>:FZF ~<Enter>
 
 " change panes
 nnoremap <A-h> <C-w>h
 nnoremap <A-j> <C-w>j
 nnoremap <A-k> <C-w>k
 nnoremap <A-l> <C-w>l
+
+" resize panes
+nnoremap <C-h> :4winc <<Enter>
+nnoremap <C-j> :4winc +<Enter>
+nnoremap <C-k> :4winc -<Enter>
+nnoremap <C-l> :4winc ><Enter>
+
+nnoremap <A-.> <C-w>\|
+nnoremap <A--> <C-w>_
 
 " plugin maps
 map <S-m> <plug>NERDCommenterToggle

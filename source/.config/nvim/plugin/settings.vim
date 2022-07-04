@@ -6,6 +6,7 @@ set spell spelllang=de_de,en_us,en_gb
 set ruler cursorline
 set nowrap textwidth=80 " colorcolumn=+1
 set splitbelow splitright
+set laststatus=3
 
 set nobackup nowritebackup noswapfile
 set autochdir autoread autowrite " autoindent
@@ -25,3 +26,9 @@ filetype plugin indent on
 set hlsearch incsearch ignorecase
 
 set list listchars=eol:¬,tab:>\ ,trail:~ " ,space:␣
+
+augroup BgHighlight
+	autocmd!
+	autocmd WinEnter * set cul 		" number relativenumber
+	autocmd WinLeave * set nocul 	" nonumber norelativenumber
+augroup END

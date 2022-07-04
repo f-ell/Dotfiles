@@ -69,7 +69,7 @@ function! ToggleHiddenAll()
     set noshowcmd
   else
     let s:hidden_all = 0
-    set laststatus=2
+    set laststatus=3
     set showcmd
   endif
 endfunction
