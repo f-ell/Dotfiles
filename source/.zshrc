@@ -20,16 +20,18 @@ SAVEHIST=5000; HISTSIZE=$(($SAVEHIST + 100)); HISTFILE=$HOME/.zsh_history
 
 eval "$(zoxide init zsh)"
 export MACHINE=`< $HOME/Git/machine`
+
+export VISUAL='nvim'
+export EDITOR=$VISUAL
+
 source $HOME/.aliases
 source $HOME/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
   ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=20
   ZSH_AUTOSUGGEST_MANUAL_REBIND=True
 source $HOME/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
-export VISUAL='nvim'
-export EDITOR=$VISUAL
 export PATH='/usr/bin:/usr/local/bin:/usr/local/sbin:/opt:/home/nico/.local/bin:/home/nico/Scripts'
-export XDG_DESKTOP_DIR=$HOME
+export XDG_DESKTOP_DIR=$HOME/
 export FZF_DEFAULT_COMMAND="fd -E .cache -E .cargo -E .local -E .git -E .vscode -E Games -tf -H -d10 ."
 export FZF_DEFAULT_OPTS='-i --tiebreak=begin,length --scroll-off=1 --reverse --prompt="$ " --height=25% --color=bw'
 _ZO_FZF_OPTS="$FZF_DEFAULT_OPTS"
