@@ -17,8 +17,8 @@ nnoremap         <A-f> :FZF ~<Enter>
 nnoremap <leader><A-f> :FZF .
 
 " create panes
-nnoremap         <A-Enter> :vsp ~/.config/nvim/newpane<Enter>:FZF ~<Enter>
-nnoremap <leader><A-Enter>  :sp ~/.config/nvim/newpane<Enter>:FZF ~<Enter>
+nnoremap         <A-Enter> :vnew<Enter>:FZF ~<Enter>
+nnoremap <leader><A-Enter>  :new<Enter>:FZF ~<Enter>
 
 " change panes
 nnoremap <A-h> <C-w>h
@@ -27,10 +27,10 @@ nnoremap <A-k> <C-w>k
 nnoremap <A-l> <C-w>l
 
 " resize panes
-nnoremap <C-h> :4winc <<Enter>
-nnoremap <C-j> :4winc +<Enter>
-nnoremap <C-k> :4winc -<Enter>
-nnoremap <C-l> :4winc ><Enter>
+" nnoremap <C-h> :4winc <<Enter>
+" nnoremap <C-j> :4winc +<Enter>
+" nnoremap <C-k> :4winc -<Enter>
+" nnoremap <C-l> :4winc ><Enter>
 
 nnoremap <A-.> <C-w>\|
 nnoremap <A--> <C-w>_
