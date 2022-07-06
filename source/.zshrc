@@ -30,7 +30,11 @@ source $HOME/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
   ZSH_AUTOSUGGEST_MANUAL_REBIND=True
 source $HOME/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
-export PATH='/usr/bin:/usr/local/bin:/usr/local/sbin:/opt:/home/nico/.local/bin:/home/nico/Scripts'
+Usr='/usr/bin:/usr/local/bin:/usr/local/sbin'
+Perl='/usr/bin/core_perl:/usr/bin/site_perl:/usr/bin/vendor_perl'
+Other='/opt:/home/nico/.local/bin:/home/nico/Scripts'
+export PATH=$Usr':'$Perl':'$Other
+unset Usr Perl Other
 export XDG_DESKTOP_DIR=$HOME/
 export FZF_DEFAULT_COMMAND="fd -E .cache -E .cargo -E .local -E .git -E .vscode -E Games -tf -H -d10 ."
 export FZF_DEFAULT_OPTS='-i --tiebreak=begin,length --scroll-off=1 --reverse --prompt="$ " --height=25% --color=bw'
@@ -135,3 +139,5 @@ export LESSHISTFILE=-
 
 # Run fetch ONLY when X-Server is running, not on TTY
 # [[ $(xset q 2>/dev/null) ]] && starfetch
+[[ $(xset q 2>/dev/null) ]] \
+  && printf "In his strong hand the man held a Rose. And his aura burned bright.\n"
