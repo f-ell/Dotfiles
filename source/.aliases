@@ -16,11 +16,11 @@ alias dots='z ~/Git/Dotfiles/'
 alias e='exa'
 alias e1='exa -1'
 alias el='exa -la'
+alias gff='nff ~/Git'
 alias hist='tail -10 <(history)'
 alias hml='himalaya'
 alias less='less -cmNS'
 alias lock='slock &'
-alias yeet='doas pacman -Qtdq | doas pacman -Rns -'
 alias pquery='pacman -Q | rg $1 2>/dev/null'
 alias pcount='pacman -Q | wc -l'
 alias scripts='z ~/Git/Scripts/'
@@ -28,6 +28,7 @@ alias um='udisksctl mount -b /dev/sdd1'   # not particularly smart
 alias uu='udisksctl unmount -b /dev/sdd1' # not particularly smart either
 alias v=$EDITOR
 alias va=$EDITOR' ~/.aliases && source ~/.aliases'
+alias yeet='doas pacman -Qtdq | doas pacman -Rns -'
 alias zath='zathura --fork'
 
 
