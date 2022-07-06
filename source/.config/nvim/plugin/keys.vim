@@ -13,12 +13,12 @@ nnoremap <leader>" a``<Esc>
 nnoremap <leader>' o```<Enter>```<Esc>kA
 
 " fuzzy search
-nnoremap         <A-f> :FZF ~<Enter>
+nnoremap         <A-f> :FZF -i --reverse --scroll-off=1 --no-info --no-color --prompt= ~<Enter>
 nnoremap <leader><A-f> :FZF .
 
 " create panes
-nnoremap         <A-Enter> :vnew<Enter>:FZF ~<Enter>
-nnoremap <leader><A-Enter>  :new<Enter>:FZF ~<Enter>
+nnoremap         <A-Enter> :vnew<Enter>:FZF -i --reverse --scroll-off=1 --no-info --no-color --prompt= ~<Enter>
+nnoremap <leader><A-Enter>  :new<Enter>:FZF -i --reverse --scroll-off=1 --no-info --no-color --prompt= ~<Enter>
 
 " change panes
 nnoremap <A-h> <C-w>h
