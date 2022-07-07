@@ -27,8 +27,10 @@ mode_switch + t
   dunstify -u low -h string:x-dunst-stack-tag:time \
   "$(date +%a.\ %d.%m.%Y\ %I:%M\ %p)"
 mode_switch + u
-  dunstify -u low -h string:x-dunst-stack-tag:util \
-  "$(~/Git/Scripts/source/perl/system_monitors/sysload_dirty)"
+  dunstify -u low -h string:x-dunst-stack-tag:load \
+  "Calculating..." && \
+  dunstify -u low -h string:x-dunst-stack-tag:load \
+  "$(~/Git/Scripts/source/perl/system_monitors/sysload)"
 
 
 
