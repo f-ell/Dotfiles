@@ -30,15 +30,16 @@ source $HOME/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
   ZSH_AUTOSUGGEST_MANUAL_REBIND=True
 source $HOME/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
-Usr='/usr/bin:/usr/local/bin:/usr/local/sbin'
+Bin='/usr/bin:/usr/local/bin:/usr/local/sbin:'$HOME'/.local/bin'
 Perl='/usr/bin/core_perl:/usr/bin/site_perl:/usr/bin/vendor_perl'
-Other='/opt:/home/nico/.local/bin:/home/nico/Scripts'
-export PATH=$Usr':'$Perl':'$Other
-unset Usr Perl Other
-export XDG_DESKTOP_DIR=$HOME/
+Other='/opt:'$HOME'/Scripts'
+export PATH=$Bin':'$Perl':'$Other
+unset Bin Perl Other
 export FZF_DEFAULT_COMMAND="fd -E .cache -E .cargo -E .local -E .git -E .vscode -E Games -tf -H -d10 ."
 export FZF_DEFAULT_OPTS='-i --tiebreak=begin,length --scroll-off=1 --reverse --prompt="$ " --height=25% --color=bw'
 _ZO_FZF_OPTS="$FZF_DEFAULT_OPTS"
+
+export XDG_DESKTOP_DIR=$HOME/
 # needed because Firefox acts up when being killed by bspwm :)
 export MOZ_CRASHREPORTER_DISABLE=1
 
@@ -138,6 +139,6 @@ export LESS_TERMCAP_us=$'\e[1;4;32m'
 export LESSHISTFILE=-
 
 # Run fetch ONLY when X-Server is running, not on TTY
-# [[ $(xset q 2>/dev/null) ]] && starfetch
 [[ $(xset q 2>/dev/null) ]] \
-  && printf "In his strong hand the man held a Rose. And his aura burned bright.\n"
+  && printf "In his strong hand the man held a Rose.\n      And his aura burned bright.      \n"
+  # && starfetch
