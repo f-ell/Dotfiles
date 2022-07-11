@@ -6,7 +6,7 @@ Name=$1
 case $Name in
   sFiles) Program="ranger $HOME"; break;;
   sMusic) Program="$HOME/.cargo/bin/spotify_player"; break;;
-  sCalc)  Program='bc -q'; break;;
+  sCalc)  Program='bc -ql'; break;;
   *)      exit 1;;
 esac
 
