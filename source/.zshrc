@@ -56,18 +56,17 @@ bindkey '^ ' autosuggest-accept
 
 # Prompt
 Prompt() {
-  X=$1
+  X=$1; (( $X == 0 )) && unset X
   C=$2
-  (( $X == 0 )) && unset X
 
   PS1=$'%{\e[1;38;5;255m%}%~ %{\e[0m%}\n'
 
   if [[ -n "$X" ]]; then
-    (( $X == 130 )) && X=INT
+    (( $X == 130 )) && X='INT'
     PS1=$PS1$'%{\e[0;38;5;160m%}%B$X%b%{\e[0m%} '
   fi
 
-  B=$(git branch --show-current 2>/dev/null)
+  B=`git branch --show-current 2>/dev/null`
   if [[ -n "$B" ]]; then
     PS1=$PS1$'%{\e[0;38;5;214m%}$B%{\e[0m%} '
   fi
@@ -81,8 +80,8 @@ precmd() {
 }
 
 zle-keymap-select() {
-  [[ $KEYMAP == main ]]   && Prompt $LAST_EXIT '$' 
-  [[ $KEYMAP == vicmd ]]  && Prompt $LAST_EXIT ':' 
+  [[ $KEYMAP == 'main' ]]   && Prompt $LAST_EXIT '$' 
+  [[ $KEYMAP == 'vicmd' ]]  && Prompt $LAST_EXIT ':' 
   zle reset-prompt
 }; zle -N zle-keymap-select
 
