@@ -1,0 +1,5 @@
+# [MODIFIER + ]*[@|!]KEYSYM
+#   COMMAND
+
+super + w
+  wormc close-active-client
