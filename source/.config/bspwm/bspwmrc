@@ -28,35 +28,29 @@ bspc config left_padding    0
 # focused_border_color  active window; focused monitor
 # presel_feedback_color preselect preview
 
+Theme='sakura'
 if [ $MACHINE = 'DT' ]; then
-  # cthulu
-  #   bspc config focused_border_color  '#6090a0'
-  #   bspc config active_border_color   '#205060'
-  #   bspc config normal_border_color   '#205060'
-  #   bspc config presel_feedback_color '#104050'
-  # sakura
-  #   bspc config focused_border_color  '#703040'
-  #   bspc config active_border_color   '#242424'
-  #   bspc config normal_border_color   '#242424'
-  #   bspc config presel_feedback_color '#181818'
-  # flower
-  #   bspc config focused_border_color  '#ffbf21'
-  #   bspc config active_border_color   '#3a7271'
-  #   bspc config normal_border_color   '#3a7271'
-  #   bspc config presel_feedback_color '#3a7271'
-  # aenami
-  #   bspc config focused_border_color  '#fa486a'
-  #   bspc config active_border_color   '#20323e'
-  #   bspc config normal_border_color   '#20323e'
-  #   bspc config presel_feedback_color '#fa486a'
-  # saturn
+  if [ $Theme = 'cthulu' ]; then
+    bspc config focused_border_color  '#6090a0'
+    bspc config active_border_color   '#205060'
+    bspc config normal_border_color   '#205060'
+    bspc config presel_feedback_color '#104050'
+
+  elif [ $Theme = 'sakura' ]; then
+    bspc config focused_border_color  '#2d3740'
+    bspc config active_border_color   '#08171e'
+    bspc config normal_border_color   '#08171e'
+    bspc config presel_feedback_color '#0d1720'
+    Wallpaper=~/Pictures/Wallpapers/nature/white_sakura.jpg
+
+  elif [ $Theme = 'saturn' ]; then
     bspc config focused_border_color  '#ffffff'
     bspc config active_border_color   '#212121'
     bspc config normal_border_color   '#212121'
     bspc config presel_feedback_color '#fafafa'
-  Wallpaper=~/Pictures/Wallpapers/monochrome/saturn.png
+    Wallpaper=~/Pictures/Wallpapers/monochrome/saturn.png
+  fi
 else
-  # cubes
     bspc config normal_border_color   '#303030'
     bspc config focused_border_color  '#e8e8e8'
     bspc config presel_feedback_color '#e8e8e8'
@@ -82,12 +76,12 @@ bspc rule -a *:*:Picture-in-Picture               state=floating
 # AUTOSTART
 if [ $MACHINE = 'DT' ]; then
   dunst &
-  pgrep sxhkd || sxhkd ~/.config/sxhkd/sxhkdrc.dt &
+  pgrep sxhkd || sxhkd ~/.config/sxhkd/sxhkdrc.dt ~/.config/bspwm/sxhkdrc.bspwm &
   pgrep conky || { conky -c ~/.config/conky/conky.conf; \
       conky -c ~/.config/conky/clock.conf; bspc monitor -f primary; } &
 else
   dunst -conf ~/.config/dunst/dunstrc.lt &
-  pgrep sxhkd || sxhkd ~/.config/sxhkd/sxhkdrc.lt &
+  pgrep sxhkd || sxhkd ~/.config/sxhkd/sxhkdrc.lt ~/.config/bspwm/sxhkdrc.bspwm &
 fi
 picom --experimental-backends --unredir-if-possible &
 feh --no-fehbg --bg-fill $Wallpaper &
@@ -99,7 +93,7 @@ bspc rule -a *:*:sCalc  hidden=on sticky=on locked=on state=floating rectangle=3
 
 # FLOAT windows on desktop '^4'
 TargetDeskId=$(bspc query -D -d '^4')
-bspc subscribe node_add | while read NodeInfo; do
+bspc subscribe -c 1 node_add | while read NodeInfo; do
   DeskId=${NodeInfo#node_add 0x* }
   DeskId=${DeskId%% *}
   NodeId=${NodeInfo##* }
@@ -109,6 +103,6 @@ done
 if [ $MACHINE = 'DT' ]; then
   sleep 2
   noisetorch -i \
-    -s alsa_input.usb-Generic_Blue_Microphones_201701110001-00.analog-stereo \
+    -s 'alsa_input.usb-Generic_Blue_Microphones_201701110001-00.analog-stereo' \
     -t 95 &
 fi

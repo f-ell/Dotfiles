@@ -29,9 +29,12 @@ foreground  = "#e0e0e0"
 timeout     = 4s
 # background  = "#303030"
 # frame_color = "#282828"
-foreground  = "#303030"
-background  = "#f4f4f4"
-frame_color = "#d4d4d4"
+# foreground  = "#303030"
+# background  = "#f4f4f4"
+# frame_color = "#d4d4d4"
+foreground  = "#08171e"
+background  = "#e7e2df"
+frame_color = "#e5e0dd"
 
 [urgency_normal]
 timeout     = 3s
