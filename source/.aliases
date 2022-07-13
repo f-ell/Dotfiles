@@ -33,7 +33,7 @@ alias yeet='doas pacman -Qtdq | doas pacman -Rns -'
 alias zath='zathura --fork'
 
 
-Sconf='~/.config/sxhkd/sxhkdrc.'
+Sconf='~/.config/bspwm/sxhkdrc.bspwm ~/.config/sxhkd/sxhkdrc.'
 if [ $MACHINE = 'DT' ]; then
   Sconf="${Sconf}dt"
   Dconf=''
