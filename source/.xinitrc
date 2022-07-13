@@ -16,4 +16,5 @@ xset r rate 220 65 &
 polkit-dumb-agent &
 
 exec bspwm
+# exec worm
 # exec qtile start
