@@ -91,18 +91,20 @@ bspc rule -a *:*:sFiles hidden=on sticky=on locked=on state=floating rectangle=1
 bspc rule -a *:*:sMusic hidden=on sticky=on locked=on state=floating rectangle=1280x720+320+180
 bspc rule -a *:*:sCalc  hidden=on sticky=on locked=on state=floating rectangle=300x400+50+50
 
-# FLOAT windows on desktop '^4'
+# FLOAT windows on desktop '^4' and force Steam games to desktop '^4'
 TargetDeskId=$(bspc query -D -d '^4')
-bspc subscribe -c 1 node_add | while read NodeInfo; do
+bspc subscribe node_add | while read NodeInfo; do
   DeskId=${NodeInfo#node_add 0x* }
   DeskId=${DeskId%% *}
   NodeId=${NodeInfo##* }
+
+  [ `xprop -id $NodeId` ] && bspc node $NodeId -d '^4'
   [ $TargetDeskId = $DeskId ] && bspc node $NodeId -t floating
 done
 
-if [ $MACHINE = 'DT' ]; then
-  sleep 2
-  noisetorch -i \
-    -s 'alsa_input.usb-Generic_Blue_Microphones_201701110001-00.analog-stereo' \
-    -t 95 &
-fi
+# if [ $MACHINE = 'DT' ]; then
+  # sleep 2
+  # noisetorch -i \
+    # -s 'alsa_input.usb-Generic_Blue_Microphones_201701110001-00.analog-stereo' \
+    # -t 95 &
+# fi
