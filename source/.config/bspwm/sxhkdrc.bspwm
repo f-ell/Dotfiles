@@ -2,7 +2,7 @@
 #   COMMAND
 
 # kill window / restart bspwm + quit X
-super + w
+super + shift + w
   bspc node focused -c
 
 super + control + {r,q}

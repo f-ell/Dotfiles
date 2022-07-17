@@ -20,15 +20,19 @@ super + o; {b,c,d,g,s}
   ~/Scripts/lof {qutebrowser,code,discord,gimp,steamwrap}
 
 # notifications
+mode_switch + i
+  dunstify -u low -h string:x-dunst-stack-tag:inet \
+  "`~/Git/Scripts/source/perl/curlstat`"
+
 mode_switch + k
   dunstctl close
 
 mode_switch + t
   dunstify -u low -h string:x-dunst-stack-tag:time \
-  "$(date +%a.\ %d.%m.%Y\ %I:%M\ %p)"
+  "`date +%a.\ %d.%m.%Y\ %I:%M\ %p`"
 
 mode_switch + u
   dunstify -u low -h string:x-dunst-stack-tag:load \
   "Calculating..." && \
   dunstify -u low -h string:x-dunst-stack-tag:load \
-  "$(~/Git/Scripts/source/perl/system_monitors/sysload)"
+  "`~/Git/Scripts/source/perl/system_monitors/sysload`"
