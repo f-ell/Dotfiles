@@ -7,10 +7,17 @@ let mapleader = " "
 " qol
 nnoremap -- :w<Enter>
 nnoremap <C-l> :noh<Enter>
+nnoremap <leader>ciw viw~
 nnoremap <S-h> :call ToggleHiddenAll()<Enter>
+
 " markdown code-block mappings
 nnoremap <leader>" a``<Esc>
 nnoremap <leader>' o```<Enter>```<Esc>kA
+
+" html / css / js mappings
+nnoremap <leader>br oborder: 1px solid red;<Esc>o<Esc>
+nnoremap <leader>bg oborder: 1px solid green;<Esc>o<Esc>
+nnoremap <leader>bb oborder: 1px solid blue;<Esc>o<Esc>
 
 " fuzzy search
 nnoremap         <A-f> :FZF -i --reverse --scroll-off=1 --no-info --no-color --prompt= ~<Enter>
