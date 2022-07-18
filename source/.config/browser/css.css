@@ -33,7 +33,7 @@ a {
   width: 78%;
   margin: 0 auto;
   min-width: 602px;
-  max-width: 900px;
+  max-width: 702px;
   height: calc(100vh - 40px);
   min-height: 560px;
 }
