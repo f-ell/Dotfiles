@@ -18,7 +18,7 @@ set -o autocd -o extendedglob -o histexpiredupsfirst -o histignoredups\
 
 SAVEHIST=5000; HISTSIZE=$(($SAVEHIST + 100)); HISTFILE=$HOME/.zsh_history
 
-eval "$(zoxide init zsh)"
+eval "`zoxide init zsh`"
 export MACHINE=`< $HOME/Git/machine`
 
 export VISUAL='nvim'
@@ -47,8 +47,10 @@ export MOZ_CRASHREPORTER_DISABLE=1
 # Binds
 autoload edit-command-line; zle -N edit-command-line
 bindkey '^Xe' edit-command-line
+bindkey -v '^?' backward-delete-char
 bindkey -v '^Y' yank
-bindkey -v '^U' kill-whole-line
+bindkey -v '^K' kill-line
+bindkey -v '^U' backward-kill-line
 bindkey '^[[1;5C' forward-word
 bindkey '^[[1;5D' backward-word
 bindkey '^ ' autosuggest-accept
@@ -138,6 +140,5 @@ export LESS_TERMCAP_us=$'\e[1;4;32m'
 export LESSHISTFILE=-
 
 # Run fetch ONLY when X-Server is running, not on TTY
-[[ $(xset q 2>/dev/null) ]] \
+[[ `xset q 2>/dev/null` ]] \
   && printf "In his strong hand the man held a Rose.\n      And his aura burned bright.      \n"
-  # && starfetch
