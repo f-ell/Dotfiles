@@ -7,12 +7,12 @@ c.input.insert_mode.auto_leave = True
 
 c.fonts.default_size          = '10pt'
 c.fonts.default_family        = 'Azeret Mono'
-#  c.fonts.web.family.standard   = 'Azeret Mono'
-#  c.fonts.web.family.cursive    = 'Azeret Mono'
-#  c.fonts.web.family.fixed      = 'Azeret Mono'
-#  c.fonts.web.family.fantasy    = 'Azeret Mono'
-#  c.fonts.web.family.serif      = 'Azeret Mono'
-#  c.fonts.web.family.sans_serif = 'Azeret Mono'
+c.fonts.web.family.standard   = 'Azeret Mono'
+c.fonts.web.family.cursive    = 'Azeret Mono'
+c.fonts.web.family.fixed      = 'Azeret Mono'
+c.fonts.web.family.fantasy    = 'Azeret Mono'
+c.fonts.web.family.serif      = 'Azeret Mono'
+c.fonts.web.family.sans_serif = 'Azeret Mono'
 c.messages.timeout          = 3000
 c.editor.command            = ['nvim', '{file}']
 #  c.colors.webpage.darkmode.enabled       = True
@@ -21,8 +21,8 @@ c.colors.webpage.bg                     = '#374247'
 
 c.window.title_format = 'qutebrowser'
 c.window.transparent  = True
-c.url.start_pages     = '/home/nico/.config/qutebrowser/index.html'
-c.url.default_page    = '/home/nico/.config/qutebrowser/index.html'
+c.url.start_pages     = '/home/nico/.config/browser/index.html'
+c.url.default_page    = '/home/nico/.config/browser/index.html'
 c.zoom.levels         = ['25%', '50%', '75%', '100%', '125%', '150%', '175%', '200%', '300%']
 
 c.prompt.radius     = 6
