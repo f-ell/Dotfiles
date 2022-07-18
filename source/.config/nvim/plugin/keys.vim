@@ -7,7 +7,7 @@ let mapleader = " "
 " qol
 nnoremap -- :w<Enter>
 nnoremap <C-l> :noh<Enter>
-nnoremap <leader>ciw viw~
+nnoremap <leader>~ viw~
 nnoremap <S-h> :call ToggleHiddenAll()<Enter>
 
 " markdown code-block mappings
@@ -43,7 +43,9 @@ nnoremap <A-.> <C-w>\|
 nnoremap <A--> <C-w>_
 
 " plugin maps
-map <S-m> <plug>NERDCommenterToggle
+nmap ; gcc
+nmap <leader>; gc
+
 imap <A-e> <C-y>,<Esc>
 nmap <A-e> <C-y>,<Esc>
 

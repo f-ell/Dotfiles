@@ -23,9 +23,7 @@ call plug#begin('~/.config/nvim/vim-plug/plugged')
   Plug 'ap/vim-css-color'
   Plug 'mattn/emmet-vim'
   Plug 'tpope/vim-surround'
-  Plug 'preservim/nerdcommenter'
-    let g:NERDSpaceDelims            = 1
-    let g:NERDTrimTrailingWhitespace = 1
+  Plug 'terrortylor/nvim-comment'
 
   Plug 'preservim/vim-markdown'
     let g:vim_markdown_no_default_keymappings     = 1
@@ -55,15 +53,23 @@ call plug#begin('~/.config/nvim/vim-plug/plugged')
 call plug#end()
 
 
-" lsp
+" lsp and other initialization
+
 " vim.keymap.set('n', '<leader>vr', vim.lsp.buf.rename, {buffer = 0})
-lua require('lspconfig').perlpls.setup{
-  \ on_attach = function()
-  \   vim.keymap.set('n', 'K', vim.lsp.buf.hover, {buffer = 0})
-  \   vim.keymap.set('n', '<leader>dj', vim.diagnostic.goto_next, {buffer = 0})
-  \   vim.keymap.set('n', '<leader>dk', vim.diagnostic.goto_prev, {buffer = 0})
-  \ end,
-  \ }
+lua <<EOF
+require('lspconfig').perlpls.setup{
+  on_attach = function()
+    vim.keymap.set('n', 'K', vim.lsp.buf.hover, {buffer = 0})
+    vim.keymap.set('n', '<leader>dj', vim.diagnostic.goto_next, {buffer = 0})
+    vim.keymap.set('n', '<leader>dk', vim.diagnostic.goto_prev, {buffer = 0})
+  end,
+  }
+require('nvim_comment').setup({
+--   line_mapping = "<leader>cc",
+--   operator_mapping = "<leader>c",
+--   comment_chunk_text_object = "ic",
+})
+EOF
 
 
 " other
