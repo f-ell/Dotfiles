@@ -18,7 +18,7 @@ window:
   padding:
     x: 6
     y: 4
-  opacity: 0.93
+  opacity: 0.97
   decorations: none
 
 cursor:
@@ -60,12 +60,10 @@ colors:
     text:   CellBackground
     cursor: CellForeground
   primary:
-    # background: '#20323e' # aenami
     # background: '#102b34' # cthulu
-    # background: '#423a49' # dreaming
-    # background: '#3c4746' # everforest
+    # background: '#323d43' # everforest
     background: '#08171e' # sakura
     # background: '#1d1d1d'
-    foreground: '#e0e0e0'
+    foreground: '#e3d6ba'
 
 live_config_reload: true
