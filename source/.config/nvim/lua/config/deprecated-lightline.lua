@@ -1,0 +1,28 @@
+-- vim.cmd([[
+-- let g:lightline = {
+--       \ 'mode_map': {
+--       \   'n' : 'N',
+--       \   'i' : 'I',
+--       \   'R' : 'R',
+--       \   'v' : 'V',
+--       \   'V' : 'VL',
+--       \   "\<C-v>" : 'VB',
+--       \   'c' : 'C'
+--       \ },
+--       \ 'colorscheme': 'serenade',
+--       \ 'active': {
+--       \   'left': [ ['icon'],
+--       \     ['mode', 'paste'],
+--       \     ['filename', 'readonly'],
+--       \   ],
+--       \   'right': [ ['lineinfo'],
+--       \     ['filetype'],
+--       \   ],
+--       \ },
+--       \ 'component': {
+--       \   'icon': '',
+--       \   'micon': '',
+--       \   'lineinfo': '%3l:%-2v%<'
+--       \ },
+--       \ }
+-- ]])
