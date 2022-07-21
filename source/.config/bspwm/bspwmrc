@@ -98,7 +98,7 @@ bspc subscribe node_add | while read NodeInfo; do
   DeskId=${DeskId%% *}
   NodeId=${NodeInfo##* }
 
-  [ `xprop -id $NodeId` ] && bspc node $NodeId -d '^4'
+  [ `xprop -id $NodeId | grep 'STEAM_GAME(CARDINAL)'` ] && bspc node $NodeId -d '^4'
   [ $TargetDeskId = $DeskId ] && bspc node $NodeId -t floating
 done
 
