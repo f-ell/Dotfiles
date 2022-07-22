@@ -1,8 +1,9 @@
-if not pcall(require, 'lspconfig')
-  or not pcall(require, 'nvim-lsp-installer') then
+local ok1, lspconfig  = pcall(require, 'lspconfig')
+local ok2, lspinstall = pcall(require, 'nvim-lsp-installer')
+if not ok1 then
     return
 end
 
-require('nvim-lsp-installer').setup()
+lspinstall.setup()
 require('lsp.setup')
 require('lsp.functions').setup()

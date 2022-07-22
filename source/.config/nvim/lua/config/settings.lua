@@ -50,16 +50,3 @@ F.setmV('autochdir', 'autoread', 'autowrite')
 
 -- Search behaviour
 F.setmV('hlsearch', 'incsearch', 'ignorecase')
-
-
--- Disable builtin plugins
-F.vimg('loaded_gzip', '0')
-F.vimg('loaded_zipPlugin', '0')
-F.vimg('loaded_tar', '0')
-F.vimg('loaded_tarPlugin', '0')
-F.vimg('loaded_2html_plugin', '0')
-F.vimg('loaded_netrw', '0')
-F.vimg('loaded_netrwPlugin', '0')
-F.vimg('loaded_matchit', '0')
-F.vimg('loaded_matchparen', '0')
-F.vimg('loaded_spec', '0')
