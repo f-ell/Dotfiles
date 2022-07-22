@@ -97,7 +97,7 @@ set_colours(){
   C="${F}42"      PIC="*.gif=${C}:*.jpg=${C}:*.png=${C}:*.svg=${C}:*.webp=${C}"
   C="${F}63"      VID="*.mov=${C}:*.mp4=${C}"
   C="${F}182"     FILE="*.css=${C}:*.docx=${C}:*.html=${C}:*.md=${C}:*.odf=${C}:*.odt=${C}:*.pdf=${C}:*.sty=${C}:*.tex=${C}:*.txt=${C}:*.yml=${C}"
-  C="${F}204"     CODE="*.class=${C}:*.java=${C}:*.js=${C}:*.json=${C}:*.pl=${C}:*.py=${C}:*.sh=${C}:*.ts=${C}"
+  C="${F}204"     CODE="*.class=${C}:*.java=${C}:*.js=${C}:*.json=${C}:*.lua=${C}:*.pl=${C}:*.py=${C}:*.sh=${C}:*.ts=${C}"
   C="${F}225;01"  ARCH="*.7z=${C}:*.bz2=${C}:*.gz=${C}:*.jar=${C}:*.rar=${C}:*.tar=${C}:*.xz=${C}:*.zip=${C}"
   C="${F}42"      R="ur=${C}:ue=${C}:gr=${C}:tr=${C}"
                   W="uw=${C}:gw=${C}:tw=${C}"
