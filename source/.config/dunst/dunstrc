@@ -31,9 +31,9 @@ timeout     = 4s
 # background  = "#e7e2df"
 # frame_color = "#e5e0dd"
 
-foreground  = "#0c1b22"
-background  = "#d8d8d8"
-frame_color = "#d0d0d0"
+foreground  = "#b8c7ce"
+background  = "#202d35"
+frame_color = "#101d25"
 
 [urgency_normal]
 timeout     = 3s

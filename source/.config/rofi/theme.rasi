@@ -14,16 +14,26 @@
     padding:          2px;
     spacing:          2px;
 
-    scr-fg:  #d8d8d8;
-    nor-fg:  #787878;
-    nor-bg:  #f8f8f8;
-    alt-fg:  #787878;
-    alt-bg:  #f8f8f8;
-    sel-fg:  #f0f0f0;
-    sel-bg:  #484848;
-    win-fg:  #585858;
-    win-bg:  #f0f0f0;
-    outline: #e0e0e0;
+    /* scr-fg:  #d8d8d8; */
+    /* nor-fg:  #787878; */
+    /* nor-bg:  #f8f8f8; */
+    /* alt-fg:  #787878; */
+    /* alt-bg:  #f8f8f8; */
+    /* sel-fg:  #f0f0f0; */
+    /* sel-bg:  #484848; */
+    /* win-fg:  #585858; */
+    /* win-bg:  #f0f0f0; */
+    /* outline: #e0e0e0; */
+    scr-fg:  #58676e;
+    nor-fg:  #58676e;
+    nor-bg:  #28343d;
+    alt-fg:  #58676e;
+    alt-bg:  #28343d;
+    sel-fg:  #08141d;
+    sel-bg:  #78878e;
+    win-fg:  #b8c7ce;
+    win-bg:  #202d35;
+    outline: #101d25;
 
     normal-fg: var(nor-fg);
     normal-bg: var(nor-bg);
