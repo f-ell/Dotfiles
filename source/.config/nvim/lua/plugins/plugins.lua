@@ -28,11 +28,10 @@ return packer.startup(
 
 
   -- LSP and completion
-  -- NEEDS CONFIGS
     use {
       {
         'neovim/nvim-lspconfig',
-        -- ft = {'java', 'lua', 'perl'}
+        -- ft = {'java', 'lua', 'perl'},
       },
       {
         'hrsh7th/cmp-nvim-lsp',
@@ -91,43 +90,24 @@ return packer.startup(
       {
         'preservim/vim-markdown',
         ft = {'markdown'},
-        config = [[
-          -- vimg('vim_markdown_no_default_keymappings', '1')
-          -- vimg('vim_markdown_no_extensions_in_markdown', '1')
-          -- vimg('vim_markdown_edit_url_in', 'vspilt')
-          -- vimg('vim_markdown_toc_autofit', '1')
-          -- vimg('vim_markdown_folding_disabled', '1')
-          -- vimg('vim_markdown_folding_level', '6')
-          -- vimg('vim_markdown_new_list_item_indent', '0')
-          -- vimg('vim_markdown_emphasis_multiline', '0')
-          -- vimg('vim_markdown_strikethrough', '1')
-          -- vimg('vim_markdown_math', '1')
-          -- vimg('vim_markdown_conceal_code_blocks', '0')
-          -- vimg('tex_conceal', '')
-          -- vimg('vim_markdown_frontmatter', '1')
-          -- vimg('vim_markdown_toml_frontmatter', '1')
-          -- vimg('vim_markdown_json_frontmatter', '1')
-        ]]
+        config = function()
+          require('plugins.plugin-config.vim-markdown')
+        end
       },
       {
         'iamcco/markdown-preview.nvim',
         run = 'cd app && yarn install',
         cmd = 'MarkdownPreview',
-        config = [[
-          vimg('mkdp_browser', 'qutebrowser')
-        ]]
+        config = function()
+          require('plugins.plugin-config.markdown-preview')
+        end
       },
       {
         'dhruvasagar/vim-table-mode',
         cmd     = 'TableModeEnable',
-        config  = [[
-          -- vimg('table_mode_relign_map', '<leader>tr'),
-          -- vimg('table_mode_tableize_map', '<leader>tt'),
-          -- vimg('table_mode_delete_row_map', '<leader>tdr'),
-          -- vimg('table_mode_delete_column_map', '<leader>tdc'),
-          -- vimg('table_mode_insert_column_before_map', '<leader>tic'),
-          -- vimg('table_mode_insert_column_after_map', '<leader>tac'),
-        ]]
+        config  = function()
+          require('plugins.plugin-config.vim-table-mode')
+        end
       }
     }
 

@@ -7,3 +7,5 @@ end
 lspinstall.setup()
 require('lsp.setup')
 require('lsp.functions').setup()
+
+return

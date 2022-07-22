@@ -27,47 +27,89 @@ local icons = {
 }
 
 -- Load snippets
--- require('luasnip.loaders.from_vscode').lazy_load()
 require('luasnip.loaders.from_snipmate').lazy_load({
   paths = {'~/.config/nvim/lua/completion/snippets'}
 })
 
 -- Configure and load cmp
 local cmp = require('cmp')
+local lsnip = require('luasnip')
 cmp.setup({
+    enabled = function()
+      local context = require('cmp.config.context')
+      if context.in_treesitter_capture == true
+        or context.in_syntax_group == true then
+        return false
+      end
+      return true
+    end,
+
     snippet = {
         expand = function(args)
-            require('luasnip').lsp_expand(args.body)
+            lsnip.lsp_expand(args.body)
         end,
     },
+
     sources = {
-        { name = 'luasnip' },
-        { name = 'nvim_lsp' },
-        { name = 'nvim_lua' },
-        { name = 'buffer' }
+        { name = 'luasnip',
+          max_item_count = 4},
+        { name = 'nvim_lsp',
+          max_item_count = 4},
+        { name = 'nvim_lua',
+          max_item_count = 4},
+        { name = 'buffer',
+          max_item_count = 4}
     },
+
+    window = {
+      completion = {
+        col_offset = 1,
+        side_padding = 0
+      }
+    },
+
     formatting = {
       fields = { 'kind', 'abbr', 'menu' },
       format = function(entry, item)
         item.kind = string.format('%s', icons[item.kind])
         item.menu = ({
-            nvim_lsp = '-Lsp-',
-            nvim_lua = '-Lua-',
-            luasnip = '-Snip-',
-            buffer = '-Buf-'
+            nvim_lsp  = '-Lsp-',
+            nvim_lua  = '-Lua-',
+            luasnip   = '-Snip-',
+            buffer    = '-Buf-'
         })[entry.source.name]
         return item
       end
     },
+
+    view = {
+      entries = {
+        name = 'custom',
+        selection_order = 'near_cursor'
+      }
+    },
+
     mapping = {
         ['<C-k>'] = cmp.mapping.select_prev_item(),
         ['<C-j>'] = cmp.mapping.select_next_item(),
-        ['<C-Space>'] = cmp.mapping.confirm{ select = true }
+        ['<C-e>'] = cmp.mapping.abort(),
+        ['<C-Space>'] = cmp.mapping(cmp.mapping.complete()),
+        ['<Tab>'] = cmp.mapping(function(fallback)
+          if cmp.visible() then
+            cmp.confirm({select = true})
+          elseif lsnip.expand_or_jumpable() then
+            lsnip.expand_or_jump()
+          else
+            fallback()
+          end
+        end)
     },
+
     confirm_opts = {
       behavior = cmp.ConfirmBehavior.Replace,
       select = false
     },
+
     experimental = {
       ghost_text = true
     }

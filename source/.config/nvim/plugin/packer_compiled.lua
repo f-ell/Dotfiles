@@ -122,7 +122,7 @@ _G.packer_plugins = {
   },
   ["markdown-preview.nvim"] = {
     commands = { "MarkdownPreview" },
-    config = { "          vimg('mkdp_browser', 'qutebrowser')\n        " },
+    config = { "\27LJ\2\nF\0\0\3\0\2\0\0046\0\0\0'\2\1\0B\0\2\1K\0\1\0+plugins.plugin-config.markdown-preview\frequire\0" },
     loaded = false,
     needs_bufread = false,
     only_cond = false,
@@ -186,7 +186,7 @@ _G.packer_plugins = {
     url = "https://github.com/ap/vim-css-color"
   },
   ["vim-markdown"] = {
-    config = { "          -- vimg('vim_markdown_no_default_keymappings', '1')\n          -- vimg('vim_markdown_no_extensions_in_markdown', '1')\n          -- vimg('vim_markdown_edit_url_in', 'vspilt')\n          -- vimg('vim_markdown_toc_autofit', '1')\n          -- vimg('vim_markdown_folding_disabled', '1')\n          -- vimg('vim_markdown_folding_level', '6')\n          -- vimg('vim_markdown_new_list_item_indent', '0')\n          -- vimg('vim_markdown_emphasis_multiline', '0')\n          -- vimg('vim_markdown_strikethrough', '1')\n          -- vimg('vim_markdown_math', '1')\n          -- vimg('vim_markdown_conceal_code_blocks', '0')\n          -- vimg('tex_conceal', '')\n          -- vimg('vim_markdown_frontmatter', '1')\n          -- vimg('vim_markdown_toml_frontmatter', '1')\n          -- vimg('vim_markdown_json_frontmatter', '1')\n        " },
+    config = { "\27LJ\2\nB\0\0\3\0\2\0\0046\0\0\0'\2\1\0B\0\2\1K\0\1\0'plugins.plugin-config.vim-markdown\frequire\0" },
     loaded = false,
     needs_bufread = true,
     only_cond = false,
@@ -202,7 +202,7 @@ _G.packer_plugins = {
   },
   ["vim-table-mode"] = {
     commands = { "TableModeEnable" },
-    config = { "          -- vimg('table_mode_relign_map', '<leader>tr'),\n          -- vimg('table_mode_tableize_map', '<leader>tt'),\n          -- vimg('table_mode_delete_row_map', '<leader>tdr'),\n          -- vimg('table_mode_delete_column_map', '<leader>tdc'),\n          -- vimg('table_mode_insert_column_before_map', '<leader>tic'),\n          -- vimg('table_mode_insert_column_after_map', '<leader>tac'),\n        " },
+    config = { "\27LJ\2\nD\0\0\3\0\2\0\0046\0\0\0'\2\1\0B\0\2\1K\0\1\0)plugins.plugin-config.vim-table-mode\frequire\0" },
     loaded = false,
     needs_bufread = true,
     only_cond = false,
@@ -222,21 +222,21 @@ time([[Defining lazy-load commands]], false)
 
 -- Keymap lazy-loads
 time([[Defining lazy-load keymaps]], true)
-vim.cmd [[noremap <silent> <leader>; <cmd>lua require("packer.load")({'nvim-comment'}, { keys = "<lt>leader>;", prefix = "" }, _G.packer_plugins)<cr>]]
 vim.cmd [[noremap <silent> ; <cmd>lua require("packer.load")({'nvim-comment'}, { keys = ";", prefix = "" }, _G.packer_plugins)<cr>]]
+vim.cmd [[noremap <silent> <leader>; <cmd>lua require("packer.load")({'nvim-comment'}, { keys = "<lt>leader>;", prefix = "" }, _G.packer_plugins)<cr>]]
 time([[Defining lazy-load keymaps]], false)
 
 vim.cmd [[augroup packer_load_aucmds]]
 vim.cmd [[au!]]
   -- Filetype lazy-loads
 time([[Defining lazy-load filetype autocommands]], true)
-vim.cmd [[au FileType css ++once lua require("packer.load")({'emmet-vim'}, { ft = "css" }, _G.packer_plugins)]]
-vim.cmd [[au FileType html ++once lua require("packer.load")({'emmet-vim'}, { ft = "html" }, _G.packer_plugins)]]
 vim.cmd [[au FileType markdown ++once lua require("packer.load")({'vim-markdown'}, { ft = "markdown" }, _G.packer_plugins)]]
+vim.cmd [[au FileType html ++once lua require("packer.load")({'emmet-vim'}, { ft = "html" }, _G.packer_plugins)]]
+vim.cmd [[au FileType css ++once lua require("packer.load")({'emmet-vim'}, { ft = "css" }, _G.packer_plugins)]]
 time([[Defining lazy-load filetype autocommands]], false)
   -- Event lazy-loads
 time([[Defining lazy-load event autocommands]], true)
-vim.cmd [[au VimEnter * ++once lua require("packer.load")({'cmp-buffer', 'vim-surround', 'presence.nvim', 'cmp-nvim-lua', 'cmp_luasnip'}, { event = "VimEnter *" }, _G.packer_plugins)]]
+vim.cmd [[au VimEnter * ++once lua require("packer.load")({'presence.nvim', 'cmp_luasnip', 'vim-surround', 'cmp-buffer', 'cmp-nvim-lua'}, { event = "VimEnter *" }, _G.packer_plugins)]]
 time([[Defining lazy-load event autocommands]], false)
 vim.cmd("augroup END")
 vim.cmd [[augroup filetypedetect]]
