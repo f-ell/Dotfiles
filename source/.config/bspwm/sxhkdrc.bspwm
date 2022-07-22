@@ -30,12 +30,10 @@ super + control + shift + {h,j,k,l}
   bspc node -z {left 50 0, bottom 0 -50, top 0 50, right -50 0}
 
 # preselect
-super + mode_switch + {h,j,k,l}
-  bspc node -p {west,south,north,east}
+super + mode_switch + {h,j,k,l,Escape}
+  bspc node -p {west,south,north,east,cancel}
 super + mode_switch + {1-9}
   bspc node -o 0.{1-9}
-super + mode_switch + Escape
-  bspc node -p cancel
 
 # receptacles
 super + i; i
