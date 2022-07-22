@@ -75,8 +75,11 @@ _G.packer_plugins = {
     url = "https://github.com/L3MON4D3/LuaSnip"
   },
   ["cmp-buffer"] = {
-    loaded = true,
-    path = "/home/nico/.local/share/nvim/site/pack/packer/start/cmp-buffer",
+    after_files = { "/home/nico/.local/share/nvim/site/pack/packer/opt/cmp-buffer/after/plugin/cmp_buffer.lua" },
+    loaded = false,
+    needs_bufread = false,
+    only_cond = false,
+    path = "/home/nico/.local/share/nvim/site/pack/packer/opt/cmp-buffer",
     url = "https://github.com/hrsh7th/cmp-buffer"
   },
   ["cmp-nvim-lsp"] = {
@@ -85,18 +88,26 @@ _G.packer_plugins = {
     url = "https://github.com/hrsh7th/cmp-nvim-lsp"
   },
   ["cmp-nvim-lua"] = {
-    loaded = true,
-    path = "/home/nico/.local/share/nvim/site/pack/packer/start/cmp-nvim-lua",
+    after_files = { "/home/nico/.local/share/nvim/site/pack/packer/opt/cmp-nvim-lua/after/plugin/cmp_nvim_lua.lua" },
+    loaded = false,
+    needs_bufread = false,
+    only_cond = false,
+    path = "/home/nico/.local/share/nvim/site/pack/packer/opt/cmp-nvim-lua",
     url = "https://github.com/hrsh7th/cmp-nvim-lua"
   },
   cmp_luasnip = {
-    loaded = true,
-    path = "/home/nico/.local/share/nvim/site/pack/packer/start/cmp_luasnip",
+    after_files = { "/home/nico/.local/share/nvim/site/pack/packer/opt/cmp_luasnip/after/plugin/cmp_luasnip.lua" },
+    loaded = false,
+    needs_bufread = false,
+    only_cond = false,
+    path = "/home/nico/.local/share/nvim/site/pack/packer/opt/cmp_luasnip",
     url = "https://github.com/saadparwaiz1/cmp_luasnip"
   },
   ["emmet-vim"] = {
-    loaded = true,
-    path = "/home/nico/.local/share/nvim/site/pack/packer/start/emmet-vim",
+    loaded = false,
+    needs_bufread = false,
+    only_cond = false,
+    path = "/home/nico/.local/share/nvim/site/pack/packer/opt/emmet-vim",
     url = "https://github.com/mattn/emmet-vim"
   },
   everforest = {
@@ -111,7 +122,7 @@ _G.packer_plugins = {
   },
   ["markdown-preview.nvim"] = {
     commands = { "MarkdownPreview" },
-    config = { "        vimg('mkdp_browser', 'qutebrowser')\n      " },
+    config = { "          vimg('mkdp_browser', 'qutebrowser')\n        " },
     loaded = false,
     needs_bufread = false,
     only_cond = false,
@@ -124,8 +135,12 @@ _G.packer_plugins = {
     url = "https://github.com/hrsh7th/nvim-cmp"
   },
   ["nvim-comment"] = {
-    loaded = true,
-    path = "/home/nico/.local/share/nvim/site/pack/packer/start/nvim-comment",
+    config = { "\27LJ\2\nB\0\0\3\0\2\0\0046\0\0\0'\2\1\0B\0\2\1K\0\1\0'plugins.plugin-config.nvim-comment\frequire\0" },
+    keys = { { "", ";" }, { "", "<leader>;" } },
+    loaded = false,
+    needs_bufread = false,
+    only_cond = false,
+    path = "/home/nico/.local/share/nvim/site/pack/packer/opt/nvim-comment",
     url = "https://github.com/terrortylor/nvim-comment"
   },
   ["nvim-lsp-installer"] = {
@@ -149,13 +164,20 @@ _G.packer_plugins = {
     url = "https://github.com/wbthomason/packer.nvim"
   },
   ["presence.nvim"] = {
-    loaded = true,
-    path = "/home/nico/.local/share/nvim/site/pack/packer/start/presence.nvim",
+    config = { "\27LJ\2\n>\0\0\3\0\2\0\0046\0\0\0'\2\1\0B\0\2\1K\0\1\0#plugins.plugin-config.presence\frequire\0" },
+    loaded = false,
+    needs_bufread = false,
+    only_cond = false,
+    path = "/home/nico/.local/share/nvim/site/pack/packer/opt/presence.nvim",
     url = "https://github.com/andweeb/presence.nvim"
   },
   ["trouble.nvim"] = {
-    loaded = true,
-    path = "/home/nico/.local/share/nvim/site/pack/packer/start/trouble.nvim",
+    commands = { "TroubleToggle" },
+    config = { "\27LJ\2\n=\0\0\3\0\2\0\0046\0\0\0'\2\1\0B\0\2\1K\0\1\0\"plugins.plugin-config.trouble\frequire\0" },
+    loaded = false,
+    needs_bufread = false,
+    only_cond = false,
+    path = "/home/nico/.local/share/nvim/site/pack/packer/opt/trouble.nvim",
     url = "https://github.com/folke/trouble.nvim"
   },
   ["vim-css-color"] = {
@@ -164,7 +186,7 @@ _G.packer_plugins = {
     url = "https://github.com/ap/vim-css-color"
   },
   ["vim-markdown"] = {
-    config = { "        -- vimg('vim_markdown_no_default_keymappings', '1')\n        -- vimg('vim_markdown_no_extensions_in_markdown', '1')\n        -- vimg('vim_markdown_edit_url_in', 'vspilt')\n        -- vimg('vim_markdown_toc_autofit', '1')\n        -- vimg('vim_markdown_folding_disabled', '1')\n        -- vimg('vim_markdown_folding_level', '6')\n        -- vimg('vim_markdown_new_list_item_indent', '0')\n        -- vimg('vim_markdown_emphasis_multiline', '0')\n        -- vimg('vim_markdown_strikethrough', '1')\n        -- vimg('vim_markdown_math', '1')\n        -- vimg('vim_markdown_conceal_code_blocks', '0')\n        -- vimg('tex_conceal', '')\n        -- vimg('vim_markdown_frontmatter', '1')\n        -- vimg('vim_markdown_toml_frontmatter', '1')\n        -- vimg('vim_markdown_json_frontmatter', '1')\n      " },
+    config = { "          -- vimg('vim_markdown_no_default_keymappings', '1')\n          -- vimg('vim_markdown_no_extensions_in_markdown', '1')\n          -- vimg('vim_markdown_edit_url_in', 'vspilt')\n          -- vimg('vim_markdown_toc_autofit', '1')\n          -- vimg('vim_markdown_folding_disabled', '1')\n          -- vimg('vim_markdown_folding_level', '6')\n          -- vimg('vim_markdown_new_list_item_indent', '0')\n          -- vimg('vim_markdown_emphasis_multiline', '0')\n          -- vimg('vim_markdown_strikethrough', '1')\n          -- vimg('vim_markdown_math', '1')\n          -- vimg('vim_markdown_conceal_code_blocks', '0')\n          -- vimg('tex_conceal', '')\n          -- vimg('vim_markdown_frontmatter', '1')\n          -- vimg('vim_markdown_toml_frontmatter', '1')\n          -- vimg('vim_markdown_json_frontmatter', '1')\n        " },
     loaded = false,
     needs_bufread = true,
     only_cond = false,
@@ -172,13 +194,15 @@ _G.packer_plugins = {
     url = "https://github.com/preservim/vim-markdown"
   },
   ["vim-surround"] = {
-    loaded = true,
-    path = "/home/nico/.local/share/nvim/site/pack/packer/start/vim-surround",
+    loaded = false,
+    needs_bufread = false,
+    only_cond = false,
+    path = "/home/nico/.local/share/nvim/site/pack/packer/opt/vim-surround",
     url = "https://github.com/tpope/vim-surround"
   },
   ["vim-table-mode"] = {
     commands = { "TableModeEnable" },
-    config = { "        -- vimg('table_mode_relign_map', '<leader>tr'),\n        -- vimg('table_mode_tableize_map', '<leader>tt'),\n        -- vimg('table_mode_delete_row_map', '<leader>tdr'),\n        -- vimg('table_mode_delete_column_map', '<leader>tdc'),\n        -- vimg('table_mode_insert_column_before_map', '<leader>tic'),\n        -- vimg('table_mode_insert_column_after_map', '<leader>tac'),\n      " },
+    config = { "          -- vimg('table_mode_relign_map', '<leader>tr'),\n          -- vimg('table_mode_tableize_map', '<leader>tt'),\n          -- vimg('table_mode_delete_row_map', '<leader>tdr'),\n          -- vimg('table_mode_delete_column_map', '<leader>tdc'),\n          -- vimg('table_mode_insert_column_before_map', '<leader>tic'),\n          -- vimg('table_mode_insert_column_after_map', '<leader>tac'),\n        " },
     loaded = false,
     needs_bufread = true,
     only_cond = false,
@@ -191,16 +215,29 @@ time([[Defining packer_plugins]], false)
 
 -- Command lazy-loads
 time([[Defining lazy-load commands]], true)
-pcall(vim.cmd, [[command -nargs=* -range -bang -complete=file MarkdownPreview lua require("packer.load")({'markdown-preview.nvim'}, { cmd = "MarkdownPreview", l1 = <line1>, l2 = <line2>, bang = <q-bang>, args = <q-args>, mods = "<mods>" }, _G.packer_plugins)]])
 pcall(vim.cmd, [[command -nargs=* -range -bang -complete=file TableModeEnable lua require("packer.load")({'vim-table-mode'}, { cmd = "TableModeEnable", l1 = <line1>, l2 = <line2>, bang = <q-bang>, args = <q-args>, mods = "<mods>" }, _G.packer_plugins)]])
+pcall(vim.cmd, [[command -nargs=* -range -bang -complete=file MarkdownPreview lua require("packer.load")({'markdown-preview.nvim'}, { cmd = "MarkdownPreview", l1 = <line1>, l2 = <line2>, bang = <q-bang>, args = <q-args>, mods = "<mods>" }, _G.packer_plugins)]])
+pcall(vim.cmd, [[command -nargs=* -range -bang -complete=file TroubleToggle lua require("packer.load")({'trouble.nvim'}, { cmd = "TroubleToggle", l1 = <line1>, l2 = <line2>, bang = <q-bang>, args = <q-args>, mods = "<mods>" }, _G.packer_plugins)]])
 time([[Defining lazy-load commands]], false)
+
+-- Keymap lazy-loads
+time([[Defining lazy-load keymaps]], true)
+vim.cmd [[noremap <silent> <leader>; <cmd>lua require("packer.load")({'nvim-comment'}, { keys = "<lt>leader>;", prefix = "" }, _G.packer_plugins)<cr>]]
+vim.cmd [[noremap <silent> ; <cmd>lua require("packer.load")({'nvim-comment'}, { keys = ";", prefix = "" }, _G.packer_plugins)<cr>]]
+time([[Defining lazy-load keymaps]], false)
 
 vim.cmd [[augroup packer_load_aucmds]]
 vim.cmd [[au!]]
   -- Filetype lazy-loads
 time([[Defining lazy-load filetype autocommands]], true)
-vim.cmd [[au FileType markdown ++once lua require("packer.load")({'vim-markdown', 'markdown-preview.nvim'}, { ft = "markdown" }, _G.packer_plugins)]]
+vim.cmd [[au FileType css ++once lua require("packer.load")({'emmet-vim'}, { ft = "css" }, _G.packer_plugins)]]
+vim.cmd [[au FileType html ++once lua require("packer.load")({'emmet-vim'}, { ft = "html" }, _G.packer_plugins)]]
+vim.cmd [[au FileType markdown ++once lua require("packer.load")({'vim-markdown'}, { ft = "markdown" }, _G.packer_plugins)]]
 time([[Defining lazy-load filetype autocommands]], false)
+  -- Event lazy-loads
+time([[Defining lazy-load event autocommands]], true)
+vim.cmd [[au VimEnter * ++once lua require("packer.load")({'cmp-buffer', 'vim-surround', 'presence.nvim', 'cmp-nvim-lua', 'cmp_luasnip'}, { event = "VimEnter *" }, _G.packer_plugins)]]
+time([[Defining lazy-load event autocommands]], false)
 vim.cmd("augroup END")
 vim.cmd [[augroup filetypedetect]]
 time([[Sourcing ftdetect script at: /home/nico/.local/share/nvim/site/pack/packer/opt/vim-markdown/ftdetect/markdown.vim]], true)
