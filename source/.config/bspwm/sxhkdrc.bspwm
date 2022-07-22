@@ -41,7 +41,7 @@ super + i; i
 super + i; m
   bspc node -n next.leaf.\!window.local
 super + i; s
-  bspc node -s next.leaf.\!window.local
+  bspc node -n last.\!automatic.local
 
 # scratchpads
 mode_switch + {1,2,3}
