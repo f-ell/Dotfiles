@@ -71,6 +71,7 @@ cmp.setup({
     formatting = {
       fields = { 'kind', 'abbr', 'menu' },
       format = function(entry, item)
+        item.abbr = string.sub(item.abbr, 1, 18)
         item.kind = string.format('%s', icons[item.kind])
         item.menu = ({
             nvim_lsp  = '-Lsp-',
