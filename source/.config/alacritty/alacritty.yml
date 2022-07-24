@@ -49,7 +49,7 @@ font:
   bold_italic:
     family: Azeret Mono
     style:  Bold Italic
-  size: 10
+  size: 8
 draw_bold_text_with_bright_colors: true
 
 colors:
@@ -63,7 +63,8 @@ colors:
     # background: '#1d1d1d'
     # background: '#102b34' # cthulu
     # background: '#323d43' # everforest
-    background: '#08151d' # sakura
+    # background: '#08151d' # sakura
+    background: '#202d35' # sakura lt
     foreground: '#e0e0e0'
 
 live_config_reload: true
