@@ -6,3 +6,7 @@ super + {F12, F11}
 
 mode_switch + b
   ~/Git/Scripts/source/perl/system_monitors/battery
+
+mode_switch + c
+  dunstify -u low -h string:x-dunst-stack-tag:temp \
+  "`~/Git/Scripts/source/shell/system_monitors/temp.lt`"
