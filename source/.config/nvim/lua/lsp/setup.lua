@@ -2,8 +2,8 @@ local lspconfig = require('lspconfig')
 
 local servers = {
   _1 = 'jdtls',
-  -- _2 = 'perlnavigator',
-  _2 = 'perlpls',
+  _2 = 'perlnavigator',
+  -- _2 = 'perlpls',
   _3 = 'sumneko_lua'
 }
 local configs  = {
@@ -19,8 +19,8 @@ for key, server in pairs(servers) do
   }
 
   if configs[key] then
-    local settings = require('lsp.server-config.' .. configs[key])
-    vim.tbl_deep_extend('force', settings, opts)
+    local config = require('lsp.server-config.' .. configs[key])
+    vim.tbl_deep_extend('force', config, opts)
   end
 
   lspconfig[server].setup(opts)

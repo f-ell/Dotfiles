@@ -28,11 +28,11 @@ local icons = {
 
 -- Load snippets
 require('luasnip.loaders.from_snipmate').lazy_load({
-  paths = {'~/.config/nvim/lua/completion/snippets'}
+  paths = {'~/.config/nvim/lua/snippets'}
 })
 
 -- Configure and load cmp
-local cmp = require('cmp')
+local cmp   = require('cmp')
 local lsnip = require('luasnip')
 cmp.setup({
     enabled = function()
@@ -51,19 +51,19 @@ cmp.setup({
     },
 
     sources = {
-        { name = 'luasnip',
-          max_item_count = 4},
-        { name = 'nvim_lsp',
-          max_item_count = 4},
-        { name = 'nvim_lua',
-          max_item_count = 4},
-        { name = 'buffer',
-          max_item_count = 4}
+        {name = 'luasnip',
+         max_item_count = 4},
+        {name = 'nvim_lsp',
+         max_item_count = 4},
+        {name = 'nvim_lua',
+         max_item_count = 4},
+        {name = 'buffer',
+         max_item_count = 4}
     },
 
     window = {
       completion = {
-        col_offset = 1,
+        col_offset   = 1,
         side_padding = 0
       }
     },
@@ -74,9 +74,9 @@ cmp.setup({
         item.abbr = string.sub(item.abbr, 1, 18)
         item.kind = string.format('%s', icons[item.kind])
         item.menu = ({
+            luasnip   = '-Snp-',
             nvim_lsp  = '-Lsp-',
             nvim_lua  = '-Lua-',
-            luasnip   = '-Snip-',
             buffer    = '-Buf-'
         })[entry.source.name]
         return item
@@ -108,7 +108,7 @@ cmp.setup({
 
     confirm_opts = {
       behavior = cmp.ConfirmBehavior.Replace,
-      select = false
+      select   = false
     },
 
     experimental = {

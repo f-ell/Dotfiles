@@ -5,7 +5,7 @@ end
 require('lualine').setup({
   options = {
     theme = 'everforest',
-    icons_enabled = true,
+    icons_enabled = false,
 
     section_separators = {
       left = '', right = ''
