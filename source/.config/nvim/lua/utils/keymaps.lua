@@ -1,6 +1,6 @@
 local F = require('utils.functions')
 
-F.g('mapleader', ' ')
+vim.g.mapleader = ' '
 
 -- QOL
 F.nnmap('--', ':w<CR>')

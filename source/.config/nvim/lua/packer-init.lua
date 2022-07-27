@@ -110,9 +110,7 @@ return packer.startup(
 
   -- Theming
     use {
-      {
-        'sainnhe/everforest',
-      },
+      { 'sainnhe/everforest' },
       {
         'nvim-lualine/lualine.nvim',
         after = 'everforest',

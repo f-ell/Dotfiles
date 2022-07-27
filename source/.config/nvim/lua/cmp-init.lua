@@ -52,13 +52,17 @@ cmp.setup({
 
     sources = {
         {name = 'luasnip',
-         max_item_count = 4},
+         max_item_count = 4,
+         keyword_length = 4},
         {name = 'nvim_lsp',
-         max_item_count = 4},
+         max_item_count = 4,
+         keyword_length = 4},
         {name = 'nvim_lua',
-         max_item_count = 4},
+         max_item_count = 4,
+         keyword_length = 4},
         {name = 'buffer',
-         max_item_count = 4}
+         max_item_count = 4,
+         keyword_length = 4}
     },
 
     window = {
@@ -112,6 +116,7 @@ cmp.setup({
     },
 
     experimental = {
-      ghost_text = true
+      native_menu = false,
+      ghost_text  = true
     }
 })

@@ -1,63 +1,60 @@
 local F = require('utils.functions')
 
--- Encoding, spelling, clipboard, undo
--- F.g('encoding', 'utf-8')
-F.o('spell')
-F.g('spelllang', 'de_de,en_us,en_gb')
+-- Spelling
+  -- using direct api calls results in horrendous performance hit
+-- vim.opt['spell'] = true
+-- vim.g['spelllang'] = 'de_de,en_us,en_gb'
 
 -- General settings
--- F.g('nocompatible')
-F.g('shell', 'dash')
-F.c('syntax on')
+F.gset('shell',   'dash')
+F.bset('syntax',  'on')
+F.gset('showmode', false)
 F.c('filetype plugin indent on')
-F.o('list')
-  vim.opt.listchars = {
-    eol  = '¬',
-    tab  = '| ',
-    nbsp = '+',
-    trail = '~'
-  }
 
-F.o('wrap', '!')
-F.g('laststatus', '3')
-F.g('textwidth', '80')
-F.g('numberwidth', '3')
-F.o('number')
-F.o('relativenumber')
-F.g('signcolumn', 'yes:1')
+F.wset('list', true)
+F.gset('listchars', 'eol:¬,tab:| ,nbsp:+,trail:~')
+  -- vim.opt.listchars = {
+  --   eol  = '¬',
+  --   tab  = '| ',
+  --   nbsp = '+',
+  --   trail = '~'
+  -- }
 
-F.g('clipboard', 'unnamed')
-F.g('mouse', 'a')
-F.g('scrolloff', '1')
-F.o('expandtab')
-F.o('smarttab')
-vim.bo.tabstop      = 2
-vim.bo.softtabstop  = 2
-vim.bo.shiftwidth   = 2
+F.wset('wrap', false)
+F.bset('textwidth',   80)
+F.wset('numberwidth',  3)
+F.wset('number',          true)
+F.wset('relativenumber',  true)
+-- F.g('signcolumn', 'yes:1')
+F.wset('signcolumn', 'yes:1')
 
-F.o('confirm')
--- F.o('wildmenu')
+F.gset('clipboard', 'unnamed')
+F.gset('guicursor', 'n-v-c-sm:block,i-ci-ve:block1-blinkon200-blinkoff150,r-cr-o:hor20')
+F.gset('mouse',     'a')
+F.gset('scrolloff',   1)
+
+F.bset('expandtab', true)
+F.bset('tabstop',     2)
+F.bset('softtabstop', 2)
+F.bset('shiftwidth',  2)
+
+F.gset('confirm', true)
 
 -- Key-chord timeouts
-F.g('timeoutlen', '500')
-F.g('ttimeoutlen', '0')
+F.gset('timeoutlen',  500)
+F.gset('ttimeoutlen',   0)
 
 -- Splits and 
-F.o('splitbelow')
-F.o('splitright')
--- F.o('ruler')
-F.o('cursorline')
+F.gset('splitbelow',  true)
+F.gset('splitright',  true)
+F.wset('cursorline',  true)
+F.gset('ruler',       false)
 
-F.o('autochdir')
--- F.o('autoread')
-F.o('autowrite')
-F.o('backup', '!')
-F.o('writebackup', '!')
-F.o('swapfile', '!')
-F.o('undofile')
--- F.g('undodir', '~/.local/share/nvim/undo')
+-- F.gset('autochdir')
+-- F.gset('autowrite')
+F.bset('swapfile', false)
+F.bset('undofile', true)
+-- F.gset('undodir', '/home/nico/.local/share/nvim/undo')
 
 -- Search behaviour
--- F.o('hlsearch')
--- F.o('incsearch')
-F.o('ignorecase')
+F.gset('ignorecase', true)
