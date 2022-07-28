@@ -1,3 +1,13 @@
+-- ____   ____
+-- |   \  |  |______
+-- |    \ |  | ___  \
+-- |     \|  | |  \  |
+-- |  \   \  | |__/  |
+-- |  |\     | _____/
+-- |__| \____| | Author: Nico Pareigis
+--          |__| NeoVim
+--
+
 require('packer-init')
 require('utils')
 
