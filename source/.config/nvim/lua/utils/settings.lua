@@ -1,7 +1,7 @@
 local F = require('utils.functions')
 
 -- Spelling
-  -- using direct api calls results in horrendous performance hit
+  -- using api functions results in horrendous performance hit
 -- vim.opt['spell'] = true
 -- vim.g['spelllang'] = 'de_de,en_us,en_gb'
 
@@ -13,26 +13,21 @@ F.c('filetype plugin indent on')
 
 F.wset('list', true)
 F.gset('listchars', 'eol:¬,tab:| ,nbsp:+,trail:~')
-  -- vim.opt.listchars = {
-  --   eol  = '¬',
-  --   tab  = '| ',
-  --   nbsp = '+',
-  --   trail = '~'
-  -- }
 
 F.wset('wrap', false)
 F.bset('textwidth',   80)
 F.wset('numberwidth',  3)
 F.wset('number',          true)
 F.wset('relativenumber',  true)
--- F.g('signcolumn', 'yes:1')
 F.wset('signcolumn', 'yes:1')
+F.gset('pumheight', 8)
 
 F.gset('clipboard', 'unnamed')
 F.gset('guicursor', 'n-v-c-sm:block,i-ci-ve:block1-blinkon200-blinkoff150,r-cr-o:hor20')
 F.gset('mouse',     'a')
 F.gset('scrolloff',   1)
 
+-- Tab settings
 F.bset('expandtab', true)
 F.bset('tabstop',     2)
 F.bset('softtabstop', 2)
@@ -54,7 +49,6 @@ F.gset('ruler',       false)
 -- F.gset('autowrite')
 F.bset('swapfile', false)
 F.bset('undofile', true)
--- F.gset('undodir', '/home/nico/.local/share/nvim/undo')
 
 -- Search behaviour
 F.gset('ignorecase', true)

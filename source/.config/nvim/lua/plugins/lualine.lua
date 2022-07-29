@@ -2,6 +2,16 @@ local function icon()
   return ''
 end
 
+local function mode()
+  local mode = vim.api.nvim_get_mode().mode
+
+  if      mode == 'V'  then mode = 'vl'
+  elseif  mode == '^V' then mode = 'vb'
+  end
+
+  return string.upper(mode)
+end
+
 require('lualine').setup({
   options = {
     theme = 'everforest',
@@ -19,28 +29,28 @@ require('lualine').setup({
 
   sections = {
     lualine_a = {icon},
-    lualine_b = {'mode'},
+    lualine_b = {mode},
     lualine_c = {
       {
         'filename',
         file_status = true,
         path = 0,
         symbols = {
-          modified = '+',
-          readonly = '-',
-          unnamed = 'Unnamed'
+          modified = ' [+]',
+          readonly = ' [-]',
+          unnamed  = '[Unnamed]'
         }
       }
     },
     lualine_x = {
-      {
-        'diagnostics',
-        colored = true,
-        sources = {'nvim_lsp', 'nvim_diagnostic'},
-        sections = {'warn', 'error'},
-        update_in_insert = true,
-        always_visible = false
-      }
+      -- {
+      --   'diagnostics',
+      --   colored = true,
+      --   sources = {'nvim_lsp', 'nvim_diagnostic'},
+      --   sections = {'warn', 'error'},
+      --   update_in_insert = true,
+      --   always_visible = false
+      -- }
     },
     lualine_y = {
       {

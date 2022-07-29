@@ -7,8 +7,6 @@ F.nnmap('--', ':w<CR>')
 F.nnmap('<C-l>', ':noh<CR>')
 F.nnmap('<leader>~', 'viw~')
 
-F.nnmap('<leader>t', ':TroubleToggle<CR>')
-F.nnmap('<leader>e', ':NvimTreeToggle<CR>')
 F.nnmap('<A-f>', ':FZF -i --reverse --scroll-off=1 --no-info --no-color --prompt=$ ~<CR>')
 
 
@@ -48,8 +46,15 @@ F.nnmap('<leader>\'', 'o```<CR>```<Esc>kA')
 
 
 -- Plugins
+  -- Trouble
+    F.nnmap('<leader>t', ':TroubleToggle<CR>')
+
+  -- Nvim-Tree
+    F.nnmap('<leader>e', ':NvimTreeToggle<CR>')
+
   -- Emmet
     F.inmap('<A-e>', '<C-y>,<Esc>')
     F.nnmap('<A-e>', '<C-y>,<Esc>')
+
   -- MarkdownPreview
     F.nnmap('<A-p>', '<plug>MarkdownPreviewToggle')

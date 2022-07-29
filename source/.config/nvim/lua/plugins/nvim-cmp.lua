@@ -28,7 +28,7 @@ local icons = {
 
 -- Load snippets
 require('luasnip.loaders.from_snipmate').lazy_load({
-  paths = {'~/.config/nvim/lua/snippets'}
+  paths = {'~/.config/nvim/snippets'}
 })
 
 -- Configure and load cmp
@@ -37,11 +37,8 @@ local lsnip = require('luasnip')
 cmp.setup({
     enabled = function()
       local context = require('cmp.config.context')
-      if context.in_treesitter_capture == true
-        or context.in_syntax_group == true then
-        return false
-      end
-      return true
+      return not context.in_treesitter_capture('comment')
+        and not context.in_syntax_group('Comment')
     end,
 
     snippet = {
@@ -52,17 +49,17 @@ cmp.setup({
 
     sources = {
         {name = 'luasnip',
-         max_item_count = 4,
-         keyword_length = 4},
+         max_item_count = 8,
+         keyword_length = 1},
         {name = 'nvim_lsp',
-         max_item_count = 4,
-         keyword_length = 4},
+         -- max_item_count = 12,
+         keyword_length = 1},
         {name = 'nvim_lua',
-         max_item_count = 4,
-         keyword_length = 4},
+         -- max_item_count = 12,
+         keyword_length = 3},
         {name = 'buffer',
-         max_item_count = 4,
-         keyword_length = 4}
+         max_item_count = 8,
+         keyword_length = 2}
     },
 
     window = {
@@ -116,7 +113,6 @@ cmp.setup({
     },
 
     experimental = {
-      native_menu = false,
       ghost_text  = true
     }
 })

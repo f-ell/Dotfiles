@@ -3,8 +3,7 @@ if not ok then
   return
 end
 
-packer.init {
-  ensure_dependencies = true,
+packer.init { ensure_dependencies = true,
   auto_clean = false,
   display = {
     open_fn = function()
@@ -47,30 +46,29 @@ return packer.startup(
       }
     }
     use {
-      {
-        'L3MON4D3/LuaSnip',
-        event = 'VimEnter'
-      },
-
---      {
---        'hrsh7th/cmp-nvim-lua',
---        ft    = 'lua',
---        after = 'LuaSnip'
---      },
 
       {
         'hrsh7th/nvim-cmp',
-        after = 'LuaSnip'
+        envent = 'VimEnter'
+      },
+      {
+        'hrsh7th/cmp-nvim-lua',
+        ft    = 'lua',
+        after = 'nvim-cmp'
+      },
+      {
+        'L3MON4D3/LuaSnip',
+        after = 'nvim-cmp'
       },
       {
         'saadparwaiz1/cmp_luasnip',
-        after = 'nvim-cmp'
+        after = 'LuaSnip'
       },
       {
         'hrsh7th/cmp-buffer',
          after = 'cmp_luasnip',
          config = function()
-           require('cmp-init')
+           require('plugins.nvim-cmp')
          end
       }
     }
@@ -81,7 +79,7 @@ return packer.startup(
       'folke/trouble.nvim',
       cmd    = 'TroubleToggle',
       config = function()
-        require('plugin-config.trouble')
+        require('plugins.trouble')
       end
     }
 
@@ -92,7 +90,7 @@ return packer.startup(
     cmd       = 'NvimTreeToggle',
     requires  = 'kyazdani42/nvim-web-devicons',
     config = function()
-      require('plugin-config.nvim-tree')
+      require('plugins.nvim-tree')
     end
   }
 
@@ -103,22 +101,22 @@ return packer.startup(
       run    = ':TSUpdate',
       event  = 'VimEnter',
       config = function()
-        require('plugin-config.nvim-treesitter')
+        require('plugins.nvim-treesitter')
       end
     }
 
 
   -- Theming
-    use {
-      { 'sainnhe/everforest' },
-      {
-        'nvim-lualine/lualine.nvim',
-        after = 'everforest',
-        config = function()
-          require('plugin-config.lualine')
-        end
-      }
-    }
+    use 'sainnhe/everforest'
+    -- {
+      -- {
+      --   'nvim-lualine/lualine.nvim',
+      --   after = 'everforest',
+      --   config = function()
+      --     require('plugins.lualine')
+      --   end
+      -- }
+    -- }
     -- use 'b4skyx/serenade'
 
 
@@ -128,7 +126,7 @@ return packer.startup(
         'preservim/vim-markdown',
         ft     = 'markdown',
         config = function()
-          require('plugin-config.vim-markdown')
+          require('plugins.vim-markdown')
         end
       },
       {
@@ -136,14 +134,14 @@ return packer.startup(
         run = 'cd app && yarn install',
         cmd = 'MarkdownPreview',
         config = function()
-          require('plugin-config.markdown-preview')
+          require('plugins.markdown-preview')
         end
       },
       {
         'dhruvasagar/vim-table-mode',
         cmd     = 'TableModeEnable',
         config  = function()
-          require('plugin-config.vim-table-mode')
+          require('plugins.vim-table-mode')
         end
       }
     }
@@ -155,7 +153,7 @@ return packer.startup(
         'terrortylor/nvim-comment',
         keys = {';', '<leader>;'},
         config = function()
-          require('plugin-config.nvim-comment')
+          require('plugins.nvim-comment')
         end
       },
       {
@@ -167,7 +165,7 @@ return packer.startup(
         'norcalli/nvim-colorizer.lua',
         event  = 'VimEnter',
         config = function()
-          require('plugin-config.nvim-colorizer')
+          require('plugins.nvim-colorizer')
         end
       },
       {
@@ -185,7 +183,7 @@ return packer.startup(
         'andweeb/presence.nvim',
         event  = 'VimEnter',
         config = function()
-          require('plugin-config.presence')
+          require('plugins.presence')
         end
       }
     }
