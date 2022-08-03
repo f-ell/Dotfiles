@@ -8,7 +8,7 @@
 #          |__| Zsh
 
 # might be causing some issues, need to do further testing:
-# source $HOME/.config/himalaya/himalaya-completions.zsh 2>/dev/null 
+# . $HOME/.config/himalaya/himalaya-completions.zsh 2>/dev/null 
 
 [[ -t 0 && $- = *i* ]] && stty -ixon # alt: stty stop ''
 
@@ -16,7 +16,9 @@ set -o autocd -o extendedglob -o histexpiredupsfirst -o histignoredups\
   -o histignorespace -o incappendhistory -o kshglob -o pipefail -o promptsubst\
   +o automenu +o autoremoveslash
 
-SAVEHIST=5000; HISTSIZE=$(($SAVEHIST + 100)); HISTFILE=$HOME/.zsh_history
+. $HOME'/.env_setup'
+
+SAVEHIST=5000; HISTSIZE=$(($SAVEHIST + 100)); HISTFILE=$HOME'/.zsh_history'
 
 eval "`zoxide init zsh`"
 export MACHINE=`< $HOME/Git/machine`
@@ -24,22 +26,21 @@ export MACHINE=`< $HOME/Git/machine`
 export VISUAL='nvim'
 export EDITOR=$VISUAL
 
-source $HOME/.aliases
-source $HOME/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
+. $HOME'/.aliases'
+. $XDG_CONFIG_HOME'/zsh/zsh-autosuggestions/zsh-autosuggestions.zsh'
   ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=20
   ZSH_AUTOSUGGEST_MANUAL_REBIND=True
-source $HOME/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+. $XDG_CONFIG_HOME'/zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh'
 
 Bin='/usr/bin:/usr/local/bin:/usr/local/sbin:'$HOME'/.local/bin'
 Perl='/usr/bin/core_perl:/usr/bin/site_perl:/usr/bin/vendor_perl'
 Other='/opt:'$HOME'/Scripts'
 export PATH=$Bin':'$Perl':'$Other
 unset Bin Perl Other
-export FZF_DEFAULT_COMMAND="fd -E .cache -E .cargo -E .local -E .git -E .vscode -E Games -tf -H -d10 ."
+export FZF_DEFAULT_COMMAND='fd -E .cache -tf -H -d10 .'
 export FZF_DEFAULT_OPTS='-i --tiebreak=begin,length --scroll-off=1 --reverse --prompt="$ " --height=25% --color=bw'
 _ZO_FZF_OPTS="$FZF_DEFAULT_OPTS"
 
-export XDG_DESKTOP_DIR=$HOME/
 # needed because Firefox acts up when being killed by bspwm :)
 export MOZ_CRASHREPORTER_DISABLE=1
 
