@@ -12,6 +12,7 @@ owns() {
 
 alias -- -='z -'
 
+alias code='code --extensions-dir '$XDG_DATA_HOME'/vscode'
 alias dots='z ~/Git/Dotfiles/'
 alias e='exa'
 alias e1='exa -1'
