@@ -56,7 +56,7 @@ cmp.setup({
          keyword_length = 1},
         {name = 'nvim_lua',
          -- max_item_count = 12,
-         keyword_length = 3},
+         keyword_length = 2},
         {name = 'buffer',
          max_item_count = 8,
          keyword_length = 2}

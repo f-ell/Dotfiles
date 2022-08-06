@@ -34,5 +34,6 @@ end
 M.nmap = map('n', {noremap = false})
 M.nnmap = map('n')
 M.inmap = map('i')
+M.tnmap = map('t')
 
 return M

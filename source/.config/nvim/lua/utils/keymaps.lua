@@ -1,11 +1,46 @@
 local F = require('utils.functions')
 
+term = function()
+  -- current buffer is terminal -> hide buffer
+  if string.find(vim.api.nvim_buf_get_name(0), 'term://~//') then
+    print('term closed')
+    return vim.cmd('close')
+  end
+
+  local termheight = vim.api.nvim_win_get_height(0) / 4
+
+  -- terminal buffer exists -> unhide and/or focus
+  for k in pairs(vim.api.nvim_list_bufs()) do
+    if string.find(vim.api.nvim_buf_get_name(k), 'term://~//') then
+      local winid = vim.fn.bufwinid(k)
+
+      if winid == -1 then
+        print('term opened')
+        return vim.cmd('bot sb'..k..' | resize '..termheight)
+      end
+
+      print('term focused')
+      return vim.fn.win_gotoid(winid)
+    end
+  end
+
+  -- terminal buffer doesn't exist -> create new buffer
+  print('new term')
+  vim.cmd('bot '..termheight..'sp term:///bin/zsh')
+end
+
+
+
 vim.g.mapleader = ' '
 
 -- QOL
+F.nnmap('<leader>k', ':source ~/.config/nvim/lua/utils/keymaps.lua<CR>')
+F.nnmap('<leader><CR>', ':lua term()<CR>')
 F.nnmap('--', ':w<CR>')
 F.nnmap('<C-l>', ':noh<CR>')
 F.nnmap('<leader>~', 'viw~')
+
+F.tnmap('<C-d>', '<C-\\><C-n>')
 
 F.nnmap('<A-f>', ':FZF -i --reverse --scroll-off=1 --no-info --no-color --prompt=$ ~<CR>')
 

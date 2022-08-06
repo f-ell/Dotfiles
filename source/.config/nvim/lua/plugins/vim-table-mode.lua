@@ -1,4 +1,4 @@
-local F = require('config.functions')
+local F = require('utils.functions')
 
 F.vimg('table_mode_relign_map', '<leader>tr')
 F.vimg('table_mode_tableize_map', '<leader>tt')
