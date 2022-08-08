@@ -48,12 +48,19 @@ export MOZ_CRASHREPORTER_DISABLE=1
 # Binds
 autoload edit-command-line; zle -N edit-command-line
 bindkey '^Xe' edit-command-line
-bindkey -v '^?' backward-delete-char
-bindkey -v '^Y' yank
+
+bindkey '^R' history-incremental-search-backward
+
 bindkey -v '^K' kill-line
 bindkey -v '^U' backward-kill-line
+bindkey -v '^Y' yank
+# Delete without overwriting 'yank'-buffer
+bindkey -v '^?' backward-delete-char
+
+# ^Left | ^Right movement
 bindkey '^[[1;5C' forward-word
 bindkey '^[[1;5D' backward-word
+
 bindkey '^ ' autosuggest-accept
 
 
