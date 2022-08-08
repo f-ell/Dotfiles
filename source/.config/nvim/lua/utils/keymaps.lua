@@ -40,6 +40,8 @@ F.nnmap('--', ':w<CR>')
 F.nnmap('<C-l>', ':noh<CR>')
 F.nnmap('<leader>~', 'viw~')
 
+F.cnmap('#', '<Up>')
+F.cnmap('\'', '<Down>')
 F.tnmap('<C-d>', '<C-\\><C-n>')
 
 F.nnmap('<A-f>', ':FZF -i --reverse --scroll-off=1 --no-info --no-color --prompt=$ ~<CR>')
