@@ -3,7 +3,7 @@ ping() {
   $Ping -c1 ${1:-archlinux.org}
 }
 owns() {
-  Program=$(command -v $1)
+  Program=`command -v $1`
   [[ -z $Program ]] \
     && printf "Error: no command specified!\n" \
     || pacman -Qo $Program
@@ -20,8 +20,6 @@ alias el='exa -la'
 alias gff='nff ~/Git'
 alias hist='tail -10 <(history)'
 alias hml='himalaya'
-alias less='less -cmNS'
-alias lock='slock &'
 alias psearch='pacman -Ss $1'
 alias pquery='pacman -Q | rg -i $1'
 alias pcount='pacman -Q | wc -l'
