@@ -19,7 +19,6 @@ F.bset('textwidth',   80)
 F.wset('numberwidth',  3)
 F.wset('number',          true)
 F.wset('relativenumber',  true)
-F.wset('signcolumn', 'yes:1')
 F.gset('pumheight', 8)
 
 F.gset('clipboard', 'unnamed')

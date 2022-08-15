@@ -4,8 +4,9 @@ if not ok1 then
     return
 end
 
+local F = require('utils.functions')
+F.wset('signcolumn', 'yes:1')
+
 lspinstall.setup()
 require('lsp.setup')
 require('lsp.functions').setup()
-
-return

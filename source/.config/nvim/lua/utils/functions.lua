@@ -31,10 +31,15 @@ local function map(mode, opt)
     end
 end
 
+M.inmap = map('i')
+
 M.nmap = map('n', {noremap = false})
 M.nnmap = map('n')
-M.inmap = map('i')
+
+M.vnmap = map('v')
+
 M.cnmap = map('c')
+
 M.tnmap = map('t')
 
 return M

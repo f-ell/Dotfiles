@@ -108,32 +108,16 @@ return packer.startup(
 
   -- Theming
     use 'sainnhe/everforest'
-    -- {
-      -- {
-      --   'nvim-lualine/lualine.nvim',
-      --   after = 'everforest',
-      --   config = function()
-      --     require('plugins.lualine')
-      --   end
-      -- }
-    -- }
     -- use 'b4skyx/serenade'
 
 
   -- Markdown
     use {
       {
-        'preservim/vim-markdown',
-        ft     = 'markdown',
-        config = function()
-          require('plugins.vim-markdown')
-        end
-      },
-      {
         'iamcco/markdown-preview.nvim',
-        run = 'cd app && yarn install',
-        cmd = 'MarkdownPreview',
-        config = function()
+        run = 'cd app && npm install',
+        -- cmd = 'MarkdownPreview',
+        config  = function()
           require('plugins.markdown-preview')
         end
       },

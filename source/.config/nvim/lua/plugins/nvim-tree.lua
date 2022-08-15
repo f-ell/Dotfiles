@@ -14,7 +14,9 @@ require('nvim-tree').setup({
     signcolumn      = 'no',
     mappings = {
       custom_only = false,
-      list = {}
+      list = {
+        {key = '+', action = 'cd'}
+      }
     }
   },
 

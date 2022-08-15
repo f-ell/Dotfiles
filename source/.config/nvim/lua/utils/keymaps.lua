@@ -2,8 +2,7 @@ local F = require('utils.functions')
 
 term = function()
   -- current buffer is terminal -> hide buffer
-  if string.find(vim.api.nvim_buf_get_name(0), 'term://~//') then
-    print('term closed')
+  if string.find(vim.api.nvim_buf_get_name(0), 'term://') then
     return vim.cmd('close')
   end
 
@@ -11,21 +10,18 @@ term = function()
 
   -- terminal buffer exists -> unhide and/or focus
   for k in pairs(vim.api.nvim_list_bufs()) do
-    if string.find(vim.api.nvim_buf_get_name(k), 'term://~//') then
+    if string.find(vim.api.nvim_buf_get_name(k), 'term://') then
       local winid = vim.fn.bufwinid(k)
 
       if winid == -1 then
-        print('term opened')
         return vim.cmd('bot sb'..k..' | resize '..termheight)
       end
 
-      print('term focused')
       return vim.fn.win_gotoid(winid)
     end
   end
 
   -- terminal buffer doesn't exist -> create new buffer
-  print('new term')
   vim.cmd('bot '..termheight..'sp term:///bin/zsh')
 end
 
@@ -34,23 +30,50 @@ end
 vim.g.mapleader = ' '
 
 -- QOL
-F.nnmap('<leader>k', ':source ~/.config/nvim/lua/utils/keymaps.lua<CR>')
-F.nnmap('<leader><CR>', ':lua term()<CR>')
-F.nnmap('--', ':w<CR>')
-F.nnmap('<C-l>', ':noh<CR>')
-F.nnmap('<leader>~', 'viw~')
+-- n
+F.nnmap('<leader>sk', ':source ~/.config/nvim/lua/utils/keymaps.lua<CR>')
 
-F.cnmap('#', '<Up>')
-F.cnmap('\'', '<Down>')
-F.tnmap('<C-d>', '<C-\\><C-n>')
+F.nnmap('--', ':w<CR>')
+F.nnmap('<leader>bw', ':bw<CR>')
+F.nnmap('<C-l>', ':noh<CR>')
+
+
+F.nnmap('<leader>~', 'viw~')
+F.nnmap('<leader><CR>', ':lua term()<CR>')
 
 F.nnmap('<A-f>', ':FZF -i --reverse --scroll-off=1 --no-info --no-color --prompt=$ ~<CR>')
+
+-- v
+F.vnmap('<Tab>', '>gv')
+F.vnmap('<S-Tab>', '<gv')
+
+-- c
+F.cnmap('<C-h>', '<Left>')
+F.cnmap('<C-k>', '<Up>')
+F.cnmap('<C-j>', '<Down>')
+F.cnmap('<C-l>', '<Right>')
+
+-- t
+F.tnmap('<C-d>', '<C-\\><C-n>')
+
 
 
 -- PACKER
 F.nnmap('<leader>ps', ':PackerStatus<CR>')
 F.nnmap('<leader>pc', ':PackerCompile<CR>')
 F.nnmap('<leader>py', ':PackerSync<CR>')
+
+
+-- TABS
+F.nnmap('<leader>h', ':tabnext-<CR>')
+F.nnmap('<leader>j', ':tabfirst<CR>')
+F.nnmap('<leader>l', ':tabnext+<CR>')
+F.nnmap('<leader>k', ':tablast<CR>')
+
+F.nnmap('<leader><C-h>', ':tabmove-<CR>')
+F.nnmap('<leader><C-j>', ':tabmove0<CR>')
+F.nnmap('<leader><C-l>', ':tabmove+<CR>')
+F.nnmap('<leader><C-k>', ':tabmove$<CR>')
 
 
 -- SPLITS
@@ -83,6 +106,8 @@ F.nnmap('<leader>\'', 'o```<CR>```<Esc>kA')
 
 
 -- Plugins
+  -- Colorizer
+    F.nnmap('<leader>c', ':ColorizerToggle<CR>')
   -- Trouble
     F.nnmap('<leader>t', ':TroubleToggle<CR>')
 
