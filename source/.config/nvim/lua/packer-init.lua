@@ -4,6 +4,7 @@ if not ok then
 end
 
 packer.init { ensure_dependencies = true,
+  compile_path = '$HOME/.local/share/nvim/site/pack/packer/packer_compiled.lua',
   auto_clean = false,
   display = {
     open_fn = function()
@@ -23,8 +24,7 @@ return packer.startup(
         'PackerLoad',           'PackerProfile',  'PackerSnapshot',
         'PackerSnapshotDelete', 'PackerRollback', 'PackerStatus',
         'PackerSync',           'PackerUpdate'
-      },
-      compile_path = '~/.local/share/nvim/site/pack/packer/packer_compiled.lua'
+      }
     }
 
 
