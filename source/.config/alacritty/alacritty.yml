@@ -38,10 +38,10 @@ scrolling:
 
 font:
   normal:
-    family: Azeret Mono
+    family: Recursive
     style:  Regular
   bold:
-    family: Recursive
+    family: Azeret Mono
     style:  Bold
   italic:
     family: Recursive
