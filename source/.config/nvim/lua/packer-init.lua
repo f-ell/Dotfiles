@@ -23,7 +23,8 @@ return packer.startup(
         'PackerLoad',           'PackerProfile',  'PackerSnapshot',
         'PackerSnapshotDelete', 'PackerRollback', 'PackerStatus',
         'PackerSync',           'PackerUpdate'
-      }
+      },
+      compile_path = '~/.local/share/nvim/site/pack/packer/packer_compiled.lua'
     }
 
 
@@ -116,7 +117,7 @@ return packer.startup(
       {
         'iamcco/markdown-preview.nvim',
         run = 'cd app && npm install',
-        -- cmd = 'MarkdownPreview',
+        cmd = 'MarkdownPreview',
         config  = function()
           require('plugins.markdown-preview')
         end
