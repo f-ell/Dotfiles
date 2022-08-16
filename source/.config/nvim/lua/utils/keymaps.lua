@@ -46,6 +46,8 @@ F.nnmap('--', ':w<CR>')
 F.nnmap('<leader>bw', ':bw<CR>')
 F.nnmap('<C-l>', ':noh<CR>')
 
+F.nnmap('<leader>rcl', '"*y_:lua <C-r>*<CR>')
+
 
 F.nnmap('<leader>~', 'viw~')
 F.nnmap('<leader><CR>', ':lua term()<CR>')

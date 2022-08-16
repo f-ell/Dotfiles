@@ -6,48 +6,46 @@ local F = require('utils.functions')
 -- vim.g['spelllang'] = 'de_de,en_us,en_gb'
 
 -- General settings
-F.gset('shell',   'dash')
-F.bset('syntax',  'on')
-F.gset('showmode', false)
+F.o('shell',   'dash')
+F.o('showmode', false)
 F.c('filetype plugin indent on')
 
-F.wset('list', true)
-F.gset('listchars', 'eol:¬,tab:| ,nbsp:+,trail:~')
+F.o('list', true)
+F.o('listchars', 'eol:¬,tab:| ,nbsp:+,trail:~')
 
-F.wset('wrap', false)
-F.bset('textwidth',   80)
-F.wset('numberwidth',  3)
-F.wset('number',          true)
-F.wset('relativenumber',  true)
-F.gset('pumheight', 8)
+F.o('wrap', false)
+F.o('textwidth', 80)
+F.o('numberwidth',  3)
+F.o('number',          true)
+F.o('relativenumber',  true)
+F.o('pumheight', 8)
 
-F.gset('clipboard', 'unnamed')
-F.gset('guicursor', 'n-v-c-sm:block,i-ci-ve:block1-blinkon200-blinkoff150,r-cr-o:hor20')
-F.gset('mouse',     'a')
-F.gset('scrolloff',   1)
+F.o('clipboard', 'unnamed')
+F.o('guicursor', 'n-v-c-sm:block,i-ci-ve:block1-blinkon200-blinkoff150,r-cr-o:hor20')
+F.o('mouse',     'a')
+F.o('scrolloff',   1)
 
 -- Tab settings
-F.bset('expandtab', true)
-F.bset('tabstop',     2)
-F.bset('softtabstop', 2)
-F.bset('shiftwidth',  2)
+F.o('expandtab',  true)
+F.o('tabstop',       2)
+F.o('softtabstop',   2)
+F.o('shiftwidth',    2)
 
-F.gset('confirm', true)
+F.o('confirm', true)
 
 -- Key-chord timeouts
-F.gset('timeoutlen',  500)
-F.gset('ttimeoutlen',   0)
+F.o('timeoutlen',  500)
+F.o('ttimeoutlen',   0)
 
 -- Splits and 
-F.gset('splitbelow',  true)
-F.gset('splitright',  true)
-F.wset('cursorline',  true)
-F.gset('ruler',       false)
+F.o('splitbelow',  true)
+F.o('splitright',  true)
+F.o('cursorline',  true)
+F.o('ruler',       false)
 
--- F.gset('autochdir')
--- F.gset('autowrite')
-F.bset('swapfile', false)
-F.bset('undofile', true)
+F.o('autochdir',   true)
+F.o('updatecount', 0) -- supersedes F.bset('swapfile', false)
+F.o('undofile',    true)
 
 -- Search behaviour
-F.gset('ignorecase', true)
+F.o('ignorecase', true)
