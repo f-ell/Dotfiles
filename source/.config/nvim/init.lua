@@ -7,8 +7,6 @@
 -- |__| \____| | Author: Nico Pareigis
 --          |__| NeoVim
 --
--- Note: in order for the statusline to reliably show the current git branch,
--- 'autochdir' has to be ENABLED (see utils.settings)
 
 require('packer-init')
 require('utils')
