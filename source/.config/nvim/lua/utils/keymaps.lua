@@ -1,30 +1,39 @@
 local F = require('utils.functions')
 
-term = function()
-  -- current buffer is terminal -> hide buffer
-  if string.find(vim.api.nvim_buf_get_name(0), 'term://') then
-    return vim.cmd('close')
-  end
 
+term = function()
+  local bufname = 'term_buffer'
   local termheight = vim.api.nvim_win_get_height(0) / 4
 
-  -- terminal buffer exists -> unhide and/or focus
-  for k in pairs(vim.api.nvim_list_bufs()) do
-    if string.find(vim.api.nvim_buf_get_name(k), 'term://') then
-      local winid = vim.fn.bufwinid(k)
-
-      if winid == -1 then
-        return vim.cmd('bot sb'..k..' | resize '..termheight)
-      end
-
-      return vim.fn.win_gotoid(winid)
-    end
+  -- if focused -> close
+  if string.find(vim.api.nvim_buf_get_name(0), bufname) then
+    return vim.api.nvim_command('close')
   end
 
-  -- terminal buffer doesn't exist -> create new buffer
-  vim.cmd('bot '..termheight..'sp term:///bin/zsh')
-end
+  local bufnr = vim.fn.bufnr(bufname)
+  -- buffer doesn't exist -> create buf
+    -- if vim.fn.bufexists('term_buffer') == 0 then
+  if bufnr == -1 then
+    bufnr = vim.api.nvim_create_buf(false, false)
+    if bufnr == 0 then
+      return print('Fatal error while spawing new terminal buffer!')
+    end
+  -- buffer exists ->
+  else
+    -- window exists? -> focus
+    local winid = vim.fn.bufwinid(bufnr)
+    if winid ~= -1 then return vim.fn.win_gotoid(winid) end
+  end
 
+  -- window doesn't exist? -> split
+  vim.api.nvim_command('bot sb'..bufnr..' | resize '..termheight)
+
+  -- window is empty -> open new terminal and rename
+  if vim.fn.bufname(bufnr) == '' then
+    vim.fn.termopen('/bin/zsh')
+    vim.api.nvim_command('file '..bufname)
+  end
+end
 
 
 vim.g.mapleader = ' '

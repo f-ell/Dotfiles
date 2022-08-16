@@ -15,7 +15,7 @@ M.tabline = function()
     local bufnr   = vim.fn.tabpagebuflist(i)[winnr]
     local bufname = vim.fn.bufname(bufnr)
       if bufname ~= '' then
-        bufname = string.gsub(bufname, '.*/.*/', '')
+        bufname = string.gsub(bufname, '.*/', '')
       else
         bufname = '[No Name]'
       end
@@ -26,7 +26,6 @@ M.tabline = function()
         modified = ''
       end
 
-
     -- set highlight groups
     if i == vim.fn.tabpagenr() then
       t = strf('%s|%s', t, '%#TabLineSel#')
@@ -35,7 +34,6 @@ M.tabline = function()
       t = strf('%s %s', t, '%#TabLine#')
       -- t = strf('%s%s %s', t, '%#TabLine#', '%#bg#')
     end
-
 
     -- build tabline
     local items = {
@@ -60,19 +58,16 @@ F.gset('showtabline', 2)
 _G.set_tabline = M.tabline
 F.gset('tabline', '%!v:lua.set_tabline()')
 
-vim.api.nvim_create_autocmd(
-  {'TermOpen', 'TermEnter'},
-  {
-    command = 'noautocmd'
-  }
-)
+-- vim.api.nvim_create_autocmd(
+--   {'TermOpen', 'TermEnter'},
+--   { command = 'noautocmd' }
+-- )
 
 vim.api.nvim_create_autocmd(
   {'BufAdd', 'BufNewFile', 'VimEnter'},
   {
     pattern = {'*'},
-    command = 'if expand(\'%:t\') !~ \'term://\' | tab ball | endif',
-    -- command = 'tab ball',
+    command = 'tab ball',
     nested = true -- required to load correct filetype in all tabs
   }
 )
