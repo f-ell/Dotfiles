@@ -13,21 +13,23 @@ M.tabline = function()
   for i = first_index, last_index do
     local winnr   = vim.fn.tabpagewinnr(i)
     local bufnr   = vim.fn.tabpagebuflist(i)[winnr]
+
     local bufname = vim.fn.bufname(bufnr)
       if bufname ~= '' then
         bufname = string.gsub(bufname, '.*/', '')
       else
         bufname = '[No Name]'
       end
+
     local modified  = vim.api.nvim_buf_get_option(bufnr, 'modified')
       if modified then
-        modified = '*'
+        modified = '*' 
       else
         modified = ''
       end
 
     -- set highlight groups
-    if i == vim.fn.tabpagenr() then
+    if i == vim.fn.tabpagenr() then 
       t = strf('%s|%s', t, '%#TabLineSel#')
       -- t = strf('%s%s %s', t, '%#TabLineSel#', '%#bg#')
     else
@@ -38,8 +40,8 @@ M.tabline = function()
     -- build tabline
     local items = {
       ' ',
-      modified,
       bufname,
+      modified,
       ' ',
       '%#TabLineFill#'
     }

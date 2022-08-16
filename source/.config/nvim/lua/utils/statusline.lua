@@ -73,9 +73,19 @@ end
 
 M.get_filetype = function()
   -- return string.format(' %s ', vim.fn.fnamemodify(vim.fn.expand('%'), ':e:e:e'))
-  local filetype = vim.bo.filetype
-  if filetype ~= '' then filetype = strf('%s | ', filetype) end
-  return filetype
+
+  local file_name = vim.fn.expand('%')
+  local file_ext  = vim.fn.expand(file_name..':e')
+  local file_icon = require('nvim-web-devicons')
+    .get_icon(file_name, file_extension, {default = true})
+
+  local filetype      = vim.bo.filetype
+  local filetype_icon = ''
+  if filetype ~= '' then
+    filetype_icon = strf('%s %s | ', file_icon, filetype)
+  end
+
+  return filetype_icon
 end
 
 M.get_position = function()

@@ -31,7 +31,7 @@ term = function()
   -- window is empty -> open new terminal and rename
   if vim.fn.bufname(bufnr) == '' then
     vim.fn.termopen('/bin/zsh')
-    vim.api.nvim_command('file '..bufname)
+    vim.api.nvim_command('0f | f '..bufname)
   end
 end
 
