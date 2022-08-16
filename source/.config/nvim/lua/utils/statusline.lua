@@ -24,24 +24,18 @@ M.get_mode_colour = function()
 end
 
 M.get_git = function()
-  -- au WinEnter,BufEnter * let b:branch_info = system('git rev-parse --is-inside-work-tree 2>/dev/null')
-  -- local branch_info = vim.b.branch_info
-  -- if branch_info then branch_info = strf('  %s ', branch_info) end
-  -- return branch_info
+  -- branch = os.execute('git branch --show-current 2>/dev/null')
+  local fh = io.popen('git branch --show-current 2>/dev/null', 'r')
+    local branch = fh:read('*a')
+  fh:close()
 
-  -- local branch = ''
-  -- if os.execute('git ls-files % 2>/dev/null') ~= '' then branch = strf('  %s', 'git') end
-
-  local branch = ''
-
-  local fh = io.popen('git ls-files --error-unmatch % 2>/dev/null')
-  if fh ~= nil then
-    if fh:read('*a') ~= '' then
-      branch = 'hey there'
-    end
-    fh:close()
+  if branch ~= '' then
+    branch = string.reverse(branch)
+    local char = string.sub(branch, 0, 1)
+    branch = string.gsub(branch, char, '')
+    branch = string.reverse(branch)
+    branch = strf('  %s', branch)
   end
-  -- if branch ~= '' then branch = strf('  %s', 'git') end
   return branch
 end
 
@@ -74,12 +68,16 @@ end
 M.get_filetype = function()
   -- return string.format(' %s ', vim.fn.fnamemodify(vim.fn.expand('%'), ':e:e:e'))
 
-  local file_name = vim.fn.expand('%')
-  local file_ext  = vim.fn.expand(file_name..':e')
-  local file_icon = require('nvim-web-devicons')
-    .get_icon(file_name, file_extension, {default = true})
+  local filetype = vim.bo.filetype
 
-  local filetype      = vim.bo.filetype
+  -- FILETYPE EXCEPTIONS
+  if      filetype == 'perl'        then filetype = 'pl'
+  elseif  filetype == 'javascript'  then filetype = 'js'
+  end
+
+  local file_icon = require('nvim-web-devicons')
+    .get_icon(filetype, {default = true})
+
   local filetype_icon = ''
   if filetype ~= '' then
     filetype_icon = strf('%s %s | ', file_icon, filetype)
@@ -103,7 +101,7 @@ M.set_statusline = function()
   local git = M:get_git()
 
   local modified  = M:get_modified()
-  local filename  = strf('%s%s', M:get_filename(), bg)
+  local filename  = strf('%s%s', M:get_filename(), bg) -- 'bg' for 'readonly'
   local bufnr     = strf('(%s)', M:get_bufnr())
 
   local filetype  = strf('%s %s', mode_colour, M:get_filetype())
