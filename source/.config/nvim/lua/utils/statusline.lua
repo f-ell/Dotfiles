@@ -24,7 +24,6 @@ M.get_mode_colour = function()
 end
 
 M.get_git = function()
-  -- branch = os.execute('git branch --show-current 2>/dev/null')
   local fh = io.popen('git branch --show-current 2>/dev/null', 'r')
     local branch = fh:read('*a')
   fh:close()
@@ -34,7 +33,7 @@ M.get_git = function()
     local char = string.sub(branch, 0, 1)
     branch = string.gsub(branch, char, '')
     branch = string.reverse(branch)
-    branch = strf('  %s', branch)
+    branch = strf(' %s %s%s', '%#Git#', branch, '%#Default#')
   end
   return branch
 end
@@ -45,14 +44,14 @@ end
 
 M.get_filename = function()
   local filename = '%t'
-  local readonly, bgreset = '', ''
+  local readonly, reset = '', ''
 
   if vim.api.nvim_buf_get_option(0, 'readonly') then
-    readonly  = '%#ro# '
-    bgreset   = ' %#bg#'
+    readonly  = '%#Ro# '
+    reset     = ' %#Default#'
   end
 
-  return strf('%s%s%s', readonly, filename, bgreset)
+  return strf('%s%s%s', readonly, filename, reset)
 end
 
 M.get_modified = function()
@@ -92,16 +91,16 @@ end
 
 
 M.set_statusline = function()
-  local bg = '%#bg#'
+  local reset = '%#Default#'
   local mode_colour = M:get_mode_colour(vim.api.nvim_get_mode().mode)
 
   local mode
-    = strf('%s %s %s', mode_colour, M:get_mode(), bg)
+    = strf('%s %s %s', mode_colour, M:get_mode(), reset)
 
   local git = M:get_git()
 
   local modified  = M:get_modified()
-  local filename  = strf('%s%s', M:get_filename(), bg) -- 'bg' for 'readonly'
+  local filename  = strf('%s%s', M:get_filename(), reset)
   local bufnr     = strf('(%s)', M:get_bufnr())
 
   local filetype  = strf('%s %s', mode_colour, M:get_filetype())
