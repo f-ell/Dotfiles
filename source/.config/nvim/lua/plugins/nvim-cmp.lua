@@ -57,9 +57,9 @@ cmp.setup({
         {name = 'nvim_lua',
           -- max_item_count = 12,
           keyword_length = 1},
-        {name = 'omni',
-          max_item_count = 4,
-          keyword_length = 1},
+        -- {name = 'omni',
+        --   max_item_count = 4,
+        --   keyword_length = 1},
         {name = 'buffer',
           max_item_count = 4,
           keyword_length = 4}
@@ -81,7 +81,7 @@ cmp.setup({
             luasnip   = '-Snp-',
             nvim_lsp  = '-Lsp-',
             nvim_lua  = '-Lua-',
-            omni      = '-Omn-',
+            -- omni      = '-Omn-',
             buffer    = '-Buf-'
         })[entry.source.name]
         return item

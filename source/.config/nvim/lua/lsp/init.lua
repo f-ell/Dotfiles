@@ -4,9 +4,9 @@ if not ok1 or not ok2 then return end
 
 mason.setup()
 
-require('lsp.setup')
+require('lsp.server-setup')
 
-local std_server_setup = function()
+local base_setup = function()
   local signs = {
     { name = "DiagnosticSignError", text = "" },
     { name = "DiagnosticSignWarn",  text = "" },
@@ -42,4 +42,4 @@ local std_server_setup = function()
   vim.lsp.handlers['textDocument/signatureHelp'] =
     vim.lsp.with(vim.lsp.handlers.signature_help, { border = 'rounded' })
 end
-std_server_setup()
+base_setup()

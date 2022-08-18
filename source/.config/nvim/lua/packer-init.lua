@@ -58,11 +58,11 @@ return packer.startup(
         ft    = 'lua',
         after = 'nvim-cmp'
       },
-      {
-        'hrsh7th/cmp-omni',
-        ft    = {'latex', 'plaintex', 'tex'},
-        after = 'nvim-cmp'
-      },
+      -- {
+      --   'hrsh7th/cmp-omni',
+      --   ft    = {'latex', 'plaintex', 'tex'},
+      --   after = 'nvim-cmp'
+      -- },
       {
         'L3MON4D3/LuaSnip',
         after = 'nvim-cmp'
@@ -139,7 +139,7 @@ return packer.startup(
 
 
   -- Latex
-  -- compilation with tectonic (consider re-adding texlab for snippets)
+  -- compilation with tectonic (uses texlab for snippets)
     use {
       'lervag/vimtex',
       ft      = {'latex', 'plaintex', 'tex'},

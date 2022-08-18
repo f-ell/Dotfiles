@@ -29,6 +29,8 @@ M.tabline = function()
         bufname = '[No Name]'
       end
 
+    local tabnum = strf('(%s)', i)
+
     -- set highlight groups
     if i == vim.fn.tabpagenr() then 
       -- alternatives:  right aligned => ▕ ▐ ,  left aligned => ▎ ▍
@@ -43,6 +45,7 @@ M.tabline = function()
       -- ' ',
       modified,
       bufname,
+      tabnum,
       ' ',
       '%#TabLineFill#'
     }
@@ -60,11 +63,6 @@ end
 F.gset('showtabline', 2)
 _G.set_tabline = M.tabline
 F.gset('tabline', '%!v:lua.set_tabline()')
-
--- vim.api.nvim_create_autocmd(
---   {'TermOpen', 'TermEnter'},
---   { command = 'noautocmd' }
--- )
 
 vim.api.nvim_create_autocmd(
   {'BufAdd', 'BufNewFile', 'VimEnter'},
