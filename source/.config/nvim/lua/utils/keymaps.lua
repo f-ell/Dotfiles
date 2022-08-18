@@ -1,7 +1,15 @@
 local F = require('utils.functions')
 
 
-term = function()
+wipebuf = function()
+  if vim.fn.tabpagenr('$') == 1 then
+    vim.cmd('enew | bw #')
+  else
+    vim.cmd('bw')
+  end
+end
+
+toggleterm = function()
   local bufname = 'term_buffer'
   local termheight = vim.api.nvim_win_get_height(0) / 4
 
@@ -42,9 +50,9 @@ vim.g.mapleader = ' '
 F.nnmap('<leader>sk', ':source ~/.config/nvim/lua/utils/keymaps.lua<CR>')
 
 F.nnmap('--', ':w<CR>')
-F.nnmap('-w', ':bw!<CR>')
+F.nnmap('-w', ':lua wipebuf()<CR>')
 F.nnmap('<C-l>', ':noh<CR>')
-F.nnmap('<leader><CR>', ':lua term()<CR>')
+F.nnmap('<leader><CR>', ':lua toggleterm()<CR>')
 
 F.nnmap('<leader>~', 'viw~')
 F.nnmap('<leader>rcl', '"*y_:lua <C-r>*<CR>')
@@ -73,15 +81,13 @@ F.nnmap('<leader>bb', 'oborder: 1px solid blue;<Esc>o<Esc>')
 
 
 -- tabs
-F.nnmap('<leader>th', ':tabnext-<CR>')
-F.nnmap('<leader>tj', ':tabfirst<CR>')
-F.nnmap('<leader>tl', ':tabnext+<CR>')
-F.nnmap('<leader>tk', ':tablast<CR>')
+F.nnmap('<leader>g0', ':tabfirst<CR>')
+F.nnmap('<leader>g$', ':tablast<CR>')
 
-F.nnmap('<leader>t<S-h>', ':tabmove-<CR>')
-F.nnmap('<leader>t<S-j>', ':tabmove0<CR>')
-F.nnmap('<leader>t<S-l>', ':tabmove+<CR>')
-F.nnmap('<leader>t<S-k>', ':tabmove$<CR>')
+F.nnmap('<leader>gh', ':tabmove-<CR>')
+F.nnmap('<leader>gj', ':tabmove0<CR>')
+F.nnmap('<leader>gl', ':tabmove+<CR>')
+F.nnmap('<leader>gk', ':tabmove$<CR>')
 
 
 -- splits

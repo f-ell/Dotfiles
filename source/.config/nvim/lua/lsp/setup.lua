@@ -1,3 +1,4 @@
+local F = require('utils.functions')
 local lspconfig = require('lspconfig')
 
 local servers = {
@@ -6,15 +7,31 @@ local servers = {
   -- _2 = 'perlpls',
   _3 = 'sumneko_lua'
 }
+
 local configs  = {
   _2 = 'perl',
   _3 = 'lua'
 }
 
+
+local on_attach = function()
+  F.o('signcolumn', 'yes:1')
+
+  vim.keymap.set('n', 'K', vim.lsp.buf.hover, { buffer = 0 })
+
+  F.nnmap('<leader>ds', vim.diagnostic.open_float,  {buffer = 0})
+  F.nnmap('<leader>dj', vim.diagnostic.goto_next,   {buffer = 0})
+  F.nnmap('<leader>dk', vim.diagnostic.goto_prev,   {buffer = 0})
+
+  F.nnmap('<leader>lr', vim.lsp.buf.rename,     {buffer = 0})
+  F.nnmap('<leader>ld', vim.lsp.buf.definition, {buffer = 0})
+end
+
+
 for key, server in pairs(servers) do
   local capabilities = vim.lsp.protocol.make_client_capabilities()
   local opts = {
-    on_attach     = require('lsp.functions').on_attach,
+    on_attach     = on_attach,
     capabilities  = require('cmp_nvim_lsp').update_capabilities(capabilities)
   }
 

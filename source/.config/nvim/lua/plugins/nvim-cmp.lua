@@ -49,17 +49,17 @@ cmp.setup({
 
     sources = {
         {name = 'luasnip',
-         max_item_count = 8,
+         max_item_count = 4,
          keyword_length = 1},
         {name = 'nvim_lsp',
          -- max_item_count = 12,
          keyword_length = 1},
         {name = 'nvim_lua',
          -- max_item_count = 12,
-         keyword_length = 2},
+         keyword_length = 1},
         {name = 'buffer',
-         max_item_count = 8,
-         keyword_length = 2}
+         max_item_count = 4,
+         keyword_length = 4}
     },
 
     window = {
@@ -96,15 +96,17 @@ cmp.setup({
         ['<C-j>'] = cmp.mapping.select_next_item(),
         ['<C-e>'] = cmp.mapping.abort(),
         ['<C-Space>'] = cmp.mapping(cmp.mapping.complete()),
-        ['<Tab>'] = cmp.mapping(function(fallback)
-          if cmp.visible() then
-            cmp.confirm({select = true})
-          elseif lsnip.expand_or_jumpable() then
-            lsnip.expand_or_jump()
-          else
-            fallback()
+        ['<Tab>'] = cmp.mapping(
+          function(fallback)
+            if cmp.visible() then
+              cmp.confirm({select = true})
+            elseif lsnip.expand_or_jumpable() then
+              lsnip.expand_or_jump()
+            else
+              fallback()
+            end
           end
-        end)
+        )
     },
 
     confirm_opts = {

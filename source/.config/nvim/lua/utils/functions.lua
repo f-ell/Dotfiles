@@ -31,7 +31,8 @@ local function map(mode, opt)
     opt = opt or {noremap = true}
     return function(lhs, rhs, re)
         re = vim.tbl_extend('force', opt, re or {})
-        vim.api.nvim_set_keymap(mode, lhs, rhs, re)
+        -- vim.api.nvim_set_keymap(mode, lhs, rhs, re)
+        vim.keymap.set(mode, lhs, rhs, re)
     end
 end
 
