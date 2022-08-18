@@ -33,12 +33,11 @@ return packer.startup(
     use {
       {
         'williamboman/mason.nvim',
-        ft = {'java', 'lua', 'perl'},
+        ft  = {'java', 'latex', 'lua', 'perl', 'plaintex', 'tex'},
         cmd = {'Mason', 'MasonInstall', 'MasonUninstall'}
       },
       {
         'neovim/nvim-lspconfig',
-        -- after = 'nvim-lsp-installer'
         after = 'mason.nvim'
       },
       {
@@ -57,6 +56,11 @@ return packer.startup(
       {
         'hrsh7th/cmp-nvim-lua',
         ft    = 'lua',
+        after = 'nvim-cmp'
+      },
+      {
+        'hrsh7th/cmp-omni',
+        ft    = {'latex', 'plaintex', 'tex'},
         after = 'nvim-cmp'
       },
       {
@@ -131,6 +135,17 @@ return packer.startup(
           require('plugins.vim-table-mode')
         end
       }
+    }
+
+
+  -- Latex
+  -- compilation with tectonic (consider re-adding texlab for snippets)
+    use {
+      'lervag/vimtex',
+      ft      = {'latex', 'plaintex', 'tex'},
+      config  = function()
+        require('plugins.vimtex')
+      end
     }
 
 

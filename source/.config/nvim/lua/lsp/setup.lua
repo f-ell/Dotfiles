@@ -4,8 +4,8 @@ local lspconfig = require('lspconfig')
 local servers = {
   _1 = 'jdtls',
   _2 = 'perlnavigator',
-  -- _2 = 'perlpls',
-  _3 = 'sumneko_lua'
+  _3 = 'sumneko_lua',
+  _4 = 'texlab'
 }
 
 local configs  = {

@@ -114,15 +114,22 @@ F.nnmap('<A-l>', '<C-w>l')
   -- colorizer
     F.nnmap('<leader>ct', ':ColorizerToggle<CR>')
 
-  -- trouble
-    F.nnmap('<leader>tt', ':TroubleToggle<CR>')
-
-  -- nvim-tree
-    F.nnmap('<leader>ntt', ':NvimTreeToggle<CR>')
-
   -- emmet
     F.inmap('<A-e>', '<C-y>,<Esc>')
     F.nnmap('<A-e>', '<C-y>,<Esc>')
 
   -- markdownpreview
     F.nnmap('<A-p>', '<plug>MarkdownPreviewToggle')
+
+  -- nvim-tree
+    F.nnmap('<leader>ntt', ':NvimTreeToggle<CR>')
+
+  -- trouble
+    F.nnmap('<leader>tt', ':TroubleToggle<CR>')
+
+  -- vimtex
+    F.nnmap('<leader>vcl',  ':VimtexClean<CR>')
+    F.nnmap('<leader>vcp',  ':VimtexCompileSS<CR>')
+    F.nnmap('<leader>vtoc', ':VimTexTocToggle<CR>')
+    F.nnmap('<leader>vst',  ':VimtexStatus!<CR>')
+    F.nnmap('<leader>vv',   ':VimtexView<CR>')
