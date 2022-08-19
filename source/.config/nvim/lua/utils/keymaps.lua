@@ -9,9 +9,39 @@ wipebuf = function()
   end
 end
 
-toggleterm = function()
-  local bufname = 'term_buffer'
-  local termheight = vim.api.nvim_win_get_height(0) / 4
+
+tabbufs = function()
+  -- loops over tabs - checks if any window holds target buffer in any tab
+  local haswindow = function(target_bufnr)
+    -- return vim.fn.bufwinnr(bufnr) ~= -1
+    for i = 1, vim.fn.tabpagenr('$') do
+      local tabbuflist = vim.fn.tabpagebuflist(i)
+
+      for j = 1, #(tabbuflist) do
+        if vim.fn.bufnr(tabbuflist[j]) == target_bufnr then return true end
+      end
+    end
+
+    return false
+  end
+
+  -- loop over buffers - check if buffer should be split to new tab
+  for _, v in pairs(vim.api.nvim_list_bufs()) do
+    local bufname = vim.fn.bufname(v)
+
+    if    vim.fn.buflisted(v) == 1
+      and vim.fn.bufloaded(v) == 1
+      and not haswindow(v)
+      and bufname ~= '' then
+      vim.cmd('tabe '..bufname)
+    end
+  end
+end
+
+
+terminal = function()
+  local bufname     = 'term_buffer'
+  local termheight  = vim.api.nvim_win_get_height(0) / 4
 
   -- if focused -> close
   if string.find(vim.api.nvim_buf_get_name(0), bufname) then
@@ -47,12 +77,15 @@ end
 vim.g.mapleader = ' '
 
 -- normal
-F.nnmap('<leader>sk', ':source ~/.config/nvim/lua/utils/keymaps.lua<CR>')
+F.nnmap('<leader>so', ':source ~/.config/nvim/lua/utils/keymaps.lua<CR>')
 
 F.nnmap('--', ':w<CR>')
+F.nnmap('-d', ':bd<CR>')
 F.nnmap('-w', ':lua wipebuf()<CR>')
 F.nnmap('<C-l>', ':noh<CR>')
-F.nnmap('<leader><CR>', ':lua toggleterm()<CR>')
+
+F.nnmap('<leader>tb',   ':lua tabbufs()<CR>')
+F.nnmap('<leader><CR>', ':lua terminal()<CR>')
 
 F.nnmap('<leader>~', 'viw~')
 F.nnmap('<leader>rcl', '"*y_:lua <C-r>*<CR>')
