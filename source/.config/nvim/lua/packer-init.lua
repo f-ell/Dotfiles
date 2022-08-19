@@ -1,7 +1,5 @@
-local ok, packer = pcall(require, 'packer')
-if not ok then
-  return
-end
+local success, packer = pcall(require, 'packer')
+if not success then return print('Error: Packer not found') end
 
 packer.init({
   ensure_dependencies = true,

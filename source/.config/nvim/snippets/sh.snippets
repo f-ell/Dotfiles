@@ -1,2 +1,8 @@
 snippet #! $hashbang
 	#!/bin/sh
+
+snippet [z $ test empty
+	[ -z $$1 ] $0
+
+snippet [n $test not empty
+	[ -n "$$1" ] $0

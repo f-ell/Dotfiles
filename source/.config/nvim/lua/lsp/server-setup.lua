@@ -1,5 +1,5 @@
-local F = require('utils.functions')
-local lspconfig = require('lspconfig')
+local lsp = require('lspconfig')
+local F   = require('utils.functions')
 
 local servers = {
   _1 = 'jdtls',
@@ -40,5 +40,5 @@ for key, server in pairs(servers) do
     vim.tbl_deep_extend('force', config, opts)
   end
 
-  lspconfig[server].setup(opts)
+  lsp[server].setup(opts)
 end

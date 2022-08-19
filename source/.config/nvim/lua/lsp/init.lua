@@ -1,6 +1,6 @@
-local ok1, lspconfig  = pcall(require, 'lspconfig')
-local ok2, mason      = pcall(require, 'mason')
-if not ok1 or not ok2 then return end
+local success1, _     = pcall(require, 'lspconfig')
+local success2, mason = pcall(require, 'mason')
+if not success1 or not success2 then return end
 
 mason.setup()
 
