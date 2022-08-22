@@ -26,14 +26,8 @@ local icons = {
   Variable      = ""
 }
 
--- Load snippets
-require('luasnip.loaders.from_snipmate').lazy_load({
-  paths = {'~/.config/nvim/snippets'}
-})
 
--- Configure and load cmp
-local cmp   = require('cmp')
-local lsnip = require('luasnip')
+local cmp = require('cmp')
 cmp.setup({
     enabled = function()
       local context = require('cmp.config.context')
@@ -43,7 +37,7 @@ cmp.setup({
 
     snippet = {
         expand = function(args)
-            lsnip.lsp_expand(args.body)
+            require('luasnip').lsp_expand(args.body)
         end,
     },
 
@@ -52,14 +46,9 @@ cmp.setup({
           max_item_count = 4,
           keyword_length = 1},
         {name = 'nvim_lsp',
-          -- max_item_count = 12,
           keyword_length = 1},
         {name = 'nvim_lua',
-          -- max_item_count = 12,
           keyword_length = 1},
-        -- {name = 'omni',
-        --   max_item_count = 4,
-        --   keyword_length = 1},
         {name = 'buffer',
           max_item_count = 4,
           keyword_length = 4}
@@ -102,13 +91,8 @@ cmp.setup({
         ['<C-Space>'] = cmp.mapping(cmp.mapping.complete()),
         ['<Tab>'] = cmp.mapping(
           function(fallback)
-            if cmp.visible() then
-              cmp.confirm({select = true})
-            elseif lsnip.expand_or_jumpable() then
-              lsnip.expand_or_jump()
-            else
-              fallback()
-            end
+            if    cmp.visible() then cmp.confirm({select = true})
+            else  fallback()    end
           end
         )
     },
