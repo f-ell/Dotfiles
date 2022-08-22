@@ -3,9 +3,10 @@ ping() {
   $Ping -c1 ${1:-archlinux.org}
 }
 owns() {
+  [[ -z $1 ]] && { printf "Error: no command specified!\n"; return; }
   Program=`command -v $1`
   [[ -z $Program ]] \
-    && printf "Error: no command specified!\n" \
+    && printf "Error: $1 not found!\n" \
     || pacman -Qo $Program
 }
 
