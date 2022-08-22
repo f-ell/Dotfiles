@@ -116,5 +116,5 @@ M.set_statusline = function()
 end
 
 
-F.gset('laststatus', 3)
-F.gset('statusline', '%!v:lua.M.set_statusline()')
+F.o('laststatus', 3)
+F.o('statusline', '%!v:lua.M.set_statusline()')

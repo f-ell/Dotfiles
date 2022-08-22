@@ -9,5 +9,5 @@ F.g('everforest_spell_foreground', 'colored')
 F.g('everforest_better_performance', '1')
 
 -- Configuration
-F.gset('termguicolors', true)
+F.o('termguicolors', true)
 F.c('colorscheme everforest')

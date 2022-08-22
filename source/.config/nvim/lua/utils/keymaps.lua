@@ -1,7 +1,7 @@
 local F = require('utils.functions')
 
 
-wipebuf = function()
+local wipe_buf = function()
   if vim.fn.tabpagenr('$') == 1 then
     vim.cmd('enew | bw #')
   else
@@ -10,7 +10,7 @@ wipebuf = function()
 end
 
 
-tabbufs = function()
+local tab_bufs = function()
   -- loops over tabs - checks if any window holds target buffer in any tab
   local haswindow = function(target_bufnr)
     -- return vim.fn.bufwinnr(bufnr) ~= -1
@@ -39,7 +39,7 @@ tabbufs = function()
 end
 
 
-terminal = function()
+local terminal = function()
   local bufname     = 'term_buffer'
   local termheight  = vim.api.nvim_win_get_height(0) / 4
 
@@ -74,28 +74,55 @@ terminal = function()
 end
 
 
+local ls_jump_backwards = function()
+  local ls = require('luasnip')
+  if ls.jumpable(-1) then ls.jump(-1) end
+end
+
+local ls_expand_or_jump = function()
+  local ls = require('luasnip')
+  if ls.expand_or_jumpable() then ls.expand_or_jump() end
+end
+
+local ls_choice_forward = function()
+  local ls = require('luasnip')
+  if ls.choice_active() then ls.change_choice(1) end
+end
+
+local ls_choice_backward = function()
+  local ls = require('luasnip')
+  if ls.choice_active(-1) then ls.change_choice(-1) end
+end
+
+
 vim.g.mapleader = ' '
 
 -- normal
-F.nnmap('<leader>so', ':source ~/.config/nvim/lua/utils/keymaps.lua<CR>')
+F.nnmap('<leader>key',  ':so ~/.config/nvim/lua/utils/keymaps.lua<CR>')
+F.nnmap('<leader>snip', ':so ~/.config/nvim/lua/plugins/luasnip.lua<CR>')
 
 F.nnmap('--', ':w<CR>')
 F.nnmap('-d', ':bd<CR>')
-F.nnmap('-w', ':lua wipebuf()<CR>')
+F.nnmap('-w', function() wipe_buf() end)
 F.nnmap('<C-l>', ':noh<CR>')
 
-F.nnmap('<leader>tb',   ':lua tabbufs()<CR>')
-F.nnmap('<leader><CR>', ':lua terminal()<CR>')
+F.nnmap('<leader>tb',   function() tab_bufs() end)
+F.nnmap('<leader><CR>', function() terminal() end)
 
 F.nnmap('<leader>~', 'viw~')
-F.nnmap('<leader>rcl', '"*y_:lua <C-r>*<CR>')
 
 
 F.nnmap('<A-f>', ':FZF -i --reverse --scroll-off=1 --no-info --no-color --prompt=$ ~<CR>')
 
+-- insert
+F.inmap('<C-h>', function() ls_jump_backwards() end)
+F.inmap('<C-j>', function() ls_choice_forward() end)
+F.inmap('<C-k>', function() ls_choice_backward() end)
+F.inmap('<C-l>', function() ls_expand_or_jump() end)
+
 -- visual
-F.vnmap('<Tab>',    '>gv')
-F.vnmap('<S-Tab>',  '<gv')
+-- F.vnmap('<Tab>',    '>gv')
+-- F.vnmap('<S-Tab>',  '<gv')
 
 -- command
 F.cnmap('<C-h>', '<Left>')
