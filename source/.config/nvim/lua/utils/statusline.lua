@@ -69,20 +69,25 @@ M.get_filetype = function()
 
   local filetype = vim.bo.filetype
 
+  local get_icon_filetype = filetype
   -- FILETYPE EXCEPTIONS
-  if      filetype == 'perl'        then filetype = 'pl'
-  elseif  filetype == 'javascript'  then filetype = 'js'
+  if      filetype == 'perl'        then get_icon_filetype = 'pl'
+  elseif  filetype == 'javascript'  then get_icon_filetype = 'js'
   end
 
-  local file_icon = require('nvim-web-devicons')
-    .get_icon(filetype, {default = true})
+  local icon = require('nvim-web-devicons')
+    .get_icon(get_icon_filetype, {default = true})
 
-  local filetype_icon = ''
+  local icon_and_filetype = ''
   if filetype ~= '' then
-    filetype_icon = strf('%s %s | ', file_icon, filetype)
+    if icon == nil then
+      icon_and_filetype = strf('%s | ', filetype)
+    else
+      icon_and_filetype = strf('%s %s | ', icon, filetype)
+    end
   end
 
-  return filetype_icon
+  return icon_and_filetype
 end
 
 M.get_position = function()
