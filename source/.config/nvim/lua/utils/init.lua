@@ -6,3 +6,5 @@ require('utils.tabline')
 require('utils.statusline')
 
 require('utils.highlights')
+
+require('utils.autoexec')
