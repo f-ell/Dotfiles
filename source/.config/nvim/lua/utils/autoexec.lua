@@ -57,7 +57,8 @@ vim.api.nvim_create_user_command('AutoExec', function()
     vim.api.nvim_command(split_cmd)
   end
 
-  local command   = vim.split(vim.fn.input('command: '), ' ')
+  local command = vim.fn.input('command: ')
+  if command == '' then command = './'..in_bufname end
 
   attach_to_buffer(in_bufnr, out_bufnr, command)
   print(' \nAttached.')
