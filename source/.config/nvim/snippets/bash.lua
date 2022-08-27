@@ -1,6 +1,6 @@
 local snippets = {
   -- hashbang
-  s('#!',
+  s('_#!',
     fmt('#!/bin/bash', {})
   )
 }

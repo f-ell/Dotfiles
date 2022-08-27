@@ -8,13 +8,13 @@
 
 local snippets = {
   -- hashbang
-  s('#!',
+  s('_#!',
     fmt('#!/usr/bin/lua', {})
   ),
 
   -- require
   -- snip('req', { t'local ', i(1), t' = require(\'', c(2, {rep(1), i()}), t'\')' }),
-  s('req',
+  s('_req',
     fmt([[local {} = require('{}')]], {
       i(1),
       c(2, {rep(1), i()})

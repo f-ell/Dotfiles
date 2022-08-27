@@ -1,12 +1,12 @@
 local snippets = {
   -- hashbang
-  s('#!',
+  s('_#!',
     fmt('#!/usr/bin/perl', {})
   ),
 
   -- regex match - NOT YET FUNCTIONAL
   -- use function node to determine matching pair
-  s('match',
+  s('_match',
     fmt('/{}{}/', {
       c(1, {t'^$', t'^', t'$', t''}),
       i(2),
