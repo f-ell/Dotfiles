@@ -49,22 +49,19 @@ font:
   bold_italic:
     family: Azeret Mono
     style:  Bold Italic
-  size: 8
+  size: 10.5
 draw_bold_text_with_bright_colors: true
 
 colors:
   cursor:
-    text:   '#202020' # CellBackground
-    cursor: '#e0e0e0' # CellForeground
-  vi_mode_cursor:
-    text:   '#202020' # CellBackground
-    cursor: '#e0e0e0' # CellForeground
+    text:   '#2a353b' # CellBackground
+    cursor: '#d3c6aa' # CellForeground
   primary:
     # background: '#1d1d1d'
     # background: '#102b34' # cthulu
-    # background: '#323d43' # everforest
+    background: '#2a353b' # everforest
     # background: '#08151d' # sakura
-    background: '#202d35' # sakura lt
+    # background: '#202d35' # sakura lt
     foreground: '#e0e0e0'
 
 live_config_reload: true

@@ -28,12 +28,20 @@ bspc config left_padding    0
 # focused_border_color  active window; focused monitor
 # presel_feedback_color preselect preview
 
-Theme='sakura'
+Theme='forest'
 if [ $Theme = 'cthulu' ]; then
   bspc config focused_border_color  '#6090a0'
   bspc config active_border_color   '#205060'
   bspc config normal_border_color   '#205060'
   bspc config presel_feedback_color '#104050'
+  Wallpaper=~/Pictures/Wallpapers/andree_wallin/cthulu/cthulu_3.jpg
+
+elif [ $Theme = 'forest' ]; then
+  bspc config focused_border_color  '#323d43'
+  bspc config active_border_color   '#222d33'
+  bspc config normal_border_color   '#222d33'
+  bspc config presel_feedback_color '#222d33'
+  Wallpaper=~/Pictures/Wallpapers/nature/everforest.jpg
 
 elif [ $Theme = 'sakura' ]; then
   bspc config focused_border_color  '#2d3740'

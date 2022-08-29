@@ -10,9 +10,9 @@
 configuration {
   modi: "window";
   drun-display-format: "{name}";
-  font: "Azeret Mono 10";
+  font: "Recursive Italic 10";
   location: 0;
-  yoffset: -20;
+  yoffset: 90;
   fixed-num-lines: false;
   sort: true;
   cycle: false;
