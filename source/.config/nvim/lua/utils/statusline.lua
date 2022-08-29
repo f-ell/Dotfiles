@@ -121,5 +121,6 @@ M.set_statusline = function()
 end
 
 
+_G.set_statusline = M.set_statusline
 F.o('laststatus', 3)
-F.o('statusline', '%!v:lua.M.set_statusline()')
+F.o('statusline', '%!v:lua.set_statusline()')
