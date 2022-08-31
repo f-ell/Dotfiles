@@ -62,6 +62,6 @@ colors:
     background: '#2a353b' # everforest
     # background: '#08151d' # sakura
     # background: '#202d35' # sakura lt
-    foreground: '#e0e0e0'
+    foreground: '#d3c6aa'
 
 live_config_reload: true
