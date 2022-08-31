@@ -3,7 +3,7 @@ local F   = require('utils.functions')
 
 local servers = {
   _1 = 'jdtls',
-  _2 = 'perlnavigator',
+  _2 = 'perlpls', -- _2 = 'perlnavigator',
   _3 = 'sumneko_lua',
   _4 = 'texlab'
 }
