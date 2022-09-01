@@ -123,7 +123,8 @@ return packer.startup(function()
     {
       'iamcco/markdown-preview.nvim',
       run = 'cd app && npm install',
-      cmd = 'MarkdownPreview',
+      -- cmd = 'MarkdownPreview',
+      ft = {'md', 'markdown'},
       config  = function()
         require('plugins.markdown-preview')
       end
@@ -153,7 +154,8 @@ return packer.startup(function()
   use {
     {
       'terrortylor/nvim-comment',
-      keys = {';', '<leader>;'}, -- consider loading on VimEnter
+      -- keys = {',', '<leader>,'}, -- consider loading on VimEnter
+      event = 'VimEnter',
       config = function()
         require('plugins.nvim-comment')
       end

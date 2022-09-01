@@ -1,3 +1,3 @@
 local F = require('utils.functions')
 
-F.vg('mkdp_browser', 'qutebrowser')
+F.g('mkdp_browser', 'qutebrowser')
