@@ -22,7 +22,7 @@ super + o; {b,c,d,g,s}
 # notifications
 mode_switch + i
   dunstify -u low -h string:x-dunst-stack-tag:inet \
-  "`~/Git/Scripts/source/perl/curlstat`"
+  "`~/Git/Scripts/source/perl/status_fetch`"
 
 mode_switch + k
   dunstctl close
