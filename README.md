@@ -8,20 +8,29 @@ Included with these configurations are:
   * 'better' monocle mode script
     * hide all but the focused window (currently ignores floating windows) to
       remove annoying backdrop with transparency
-* nvim
+* Neovim
   * _almost_ full Lua configuration (some `vim.cmd`s remain)
   * custom status- and tab-/bufferline written from scratch
   * custom highlight groups for status- and tab-/bufferline
   * toggleable terminal in separate split (somewhat similar to VSCode)
-  * [LuaSnip](https://github.com/L3MON4D3/LuaSnip/) lua snippets for languages I use
-* zsh
+  * [LuaSnip](https://github.com/L3MON4D3/LuaSnip/) lua snippets for languages I
+  use
+* sxhkd
+  * different bindings fitting my needs for desktop and laptop machines
+    * the device type is read from `$HOME/Git/machine` (should contain either
+    'DT' or 'LT') and exported as `$MACHINE`
+    * e.g. `r-Alt + b` returns my
+      * mouse's battery percentage on a desktop
+      * laptop's battery percentage on a laptop
+* Zsh
   * prompt
-    * git branch
+    * Git branch
     * last command exit status (`$?`)
     * prompt-character denoting viins and vicmd modes
   * colours
     * custom `ls` and [`exa`](https://the.exa.website/) colours
-    * custom [`zsh-syntax-highlighting`](https://github.com/zsh-users/zsh-syntax-highlighting/) colours
+    * custom [`zsh-syntax-highlighting`](https://github.com/zsh-users/zsh-syntax-highlighting/)
+    colours
 
 ## Software
 * WM:             [`bspwm`](https://www.github.com/baskerville/bspwm/)
@@ -35,13 +44,16 @@ Included with these configurations are:
 * Screenshots:    [`scrot`](https://github.com/resurrecting-open-source-projects/scrot/)
 
 ## Pictures
+Showing off Zsh prompt whilst in a Git repository and last propram's exit code:  
 ![](Pictures/zsh.png)  
-Zsh prompt in a git repository showing the last command's exit status, when
-not zero.
+
+Showing off Neovim looks whilst editing a buffer:  
 ![](Pictures/nvim.png)
 
 ## Basic Keybindings
-Keybindings needed to get up and running. Not exhaustive and subject to change.
+Keybindings needed to get up and running. Not exhaustive and subject to change.  
+See [`sxhkd`](source/.config/sxhkd/) for general keybindings. WM-specific
+keybindings can be found in `source/.config/<WM>/sxhkdrc.<WM>`.
 ```
   Super + Enter:      spawn terminal (Alacritty by default)
   Super + r:          spawn rofi with custom run script
