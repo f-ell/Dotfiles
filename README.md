@@ -46,7 +46,7 @@ Noteworthy things included with these configurations:
 
 ## Pictures
 Zsh prompt whilst in a Git repository and prompt when last command's exit status
-is not zero:
+is not zero:  
 ![](Pictures/zsh.png)  
 
 Neovim whilst editing buffer in a single window:  
