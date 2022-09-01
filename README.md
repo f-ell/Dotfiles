@@ -19,15 +19,15 @@ Noteworthy things included with these configurations:
   * different bindings fitting my needs for desktop and laptop machines
     * device-specific files end in `.dt` and `.lt` respectively
     * the device type is read from `$HOME/Git/machine` (contains either 'DT' or
-    'LT') and exported as `$MACHINE`
+    'LT') and exported as `$MACHINE` on shell startup
     * e.g. `r-Alt + b` returns my
       * mouse's battery percentage on a desktop
       * laptop's battery percentage on a laptop
 * Zsh
-  * prompt
+  * prompt includes
     * Git branch
-    * last command exit status (`$?`)
-    * prompt-character denoting viins and vicmd modes
+    * last command exit status (`$?`) when not zero
+    * prompt-character denoting `viins` and `vicmd` modes
   * colours
     * custom `ls` and [`exa`](https://the.exa.website/) colours
     * custom [`zsh-syntax-highlighting`](https://github.com/zsh-users/zsh-syntax-highlighting/)
