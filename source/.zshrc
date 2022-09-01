@@ -150,4 +150,4 @@ export LESSHISTFILE=-
 # Run fetch ONLY when X-Server is running, not on TTY
 [[ `xset q 2>/dev/null` ]] \
   && printf "'Whose is the dying flame?' asked the Witcher.\n    'Yours,' Death replied.\n"
-  # && printf "In his strong hand the man held a Rose.\n      And his aura burned bright.      \n"
+  # && printf "In his strong hand the man held a Rose.\n      And his aura burned bright.\n"
