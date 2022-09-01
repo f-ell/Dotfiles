@@ -4,10 +4,10 @@ local set_hl_groups = function()
   local fg_1 = '#ffffff'
   local fg_2 = '#b0b0b0'
 
-  local plum_1 = '#400070'
-  local plum_2 = '#8020f0'
+  local plum_1 = '#302090'
+  local plum_2 = '#6050f0'
 
-  local readonly  = '#ff3050'
+  local readonly  = '#f02030'
   local git       = '#fca326'
 
   local hls = {
@@ -22,22 +22,21 @@ local set_hl_groups = function()
 
     -- vim builtin groups
     {0, 'Search',     {fg = plum_1, bg = fg_1}},
-    {0, 'Substitute', {fg = plum_1, bg = fg_1}},
-    {0, 'CurSearch',  {fg = fg_1,   bg = plum_1}}, -- doesn't work?
+    {0, 'Substitute', {fg = fg_1,   bg = plum_1}},
     {0, 'IncSearch',  {fg = fg_1,   bg = plum_1}},
 
-    {0, 'Visual', {fg = '', bg = '#500040'}},
+    {0, 'Visual', {fg = fg_1, bg = '#3030a0'}},
 
     {0, 'TabLine',      {fg = fg_2, bg = plum_1, italic = true}},
     {0, 'TabLineSel',   {fg = fg_1, bg = plum_2, italic = true, underline = true}},
     {0, 'TabLineFill',  {fg = fg_1, bg = none}},
 
-    {0, 'modeN',  {fg = fg_1, bg = '#8020f0'}},
-    {0, 'modeC',  {fg = fg_1, bg = '#30c080'}},
-    {0, 'modeV',  {fg = fg_1, bg = '#700060'}},
-    {0, 'modeR',  {fg = fg_1, bg = '#b8b800'}},
+    {0, 'modeN',  {fg = fg_1, bg = '#6050f0'}},
+    {0, 'modeC',  {fg = fg_1, bg = '#30a080'}},
+    {0, 'modeV',  {fg = fg_1, bg = '#3030a0'}},
+    {0, 'modeR',  {fg = fg_1, bg = '#d0d050'}},
     {0, 'modeT',  {fg = fg_1, bg = '#3d3d3d'}},
-    {0, 'modeI',  {fg = fg_1, bg = '#b02050'}}
+    {0, 'modeI',  {fg = fg_1, bg = '#b03050'}}
   }
 
   for _, hlgr in pairs(hls) do

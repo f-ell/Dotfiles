@@ -19,4 +19,4 @@ ls.config.setup({
 --   .lazy_load({paths = {'~/.config/nvim/snippets'}})
 
 require('luasnip.loaders.from_lua')
-  .lazy_load({paths = {'~/.config/nvim/snippets'}})
+  .lazy_load({paths = {'~/.config/nvim/lua/snippets'}})
