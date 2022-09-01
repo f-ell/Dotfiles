@@ -1,6 +1,6 @@
 ## About
 This repository is a collection of my personal configuration files.  
-Included with these configurations are:
+Noteworthy things included with these configurations:
 * bspwm
   * 'smart' scratchpads script
     * re-launch scratchpad and reexecute application after accidentally closing
@@ -17,8 +17,9 @@ Included with these configurations are:
   use
 * sxhkd
   * different bindings fitting my needs for desktop and laptop machines
-    * the device type is read from `$HOME/Git/machine` (should contain either
-    'DT' or 'LT') and exported as `$MACHINE`
+    * device-specific files end in `.dt` and `.lt` respectively
+    * the device type is read from `$HOME/Git/machine` (contains either 'DT' or
+    'LT') and exported as `$MACHINE`
     * e.g. `r-Alt + b` returns my
       * mouse's battery percentage on a desktop
       * laptop's battery percentage on a laptop
@@ -44,37 +45,46 @@ Included with these configurations are:
 * Screenshots:    [`scrot`](https://github.com/resurrecting-open-source-projects/scrot/)
 
 ## Pictures
-Showing off Zsh prompt whilst in a Git repository and last propram's exit code:  
+Zsh prompt whilst in a Git repository and prompt when last command's exit status
+is not zero:
 ![](Pictures/zsh.png)  
 
-Showing off Neovim looks whilst editing a buffer:  
+Neovim whilst editing buffer in a single window:  
 ![](Pictures/nvim.png)
 
 ## Basic Keybindings
 Keybindings needed to get up and running. Not exhaustive and subject to change.  
-See [`sxhkd`](source/.config/sxhkd/) for general keybindings. WM-specific
+See [`sxhkd/`](source/.config/sxhkd/) for general keybindings. WM-specific
 keybindings can be found in `source/.config/<WM>/sxhkdrc.<WM>`.
 ```
-  Super + Enter:      spawn terminal (Alacritty by default)
-  Super + r:          spawn rofi with custom run script
-  Super + Shift + r:  spawn rofi in window mode
-  Super + o + x:      open application x
+  Super + Enter:          spawn terminal (Alacritty by default)
+  Super + r:              spawn Rofi with custom run script
+  Super + Shift + r:      spawn Rofi in window mode
+  Super + o + x:          spawn application x
 
-  Super + Shift + w:    close current window
-  Super + Control + q:  kill window manager
+  Super + Shift + w:      close focused node
+  Super + Control + r:    reload window manager
+  Super + Control + q:    kill window manager
 
-  Super + [0-x]:                    go to workspace x
-  Super + Shift + [0-x]:            move current window to workspace x
-  Super + Control + [hjkl]:         grow window in direction [hjkl]
-  Super + Control + Shift + [hjkl]: shrink window from direction [hjkl]
+  Super + f:              toggle node floating / tiled
+  Super + Tab:            toggle monocle layout
 
-  Super + r-Alt + [hjkl]: preselect in direction [hjkl]
-  Super + r-Alt + [0-9]:  change preselection ratio
-  Super + r-Alt + Escape: cancel preselction
+  Super + [0-x]:                      go to workspace x
+  Super + [hjkl]:                     focus node in direction [hjkl]
+  Super + Shift + [0-x]:              move node to workspace x
+  Super + Shift + [hjkl]:             move node in direction [hjkl]
 
-  Super + i + [ims]:  insert / move to / switch with receptacle
+  Super + Control + n:                equalize size of all nodes
+  Super + Control + [hjkl]:           grow node *in* direction [hjkl]
+  Super + Control + Shift + [hjkl]:   shrink node *from* direction [hjkl]
 
-  Super + (Shift +) m: take (full desktop) screenshot
+  Super + r-Alt + [hjkl]:   preselect in direction [hjkl]
+  Super + r-Alt + [0-9]:    change preselection ratio
+  Super + r-Alt + Escape:   cancel preselction
 
-  r-Alt + x: send dunst notification x ('mode_switch' bindings)
+  Super + i + [ims]:        insert / move to / switch with receptacle
+
+  Super + (Shift +) m:      take (full desktop) screenshot
+
+  r-Alt + x: send dunst notification x
 ```
