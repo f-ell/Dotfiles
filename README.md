@@ -35,7 +35,7 @@ Included with these configurations are:
 * Screenshots:    [`scrot`](https://github.com/resurrecting-open-source-projects/scrot/)
 
 ## Pictures
-![](Pictures/shell.png)  
+![](Pictures/zsh.png)  
 Zsh prompt in a git repository showing the last command's exit status, when
 not zero.
 ![](Pictures/nvim.png)
