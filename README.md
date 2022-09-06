@@ -1,6 +1,6 @@
 ## About
 This repository is a collection of my personal configuration files.  
-Noteworthy things included with these configurations:
+Some things worth highlighting:
 * bspwm
   * 'smart' scratchpads script
     * re-launch scratchpad and reexecute application after accidentally closing
@@ -9,14 +9,15 @@ Noteworthy things included with these configurations:
     * hide all but the focused window (currently ignores floating windows) to
       remove annoying backdrop with transparency
 * Neovim
-  * _almost_ full Lua configuration (some `vim.cmd`s remain)
+  * _almost_ 100% Lua configuration (some `vim.cmd`s still remain)
   * custom status- and tab-/bufferline written from scratch
   * custom highlight groups for status- and tab-/bufferline
   * toggleable terminal in separate split (somewhat similar to VSCode)
-  * [LuaSnip](https://github.com/L3MON4D3/LuaSnip/) lua snippets for languages I
-  use
+  * [LuaSnip](https://github.com/L3MON4D3/LuaSnip/) lua snippets that can be
+    used to build upon
 * sxhkd
-  * different bindings fitting my needs for desktop and laptop machines
+  * device-specific bindings that do something different depending on the
+    machine that's used
     * device-specific files end in `.dt` and `.lt` respectively
     * the device type is read from `$HOME/Git/machine` (contains either 'DT' or
     'LT') and exported as `$MACHINE` on shell startup
@@ -24,9 +25,9 @@ Noteworthy things included with these configurations:
       * mouse's battery percentage on a desktop
       * laptop's battery percentage on a laptop
 * Zsh
-  * prompt includes
-    * Git branch
-    * last command exit status (`$?`) when not zero
+  * prompt shows
+    * current Git branch
+    * last command's exit code, when not zero
     * prompt-character denoting `viins` and `vicmd` modes
   * colours
     * custom `ls` and [`exa`](https://the.exa.website/) colours
