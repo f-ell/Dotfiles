@@ -1,0 +1,8 @@
+#!/bin/sh
+# List=''
+while IFS='\n' read -r Item; do
+  List="$List$Item\n"
+done < ${0%/*}/items
+
+Program=`printf $List | rofi -monitor -4 -disable-history -dmenu -i`
+$Program &

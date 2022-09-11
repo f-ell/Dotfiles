@@ -8,7 +8,7 @@ super + Return
   /usr/bin/alacritty --working-directory ~
 
 super + r
-  ~/.config/rofi/rofi_custom.sh
+  ~/.config/rofi/launch
 super + shift + r
   rofi -monitor -4 -disable-history -sort -show window
 
@@ -20,18 +20,18 @@ super + o; {b,c,d,g,s}
   ~/Scripts/lof {qutebrowser,code,discord,gimp,steamwrap}
 
 # notifications
-mode_switch + i
+alt + i
   dunstify -u low -h string:x-dunst-stack-tag:inet \
   "`~/Git/Scripts/source/perl/status_fetch`"
 
-mode_switch + k
+alt + k
   dunstctl close
 
-mode_switch + t
+alt + t
   dunstify -u low -h string:x-dunst-stack-tag:time \
   "`date +%a.\ %d.%m.%Y\ %I:%M\ %p`"
 
-mode_switch + u
+alt + u
   dunstify -u low -h string:x-dunst-stack-tag:load \
   "Calculating..." && \
   dunstify -u low -h string:x-dunst-stack-tag:load \
