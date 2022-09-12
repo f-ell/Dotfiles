@@ -34,7 +34,7 @@ export EDITOR=$VISUAL
 
 Bin='/usr/bin:/usr/local/bin:/usr/local/sbin:'$HOME'/.local/bin'
 Perl='/usr/bin/core_perl:/usr/bin/site_perl:/usr/bin/vendor_perl'
-Other='/opt:'$HOME'/Scripts'
+Other='/opt:'$CARGO_HOME'/bin:'$HOME'/Scripts'
 export PATH=$Bin':'$Perl':'$Other
 unset Bin Perl Other
 export FZF_DEFAULT_COMMAND='fd -E .cache -tf -H -d10 .'
