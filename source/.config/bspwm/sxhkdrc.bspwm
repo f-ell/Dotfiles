@@ -30,10 +30,14 @@ super + control + shift + {h,j,k,l}
   bspc node -z {left 50 0, bottom 0 -50, top 0 50, right -50 0}
 
 # preselect
-super + mode_switch + {h,j,k,l,Escape}
+control + alt + {h,j,k,l,Escape}
   bspc node -p {west,south,north,east,cancel}
-super + mode_switch + {1-9}
+control + alt + {1-9}
   bspc node -o 0.{1-9}
+# super + mode_switch + {h,j,k,l,Escape}
+#   bspc node -p {west,south,north,east,cancel}
+# super + mode_switch + {1-9}
+#   bspc node -o 0.{1-9}
 
 # receptacles
 super + i; i
@@ -44,6 +48,6 @@ super + i; s
   bspc node -n last.\!automatic.local
 
 # scratchpads
-mode_switch + {1,2,3}
+alt + {1,2,3}
   ~/.config/bspwm/scripts/scratchpad {sFiles,sMusic,sCalc}
 
