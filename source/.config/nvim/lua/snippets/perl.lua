@@ -1,7 +1,11 @@
 local snippets = {
   -- hashbang
-  s('_#!',
-    fmt('#!/usr/bin/perl', {})
+  s('_!',
+    fmt('{}\n{}\n{}\n\n', {
+      t'#!/usr/bin/perl',
+      t'use warnings;',
+      t'use strict;'
+    })
   ),
 
   -- regex match - NOT YET FUNCTIONAL

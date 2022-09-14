@@ -2,7 +2,7 @@ local F = require('snippets.default_functions')
 
 local snippets = {
   -- hashbang
-  s('_#!',
+  s('_!',
     fmt('#!/bin/bash', {})
   ),
 

@@ -8,7 +8,7 @@
 
 local snippets = {
   -- hashbang
-  s('_#!',
+  s('_!',
     fmt('#!/usr/bin/lua', {})
   ),
 
