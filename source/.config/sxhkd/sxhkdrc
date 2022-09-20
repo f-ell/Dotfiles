@@ -7,10 +7,8 @@ control + Escape
 super + Return
   /usr/bin/alacritty --working-directory ~
 
-super + r
-  ~/.config/rofi/launch
-super + shift + r
-  rofi -monitor -4 -disable-history -sort -show window
+super + {_,shift +} + r
+  `rofi -monitor -4 {-dmenu -input ~/.config/rofi/items -i,-show window}`
 
 super + {_, shift +} m
   scrot -i -q 100 -F ~/Media/Pictures/Screenshots/scrot_$(date +%Y%m%d-%H%M%S).png \

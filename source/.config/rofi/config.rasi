@@ -1,24 +1,30 @@
 // ____   ____
 // |   \  |  |______
-// |    \ |  | ___  \ 
+// |    \ |  | ___  \
 // |     \|  | |  \  |
 // |  \   \  | |__/  |
 // |  |\     | _____/
 // |__| \____| | Author: Nico Pareigis
-//          |__| Rofi - Config
+//          |__| Rofi - Theme
+
 
 configuration {
-  modi: "window";
-  drun-display-format: "{name}";
-  font: "Recursive Italic 10";
+  modi:       "window,drun";
+  show-icons: false;
+  display-drun:   ""; // 
+  display-window: "";
+  drun-display-format:  "{name}";
+  window-format:        "{w}. {c}";
+
   location: 0;
-  yoffset: 90;
   fixed-num-lines: false;
-  sort: true;
-  cycle: false;
+
+  sort:     true;
+  cycle:    false;
   matching: "regex";
-  scroll-method: 0;
+  scroll-method:    0;
   max-history-size: 30;
+
   kb-accept-entry:      "Return";
   kb-cancel:            "Escape";
   kb-clear-line:        "Control+u";
@@ -36,5 +42,113 @@ configuration {
   kb-row-first:         "Control+h";
   kb-row-last:          "Control+l";
   kb-row-up:            "Control+k";
+
+  dmenu {
+    display-name: "dmenu";
+  }
+  inputchange {
+    action: "kb-row-first";
+  }
 }
-@theme "theme.rasi"
+
+* {
+  font: "Recursive Italic 10";
+
+  padding:          2px;
+  spacing:          2px;
+  border-radius:    4px;
+
+  fg-nor:  #d3c6aa;
+  fg-alt:  #b3a68a;
+  bg-alt:  #4a555b;
+  bg-nor:  #3a454b;
+
+  text-color:       @fg-nor;
+  border-color:     @fg-nor;
+  background-color: transparent;
+}
+
+window {
+  x-offset: 0px;
+  y-offset: 140px;
+  width:    14%;
+
+  spacing:          0px;
+  transparency:     "real";
+
+  border:           0px;
+
+  text-color:       inherit;
+  background-color: @bg-nor;
+}
+
+mainbox {
+  orientation:  vertical;
+  spacing:      0px;
+
+  text-color:       @fg-nor;
+  background-color: transparent;
+  children:         ["inputbar", "listbox"];
+}
+
+inputbar {
+  text-color:       inherit;
+  background-color: inherit;
+  children:   ["textbox-prompt", "entry"];
+}
+  textbox-prompt {
+    expand: false;
+    str: " ";
+  }
+  entry {
+    placeholder:      "";
+    text-color:       inherit;
+    background-color: inherit;
+  }
+
+listbox {
+  orientation:      vertical;
+
+  text-color:       inherit;
+  background-color: inherit;
+  children:         ["mode-switcher", "listview"];
+}
+  mode-switcher {
+    text-color:       inherit;
+    background-color: inherit;
+  }
+    button {
+      text-color:       inherit;
+      background-color: inherit;
+    }
+    button selected {
+      text-color:       @fg-nor;
+      background-color: @bg-alt;
+    }
+  listview {
+    columns:        3;
+    lines:          2;
+    dynamic:        false;
+    fixed-columns:  false;
+    fixed-height:   true;
+    padding:        4px 0px 0px 0px;
+    scrollbar:      false;
+    spacing:        2px;
+
+    border:         1px dash 0px 0px 0px;
+    border-color:   inherit;
+    border-radius:  0px;
+
+    text-color:       inherit;
+    background-color: inherit;
+  }
+
+element       {cursor: pointer; border: 0px;}
+element-text  {vertical-align: 0.5; horizontal-align: 0.5;}
+
+element normal.normal     {text-color: @fg-alt; background-color: inherit;}
+element normal.active     {text-color: @fg-alt; background-color: inherit;}
+element selected.normal   {text-color: @fg-nor; background-color: @bg-alt;}
+element selected.active   {text-color: @fg-nor; background-color: @bg-alt;}
+element alternate.normal  {text-color: @fg-alt; background-color: inherit;}
+element alternate.active  {text-color: @fg-alt; background-color: inherit;}
