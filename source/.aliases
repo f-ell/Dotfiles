@@ -1,20 +1,31 @@
+Err() { printf 'Error: %s\n' "$1" 1>&2 }
+
 Ping=$(command -v ping)
 ping() {
   $Ping -c1 ${1:-archlinux.org}
 }
 owns() {
-  [[ -z $1 ]] && { printf "Error: no command specified!\n"; return; }
+  [[ -z $1 ]] && { Err 'No command specified!'; return 1; }
   Program=`command -v $1`
   [[ -z $Program ]] \
-    && printf "Error: $1 not found!\n" \
+    && { Err "$1 not found!"; return 1; } \
     || pacman -Qo $Program
+}
+ud2() {
+  Dev=/dev/$1
+  [[ -b $Dev ]] || { Err "${1:--} is not a valid blockdev."; return 1; }
+  if [[ -z `udisksctl info -b $Dev | grep -oP '^\s*MountPoints:\s+\K.*$'` ]]; then
+    udisksctl mount -b $Dev
+  else
+    udisksctl unmount -b $Dev
+  fi
 }
 
 
-alias -- -='z -'
+alias -- -='cd -'
 
 alias code='code --extensions-dir '$XDG_DATA_HOME'/vscode'
-alias dots='z ~/Git/Dotfiles/'
+alias dots='cd ~/Git/Dotfiles/'
 alias e='exa'
 alias e1='exa -1'
 alias ed='exa -ld'
@@ -25,9 +36,7 @@ alias hml='himalaya'
 alias psearch='pacman -Ss $1'
 alias pquery='pacman -Q | rg -i $1'
 alias pcount='pacman -Q | wc -l'
-alias scripts='z ~/Git/Scripts/'
-alias um='udisksctl mount -b /dev/sdd1'   # not particularly smart
-alias uu='udisksctl unmount -b /dev/sdd1' # not particularly smart either
+alias scripts='cd ~/Git/Scripts/'
 alias v=$EDITOR
 alias va=$EDITOR' ~/.aliases && source ~/.aliases'
 alias yeet='doas pacman -Qtdq | doas pacman -Rns -'
@@ -35,7 +44,7 @@ alias zath='zathura --fork'
 
 
 Sconf='~/.config/bspwm/sxhkdrc.bspwm ~/.config/sxhkd/sxhkdrc.'
-if [ $MACHINE = 'DT' ]; then
+if [[ $MACHINE = 'DT' ]]; then
   Sconf="${Sconf}dt"
   Dconf=''
 else
