@@ -1,9 +1,10 @@
 [global]
-title          = Dunst
-class          = Dunst
-font           = Azeret Mono 11
-history_length = 3
-sticky_history = no
+title           = Dunst
+class           = Dunst
+font            = Recursive Italic 11
+history_length  = 0
+sticky_history  = no
+show_indicators = false
 icon_path = /usr/share/icons/Adwaita/16x16/status/:/usr/share/icons/Adwaita/16x16/devices/:/usr/share/icons/Adwaita/16x16/legacy/
 
 width  = (0, 1920)
@@ -26,31 +27,36 @@ foreground  = "#e0e0e0"
 
 [urgency_low]
 timeout     = 4s
-# background  = "#303030"
-# frame_color = "#282828"
-
-foreground  = "#b8c7ce"
-background  = "#202d35"
-frame_color = "#101d25"
+foreground  = "#d3c6aa"
+background  = "#323d43"
+frame_color = "#323d43"
 
 [urgency_normal]
 timeout     = 3s
-foreground  = "#303030"
-background  = "#d4d4d4"
-frame_color = "#b4b4b4"
+foreground  = "#a3967a"
+background  = "#323d43"
+frame_color = "#323d43"
 
 [urgency_critical]
 timeout     = 8s
+foreground  = "#e67e80"
+background  = "#323d43"
+frame_color = "#323d43"
+
+[spotify]
+appname     = "Spotify"
+skip_display= true
 
 [hightemp]
 appname     = "highTemp"
 timeout     = 8s
-background  = "#6f0000"
-frame_color = "#9f0000"
+foreground  = "#e67e80"
+background  = "#323d43"
+frame_color = "#323d43"
 
 [crittemp]
 appname     = "critTemp"
 timeout     = 14s
-foreground  = "#3f0000"
-background  = "#ff0000"
-frame_color = "#ff0000"
+foreground  = "#e67e80"
+background  = "#323d43"
+frame_color = "#323d43"

@@ -1,9 +1,9 @@
 [global]
-title          = Dunst
-class          = Dunst
-font           = Recursive Italic 9
-history_length = 0
-sticky_history = no
+title           = Dunst
+class           = Dunst
+font            = Recursive Italic 9
+history_length  = 0
+sticky_history  = no
 show_indicators = false
 icon_path = /usr/share/icons/Adwaita/16x16/status/:/usr/share/icons/Adwaita/16x16/devices/:/usr/share/icons/Adwaita/16x16/legacy/
 
