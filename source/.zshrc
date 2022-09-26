@@ -66,7 +66,7 @@ bindkey '^ ' autosuggest-accept
 
 # Prompt
 Prompt() {
-  PS1=
+  unset PS1 RPS1
   # M -> 'mode' - 0 for single-line, anything else for multi-line
   M=$1; X=$2; C=$3
 
@@ -81,6 +81,7 @@ Prompt() {
     PS1=$PS1$' %{\e[1;38;5;255m%}%1~%{\e[0m%} '
     [[ -n "$B" ]] && PS1=$PS1$'on %{\e[0;38;5;214m%}%S $B%s%{\e[0m%} '
     PS1=$PS1$'%{\e[0;38;5;248m%}$C%{\e[0m%} '
+    RPS1=$'%{\e[0;38;5;255m%}%B%S%-2~%s%b%{\e[0m%}'
   else
     PS1=$'%{\e[1;38;5;255m%}%~%{\e[0m%}\n'
     [[ -n "$X" ]] && PS1=$PS1$'%{\e[0;38;5;160m%}%B$X%b%{\e[0m%} '
@@ -94,8 +95,8 @@ precmd() {
 }
 
 zle-keymap-select() {
-  [[ $KEYMAP == 'main' ]]   && Prompt $LAST_EXIT '$' 
-  [[ $KEYMAP == 'vicmd' ]]  && Prompt $LAST_EXIT ':' 
+  [[ $KEYMAP == 'main' ]]   && Prompt 0 $LAST_EXIT '' 
+  [[ $KEYMAP == 'vicmd' ]]  && Prompt 0 $LAST_EXIT '' 
   zle reset-prompt
 }; zle -N zle-keymap-select
 
