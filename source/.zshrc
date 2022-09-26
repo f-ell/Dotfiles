@@ -66,27 +66,31 @@ bindkey '^ ' autosuggest-accept
 
 # Prompt
 Prompt() {
-  X=$1; (( $X == 0 )) && unset X
-  C=$2
+  PS1=
+  # M -> 'mode' - 0 for single-line, anything else for multi-line
+  M=$1; X=$2; C=$3
 
-  PS1=$'%{\e[1;38;5;255m%}%~ %{\e[0m%}\n'
-
-  if [[ -n "$X" ]]; then
-    (( $X == 130 )) && X='INT'
-    PS1=$PS1$'%{\e[0;38;5;160m%}%B$X%b%{\e[0m%} '
-  fi
-
+  # Exit code
+  (( $X == 0 )) && unset X
+  [[ -n "$X" ]] && (( $X == 130 )) && X='INT'
+  # Git branch
   B=`git branch --show-current 2>/dev/null`
-  if [[ -n "$B" ]]; then
-    PS1=$PS1$'%{\e[0;38;5;214m%}$B%{\e[0m%} '
+
+  if [[ $M -eq 0 ]]; then
+    [[ -n "$X" ]] && PS1=$'%{\e[0;38;5;160m%}%B%S$X%s%b%{\e[0m%} '
+    PS1=$PS1$' %{\e[1;38;5;255m%}%1~%{\e[0m%} '
+    [[ -n "$B" ]] && PS1=$PS1$'on %{\e[0;38;5;214m%}%S $B%s%{\e[0m%} '
+    PS1=$PS1$'%{\e[0;38;5;248m%}$C%{\e[0m%} '
+  else
+    PS1=$'%{\e[1;38;5;255m%}%~%{\e[0m%}\n'
+    [[ -n "$X" ]] && PS1=$PS1$'%{\e[0;38;5;160m%}%B$X%b%{\e[0m%} '
+    [[ -n "$B" ]] && PS1=$PS1$'%{\e[0;38;5;214m%}%B $B%b%{\e[0m%} '
+    PS1=$PS1$'%{\e[0;38;5;248m%}$C%{\e[0m%} '
   fi
-
-  PS1=$PS1$'%{\e[0;38;5;248m%}$C%{\e[0m%} '
 }
-
 precmd() {
   LAST_EXIT=$?
-  Prompt $LAST_EXIT '$' 
+  Prompt 0 $LAST_EXIT '' 
 }
 
 zle-keymap-select() {
@@ -148,6 +152,6 @@ export LESS_TERMCAP_us=$'\e[1;4;32m'
 export LESSHISTFILE=-
 
 # Run fetch ONLY when X-Server is running, not on TTY
-[[ `xset q 2>/dev/null` ]] \
-  && printf "'Whose is the dying flame?' asked the Witcher.\n    'Yours,' Death replied.\n"
+# [[ `xset q 2>/dev/null` ]] \
+  # && printf "'Whose is the dying flame?' asked the Witcher.\n    'Yours,' Death replied.\n"
   # && printf "In his strong hand the man held a Rose.\n      And his aura burned bright.\n"
