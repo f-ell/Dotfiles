@@ -74,7 +74,10 @@ Prompt() {
   (( $X == 0 )) && unset X
   [[ -n "$X" ]] && (( $X == 130 )) && X='INT'
   # Git branch
-  B=`git branch --show-current 2>/dev/null`
+  if [[ `git rev-parse --is-inside-work 2>/dev/null` ]]; then
+    B=`git branch --show-current`
+    [[ -n $B ]] || { B=`git rev-parse @`; B=${B:0:7}; }
+  fi
 
   if [[ $M -eq 0 ]]; then
     [[ -n "$X" ]] && PS1=$'%{\e[0;38;5;160m%}%B%S$X%s%b%{\e[0m%} '
