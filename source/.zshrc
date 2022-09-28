@@ -83,7 +83,9 @@ Prompt() {
     unset B
   fi
   # RPS
-  R=$OLDPWD; R="${R/$HOME/~}"
+  R="${OLDPWD/$HOME/~}"; set -A AR ${(s:/:)R}
+  for i in {1..${#AR}}; do AR[i]=${AR[i]:0:1}; done
+  R="${(j:/:)AR}"; (( ${#R} > 16 )) && R="${R:0:14}.."
 
   if [[ $M -eq 0 ]]; then
     # [[ -n "$X" ]] && PS1=$'%{\e[0;38;5;160m%}%B%S$X%s%b%{\e[0m%} ' PS1=$PS1$' %{\e[1;38;5;255m%}%1~%{\e[0m%} ' [[ -n "$B" ]] && PS1=$PS1$'on %{\e[0;38;5;208m%}%S $B%s%{\e[0m%} ' PS1=$PS1$'%{\e[0;38;5;248m%}$C%{\e[0m%} ' RPS1=$'%{\e[0;38;5;255m%}%B%S$R%s%b%{\e[0m%}'
