@@ -65,6 +65,7 @@ bindkey '^ ' autosuggest-accept
 
 
 # Prompt
+CE='#e67e80'; CF='#d3c6aa'; CG='#fca326'; CC='#a0a0a0'
 Prompt() {
   unset PS1 RPS1
   # M -> 'mode' - 0 for single-line, anything else for multi-line
@@ -78,19 +79,25 @@ Prompt() {
   if [[ $? -eq 0 && $B == 'true' ]]; then
     B=`git branch --show-current`
     [[ -n "$B" ]] || { B=`git rev-parse @`; B=${B:0:7}; }
-  else unset B fi
+  else
+    unset B
+  fi
+  # RPS
+  R=$OLDPWD; R="${R/$HOME/~}"
 
   if [[ $M -eq 0 ]]; then
-    [[ -n "$X" ]] && PS1=$'%{\e[0;38;5;160m%}%B%S$X%s%b%{\e[0m%} '
-    PS1=$PS1$' %{\e[1;38;5;255m%}%1~%{\e[0m%} '
-    [[ -n "$B" ]] && PS1=$PS1$'on %{\e[0;38;5;208m%}%S $B%s%{\e[0m%} '
-    PS1=$PS1$'%{\e[0;38;5;248m%}$C%{\e[0m%} '
-    RPS1=$'%{\e[0;38;5;255m%}%B%S%-2~%s%b%{\e[0m%}'
+    # [[ -n "$X" ]] && PS1=$'%{\e[0;38;5;160m%}%B%S$X%s%b%{\e[0m%} ' PS1=$PS1$' %{\e[1;38;5;255m%}%1~%{\e[0m%} ' [[ -n "$B" ]] && PS1=$PS1$'on %{\e[0;38;5;208m%}%S $B%s%{\e[0m%} ' PS1=$PS1$'%{\e[0;38;5;248m%}$C%{\e[0m%} ' RPS1=$'%{\e[0;38;5;255m%}%B%S$R%s%b%{\e[0m%}'
+    [[ -n "$X" ]] && PS1=$'%F{$CE}%S%B$X%b%s%f '      # exit code
+    PS1=$PS1$'%F{$CF} %B%S%1~%s%b '                  # working dir
+    [[ -n "$B" ]] && PS1=$PS1$'on %F{$CG}%S $B%s%f ' # git branch
+    PS1=$PS1$'%F{$CC}$C%f '                             # prompt char
+    RPS1=$'%F{$CF}%B%S$R%s%b%f'                       # oldpwd
   else
-    PS1=$'%{\e[1;38;5;255m%}%~%{\e[0m%}\n'
-    [[ -n "$X" ]] && PS1=$PS1$'%{\e[0;38;5;160m%}%B$X%b%{\e[0m%} '
-    [[ -n "$B" ]] && PS1=$PS1$'%{\e[0;38;5;214m%}%B $B%b%{\e[0m%} '
-    PS1=$PS1$'%{\e[0;38;5;248m%}$C%{\e[0m%} '
+    # PS1=$'%{\e[1;38;5;255m%}%~%{\e[0m%}\n' [[ -n "$X" ]] && PS1=$PS1$'%{\e[0;38;5;160m%}%B$X%b%{\e[0m%} ' [[ -n "$B" ]] && PS1=$PS1$'%{\e[0;38;5;214m%}%B $B%b%{\e[0m%} ' PS1=$PS1$'%{\e[0;38;5;248m%}$C%{\e[0m%} '
+    PS1=$'%F{$CF}%B%S%~%s%b%f\n'
+    [[ -n "$X" ]] && PS1=$PS1$'%F{$CE}%B$X%b%f '
+    [[ -n "$B" ]] && PS1=$PS1$'%F{$CG}%B $B%b%f '
+    PS1=$PS1$'%F{$CC}$C%f '
   fi
 }
 precmd() {
