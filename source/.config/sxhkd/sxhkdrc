@@ -5,7 +5,8 @@ control + Escape
   slock
 
 super + Return
-  /usr/bin/alacritty --working-directory ~
+  /usr/bin/kitty -d $HOME
+  # /usr/bin/alacritty --working-directory $HOME
 
 super + {_,shift +} + r
   `rofi -monitor -4 {-dmenu -input ~/.config/rofi/items -i,-show window}`
@@ -22,7 +23,7 @@ alt + i
   dunstify -u low -h string:x-dunst-stack-tag:inet \
   "`~/Git/Scripts/source/perl/status_fetch`"
 
-alt + k
+alt + d
   dunstctl close
 
 alt + t
