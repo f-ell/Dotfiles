@@ -68,7 +68,7 @@ bindkey '^ ' autosuggest-accept
 # Prompt
 CE='#e67e80'; CF='#d3c6aa'; CG='#fca326'; CC='#a0a0a0'
 Prompt() {
-  unset PS1 RPS1
+  unset {,R}PS1
   # M -> 'mode' - 0 for single-line, anything else for multi-line
   M=$1; X=$2; C=$3
 
@@ -83,14 +83,6 @@ Prompt() {
   else
     unset B
   fi
-  # RPS
-  R="${OLDPWD/$HOME/~}"; set -A Arr ${${(s:/:)R}:-/}
-  for i in {1..$#Arr}; do Arr[i]=${Arr[i]:0:1}; done
-  [[ $Arr[1] =~ ^[^~]$ ]] && Arr[1]='/'$Arr[1]
-  R=${(j:/:)Arr}; (( $#R > 16 )) && R=${R:0:14}'..'
-  [[ ${R:0:1} == '/' ]]\
-    && { (( $#R > 6 )) && R=${R:0:6}'..'; }\
-    || { (( $#R > 7 )) && R=${R:0:7}'..'; }
 
   if [[ $M -eq 0 ]]; then
     # [[ -n "$X" ]] && PS1=$'%{\e[0;38;5;160m%}%B%S$X%s%b%{\e[0m%} ' PS1=$PS1$' %{\e[1;38;5;255m%}%1~%{\e[0m%} ' [[ -n "$B" ]] && PS1=$PS1$'on %{\e[0;38;5;208m%}%S $B%s%{\e[0m%} ' PS1=$PS1$'%{\e[0;38;5;248m%}$C%{\e[0m%} ' RPS1=$'%{\e[0;38;5;255m%}%B%S$R%s%b%{\e[0m%}'
@@ -98,7 +90,18 @@ Prompt() {
     PS1=$PS1$'%F{$CF} %B%S%1~%s%b '                  # working dir
     [[ -n "$B" ]] && PS1=$PS1$'on %F{$CG}%S $B%s%f ' # git branch
     PS1=$PS1$'%F{$CC}$C%f '                             # prompt char
-    RPS1=$'%F{$CF}%B%S$R%s%b%f'                       # oldpwd
+
+    # RPS1
+    #   1. replace $HOME in $OLDPWD
+    #   2. split to array       - (s)
+    #   3. truncate to length 1 - (r)
+    #   4. join to string       - (j)
+    # |4.     |3.     |2.     |1.
+    R=${(j:/:)${(r:1:)${(s:/:)${OLDPWD/$HOME/\~}}[@]}}
+    # Adding leading slash and ellipsis
+    local Len; [[ ${R:0:1} == '~' ]] && Len=6 || { R='/'$R; Len=7; }
+    (( $#R > $Len )) && R=${R:0:$Len}'..'
+    RPS1=$'%F{$CF}%B%S$R%s%b%f'
   else
     # PS1=$'%{\e[1;38;5;255m%}%~%{\e[0m%}\n' [[ -n "$X" ]] && PS1=$PS1$'%{\e[0;38;5;160m%}%B$X%b%{\e[0m%} ' [[ -n "$B" ]] && PS1=$PS1$'%{\e[0;38;5;214m%}%B $B%b%{\e[0m%} ' PS1=$PS1$'%{\e[0;38;5;248m%}$C%{\e[0m%} '
     PS1=$'%F{$CF}%B%S%~%s%b%f\n'
