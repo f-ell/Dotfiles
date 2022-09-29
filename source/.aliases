@@ -4,6 +4,7 @@ Ping=$(command -v ping)
 ping() {
   $Ping -c1 ${1:-archlinux.org}
 }
+
 owns() {
   [[ -z $1 ]] && { Err 'No command specified!'; return 1; }
   Program=`command -v $1`
@@ -11,6 +12,7 @@ owns() {
     && { Err "$1 not found!"; return 1; } \
     || pacman -Qo $Program
 }
+
 ud2() {
   Dev=/dev/$1
   [[ -b $Dev ]] || { Err "${1:--} is not a valid blockdev."; return 1; }
@@ -23,7 +25,6 @@ ud2() {
 
 
 alias -- -='cd -'
-
 alias code='code --extensions-dir '$XDG_DATA_HOME'/vscode'
 alias dots='cd ~/Git/Dotfiles/'
 alias e='exa'
