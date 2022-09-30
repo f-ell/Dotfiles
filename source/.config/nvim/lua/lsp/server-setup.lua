@@ -5,7 +5,8 @@ local servers = {
   _1 = 'jdtls',
   _2 = 'perlpls', -- _2 = 'perlnavigator',
   _3 = 'sumneko_lua',
-  _4 = 'texlab'
+  _4 = 'texlab',
+  _5 = 'quick_lint_js'
 }
 
 local configs  = {
