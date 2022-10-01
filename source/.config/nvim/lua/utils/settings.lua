@@ -10,6 +10,7 @@ F.o('shell',    'dash')
 F.o('cdhome',   true)
 F.o('confirm',  true)
 F.o('showmode', false)
+F.o('cmdheight', 0)
 F.c('filetype plugin indent on')
 
 F.o('list', true)
