@@ -1,10 +1,9 @@
 local snippets = {
   -- hashbang
   s('_!',
-    fmt('{}\n{}\n{}\n\n', {
+    fmt('{}\n{}\n\n', {
       t'#!/usr/bin/perl',
-      t'use warnings;',
-      t'use strict;'
+      t'use warnings; use strict;',
     })
   ),
 
