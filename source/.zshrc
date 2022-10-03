@@ -94,14 +94,15 @@ Prompt() {
     # RPS1
     #   1. replace $HOME in $OLDPWD
     #   2. split to array       - (s)
-    #   3. truncate to length 1 - (r)
-    #   4. join to string       - (j)
-    # |4.     |3.     |2.     |1.
-    R=${(j:/:)${(r:1:)${(s:/:)${OLDPWD/$HOME/\~}}[@]}}
-    # Adding leading slash and ellipsis
-    local Len; [[ ${R:0:1} == '~' ]] && Len=6 || { R='/'$R; Len=7; }
+    #   3. strip leading '.'    - (#)
+    #   4. truncate to length 1 - (r)
+    #   5. join to string       - (j)
+    # |5.     |4.     |3|4.     |1.
+    R=${(j:/:)${(r:1:)${${(s:/:)${PWD/$HOME/\~}}[@]##.}}}
+    # Adding leading slash and ellipsize
+    local Len; [[ ${R:0:1} == '~' ]] && Len=8 || { R='/'$R; Len=9; }
     (( $#R > $Len )) && R=${R:0:$Len}'..'
-    RPS1=$'%F{$CF}%B%S$R%s%b%f'
+    [[ $R != '~' ]] && RPS1=$'%F{$CF}%B%S$R%s%b%f'
   else
     # PS1=$'%{\e[1;38;5;255m%}%~%{\e[0m%}\n' [[ -n "$X" ]] && PS1=$PS1$'%{\e[0;38;5;160m%}%B$X%b%{\e[0m%} ' [[ -n "$B" ]] && PS1=$PS1$'%{\e[0;38;5;214m%}%B $B%b%{\e[0m%} ' PS1=$PS1$'%{\e[0;38;5;248m%}$C%{\e[0m%} '
     PS1=$'%F{$CF}%B%S%~%s%b%f\n'
@@ -111,8 +112,7 @@ Prompt() {
   fi
 }
 precmd() {
-  LAST_EXIT=$?
-  Prompt 0 $LAST_EXIT '' 
+  LAST_EXIT=$?; Prompt 0 $LAST_EXIT '' 
 }
 
 zle-keymap-select() {
