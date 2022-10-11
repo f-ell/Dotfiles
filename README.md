@@ -57,6 +57,10 @@ Neovim whilst editing buffer in a single window:
 Keybindings needed to get up and running. Not exhaustive and subject to change.  
 See [`sxhkd/`](source/.config/sxhkd/) for general keybindings. WM-specific
 keybindings can be found in `source/.config/<WM>/sxhkdrc.<WM>`.
+
+NOTE: some change in [xkeyboard-config](https://gitlab.freedesktop.org/xkeyboard-config/xkeyboard-config)
+seems to have broken `r-Alt` / `mode_switch` bindings. They have all been
+changed to use --`l-Alt`-- instead.
 ```
   Super + Enter:          spawn terminal (Alacritty by default)
   Super + r:              spawn Rofi with custom run script
