@@ -22,8 +22,9 @@ local set_hl_groups = function()
 
     -- vim builtin groups
     {0, 'Search',     {fg = plum_1, bg = fg_1}},
+    {0, 'IncSearch',  {fg = plum_1, bg = fg_1}},
+    {0, 'CurSearch',  {fg = fg_1,   bg = plum_1}},
     {0, 'Substitute', {fg = fg_1,   bg = plum_1}},
-    {0, 'IncSearch',  {fg = fg_1,   bg = plum_1}},
 
     {0, 'Visual', {fg = fg_1, bg = '#3030a0'}},
 
