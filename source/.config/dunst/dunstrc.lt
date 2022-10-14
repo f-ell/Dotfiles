@@ -1,7 +1,7 @@
 [global]
 title           = Dunst
 class           = Dunst
-font            = Recursive Italic 11
+font            = Cartograph CF Demi Bold Italic 11
 history_length  = 0
 sticky_history  = no
 show_indicators = false
@@ -33,7 +33,7 @@ frame_color = "#323d43"
 
 [urgency_normal]
 timeout     = 3s
-foreground  = "#a3967a"
+foreground  = "#d699b6"
 background  = "#323d43"
 frame_color = "#323d43"
 
