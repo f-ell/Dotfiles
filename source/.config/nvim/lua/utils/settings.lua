@@ -30,7 +30,7 @@ F.o('relativenumber', true)
 F.o('pumheight', 7)
 
 F.o('clipboard', 'unnamed')
-F.o('guicursor', 'n-v-c-sm:block,i-ci-ve:block1-blinkon200-blinkoff150,r-cr-o:hor20')
+F.o('guicursor', 'n-v-c-sm:block,i-ci-ve:hor1-blinkon200-blinkoff150,r-cr-o:hor20')
 F.o('scrolloff',  1)
 F.o('mouse', 'a')
 
