@@ -50,7 +50,7 @@ export MOZ_CRASHREPORTER_DISABLE=1
 autoload edit-command-line; zle -N edit-command-line
 bindkey '^Xe' edit-command-line
 
-bindkey '^R' history-incremental-search-backward
+bindkey '^R' vi-history-search-backward
 
 bindkey -v '^K' kill-line
 bindkey -v '^U' backward-kill-line
