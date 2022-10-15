@@ -1,7 +1,7 @@
 [global]
 title           = Dunst
 class           = Dunst
-font            = Cartograph CF Demi Bold Italic 11
+font            = Recursive Italic 11
 history_length  = 0
 sticky_history  = no
 show_indicators = false
