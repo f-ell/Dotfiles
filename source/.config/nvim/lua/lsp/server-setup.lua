@@ -31,7 +31,7 @@ for key, server in pairs(servers) do
   local capabilities = vim.lsp.protocol.make_client_capabilities()
   local opts = {
     on_attach     = on_attach,
-    capabilities  = require('cmp_nvim_lsp').update_capabilities(capabilities)
+    capabilities  = require('cmp_nvim_lsp').default_capabilities(capabilities)
   }
 
   if configs[key] then
