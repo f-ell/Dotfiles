@@ -4,9 +4,10 @@ local F   = require('utils.functions')
 local servers = {
   _1 = 'jdtls',
   _2 = 'perlpls', -- / perlnavigator
-  _3 = 'sumneko_lua',
-  _4 = 'texlab',
-  _5 = 'tsserver' -- / quick_lint_js
+  _3 = 'pylsp',
+  _4 = 'sumneko_lua',
+  _5 = 'texlab',
+  _6 = 'tsserver' -- / quick_lint_js
 }
 
 local configs  = {
