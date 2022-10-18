@@ -166,6 +166,17 @@ export LESS_TERMCAP_ue=$'\e[0m'
 export LESS_TERMCAP_us=$'\e[1;4;32m'
 export LESSHISTFILE=-
 
+
+# Completion
+zstyle ':completion:*' completer _complete _expand _ignored _match
+zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
+zstyle ':completion:*' matcher-list 'm:{[:lower:]}={[:upper:]} r:|[._-/]=** r:|=**' 'l:|=* r:|=*'
+zstyle ':completion:*' verbose false
+
+autoload -Uz compinit
+compinit -d $XDG_CONFIG_HOME'/zsh/zcomp'
+
+
 # Run fetch ONLY when X-Server is running, not on TTY
 # [[ `xset q 2>/dev/null` ]] \
   # && printf "'Whose is the dying flame?' asked the Witcher.\n    'Yours,' Death replied.\n"
