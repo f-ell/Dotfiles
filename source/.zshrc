@@ -7,9 +7,6 @@
 # |__| \____| | Author: Nico Pareigis
 #          |__| Zsh
 
-# might be causing some issues, need to do further testing:
-# . $HOME/.config/himalaya/himalaya-completions.zsh 2>/dev/null 
-
 [[ -t 0 && $- = *i* ]] && stty -ixon # alt: stty stop ''
 
 set -o autocd -o extendedglob -o histexpiredupsfirst -o histignoredups\
@@ -21,7 +18,6 @@ set -o autocd -o extendedglob -o histexpiredupsfirst -o histignoredups\
 
 SAVEHIST=5000; HISTSIZE=$(($SAVEHIST + 100)); HISTFILE=$HOME'/.zsh_history'
 
-eval "`zoxide init zsh`"
 export MACHINE=`< $HOME/Git/machine`
 
 export VISUAL='nvim'
@@ -40,7 +36,6 @@ export PATH=$Bin':'$Perl':'$Other
 unset Bin Perl Other
 export FZF_DEFAULT_COMMAND='fd -E .cache -tf -H -d10 .'
 export FZF_DEFAULT_OPTS='-i --tiebreak=begin,length --scroll-off=1 --reverse --prompt="$ " --height=25% --color=bw'
-_ZO_FZF_OPTS="$FZF_DEFAULT_OPTS"
 
 # needed because Firefox acts up when being killed by bspwm :)
 export MOZ_CRASHREPORTER_DISABLE=1
@@ -85,7 +80,6 @@ Prompt() {
   fi
 
   if [[ $M -eq 0 ]]; then
-    # [[ -n "$X" ]] && PS1=$'%{\e[0;38;5;160m%}%B%S$X%s%b%{\e[0m%} ' PS1=$PS1$' %{\e[1;38;5;255m%}%1~%{\e[0m%} ' [[ -n "$B" ]] && PS1=$PS1$'on %{\e[0;38;5;208m%}%S $B%s%{\e[0m%} ' PS1=$PS1$'%{\e[0;38;5;248m%}$C%{\e[0m%} ' RPS1=$'%{\e[0;38;5;255m%}%B%S$R%s%b%{\e[0m%}'
     [[ -n "$X" ]] && PS1=$'%F{$CE}%S%B$X%b%s%f '      # exit code
     PS1=$PS1$'%F{$CF} %B%S%1~%s%b '                  # working dir
     [[ -n "$B" ]] && PS1=$PS1$'on %F{$CG}%S $B%s%f ' # git branch
@@ -104,7 +98,6 @@ Prompt() {
     (( $#R > $Len )) && R=${R:0:$Len}'..'
     [[ $R != '~' ]] && RPS1=$'%F{$CF}%B%S$R%s%b%f'
   else
-    # PS1=$'%{\e[1;38;5;255m%}%~%{\e[0m%}\n' [[ -n "$X" ]] && PS1=$PS1$'%{\e[0;38;5;160m%}%B$X%b%{\e[0m%} ' [[ -n "$B" ]] && PS1=$PS1$'%{\e[0;38;5;214m%}%B $B%b%{\e[0m%} ' PS1=$PS1$'%{\e[0;38;5;248m%}$C%{\e[0m%} '
     PS1=$'%F{$CF}%B%S%~%s%b%f\n'
     [[ -n "$X" ]] && PS1=$PS1$'%F{$CE}%B$X%b%f '
     [[ -n "$B" ]] && PS1=$PS1$'%F{$CG}%B $B%b%f '
