@@ -80,8 +80,8 @@ Prompt() {
   fi
 
   if [[ $M -eq 0 ]]; then
-    [[ -n "$X" ]] && PS1=$'%F{$CE}%S%B$X%b%s%f '      # exit code
-    PS1=$PS1$'%F{$CF} %B%S%1~%s%b '                  # working dir
+    [[ -n "$X" ]] && PS1=$'%F{$CE}%B%S$X%s%b%f '      # exit code
+    PS1=$PS1$'%F{$CF} %B%S %1~%s%b '                # working dir
     [[ -n "$B" ]] && PS1=$PS1$'on %F{$CG}%S $B%s%f ' # git branch
     PS1=$PS1$'%F{$CC}$C%f '                             # prompt char
 
@@ -96,7 +96,8 @@ Prompt() {
     # Adding leading slash and ellipsize
     local Len; [[ ${R:0:1} == '~' ]] && Len=8 || { R='/'$R; Len=9; }
     (( $#R > $Len )) && R=${R:0:$Len}'..'
-    [[ $R != '~' ]] && RPS1=$'%F{$CF}%B%S$R%s%b%f'
+    [[ $R != '~' ]] && RPS1=$'  %F{$CF}%B%S$R%s%b%f'
+    RPS1=$RPS1$' '
   else
     PS1=$'%F{$CF}%B%S%~%s%b%f\n'
     [[ -n "$X" ]] && PS1=$PS1$'%F{$CE}%B$X%b%f '
@@ -105,7 +106,7 @@ Prompt() {
   fi
 }
 precmd() {
-  LAST_EXIT=$?; Prompt 0 $LAST_EXIT '' 
+  LAST_EXIT=$?; Prompt 0 $LAST_EXIT ''
 }
 
 zle-keymap-select() {
@@ -168,9 +169,10 @@ export LESSHISTFILE=-
 
 
 # Completion
-zstyle ':completion:*' completer _complete _expand _ignored _match
+zstyle ':completion:*' completer _expand _complete _ignored _match
 zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 zstyle ':completion:*' matcher-list 'm:{[:lower:]}={[:upper:]} r:|[._-/]=** r:|=**' 'l:|=* r:|=*'
+zstyle ':completion:*' keep-prefix true
 zstyle ':completion:*' verbose false
 
 autoload -Uz compinit
