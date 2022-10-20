@@ -10,6 +10,6 @@ require('trouble').setup({
     next = 'j',
     previous = 'k'
   },
-  icons = false,
-  use_diagnostic_signs = true
+  icons                 = true,
+  use_diagnostic_signs  = true
 })

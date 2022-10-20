@@ -1,9 +1,9 @@
 local success, packer = pcall(require, 'packer')
-if not success then return print('Error: Packer not found') end
+if not success then return end
 
 packer.init({
   ensure_dependencies = true,
-  -- compile_path = '$XDG_DATA_HOME/nvim/site/pack/packer/packer_compiled.lua',
+  -- compile_path = os.getenv('XDG_DATA_HOME')..'/nvim/site/pack/packer/packer_compiled.lua',
   auto_clean = false,
   display = {
     open_fn = function()
@@ -39,6 +39,12 @@ return packer.startup(function()
     {
       'neovim/nvim-lspconfig',
       after = 'mason.nvim'
+    },
+    {
+      'glepnir/lspsaga.nvim',
+      config = function()
+        require('plugins.lspsaga')
+      end
     },
     {
       'hrsh7th/cmp-nvim-lsp',
@@ -87,20 +93,25 @@ return packer.startup(function()
   -- LSP supplementary
   use {
     'folke/trouble.nvim',
-    cmd    = 'TroubleToggle',
-    config = function()
+    requires  = 'kyazdani42/nvim-web-devicons',
+    cmd       = 'TroubleToggle',
+    config    = function()
       require('plugins.trouble')
     end
   }
 
 
-  -- Explorer
+  -- Telescope
+  use 'nvim-lua/plenary.nvim'
+  use 'natecraddock/telescope-zf-native.nvim'
   use {
-    'kyazdani42/nvim-tree.lua',
-    cmd       = 'NvimTreeToggle',
-    requires  = 'kyazdani42/nvim-web-devicons',
-    config = function()
-      require('plugins.nvim-tree')
+    'nvim-telescope/telescope.nvim',
+    requires  = {
+      'nvim-lua/plenary.nvim',
+      'natecraddock/telescope-zf-native.nvim'
+    },
+    config    = function()
+      require('plugins.telescope')
     end
   }
 
@@ -119,38 +130,6 @@ return packer.startup(function()
   -- Theming
   use 'sainnhe/everforest'
   -- use 'b4skyx/serenade'
-
-
-  -- Markdown
-  use {
-    {
-      'iamcco/markdown-preview.nvim',
-      run = 'cd app && npm install',
-      -- cmd = 'MarkdownPreview',
-      ft = {'md', 'markdown'},
-      config  = function()
-        require('plugins.markdown-preview')
-      end
-    },
-    {
-      'dhruvasagar/vim-table-mode',
-      cmd     = 'TableModeEnable',
-      config  = function()
-        require('plugins.vim-table-mode')
-      end
-    }
-  }
-
-
-  -- Latex
-  -- compilation with tectonic (uses texlab for snippets)
-  use {
-    'lervag/vimtex',
-    ft      = {'latex', 'plaintex', 'tex'},
-    config  = function()
-      require('plugins.vimtex')
-    end
-  }
 
 
   -- Miscellaneous
@@ -186,12 +165,37 @@ return packer.startup(function()
         require('nvim-web-devicons').setup()
       end
     },
+  }
+
+
+  -- Markdown
+  use {
     {
-      'andweeb/presence.nvim',
-      event  = 'VimEnter',
-      config = function()
-        require('plugins.presence')
+      'iamcco/markdown-preview.nvim',
+      run = 'cd app && npm install',
+      -- cmd = 'MarkdownPreview',
+      ft = {'md', 'markdown'},
+      config  = function()
+        require('plugins.markdown-preview')
+      end
+    },
+    {
+      'dhruvasagar/vim-table-mode',
+      cmd     = 'TableModeEnable',
+      config  = function()
+        require('plugins.vim-table-mode')
       end
     }
+  }
+
+
+  -- Latex
+  -- compilation with tectonic, texlab for snippets
+  use {
+    'lervag/vimtex',
+    ft      = {'latex', 'plaintex', 'tex'},
+    config  = function()
+      require('plugins.vimtex')
+    end
   }
 end)

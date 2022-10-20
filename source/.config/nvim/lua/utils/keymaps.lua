@@ -30,7 +30,7 @@ local tab_bufs = function()
     local bufname = vim.fn.bufname(v)
 
     if    vim.fn.buflisted(v) == 1
-      and vim.fn.bufloaded(v) == 1
+      -- and vim.fn.bufloaded(v) == 1
       and not haswindow(v)
       and bufname ~= '' then
       vim.cmd('tabe '..bufname)
@@ -105,6 +105,7 @@ F.nnmap('--', ':w<CR>')
 F.nnmap('-d', ':bd<CR>')
 F.nnmap('-w', function() wipe_buf() end)
 F.nnmap('<C-l>', ':noh<CR>')
+F.nnmap('<leader>%', ':so%<CR>')
 
 F.nnmap('<leader>tb',   function() tab_bufs() end)
 F.nnmap('<leader><CR>', function() terminal() end)
@@ -112,17 +113,11 @@ F.nnmap('<leader><CR>', function() terminal() end)
 F.nnmap('<leader>~', 'viw~')
 
 
-F.nnmap('<A-f>', ':FZF -i --reverse --scroll-off=1 --no-info --no-color --prompt=$ ~<CR>')
-
 -- insert
 F.inmap('<C-h>', function() ls_jump_backwards() end)
 F.inmap('<C-j>', function() ls_choice_forward() end)
 F.inmap('<C-k>', function() ls_choice_backward() end)
 F.inmap('<C-l>', function() ls_expand_or_jump() end)
-
--- visual
--- F.vnmap('<Tab>',    '>gv')
--- F.vnmap('<S-Tab>',  '<gv')
 
 -- command
 F.cnmap('<C-h>', '<Left>')
@@ -143,26 +138,17 @@ F.nnmap('<leader>bb', 'oborder: 1px solid blue;<Esc>o<Esc>')
 -- tabs
 F.nnmap('<leader>g0', ':tabfirst<CR>')
 F.nnmap('<leader>g$', ':tablast<CR>')
-
 F.nnmap('<leader>gh', ':tabmove-<CR>')
 F.nnmap('<leader>gj', ':tabmove0<CR>')
 F.nnmap('<leader>gl', ':tabmove+<CR>')
 F.nnmap('<leader>gk', ':tabmove$<CR>')
 
 
--- splits
-F.nmap('<A-CR>',          ':vnew<CR><A-f>')
-F.nmap('<leader><A-CR>',  ':new<CR><A-f>')
-
+-- windows
 F.nnmap('<A-h>', '<C-w>h')
 F.nnmap('<A-j>', '<C-w>j')
 F.nnmap('<A-k>', '<C-w>k')
 F.nnmap('<A-l>', '<C-w>l')
-
--- F.nnmap('<C-h>', ':4winc <<CR>')
--- F.nnmap('<C-j>', ':4winc +<CR>')
--- F.nnmap('<C-k>', ':4winc -<CR>')
--- F.nnmap('<C-l>', ':4winc ><CR>')
 
 
 -- plugins
@@ -170,6 +156,12 @@ F.nnmap('<A-l>', '<C-w>l')
     F.nnmap('<leader>ps', ':PackerStatus<CR>')
     F.nnmap('<leader>pc', ':PackerCompile<CR>')
     F.nnmap('<leader>py', ':PackerSync<CR>')
+
+  -- telescope
+    local tlsb = require('telescope.builtin')
+    F.nnmap('<leader>ff', tlsb.find_files)
+    F.nnmap('<leader>fg', tlsb.git_files)
+    F.nnmap('<leader>rg', tlsb.live_grep)
 
   -- colorizer
     F.nnmap('<leader>ct', ':ColorizerToggle<CR>')
@@ -180,12 +172,6 @@ F.nnmap('<A-l>', '<C-w>l')
 
   -- markdownpreview
     F.nnmap('<A-p>', '<plug>MarkdownPreviewToggle')
-
-  -- nvim-tree
-    F.nnmap('<leader>ntt', ':NvimTreeToggle<CR>')
-
-  -- trouble
-    F.nnmap('<leader>tt', ':TroubleToggle<CR>')
 
   -- vimtex
     F.nnmap('<leader>vcl',  ':VimtexClean<CR>')

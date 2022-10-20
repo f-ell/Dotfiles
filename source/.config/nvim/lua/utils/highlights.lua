@@ -11,8 +11,6 @@ local set_hl_groups = function()
   local git       = '#fca326'
 
   local hls = {
-    -- {0, 'name', {fg = '', bg = ''}},
-
     -- custom groups
     {0, 'fg_dark',  {fg = fg_2, bg = none}},
 
@@ -20,7 +18,7 @@ local set_hl_groups = function()
     {0, 'Ro',       {fg = fg_1, bg = readonly}},
     {0, 'Git',      {fg = git,  bg = none, italic = true}},
 
-    -- vim builtin groups
+    -- Search
     {0, 'Search',     {fg = plum_1, bg = fg_1}},
     {0, 'IncSearch',  {fg = plum_1, bg = fg_1}},
     {0, 'CurSearch',  {fg = fg_1,   bg = plum_1}},
@@ -28,16 +26,30 @@ local set_hl_groups = function()
 
     {0, 'Visual', {fg = fg_1, bg = '#3030a0'}},
 
+    -- Tabline
     {0, 'TabLine',      {fg = fg_2, bg = plum_1, italic = true}},
     {0, 'TabLineSel',   {fg = fg_1, bg = plum_2, italic = true, underline = true}},
     {0, 'TabLineFill',  {fg = fg_1, bg = none}},
 
+    -- Modes
     {0, 'modeN',  {fg = fg_1, bg = '#6050f0'}},
     {0, 'modeC',  {fg = fg_1, bg = '#30a080'}},
     {0, 'modeV',  {fg = fg_1, bg = '#3030a0'}},
     {0, 'modeR',  {fg = fg_1, bg = '#d0d050'}},
     {0, 'modeT',  {fg = fg_1, bg = '#3d3d3d'}},
-    {0, 'modeI',  {fg = fg_1, bg = '#b03050'}}
+    {0, 'modeI',  {fg = fg_1, bg = '#b03050'}},
+
+    -- Telescope
+    {0, 'TelescopeBorder',        {fg = plum_2, bg = none}},
+    {0, 'TelescopeMatching',      {fg = plum_1, bg = fg_1}},
+    {0, 'TelescopeNormal',        {fg = fg_1,   bg = none}},
+    {0, 'TelescopePreviewTitle',  {fg = fg_1,   bg = none}},
+    {0, 'TelescopePromptCounter', {fg = fg_2,   bg = none}},
+    {0, 'TelescopePromptNormal',  {fg = fg_1,   bg = none}},
+    {0, 'TelescopePromptPrefix',  {fg = fg_1,   bg = none}},
+    {0, 'TelescopePromptTitle',   {fg = fg_1,   bg = none}},
+    {0, 'TelescopeSelection',     {fg = fg_1,   bg = plum_1}},
+    {0, 'TelescopeTitle',         {fg = fg_1,   bg = none}},
   }
 
   for _, hlgr in pairs(hls) do
