@@ -32,20 +32,20 @@ timeout     = 4s
 # frame_color = "#e5e0dd"
 
 foreground  = "#d3c6aa"
-background  = "#323d43"
-frame_color = "#323d43"
+background  = "#323c41"
+frame_color = "#323c41"
 
 [urgency_normal]
 timeout     = 3s
 foreground  = "#d699b6"
-background  = "#323d43"
-frame_color = "#323d43"
+background  = "#323c41"
+frame_color = "#323c41"
 
 [urgency_critical]
 timeout     = 8s
 foreground  = "#e67e80"
-background  = "#323d43"
-frame_color = "#323d43"
+background  = "#323c41"
+frame_color = "#323c41"
 
 [discord]
 appname     = "discord"
@@ -62,12 +62,12 @@ skip_display= true
 appname     = "highTemp"
 timeout     = 8s
 foreground  = "#e67e80"
-background  = "#323d43"
-frame_color = "#323d43"
+background  = "#323c41"
+frame_color = "#323c41"
 
 [crittemp]
 appname     = "critTemp"
 timeout     = 14s
 foreground  = "#e67e80"
-background  = "#323d43"
-frame_color = "#323d43"
+background  = "#323c41"
+frame_color = "#323c41"
