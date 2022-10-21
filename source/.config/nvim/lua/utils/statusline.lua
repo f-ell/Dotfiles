@@ -33,7 +33,7 @@ M.get_git = function()
     local char = string.sub(branch, 0, 1)
     branch = string.gsub(branch, char, '')
     branch = string.reverse(branch)
-    branch = strf(' %s %s%s', '%#Git#', branch, '%#Default#')
+    branch = strf(' %s %s%s', '%#SlGit#', branch, '%#SlDef#')
   end
   return branch
 end
@@ -47,8 +47,8 @@ M.get_filename = function()
   local readonly, reset = '', ''
 
   if vim.api.nvim_buf_get_option(0, 'readonly') then
-    readonly  = '%#Ro# '
-    reset     = ' %#Default#'
+    readonly  = '%#SlRo# '
+    reset     = ' %#SlDef#'
   end
 
   return strf('%s%s%s', readonly, filename, reset)
@@ -58,7 +58,7 @@ M.get_modified = function()
   local modified_status = ''
 
   if vim.api.nvim_buf_get_option(0, 'modified') then
-    modified_status = '-+- '
+    modified_status = '-*- '
   end
 
   return modified_status
@@ -96,7 +96,7 @@ end
 
 
 M.set_statusline = function()
-  local reset = '%#Default#'
+  local reset = '%#SlDef#'
   local mode_colour = M:get_mode_colour(vim.api.nvim_get_mode().mode)
 
   local mode

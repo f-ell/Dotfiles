@@ -17,7 +17,24 @@ tls.setup({
 
     sorting_strategy  = 'descending',
     scroll_strategy   = 'limit',
-    layout_strategy   = 'horizontal',
+
+    layout_strategy   = 'vertical',
+    theme = 'dropdown',
+    layout_config     = {
+      prompt_position = 'bottom',
+      width   = 0.80,
+      height  = 0.70,
+      horizontal = {
+        preview_width = 0.65,
+        results_width = 0.3,
+      },
+      vertical = {
+        preview_height = 0.45,
+        mirror = false,
+      },
+      preview_cutoff = 12
+    },
+
     prompt_prefix     = ' ',
     entry_prefix      = '  ',
     selection_caret   = '> ',
