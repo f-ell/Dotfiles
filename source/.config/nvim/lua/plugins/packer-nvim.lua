@@ -126,8 +126,14 @@ return packer.startup(function()
   -- Miscellaneous
   use {
     {
+      'lewis6991/gitsigns.nvim',
+      event = 'VimEnter',
+      config = function()
+        require('plugins.gitsigns-nvim')
+      end
+    },
+    {
       'terrortylor/nvim-comment',
-      -- keys = {',', '<leader>,'}, -- consider loading on VimEnter
       event = 'VimEnter',
       config = function()
         require('plugins.nvim-comment')

@@ -45,9 +45,9 @@ local set_hl_groups = function()
 
     -- Search
     {0, 'Search',     {fg = fg1, bg = dr2}},
-    {0, 'IncSearch',  {fg = fg1, bg = dr2}},
+    {0, 'IncSearch',  {link = 'Search'}},
     {0, 'CurSearch',  {fg = dr2, bg = fg1}},
-    {0, 'Substitute', {fg = dr2, bg = fg1}},
+    {0, 'Substitute', {link = 'Substitute'}},
 
     {0, 'Visual', {fg = dr2, bg = fg1}},
 
@@ -77,6 +77,17 @@ local set_hl_groups = function()
     {0, 'TelescopePromptNormal',  {fg = fg1,  bg = fg3}},
     {0, 'TelescopePromptPrefix',  {fg = aqu1, bg = _}},
     {0, 'TelescopePromptTitle',   {fg = fg1,  bg = aqu1}},
+
+    -- Gitsigns
+    {0, 'GSAdd', {fg = gre1, bg = none}},
+    {0, 'GSCha', {fg = blu1, bg = none}},
+    {0, 'GSDel', {fg = red1, bg = none}},
+    {0, 'GSAddNr', {link = 'GitsignsAddNr'}},
+    {0, 'GSAddLn', {link = 'GitSignsAddLn'}},
+    {0, 'GSChaNr', {link = 'GitSignsChangeNr'}},
+    {0, 'GSChaLn', {link = 'GitSignsChangeLn'}},
+    {0, 'GSDelNr', {link = 'GitSignsDeleteNr'}},
+    {0, 'GSDelLn', {link = 'GitSignsDeleteLn'}},
   }
 
   for _, hlgr in pairs(hls) do

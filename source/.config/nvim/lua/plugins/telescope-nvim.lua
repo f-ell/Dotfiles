@@ -8,7 +8,7 @@ tls.setup({
       'rg', '--color=never', '--no-heading', '--with-filename', '--column',
       '--smart-case'
     },
-    path_display      = {
+    path_display = {
       shorten = {
         len = 1, exclude = {-2, -1, 1}
       },
@@ -89,23 +89,18 @@ tls.setup({
       find_command  = {
         'fd', '-tf', '-H', '-d10', '--strip-cwd-prefix'
       },
-
-      mappings = {
-        n = {
-          ["cd"] = function(prompt_bufnr)
-            local sel = require("telescope.actions.state").get_selected_entry()
-            local dir = vim.fn.fnamemodify(sel.path, ":p:h")
-            require("telescope.actions").close(prompt_bufnr)
-            vim.cmd('silent lcd '..dir)
-          end
-        }
-      }
     },
 
     live_grep = {
       preview = {
         filesize_limit  = 0.3,
         timeout         = 100,
+        hide_on_startup = false
+      },
+    },
+
+    current_buffer_fuzzy_find = {
+      preview = {
         hide_on_startup = false
       },
     }

@@ -160,8 +160,8 @@ F.nnmap('<A-l>', '<C-w>l')
     F.nnmap('<leader>py', ':PackerSync<CR>')
 
   -- telescope
-    F.nnmap('<leader>f', ':Telescope find_files<CR>')
-    F.nnmap('<leader>g', ':Telescope git_files<CR>')
+    F.nnmap('<leader>f',  ':Telescope find_files<CR>')
+    F.nnmap('<leader>tg', ':Telescope git_files<CR>')
     F.nnmap('<leader>tr', ':Telescope live_grep<CR>')
     F.nnmap('<leader>tf', ':Telescope current_buffer_fuzzy_find<CR>')
 
@@ -171,6 +171,13 @@ F.nnmap('<A-l>', '<C-w>l')
   -- emmet
     F.inmap('<A-e>', '<C-y>,<Esc>')
     F.nnmap('<A-e>', '<C-y>,<Esc>')
+
+  -- gitsigns
+    F.nnmap('<leader>gsh', ':Gitsigns diffthis<CR>')
+    F.nnmap('<leader>gsj', ':silent Gitsigns next_hunk<CR>')
+    F.nnmap('<leader>gsk', ':silent Gitsigns prev_hunk<CR>')
+    F.nnmap('<leader>gsl', ':Gitsigns toggle_deleted<CR>')
+    F.nnmap('<leader>gsc', ':Gitsigns toggle_linehl<CR>')
 
   -- markdownpreview
     F.nnmap('<A-p>', '<plug>MarkdownPreviewToggle')

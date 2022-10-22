@@ -21,7 +21,7 @@ local on_attach = function()
   F.nnmap('gd', ':Lspsaga peek_definition<CR>')
   F.nnmap('K',  ':Lspsaga hover_doc<CR>')
   F.nnmap('<leader>r', ':Lspsaga rename<CR>')
-  F.nnmap('<leader>c', ':Lspsaga code_action<CR>')
+  F.nnmap('<leader>ca', ':Lspsaga code_action<CR>')
 
   F.nnmap('<leader>h', ':Lspsaga show_line_diagnostics<CR>')
   F.nnmap('<leader>j', ':Lspsaga diagnostic_jump_next<CR>')
