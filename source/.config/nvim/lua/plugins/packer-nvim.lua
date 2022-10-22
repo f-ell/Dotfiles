@@ -42,8 +42,9 @@ return packer.startup(function()
     },
     {
       'glepnir/lspsaga.nvim',
+      after = 'nvim-lspconfig',
       config = function()
-        require('plugins.lspsaga')
+        require('plugins.lspsaga-nvim')
       end
     },
     {
@@ -82,7 +83,7 @@ return packer.startup(function()
     },
     {
       'hrsh7th/cmp-buffer',
-       after = 'cmp_luasnip',
+       after = 'nvim-cmp',
        config = function()
          require('plugins.nvim-cmp')
        end
@@ -96,7 +97,7 @@ return packer.startup(function()
     requires  = 'kyazdani42/nvim-web-devicons',
     cmd       = 'TroubleToggle',
     config    = function()
-      require('plugins.trouble')
+      require('plugins.trouble-nvim')
     end
   }
 
@@ -106,12 +107,13 @@ return packer.startup(function()
   use 'natecraddock/telescope-zf-native.nvim'
   use {
     'nvim-telescope/telescope.nvim',
+    event     = 'VimEnter',
     requires  = {
       'nvim-lua/plenary.nvim',
       'natecraddock/telescope-zf-native.nvim'
     },
     config    = function()
-      require('plugins.telescope')
+      require('plugins.telescope-nvim')
     end
   }
 
@@ -176,7 +178,7 @@ return packer.startup(function()
       -- cmd = 'MarkdownPreview',
       ft = {'md', 'markdown'},
       config  = function()
-        require('plugins.markdown-preview')
+        require('plugins.markdown-preview-nvim')
       end
     },
     {

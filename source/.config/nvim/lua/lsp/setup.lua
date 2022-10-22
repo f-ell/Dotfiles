@@ -46,7 +46,7 @@ for key, server in pairs(servers) do
   }
 
   if configs[key] then
-    local config = require('lsp.server-config.' .. configs[key])
+    local config = require('lsp.servers.' .. configs[key])
     vim.tbl_deep_extend('force', config, opts)
   end
 
