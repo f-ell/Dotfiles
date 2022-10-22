@@ -24,18 +24,23 @@ M.get_mode_colour = function()
 end
 
 M.get_git = function()
-  local fh = io.popen('git branch --show-current 2>/dev/null', 'r')
-    local branch = fh:read('*a')
-  fh:close()
+  local fh
+  local head  = ''
 
-  if branch ~= '' then
-    branch = string.reverse(branch)
-    local char = string.sub(branch, 0, 1)
-    branch = string.gsub(branch, char, '')
-    branch = string.reverse(branch)
-    branch = strf(' %s %s%s', '%#SlGit#', branch, '%#SlDef#')
+  fh        = io.popen('git rev-parse --is-inside-work-tree 2>/dev/null', 'r')
+  local git = F.chop(fh:read('*a')); fh:close()
+
+  if git == 'true' then
+    fh    = io.popen('git branch --show-current', 'r')
+    head  = F.chop(fh:read('*a')); fh:close()
+    if head == '' then
+      fh    = io.popen('git rev-parse @', 'r')
+      head  = fh:read('*a'); fh:close()
+      head  = head:sub(1, 7)
+    end
+    head = strf(' %s %s%s', '%#SlGit#', head, '%#SlDef#')
   end
-  return branch
+  return head
 end
 
 M.get_bufnr = function()

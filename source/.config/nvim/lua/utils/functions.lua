@@ -1,24 +1,30 @@
 local M = {}
+local v = vim
 
 
-function M.c(command)
-  vim.api.nvim_command(command)
+M.c = function(command)
+  v.api.nvim_command(command)
 end
 
-function M.o(name, value)
-  vim.opt[name] = value
+M.o = function(name, value)
+  v.opt[name] = value
 end
 
-function M.g(name, value)
-  vim.g[name] = value
+M.g = function(name, value)
+  v.g[name] = value
 end
 
 
-local function map(mode, opt)
+M.chop = function(str)
+  return str:sub(0, str:len()-1)
+end
+
+
+local map = function(mode, opt)
     opt = opt or {noremap = true}
     return function(lhs, rhs, re)
-        re = vim.tbl_extend('force', opt, re or {})
-        vim.keymap.set(mode, lhs, rhs, re)
+        re = v.tbl_extend('force', opt, re or {})
+        v.keymap.set(mode, lhs, rhs, re)
     end
 end
 
