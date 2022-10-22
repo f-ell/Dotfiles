@@ -17,24 +17,24 @@ local configs  = {
 
 
 local on_attach = function()
-  -- lspsaga
-    F.nnmap('<leader>gd', 'gd')
-    F.nnmap('gd', ':Lspsaga peek_definition<CR>')
-    F.nnmap('K',  ':Lspsaga hover_doc<CR>')
-    F.nnmap('<leader>r',  ':Lspsaga rename<CR>')
-    F.nnmap('<leader>dj', ':Lspsaga diagnostic_jump_next<CR>')
-    F.nnmap('<leader>dk', ':Lspsaga diagnostic_jump_prev<CR>')
-    F.nnmap('<leader>ds', ':Lspsaga show_line_diagnostics<CR>')
-  -- trouble
-    F.nnmap('<leader>tt', ':TroubleToggle<CR>')
+  F.nnmap('<leader>gd', 'gd')
+  F.nnmap('gd', ':Lspsaga peek_definition<CR>')
+  F.nnmap('K',  ':Lspsaga hover_doc<CR>')
+  F.nnmap('<leader>r', ':Lspsaga rename<CR>')
+  F.nnmap('<leader>c', ':Lspsaga code_action<CR>')
+
+  F.nnmap('<leader>h', ':Lspsaga show_line_diagnostics<CR>')
+  F.nnmap('<leader>j', ':Lspsaga diagnostic_jump_next<CR>')
+  F.nnmap('<leader>k', ':Lspsaga diagnostic_jump_prev<CR>')
+  F.nnmap('<leader>l', ':silent! Telescope diagnostics<CR>')
 
   -- deprecated mappings:
-    -- vim.keymap.set('n', 'K', vim.lsp.buf.hover, { buffer = 0 })
-    -- F.nnmap('<leader>ds', vim.diagnostic.open_float,  {buffer = 0})
-    -- F.nnmap('<leader>dj', vim.diagnostic.goto_next,   {buffer = 0})
-    -- F.nnmap('<leader>dk', vim.diagnostic.goto_prev,   {buffer = 0})
-    -- F.nnmap('<leader>lr', vim.lsp.buf.rename,     {buffer = 0})
-    -- F.nnmap('<leader>ld', vim.lsp.buf.definition, {buffer = 0})
+  -- vim.keymap.set('n', 'K', vim.lsp.buf.hover, { buffer = 0 })
+  -- F.nnmap('<leader>ds', vim.diagnostic.open_float,  {buffer = 0})
+  -- F.nnmap('<leader>dj', vim.diagnostic.goto_next,   {buffer = 0})
+  -- F.nnmap('<leader>dk', vim.diagnostic.goto_prev,   {buffer = 0})
+  -- F.nnmap('<leader>lr', vim.lsp.buf.rename,     {buffer = 0})
+  -- F.nnmap('<leader>ld', vim.lsp.buf.definition, {buffer = 0})
 end
 
 

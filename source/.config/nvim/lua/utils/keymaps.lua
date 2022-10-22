@@ -36,6 +36,8 @@ local tab_bufs = function()
       vim.cmd('tabe '..bufname)
     end
   end
+
+  vim.cmd('tablast')
 end
 
 
@@ -98,8 +100,8 @@ end
 vim.g.mapleader = ' '
 
 -- normal
-F.nnmap('<leader>key',  ':so ~/.config/nvim/lua/utils/keymaps.lua<CR>')
-F.nnmap('<leader>snip', ':so ~/.config/nvim/lua/plugins/luasnip.lua<CR>')
+F.nnmap('<leader>sok', ':so ~/.config/nvim/lua/utils/keymaps.lua<CR>')
+F.nnmap('<leader>sos', ':so ~/.config/nvim/lua/plugins/luasnip.lua<CR>')
 
 F.nnmap('--', ':w<CR>')
 F.nnmap('-d', ':bd<CR>')
@@ -158,13 +160,10 @@ F.nnmap('<A-l>', '<C-w>l')
     F.nnmap('<leader>py', ':PackerSync<CR>')
 
   -- telescope
-    -- local tlsb = require('telescope.builtin')
-    -- F.nnmap('<leader>ff', tlsb.find_files)
-    -- F.nnmap('<leader>fg', tlsb.git_files)
-    -- F.nnmap('<leader>rg', tlsb.live_grep)
-    F.nnmap('<leader>ff', ':Telescope find_files<CR>')
-    F.nnmap('<leader>fg', ':Telescope git_files<CR>')
-    F.nnmap('<leader>rg', ':Telescope live_grep<CR>')
+    F.nnmap('<leader>f', ':Telescope find_files<CR>')
+    F.nnmap('<leader>g', ':Telescope git_files<CR>')
+    F.nnmap('<leader>tr', ':Telescope live_grep<CR>')
+    F.nnmap('<leader>tf', ':Telescope current_buffer_fuzzy_find<CR>')
 
   -- colorizer
     F.nnmap('<leader>ct', ':ColorizerToggle<CR>')
