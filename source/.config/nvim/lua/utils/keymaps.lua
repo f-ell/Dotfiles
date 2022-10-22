@@ -158,10 +158,13 @@ F.nnmap('<A-l>', '<C-w>l')
     F.nnmap('<leader>py', ':PackerSync<CR>')
 
   -- telescope
-    local tlsb = require('telescope.builtin')
-    F.nnmap('<leader>ff', tlsb.find_files)
-    F.nnmap('<leader>fg', tlsb.git_files)
-    F.nnmap('<leader>rg', tlsb.live_grep)
+    -- local tlsb = require('telescope.builtin')
+    -- F.nnmap('<leader>ff', tlsb.find_files)
+    -- F.nnmap('<leader>fg', tlsb.git_files)
+    -- F.nnmap('<leader>rg', tlsb.live_grep)
+    F.nnmap('<leader>ff', ':Telescope find_files<CR>')
+    F.nnmap('<leader>fg', ':Telescope git_files<CR>')
+    F.nnmap('<leader>rg', ':Telescope live_grep<CR>')
 
   -- colorizer
     F.nnmap('<leader>ct', ':ColorizerToggle<CR>')
