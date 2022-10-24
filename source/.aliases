@@ -36,11 +36,12 @@ alias hist='tail -10 <(history)'
 alias psearch='pacman -Ss $1'
 alias pquery='pacman -Q | rg -i $1'
 alias pcount='pacman -Q | wc -l'
+alias sem='cd ~/Documents/Uni/3_Sem'
 alias scripts='cd ~/Git/Scripts/'
 alias v=$EDITOR
 alias va=$EDITOR' ~/.aliases && source ~/.aliases'
 alias yeet='doas pacman -Qtdq | doas pacman -Rns -'
-alias zath='zathura --fork'
+alias zt='zathura --fork'
 
 
 Sconf='~/.config/bspwm/sxhkdrc.bspwm ~/.config/sxhkd/sxhkdrc.'
