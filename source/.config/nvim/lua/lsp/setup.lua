@@ -12,7 +12,7 @@ local servers = {
 
 local configs  = {
   _2 = 'perl',
-  _3 = 'lua'
+  _4 = 'lua'
 }
 
 
