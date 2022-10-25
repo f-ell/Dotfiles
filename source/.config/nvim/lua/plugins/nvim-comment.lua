@@ -1,5 +1,5 @@
 require('nvim_comment').setup({
-  line_mapping              = ',',
-  operator_mapping          = '<leader>,',
+  line_mapping              = 'm',
+  operator_mapping          = '<leader>m',
   comment_chunk_text_object = 'ic'
 })
