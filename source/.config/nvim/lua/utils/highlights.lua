@@ -79,15 +79,15 @@ local set_hl_groups = function()
     {0, 'TelescopePromptTitle',   {fg = fg1,  bg = aqu1}},
 
     -- Gitsigns
-    {0, 'GSAdd', {fg = gre1, bg = none}},
-    {0, 'GSCha', {fg = blu1, bg = none}},
-    {0, 'GSDel', {fg = red1, bg = none}},
-    {0, 'GSAddNr', {link = 'GitsignsAddNr'}},
-    {0, 'GSAddLn', {link = 'GitSignsAddLn'}},
-    {0, 'GSChaNr', {link = 'GitSignsChangeNr'}},
-    {0, 'GSChaLn', {link = 'GitSignsChangeLn'}},
-    {0, 'GSDelNr', {link = 'GitSignsDeleteNr'}},
-    {0, 'GSDelLn', {link = 'GitSignsDeleteLn'}},
+    {0, 'GSAdd',    {fg = gre1, bg = none}},
+    {0, 'GSCha',    {fg = blu1, bg = none}},
+    {0, 'GSDel',    {fg = red1, bg = none}},
+    {0, 'GSAddNr',  {link = 'GitsignsAddNr'}},
+    {0, 'GSAddLn',  {link = 'GitSignsAddLn'}},
+    {0, 'GSChaNr',  {link = 'GitSignsChangeNr'}},
+    {0, 'GSChaLn',  {link = 'GitSignsChangeLn'}},
+    {0, 'GSDelNr',  {link = 'GitSignsDeleteNr'}},
+    {0, 'GSDelLn',  {link = 'GitSignsDeleteLn'}},
   }
 
   for _, hlgr in pairs(hls) do
