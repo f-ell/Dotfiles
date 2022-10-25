@@ -140,9 +140,9 @@ F.nnmap('<leader>bb', 'oborder: 1px solid blue;<Esc>o<Esc>')
 -- tabs
 F.nnmap('<leader>g0', ':tabfirst<CR>')
 F.nnmap('<leader>g$', ':tablast<CR>')
-F.nnmap('<leader>gh', ':tabmove-<CR>')
+F.nnmap('<leader>gh', ':silent! tabmove-<CR>')
 F.nnmap('<leader>gj', ':tabmove0<CR>')
-F.nnmap('<leader>gl', ':tabmove+<CR>')
+F.nnmap('<leader>gl', ':silent! tabmove+<CR>')
 F.nnmap('<leader>gk', ':tabmove$<CR>')
 
 

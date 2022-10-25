@@ -18,23 +18,23 @@ local configs  = {
 
 local on_attach = function()
   F.nnmap('<leader>gd', 'gd')
+
+  -- TODO: deprecate this block:
   F.nnmap('gd', ':Lspsaga peek_definition<CR>')
-  F.nnmap('K',  ':Lspsaga hover_doc<CR>')
-  F.nnmap('<leader>r', ':Lspsaga rename<CR>')
   F.nnmap('<leader>ca', ':Lspsaga code_action<CR>')
-
+  F.nnmap('<leader>rn', ':Lspsaga rename<CR>')
   F.nnmap('<leader>h', ':Lspsaga show_line_diagnostics<CR>')
-  F.nnmap('<leader>j', ':Lspsaga diagnostic_jump_next<CR>')
-  F.nnmap('<leader>k', ':Lspsaga diagnostic_jump_prev<CR>')
-  F.nnmap('<leader>l', ':silent! Telescope diagnostics<CR>')
 
-  -- deprecated mappings:
-  -- vim.keymap.set('n', 'K', vim.lsp.buf.hover, { buffer = 0 })
-  -- F.nnmap('<leader>ds', vim.diagnostic.open_float,  {buffer = 0})
-  -- F.nnmap('<leader>dj', vim.diagnostic.goto_next,   {buffer = 0})
-  -- F.nnmap('<leader>dk', vim.diagnostic.goto_prev,   {buffer = 0})
-  -- F.nnmap('<leader>lr', vim.lsp.buf.rename,     {buffer = 0})
-  -- F.nnmap('<leader>ld', vim.lsp.buf.definition, {buffer = 0})
+  -- F.nnmap('gd', vim.lsp.buf.definition, {buffer = 0})
+  F.nnmap('K',  vim.lsp.buf.hover,      {buffer = 0})
+  -- F.nnmap('<leader>ca', vim.lsp.buf.code_action,    {buffer = 0})
+  -- F.nnmap('<leader>rn', vim.lsp.buf.rename,         {buffer = 0})
+  F.nnmap('<leader>rf', vim.lsp.buf.references,     {buffer = 0})
+
+  -- F.nnmap('<leader>h',  vim.diagnostic.open_float,  {buffer = 0})
+  F.nnmap('<leader>j',  vim.diagnostic.goto_next,   {buffer = 0})
+  F.nnmap('<leader>k',  vim.diagnostic.goto_prev,   {buffer = 0})
+  F.nnmap('<leader>l', ':silent! Telescope diagnostics<CR>')
 end
 
 

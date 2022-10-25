@@ -61,6 +61,14 @@ local set_hl_groups = function()
     {0, 'TabLineSel',   {fg = fg1, bg = dr1, italic = true, bold = true}},
     {0, 'TabLineFill',  {fg = fg1, bg = _}},
 
+    -- Float
+    {0, 'FloatBorder',  {fg = aqu2, bg = none}},
+    {0, 'NormalFloat',  {fg = pur1, bg = none}},
+    {0, 'HintFloat',    {fg = blu1, bg = none}},
+    {0, 'InfoFloat',    {fg = aqu1, bg = none}},
+    {0, 'WarningFloat', {fg = yel1, bg = none}},
+    {0, 'ErrorFloat',   {fg = red1, bg = none}},
+
     -- Telescope
     {0, 'TelescopeBorder',        {fg = fg4,  bg = fg4}},
     {0, 'TelescopeMatching',      {fg = pur2, bg = fg1}},

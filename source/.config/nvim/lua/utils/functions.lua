@@ -1,9 +1,10 @@
-local M = {}
-local v = vim
+local M   = {}
+local v   = vim
+local va  = vim.api
 
 
 M.c = function(command)
-  v.api.nvim_command(command)
+  va.nvim_command(command)
 end
 
 M.o = function(name, value)

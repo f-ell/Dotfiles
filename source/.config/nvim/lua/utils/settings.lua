@@ -57,5 +57,5 @@ F.o('updatecount', 0) -- supersedes F.o('swapfile', false)
 F.o('undofile',    true)
 
 -- transparency
-F.o('pumblend', 8)
-F.o('winblend', 8)
+F.o('pumblend', 0) -- was 8
+F.o('winblend', 0)
