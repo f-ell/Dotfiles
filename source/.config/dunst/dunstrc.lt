@@ -1,7 +1,7 @@
 [global]
 title           = Dunst
 class           = Dunst
-font            = Recursive Italic 11
+font            = Ellograph CF Italic Demi-Bold 14
 history_length  = 0
 sticky_history  = no
 show_indicators = false
