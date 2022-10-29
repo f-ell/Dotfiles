@@ -13,11 +13,11 @@ if [ $MACHINE = 'DT' ]; then
   bspc monitor DP-2 -d 1 2 3 4
   bspc monitor DP-0 -d 5
   bspc config pointer_motion_interval 7
-  ssm -e b -c 70 -g 70 &
+  pgrep ssm || ssm -e b -c 70 -g 70 &
 else
   bspc monitor eDP1 -d 1 2 3 4
   bspc config pointer_motion_interval 16
-  ssm -e g -b 30 -c 70 &
+  pgrep ssm || ssm -e g -b 30 -c 70 &
 fi
 
 bspc config window_gap      18
