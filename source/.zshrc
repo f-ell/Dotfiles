@@ -60,6 +60,10 @@ bindkey '^[[1;5D' backward-word
 bindkey '^ ' autosuggest-accept
 
 
+# Early exit when running on tty
+[[ `xset q 2>/dev/null` ]] || { PS1=$'%1~ $ '; return; }
+
+
 # Prompt
 CE='#e67e80'; CF='#d3c6aa'; CG='#fca326'; CC='#a0a0a0'
 Prompt() {
@@ -80,7 +84,7 @@ Prompt() {
   fi
 
   if (( $M == 0 )); then
-    PS1=$'%F{$CF} %B%S';
+    PS1=$'%F{$CF}• %B%S';
     [[ $PWD != $HOME ]] && PS1=$PS1$' %1~'; PS1=$PS1$'%s%b'       # working dir
     [[ -n $B ]] \
       && PS1=$PS1$'%K{$CG} %k%F{$CG}%S $B%s%f' \
