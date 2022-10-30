@@ -140,9 +140,11 @@ return packer.startup(function()
       end
     },
     {
-      'tpope/vim-surround',
-      event = 'VimEnter'
-      -- keys = {'cs', 'ds', 'ys'} -- ds overloads dd
+      'echasnovski/mini.surround',
+      event = 'VimEnter',
+      config = function()
+        require('plugins.mini-surround')
+      end
     },
     {
       'norcalli/nvim-colorizer.lua',
