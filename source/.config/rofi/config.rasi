@@ -52,11 +52,11 @@ configuration {
 }
 
 * {
-  font: "Recursive Italic 10";
+  font: "Ellograph CF Bold Italic 10";
 
   padding:          2px;
   spacing:          2px;
-  border-radius:    4px;
+  border-radius:    6px;
 
   fg-nor:  #d3c6aa;
   fg-alt:  #b3a68a;
@@ -98,7 +98,7 @@ inputbar {
 }
   textbox-prompt {
     expand: false;
-    str: " ";
+    str: "  "; // 
   }
   entry {
     placeholder:      "";
@@ -135,7 +135,7 @@ listbox {
     scrollbar:      false;
     spacing:        2px;
 
-    border:         1px dash 0px 0px 0px;
+    border:         1px solid 0px 0px 0px;
     border-color:   inherit;
     border-radius:  0px;
 
