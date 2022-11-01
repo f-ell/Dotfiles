@@ -23,6 +23,20 @@ M.get_mode_colour = function()
   return strf('%s%s#', '%#mode', mode:upper())
 end
 
+
+M.get_search_count = function()
+  local s   = vim.fn.searchcount({maxcount=0})
+  local cur = s.current
+  local tot = s.total
+  local cmp = s.incomplete
+
+  if s.exact_match == 0 then return '' end
+  if cmp == 1           then return '| ['..cur..'/?] ' end
+
+  return '| ['..cur..'/'..tot..'] '
+end
+
+
 M.get_git = function()
   local fh
   local head  = ''
@@ -43,9 +57,6 @@ M.get_git = function()
   return head
 end
 
-M.get_bufnr = function()
-  return '%n'
-end
 
 M.get_filename = function()
   local filename = '%t'
@@ -59,6 +70,10 @@ M.get_filename = function()
   return strf('%s%s%s', readonly, filename, reset)
 end
 
+M.get_bufnr = function()
+  return '%n'
+end
+
 M.get_modified = function()
   local modified_status = ''
 
@@ -68,6 +83,7 @@ M.get_modified = function()
 
   return modified_status
 end
+
 
 M.get_filetype = function()
   -- return string.format(' %s ', vim.fn.fnamemodify(vim.fn.expand('%'), ':e:e:e'))
@@ -95,6 +111,7 @@ M.get_filetype = function()
   return icon_and_filetype
 end
 
+
 M.get_position = function()
   return '%l:%v'
 end
@@ -104,8 +121,8 @@ M.set_statusline = function()
   local reset = '%#SlDef#'
   local mode_colour = M:get_mode_colour(vim.api.nvim_get_mode().mode)
 
-  local mode
-    = strf('%s %s %s', mode_colour, M:get_mode(), reset)
+  local mode    = strf('%s %s %s',  mode_colour, M:get_mode(),          reset)
+  local search  = strf('%s%s%s',    mode_colour, M:get_search_count(),  reset)
 
   local git = M:get_git()
 
@@ -114,14 +131,14 @@ M.set_statusline = function()
   local bufnr     = strf('(%s)', M:get_bufnr())
 
   local filetype  = strf('%s %s', mode_colour, M:get_filetype())
-  local position  = M:get_position()
+  local position  = M:get_position()..' '
 
   return table.concat({
-    mode, '%<', git,
+    mode, '%<', search, git,
     '%=',
     modified, filename, bufnr,
     '%=',
-    filetype, position, ' '
+    filetype, position
   })
 end
 
