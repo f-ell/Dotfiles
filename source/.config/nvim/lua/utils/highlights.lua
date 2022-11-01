@@ -9,8 +9,8 @@ local set_hl_groups = function()
   local ro    = '#f85552'
   local git   = '#fca326'
 
-  local dr1  = '#6d5261'
-  local dr2  = '#472e3c'
+  -- local dr1  = '#6d5261'
+  -- local dr2  = '#472e3c'
 
   local aqu1 = '#83c092'
   local aqu2 = '#35a77c'
@@ -25,9 +25,9 @@ local set_hl_groups = function()
   local yel1 = '#dbbc7f'
   local yel2 = '#dfa000'
 
-  local cmd = aqu2
-  local ins = dr2
-  local nor = dr1
+  local cmd = red1
+  local ins = aqu1
+  local nor = fg4
   local rep = yel1
   local ter = gre1
   local vis = pur1
@@ -38,7 +38,7 @@ local set_hl_groups = function()
 
     -- Modes
     {0, 'modeC',  {fg = fg1, bg = cmd}},
-    {0, 'modeI',  {fg = fg1, bg = ins}},
+    {0, 'modeI',  {fg = fg5, bg = ins}},
     {0, 'modeN',  {fg = fg1, bg = nor}},
     {0, 'modeR',  {fg = fg5, bg = rep}},
     {0, 'modeT',  {fg = fg5, bg = ter}},
@@ -58,8 +58,8 @@ local set_hl_groups = function()
     {0, 'SlGit',  {fg = git, bg =  _, italic = true}},
 
     -- Tabline
-    {0, 'TabLine',      {fg = fg2, bg = dr2, italic = true}},
-    {0, 'TabLineSel',   {fg = fg1, bg = dr1, italic = true, bold = true}},
+    {0, 'TabLine',      {fg = fg3, bg = fg5, italic = true}},
+    {0, 'TabLineSel',   {fg = fg2, bg = fg4, italic = true, bold = true}},
     {0, 'TabLineFill',  {fg = fg1, bg = _}},
 
     -- Float-Diagnostics
