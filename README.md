@@ -16,12 +16,12 @@ Some things worth highlighting:
   * [LuaSnip](https://github.com/L3MON4D3/LuaSnip/) lua snippets that can be
     used to build upon
 * sxhkd
-  * device-specific bindings that do something different depending on the
-    machine that's used
+  * device-specific bindings that act differently depending on the machine
+    that's used
     * device-specific files end in `.dt` and `.lt` respectively
-    * the device type is read from `$HOME/Git/machine` (contains either 'DT' or
-    'LT') and exported as `$MACHINE` on shell startup
-    * e.g. `r-Alt + b` returns my
+    * the device type is read from `$HOME/Git/machine` (should contain either
+    'DT' or 'LT') and exported as `$MACHINE` on login
+    * e.g. `Alt + b` returns my
       * mouse's battery percentage on a desktop
       * laptop's battery percentage on a laptop
 * Zsh
@@ -37,20 +37,18 @@ Some things worth highlighting:
 ## Software
 * WM:             [`bspwm`](https://www.github.com/baskerville/bspwm/)
 * Keybindings:    [`sxhkd`](https://github.com/baskerville/sxhkd/)
-* Terminal:       [`Alacritty`](https://alacritty.org/)
+* Terminal:       [`kitty`](https://sw.kovidgoyal.net/kitty/)
 * Shell:          [`Zsh`](https://www.zsh.org/)
 * Editor:         [`Neovim`](https://neovim.io/)
 * Launcher:       [`Rofi`](https://github.com/davatorium/rofi/)
-* File Manager:   [`ranger`](https://ranger.github.io/)
 * Notifications:  [`dunst`](https://dunst-project.org/)
 * Screenshots:    [`scrot`](https://github.com/resurrecting-open-source-projects/scrot/)
 
 ## Pictures
-Zsh prompt whilst in a Git repository and prompt when last command's exit status
-is not zero:  
+Custom Zsh prompt:
 ![](Pictures/zsh.png)  
 
-Neovim whilst editing buffer in a single window:  
+Neovim:  
 ![](Pictures/nvim.png)
 
 ## Basic Keybindings
@@ -58,38 +56,35 @@ Keybindings needed to get up and running. Not exhaustive and subject to change.
 See [`sxhkd/`](source/.config/sxhkd/) for general keybindings. WM-specific
 keybindings can be found in `source/.config/<WM>/sxhkdrc.<WM>`.
 
-NOTE: some change in [xkeyboard-config](https://gitlab.freedesktop.org/xkeyboard-config/xkeyboard-config)
-seems to have broken `r-Alt` / `mode_switch` bindings. They have all been
-changed to use --`l-Alt`-- instead.
 ```
-  Super + Enter:          spawn terminal (Alacritty by default)
+  Super + Enter:          spawn terminal
   Super + r:              spawn Rofi with custom run script
-  Super + Shift + r:      spawn Rofi in window mode
-  Super + o + x:          spawn application x
+  Super + Shift + r:      spawn Rofi in window | drun mode
+  Super + o + b:          spawn browser
 
   Super + Shift + w:      close focused node
   Super + Control + r:    reload window manager
   Super + Control + q:    kill window manager
 
   Super + f:              toggle node floating / tiled
-  Super + Tab:            toggle monocle layout
+  Super + Tab:            toggle 'monocle' layout
 
-  Super + [0-x]:                      go to workspace x
+  Super + [0-x]:                      go to workspace [0-x]
   Super + [hjkl]:                     focus node in direction [hjkl]
-  Super + Shift + [0-x]:              move node to workspace x
+  Super + Shift + [0-x]:              move node to workspace [0-x]
   Super + Shift + [hjkl]:             move node in direction [hjkl]
 
-  Super + Control + n:                equalize size of all nodes
+  Super + Control + n:                equalize nodes
   Super + Control + [hjkl]:           grow node *in* direction [hjkl]
   Super + Control + Shift + [hjkl]:   shrink node *from* direction [hjkl]
 
   Super + r-Alt + [hjkl]:   preselect in direction [hjkl]
-  Super + r-Alt + [0-9]:    change preselection ratio
-  Super + r-Alt + Escape:   cancel preselction
+  Super + r-Alt + [0-9]:    change preselect ratio
+  Super + r-Alt + Escape:   cancel preselect
 
   Super + i + [ims]:        insert / move to / switch with receptacle
 
   Super + (Shift +) m:      take (full desktop) screenshot
 
-  r-Alt + x: send dunst notification x
+  Alt + [bcdtu]: dunst notifications for system information
 ```
