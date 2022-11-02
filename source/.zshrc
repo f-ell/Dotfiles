@@ -61,77 +61,80 @@ bindkey '^ ' autosuggest-accept
 
 
 # Early exit when running on tty
-[[ `xset q 2>/dev/null` ]] || { PS1=$'%1~ $ '; return; }
+if [[ `xset q 2>/dev/null` ]]; then
+  # Prompt
+  CE='#e67e80'; CF='#d3c6aa'; CG='#fca326'; CC='#a0a0a0'
+  Prompt() {
+    unset {,R}PS1
+    # M -> 'mode' - 0 for compact single-line, 1 for long single-line,
+    # anything else for multi-line
+    M=$1; X=$2; C=$3
+
+    # Exit code
+    (( $X == 0 )) && unset X
+
+    # Git branch
+    B=`git rev-parse --is-inside-work-tree 2>/dev/null`
+    if (( $? == 0 )) && [[ $B == 'true' ]]; then
+      B=`git branch --show-current`
+      [[ -n $B ]] || { B=`git rev-parse @`; B=${B:0:7}; }
+    else
+      unset B
+    fi
+
+    if (( $M == 0 )); then
+      [[ $PWD == / ]] && P=/ || P=${PWD##*/}
+      PS1=$'%F{$CF}• %B%S';
+      [[ $PWD != $HOME ]] && PS1=$PS1\ $P; PS1=$PS1$'%s%b'          # working dir
+      [[ -n $B ]] \
+        && PS1=$PS1$'%K{$CG} %k%F{$CG}%S $B%s%f' \
+        || PS1=$PS1$''                                             # git branch
+      [[ -n $X ]] && PS1=$PS1$' %F{$CE}%B%{\e[3m%}$X%{\e[0m%}%b%f'  # exit code
+      PS1=$PS1$' %F{$CC}$C%f '                                      # prompt char
+
+    elif (( $M == 1 )); then
+      [[ -n $X ]] && PS1=$'%F{$CE}%B%S$X%s%b%f '      # exit code
+      PS1=$PS1$'%F{$CF}• %B%S %1~%s%b '              # working dir
+      [[ -n $B ]] && PS1=$PS1$'on %F{$CG}%S $B%s%f ' # git branch
+      PS1=$PS1$'%F{$CC}$C%f '                           # prompt char
+
+    else
+      PS1=$'%F{$CF}%B%S%~%s%b%f\n'
+      [[ -n $X ]] && PS1=$PS1$'%F{$CE}%B$X%b%f '
+      [[ -n $B ]] && PS1=$PS1$'%F{$CG}%B $B%b%f '
+      PS1=$PS1$'%F{$CC}$C%f '
+    fi
 
 
-# Prompt
-CE='#e67e80'; CF='#d3c6aa'; CG='#fca326'; CC='#a0a0a0'
-Prompt() {
-  unset {,R}PS1
-  # M -> 'mode' - 0 for compact single-line, 1 for long single-line, anything else for multi-line
-  M=$1; X=$2; C=$3
+    # RPS1
+    if (( $M == 1 )); then
+      #   1. replace $HOME in $OLDPWD
+      #   2. split to array       - (s)
+      #   3. strip leading '.'    - (#)
+      #   4. truncate to length 1 - (r)
+      #   5. join to string       - (j)
+      # |5.     |4.     |3|2.     |1.
+      R=${(j:/:)${(r:1:)${${(s:/:)${PWD/$HOME/\~}}[@]##.}}}
+      # Add leading slash and ellipsize
+      local Len; [[ ${R:0:1} == '~' ]] && Len=8 || { R='/'$R; Len=9; }
+      (( $#R > $Len )) && R=${R:0:$Len}'..'
+      [[ $R != '~' ]] && RPS1=$'  %F{$CF}%B%S$R%s%b%f'
+      RPS1=$RPS1$' •'
+    fi
+  }
+  precmd() {
+    LAST_EXIT=$?; Prompt 0 $LAST_EXIT ''
+  }
 
-  # Exit code
-  (( $X == 0 )) && unset X
-
-  # Git branch
-  B=`git rev-parse --is-inside-work-tree 2>/dev/null`
-  if (( $? == 0 )) && [[ $B == 'true' ]]; then
-    B=`git branch --show-current`
-    [[ -n $B ]] || { B=`git rev-parse @`; B=${B:0:7}; }
-  else
-    unset B
-  fi
-
-  if (( $M == 0 )); then
-    PS1=$'%F{$CF}• %B%S';
-    [[ $PWD != $HOME ]] && PS1=$PS1$' %1~'; PS1=$PS1$'%s%b'       # working dir
-    [[ -n $B ]] \
-      && PS1=$PS1$'%K{$CG} %k%F{$CG}%S $B%s%f' \
-      || PS1=$PS1$''                                             # git branch
-    [[ -n $X ]] && PS1=$PS1$' %F{$CE}%B%{\e[3m%}$X%{\e[0m%}%b%f'  # exit code
-    PS1=$PS1$' %F{$CC}$C%f '                                      # prompt char
-
-  elif (( $M == 1 )); then
-    [[ -n $X ]] && PS1=$'%F{$CE}%B%S$X%s%b%f '      # exit code
-    PS1=$PS1$'%F{$CF} %B%S %1~%s%b '              # working dir
-    [[ -n $B ]] && PS1=$PS1$'on %F{$CG}%S $B%s%f ' # git branch
-    PS1=$PS1$'%F{$CC}$C%f '                           # prompt char
-
-  else
-    PS1=$'%F{$CF}%B%S%~%s%b%f\n'
-    [[ -n $X ]] && PS1=$PS1$'%F{$CE}%B$X%b%f '
-    [[ -n $B ]] && PS1=$PS1$'%F{$CG}%B $B%b%f '
-    PS1=$PS1$'%F{$CC}$C%f '
-  fi
-
-
-  # RPS1
-  if (( $M == 1 )); then
-    #   1. replace $HOME in $OLDPWD
-    #   2. split to array       - (s)
-    #   3. strip leading '.'    - (#)
-    #   4. truncate to length 1 - (r)
-    #   5. join to string       - (j)
-    # |5.     |4.     |3|2.     |1.
-    R=${(j:/:)${(r:1:)${${(s:/:)${PWD/$HOME/\~}}[@]##.}}}
-    # Adding leading slash and ellipsize
-    local Len; [[ ${R:0:1} == '~' ]] && Len=8 || { R='/'$R; Len=9; }
-    (( $#R > $Len )) && R=${R:0:$Len}'..'
-    [[ $R != '~' ]] && RPS1=$'  %F{$CF}%B%S$R%s%b%f'
-    RPS1=$RPS1$' '
-  fi
-}
-precmd() {
-  LAST_EXIT=$?; Prompt 0 $LAST_EXIT ''
-}
-
-zle-keymap-select() {
-  [[ $KEYMAP == 'main' ]]   && Prompt 0 $LAST_EXIT '' 
-  [[ $KEYMAP == 'vicmd' ]]  && Prompt 0 $LAST_EXIT '' 
-  zle reset-prompt
-}; zle -N zle-keymap-select
-
+  zle-keymap-select() {
+    [[ $KEYMAP == 'main' ]]   && Prompt 0 $LAST_EXIT ''
+    [[ $KEYMAP == 'vicmd' ]]  && Prompt 0 $LAST_EXIT ''
+    zle reset-prompt
+  }; zle -N zle-keymap-select
+else
+  PS1=$'%1~ $ '
+  return
+fi
 
 # Colours
 set_colours(){
