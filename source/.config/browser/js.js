@@ -1,5 +1,5 @@
-const dayElem = document.getElementsByClassName('date')[0];
-const time    = document.getElementsByClassName('time')[0];
+const dateElem = document.getElementsByClassName('date')[0];
+const timeElem = document.getElementsByClassName('time')[0];
 
 const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
@@ -20,7 +20,7 @@ const getTime = function() {
 
   hour < 12 ? ampm = 'AM' : ampm = 'PM';
 
-  dayElem.textContent = `${weekday}. ${day}.${month}.${year}`;
-  time.textContent = `${hour%12 ? hour%12 : 12}:${minute} ${ampm}`;
+  dateElem.textContent = `${weekday}. ${day}.${month}.${year}`;
+  timeElem.textContent = `${hour%12 ? hour%12 : 12}:${minute} ${ampm}`;
 }
 setInterval(getTime, 1000);
