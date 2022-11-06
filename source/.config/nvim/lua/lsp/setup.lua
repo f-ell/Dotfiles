@@ -5,7 +5,7 @@ local servers = {
   _1 = 'jdtls',
   _2 = 'perlpls', -- / perlnavigator
   _3 = 'pylsp',
-  _4 = 'rust',
+  _4 = 'rust_analyzer',
   _5 = 'sumneko_lua',
   _6 = 'texlab',
   _7 = 'tsserver' -- / quick_lint_js
@@ -26,6 +26,10 @@ local on_attach = function()
   F.nnmap('<leader>ca', ':Lspsaga code_action<CR>')
   F.nnmap('<leader>rn', ':Lspsaga rename<CR>')
   F.nnmap('<leader>h', ':Lspsaga show_line_diagnostics<CR>')
+  ----
+  F.nnmap('<leader>j', ':Lspsaga diagnostic_jump_next<CR>')
+  F.nnmap('<leader>k', ':Lspsaga diagnostic_jump_prev<CR>')
+  ----
 
   -- F.nnmap('gd', vim.lsp.buf.definition, {buffer = 0})
   F.nnmap('K',  vim.lsp.buf.hover,      {buffer = 0})
@@ -34,8 +38,8 @@ local on_attach = function()
   F.nnmap('<leader>rf', vim.lsp.buf.references,     {buffer = 0})
 
   -- F.nnmap('<leader>h',  vim.diagnostic.open_float,  {buffer = 0})
-  F.nnmap('<leader>j',  vim.diagnostic.goto_next,   {buffer = 0})
-  F.nnmap('<leader>k',  vim.diagnostic.goto_prev,   {buffer = 0})
+  -- F.nnmap('<leader>j',  vim.diagnostic.goto_next,   {buffer = 0})
+  -- F.nnmap('<leader>k',  vim.diagnostic.goto_prev,   {buffer = 0})
   F.nnmap('<leader>l', ':silent! Telescope diagnostics<CR>')
 end
 
