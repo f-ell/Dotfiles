@@ -5,14 +5,16 @@ local servers = {
   _1 = 'jdtls',
   _2 = 'perlpls', -- / perlnavigator
   _3 = 'pylsp',
-  _4 = 'sumneko_lua',
-  _5 = 'texlab',
-  _6 = 'tsserver' -- / quick_lint_js
+  _4 = 'rust',
+  _5 = 'sumneko_lua',
+  _6 = 'texlab',
+  _7 = 'tsserver' -- / quick_lint_js
 }
 
 local configs  = {
   _2 = 'perl',
-  _4 = 'lua'
+  _4 = 'rust',
+  _5 = 'lua'
 }
 
 
