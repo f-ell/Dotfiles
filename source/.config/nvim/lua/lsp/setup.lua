@@ -2,19 +2,21 @@ local lsp = require('lspconfig')
 local F   = require('utils.functions')
 
 local servers = {
-  _1 = 'jdtls',
-  _2 = 'perlpls', -- / perlnavigator
-  _3 = 'pylsp',
-  _4 = 'rust_analyzer',
-  _5 = 'sumneko_lua',
-  _6 = 'texlab',
-  _7 = 'tsserver' -- / quick_lint_js
+  _1 = 'gopls',
+  _2 = 'jdtls',
+  _3 = 'perlpls',
+  _4 = 'pylsp',
+  _5 = 'rust_analyzer',
+  _6 = 'sumneko_lua',
+  _7 = 'texlab',
+  _8 = 'tsserver'
 }
 
 local configs  = {
-  _2 = 'perl',
-  _4 = 'rust',
-  _5 = 'lua'
+  _1 = 'go',
+  _3 = 'perl',
+  _5 = 'rust',
+  _6 = 'lua'
 }
 
 
