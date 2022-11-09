@@ -58,7 +58,7 @@ end
 
 
 _G.set_tabline = M.tabline
-F.o('showtabline', 2)
+F.o('showtabline', 1)
 F.o('tabline', '%!v:lua.set_tabline()')
 
 -- vim.api.nvim_create_autocmd(
