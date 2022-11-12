@@ -11,7 +11,7 @@ const getTime = function() {
   const date  = new Date();
 
   let day     = pad(date.getDate(), 2, '0');
-  let month   = pad(date.getMonth(), 2, '0');
+  let month   = pad(date.getMonth()+1, 2, '0');
   const year  = date.getFullYear();
 
   const weekday = weekdays[date.getDay()];
@@ -23,4 +23,6 @@ const getTime = function() {
   dateElem.textContent = `${weekday}. ${day}.${month}.${year}`;
   timeElem.textContent = `${hour%12 ? hour%12 : 12}:${minute} ${ampm}`;
 }
+
+window.onload = getTime();
 setInterval(getTime, 1000);
