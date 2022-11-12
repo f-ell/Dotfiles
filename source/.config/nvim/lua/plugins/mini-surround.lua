@@ -9,7 +9,7 @@ require('mini.surround').setup({
     delete    = 'ds',
     find      = '',
     find_left = '',
-    highlight = '<leader>hs',
+    highlight = '<leader>ys',
     update_n_lines = '<leader>ns',
 
     suffix_last = 'l',
