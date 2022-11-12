@@ -31,8 +31,8 @@ return packer.startup(function()
     {
       'williamboman/mason.nvim',
       ft  = {
-        'go', 'java', 'javascript', 'latex', 'lua', 'perl', 'plaintex', 'python',
-        'rust', 'tex', 'typescript'
+        'c', 'java', 'javascript', 'latex', 'lua', 'perl', 'plaintex', 'tex',
+        'typescript'
       },
       cmd = {'Mason', 'MasonInstall', 'MasonUninstall'}
     },
@@ -126,13 +126,6 @@ return packer.startup(function()
   -- Miscellaneous
   use {
     {
-      'lewis6991/gitsigns.nvim',
-      event = 'VimEnter',
-      config = function()
-        require('plugins.gitsigns-nvim')
-      end
-    },
-    {
       'terrortylor/nvim-comment',
       event = 'VimEnter',
       config = function()
@@ -158,6 +151,13 @@ return packer.startup(function()
       ft = 'html'
     },
     {
+      'lewis6991/gitsigns.nvim',
+      event = 'VimEnter',
+      config = function()
+        require('plugins.gitsigns-nvim')
+      end
+    },
+    {
       'kyazdani42/nvim-web-devicons',
       event  = 'VimEnter',
       config = function()
@@ -172,7 +172,6 @@ return packer.startup(function()
     {
       'iamcco/markdown-preview.nvim',
       run = 'cd app && npm install',
-      -- cmd = 'MarkdownPreview',
       ft = {'md', 'markdown'},
       config  = function()
         require('plugins.markdown-preview-nvim')
