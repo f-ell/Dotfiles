@@ -9,8 +9,7 @@ local set_hl_groups = function()
   local ro    = '#f85552'
   local git   = '#fca326'
 
-  -- local dr1  = '#6d5261'
-  -- local dr2  = '#472e3c'
+  -- local dr1  = '#6d5261' local dr2  = '#472e3c'
 
   local aqu1 = '#83c092'
   local aqu2 = '#35a77c'
@@ -45,12 +44,12 @@ local set_hl_groups = function()
     {0, 'modeV',  {fg = fg5, bg = vis}},
 
     -- Search
-    {0, 'Search',     {fg = fg2, bg = red2}},
-    {0, 'IncSearch',  {link = 'Search'}},
-    {0, 'CurSearch',  {fg = red2, bg = fg2}},
-    {0, 'Substitute', {link = 'CurSearch'}},
+    {0, 'Search',     {fg = fg2, bg = red1}},
+    {0, 'IncSearch',  {fg = red2, bg = fg2}},
+    {0, 'CurSearch',  {link = 'IncSearch'}},
+    {0, 'Substitute', {link = 'IncSearch'}},
 
-    {0, 'Visual',     {link = 'CurSearch'}},
+    {0, 'Visual',     {link = 'IncSearch'}},
 
     -- Statusline
     {0, 'SlDef',  {fg = fg1, bg =  _, italic = true}},
