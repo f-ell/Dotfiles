@@ -1,0 +1,25 @@
+[color]
+  ui = auto
+[color "branch"]
+  current   = "#a7c080"
+  local     = "#7fbbb3"
+  remote    = "#e67e80"
+  upstream  = "#dbbc7f"
+  plain     = "#859289"
+[color "diff"]
+  context = "#e8e0cc"
+  meta    = "#e8e0cc"
+  frag    = "#7fbbb3"
+  old     = "#e67e80"
+  new     = "#a7c080"
+  commit  = "#83c092"
+  whitespace = "#f85552"
+[color "status"]
+  header    = "#e8e0cc"
+  added     = "#a7c080"
+  updated   = "#8da101"
+  changed   = "#7fbbb3"
+  untracked = "#d699b6"
+  branch    = "#a7c080"
+  nobranch  = "#e67e80"
+  unmerged  = "#f85552"
