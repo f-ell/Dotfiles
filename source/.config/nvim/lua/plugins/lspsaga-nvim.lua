@@ -9,7 +9,7 @@ require('lspsaga').init_lsp_saga({
     sign              = false,
     update_time       = 100
   },
-  code_action_icon  = '',
+  code_action_icon  = '',
   max_preview_lines = 8,
 
   rename_action_quit  = '<C-c>',
