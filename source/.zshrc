@@ -140,13 +140,13 @@ fi
 set_colours(){
   local F C GEN AUD PIC VID FILE CODE ARCH R W X FS UG TS
   F="38;5;"
-  GEN="bd=${F}15:cd=${F}16:di=${F}15;1:ex=${F}14;3;4:fi=${F}01;3:ln=${F}07:or=${F}02;1:*.bak=${F}13;4:*.iso=${F}13;4:*.otf=${F}12;3:*.ttf=${F}12;3"
-  C="${F}11"    AUD="*.mp3=${C}:*.wav=${C}"
-  C="${F}09"    PIC="*.gif=${C}:*.jpg=${C}:*.png=${C}:*.svg=${C}:*.webp=${C}"
-  C="${F}15"    VID="*.mov=${C}:*.mp4=${C}"
-  C="${F}05"    FILE="*.a=${C}:*.css=${C}:*.h=${C}:*.html=${C}:*.json=${C}:*.md=${C}:*.o=${C}:*.pdf=${C}:*.sty=${C}:*.tex=${C}"
-  C="${F}13;03" CODE="*.c=${C}:*.java=${C}:*.js=${C}:*.lua=${C}:*.pl=${C}:*.py=${C}:*.sh=${C}:*.ts=${C}"
-  C="${F}16;01" ARCH="*.bz2=${C}:*.gz=${C}:*.jar=${C}:*.rar=${C}:*.tar=${C}:*.xz=${C}:*.zip=${C}"
+  GEN="bd=${F}15:cd=${F}16:di=${F}15;1:ex=${F}14;3;4:fi=${F}01;3:ln=${F}07:or=${F}02;1:*.bak=${F}13;4:*.iso=${F}13;4:*.otf=${F}12;3:*.ttf=${F}12;3:?akefile=${F}11;3;4"
+  AUD=`clsc mp3:wav $F'11' :`
+  PIC=`clsc gif:jpg:png:svg:webp $F'09' :`
+  VID=`clsc mov:mp4 $F'15' :`
+  FILE=`clsc a:css:h:html:json:md:o:pdf:sty:tex $F'05' :`
+  CODE=`clsc c:java:js:lua:pl:py:sh:ts $F'13;03' :`
+  ARCH=`clsc bz2:gz:jar:rar:tar:xz:zip $F'16;01' :`
   C="${F}05"  R="ur=${C}:ue=${C}:gr=${C}:tr=${C}"
               W="uw=${C}:gw=${C}:tw=${C}"
               X="ux=${C}:gx=${C}:tx=${C}"
