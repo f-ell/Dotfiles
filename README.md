@@ -31,6 +31,7 @@ Some things worth highlighting:
     * prompt-character denoting `viins` and `vicmd` modes
   * colours
     * custom `ls` and [`exa`](https://the.exa.website/) colours
+      * note: colours require [`clsc`](https://gitlab.com/fell_/clsc)
     * custom [`zsh-syntax-highlighting`](https://github.com/zsh-users/zsh-syntax-highlighting/)
     colours
 

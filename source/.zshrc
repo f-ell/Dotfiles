@@ -31,13 +31,13 @@ export EDITOR=$VISUAL
 
 Bin='/usr/bin:/usr/local/bin:/usr/local/sbin:'$HOME'/.local/bin'
 Perl='/usr/bin/core_perl:/usr/bin/site_perl:/usr/bin/vendor_perl'
-Other='/opt:'$CARGO_HOME'/bin:'$HOME'/Scripts'
-export PATH=$Bin':'$Perl':'$Other
-unset Bin Perl Other
+Misc='/opt:'$CARGO_HOME'/bin:'$HOME'/Scripts'
+export PATH=$Bin':'$Perl':'$Misc
+unset Bin Perl Misc
 export FZF_DEFAULT_COMMAND='fd -E .cache -tf -H -d10 .'
 export FZF_DEFAULT_OPTS='-i --tiebreak=begin,length --scroll-off=1 --reverse --prompt="$ " --height=25% --color=bw'
 
-# needed because Firefox acts up when being killed by bspwm :)
+# Firefox acts up when killed by bspwm :))
 export MOZ_CRASHREPORTER_DISABLE=1
 
 
@@ -138,8 +138,9 @@ fi
 
 # Colours
 set_colours(){
-  local F C GEN AUD PIC VID FILE CODE ARCH R W X FS UG TS
+  local F GEN AUD PIC VID FILE CODE ARCH PERM SIZE USER TIME STCK
   F="38;5;"
+
   GEN="bd=${F}15:cd=${F}16:di=${F}15;1:ex=${F}14;3;4:fi=${F}01;3:ln=${F}07:or=${F}02;1:*.bak=${F}13;4:*.iso=${F}13;4:*.otf=${F}12;3:*.ttf=${F}12;3:?akefile=${F}11;3;4"
   AUD=`clsc mp3:wav $F'11' :`
   PIC=`clsc gif:jpg:png:svg:webp $F'09' :`
@@ -147,16 +148,14 @@ set_colours(){
   FILE=`clsc a:css:h:html:json:md:o:pdf:sty:tex $F'05' :`
   CODE=`clsc c:java:js:lua:pl:py:sh:ts $F'13;03' :`
   ARCH=`clsc bz2:gz:jar:rar:tar:xz:zip $F'16;01' :`
-  C="${F}05"  R="ur=${C}:ue=${C}:gr=${C}:tr=${C}"
-              W="uw=${C}:gw=${C}:tw=${C}"
-              X="ux=${C}:gx=${C}:tx=${C}"
-  C="${F}11"  FS="sn=${C}:sb=${C}:df=${C}:ds=${C}"
-  C="${F}15"  UG="uu=${C}:gu=${C}"
-  C="${F}09"  TS="da=${C}"
-  C="${F}13"  SB="su=${C}:sf=${C}"
+  PERM=`clsc -s ur:gr:tr:uw:gw:tw:ux:gx:tx $F'05' :`
+  SIZE=`clsc -s sn:sb:df:ds $F'11' :`
+  USER=`clsc -s uu:gu $F'15' :`
+  TIME=`clsc -s da $F'09' :`
+  STCK=`clsc -s su:sf $F'13' :`
 
   LS_COLORS="${GEN}:${AUD}:${PIC}:${VID}:${FILE}:${CODE}:${ARCH}"
-  EXA_COLORS="${R}:${W}:${X}:${FS}:${UG}:${TS}:${SB}"
+  EXA_COLORS="${PERM}:${SIZE}:${USER}:${TIME}:${STCK}"
 
   local _1=01 _2=02 _3=03 _4=04 _5=05 _6=06 _7=07 _8=08 _9=09
   local _10=10 _11=11 _12=12 _13=13 _14=14 _15=15 _16=16
