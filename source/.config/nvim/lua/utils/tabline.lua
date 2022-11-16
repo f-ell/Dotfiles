@@ -1,10 +1,9 @@
 local F = require('utils.functions')
-local strf  = string.format
+local strf    = string.format
+local hl_nor  = '%#TlNor#'; local hl_sel = '%#TlSel#'
 
-M = {}
 
-
-M.tabline = function()
+local tabline = function()
   local t = ''
 
   for i = 1, vim.fn.tabpagenr('$') do
@@ -12,60 +11,31 @@ M.tabline = function()
     local bufnr = vim.fn.tabpagebuflist(i)[winnr]
 
     local modified = vim.api.nvim_buf_get_option(bufnr, 'modified')
-      if modified then
-        -- alternatives: * ●
-        modified = '*'
-      else
-        modified = ''
-      end
+      if modified then  modified = '*'
+      else              modified = '' end
 
     local bufname = vim.fn.bufname(bufnr)
       if bufname ~= '' then
         bufname = string.gsub(bufname, '.*/', '')
       else
-        bufname = '[No Name]'
+        bufname = '[unnamed]'
       end
 
-    local tabnum = strf('(%s)', i)
-
     -- set highlight groups
-    if i == vim.fn.tabpagenr() then 
-      -- alternatives:  right aligned => ▕ ▐ ,  left aligned => ▎ ▍
-      -- t = strf('%s%s▎', t, '%#TabLineSel#')
-      t = strf('%s%s ', t, '%#TabLineSel#')
-    else
-      t = strf('%s%s ', t, '%#TabLine#')
-    end
+    if i == vim.fn.tabpagenr() then t = strf('%s%s', t, hl_sel)
+    else                            t = strf('%s%s', t, hl_nor) end
 
     -- build tabline
-    local items = {
-      -- ' ',
-      modified,
-      bufname,
-      tabnum,
-      ' ',
-      '%#TabLineFill#'
-    }
+    local items = { modified, bufname, hl_nor }
 
     -- mouse support with '%iT'
-    t = strf('%s%%%sT%s', t, i, table.concat(items))
+    t = strf('%s%%%sT%s ', t, i, table.concat(items))
   end
 
-  t = strf('%s%s', t, '%#TabLineFill#')
-
-  return t
+  return strf('%s %s%s', hl_nor, t, hl_nor)
 end
 
 
-_G.set_tabline = M.tabline
+_G.tabline = tabline
 F.o('showtabline', 1)
-F.o('tabline', '%!v:lua.set_tabline()')
-
--- vim.api.nvim_create_autocmd(
---   {'BufAdd', 'BufNewFile', 'VimEnter'},
---   {
---     pattern = {'*'},
---     command = 'tab ball',
---     nested = true -- required to load correct filetype in all tabs
---   }
--- )
+F.o('tabline', '%!v:lua.tabline()')

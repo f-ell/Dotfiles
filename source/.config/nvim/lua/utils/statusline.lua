@@ -1,11 +1,9 @@
 local F     = require('utils.functions')
 local strf  = string.format
+local hl_no = '%#SlNo#'; local hl_it = '%#SlIt#'; local hl_git = '%#SlGit#'
 
 
-M = {}
-
-
-M.get_mode = function()
+local get_mode = function()
   local mode = vim.api.nvim_get_mode().mode
 
   if      mode == 'V'   then mode = 'VL'
@@ -14,7 +12,8 @@ M.get_mode = function()
   return mode:upper()
 end
 
-M.get_mode_colour = function()
+
+local get_mode_colour = function()
   local mode = vim.api.nvim_get_mode().mode
 
   if      mode == 'V' or mode == '' then mode = 'v'
@@ -24,22 +23,19 @@ M.get_mode_colour = function()
 end
 
 
-M.get_search_count = function()
+local get_search_count = function()
   local s   = vim.fn.searchcount({maxcount=0})
-  local cur = s.current
-  local tot = s.total
-  local cmp = s.incomplete
+  local cur = s.current; local tot = s.total; local cmp = s.incomplete
 
-  if s.exact_match == 0 then return '' end
-  if cmp == 1           then return '| ['..cur..'/?] ' end
+  if s.exact_match == 0 then cur = 0 end
+  if cmp == 1           then return cur..'/?' end
 
-  return '| ['..cur..'/'..tot..'] '
+  return cur..'/'..tot
 end
 
 
-M.get_git = function()
-  local fh
-  local head  = ''
+local get_git = function()
+  local fh; local head  = ''
 
   fh        = io.popen('git rev-parse --is-inside-work-tree 2>/dev/null', 'r')
   local git = F.chop(fh:read('*a')); fh:close()
@@ -52,29 +48,29 @@ M.get_git = function()
       head  = fh:read('*a'); fh:close()
       head  = head:sub(1, 7)
     end
-    head = strf(' %s %s%s', '%#SlGit#', head, '%#SlDef#')
+    head = strf(' %s %s%s', hl_git, head, hl_no)
   end
+
   return head
 end
 
 
-M.get_filename = function()
+local get_filename = function()
   local filename = '%t'
   local readonly, reset = '', ''
 
   if vim.api.nvim_buf_get_option(0, 'readonly') then
-    readonly  = '%#SlRo# '
-    reset     = ' %#SlDef#'
+    readonly  = '%#SlRo# '; reset     = ' %#SlNo#'
   end
 
   return strf('%s%s%s', readonly, filename, reset)
 end
 
-M.get_bufnr = function()
-  return '%n'
-end
 
-M.get_modified = function()
+local get_bufnr = function() return '%n' end
+
+
+local get_modified = function()
   local modified_status = ''
 
   if vim.api.nvim_buf_get_option(0, 'modified') then
@@ -85,64 +81,30 @@ M.get_modified = function()
 end
 
 
-M.get_filetype = function()
-  -- return string.format(' %s ', vim.fn.fnamemodify(vim.fn.expand('%'), ':e:e:e'))
-
-  local filetype = vim.bo.filetype
-
-  local get_icon_filetype = filetype
-  -- FILETYPE EXCEPTIONS
-  if      filetype == 'perl'        then get_icon_filetype = 'pl'
-  elseif  filetype == 'javascript'  then get_icon_filetype = 'js'
-  end
-
-  local icon = require('nvim-web-devicons')
-    .get_icon(get_icon_filetype, {default = true})
-
-  local icon_and_filetype = ''
-  if filetype ~= '' then
-    if icon == nil then
-      icon_and_filetype = strf('%s | ', filetype)
-    else
-      icon_and_filetype = strf('%s %s | ', icon, filetype)
-    end
-  end
-
-  return icon_and_filetype
+local get_bytecount = function()
+  local count = vim.fn.line2byte('$') + vim.fn.len(vim.fn.getline('$'))
+  return count..'B'
 end
 
 
-M.get_position = function()
-  return '%l:%v'
-end
+local get_position = function() return '%l:%v' end
 
 
-M.set_statusline = function()
-  local reset = '%#SlDef#'
-  local mode_colour = M:get_mode_colour(vim.api.nvim_get_mode().mode)
-
-  local mode    = strf('%s %s %s',  mode_colour, M:get_mode(),          reset)
-  local search  = strf('%s%s%s',    mode_colour, M:get_search_count(),  reset)
-
-  local git = M:get_git()
-
-  local modified  = M:get_modified()
-  local filename  = strf('%s%s', M:get_filename(), reset)
-  local bufnr     = strf('(%s)', M:get_bufnr())
-
-  local filetype  = strf('%s %s', mode_colour, M:get_filetype())
-  local position  = M:get_position()..' '
+local set_statusline = function()
+  local mode_colour = get_mode_colour(vim.api.nvim_get_mode().mode)
+  local mode        = strf('%s %s %s', mode_colour, get_mode(), hl_no)
+  local bufnr       = strf('%s(%s)', hl_no, get_bufnr())
 
   return table.concat({
-    mode, '%<', search, git,
+    hl_no, ' ', mode, '%<', get_git(), hl_no,
     '%=',
-    modified, filename, bufnr,
+    get_modified(), hl_it, get_filename(), bufnr,
     '%=',
-    filetype, position
+    get_bytecount(), '  ', get_search_count(), '  ', get_position(), ' '
   })
 end
 
 
-_G.set_statusline = M.set_statusline
+_G.statusline = set_statusline
 F.o('laststatus', 3)
-F.o('statusline', '%!v:lua.set_statusline()')
+F.o('statusline', '%!v:lua.statusline()')

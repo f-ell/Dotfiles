@@ -9,8 +9,6 @@ local set_hl_groups = function()
   local ro    = '#f85552'
   local git   = '#fca326'
 
-  -- local dr1  = '#6d5261' local dr2  = '#472e3c'
-
   local aqu1 = '#83c092'
   local aqu2 = '#35a77c'
   local blu1 = '#7fbbb3'
@@ -32,9 +30,6 @@ local set_hl_groups = function()
   local vis = pur1
 
   local hls = {
-    -- custom groups
-    {0, 'fg_dark',  {fg = fg2, bg = _}}, -- is this used?
-
     -- Modes
     {0, 'modeC',  {fg = fg1, bg = cmd}},
     {0, 'modeI',  {fg = fg5, bg = ins}},
@@ -52,31 +47,31 @@ local set_hl_groups = function()
     {0, 'Visual',     {link = 'IncSearch'}},
 
     -- Statusline
-    {0, 'SlDef',  {fg = fg1, bg =  _, italic = true}},
+    {0, 'SlNo',   {fg = fg1, bg = _}},
+    {0, 'SlIt',   {fg = fg1, bg = _,  italic = true}},
     {0, 'SlRo',   {fg = fg1, bg = ro,   bold = true}},
     {0, 'SlGit',  {fg = git, bg =  _, italic = true}},
 
     -- Tabline
-    {0, 'TabLine',      {fg = fg3, bg = fg5, italic = true}},
-    {0, 'TabLineSel',   {fg = fg2, bg = fg4, italic = true, bold = true}},
-    {0, 'TabLineFill',  {fg = fg1, bg = _}},
+    {0, 'TlNor',  {fg = fg3, bg = _}},
+    {0, 'TlSel',  {fg = fg2, bg = _, bold = true, underline = true}},
 
     -- Float-Diagnostics
-    {0, 'GhostHead',    {fg = fg3,  bg = none, italic = true}},
-    {0, 'NormalHead',   {fg = aqu1, bg = none,                bold = true}},
-    {0, 'NormalBody',   {fg = fg3,  bg = none}},
-    {0, 'HintHead',     {fg = blu1, bg = none}},
-    {0, 'HintBody',     {fg = blu1, bg = none}},
-    {0, 'InfoHead',     {fg = aqu1, bg = none}},
-    {0, 'InfoBody',     {fg = aqu1, bg = none}},
-    {0, 'WarningHead',  {fg = yel1, bg = none, italic = true, bold = true}},
-    {0, 'WarningBody',  {fg = yel1, bg = none}},
-    {0, 'ErrorHead',    {fg = red1, bg = none, italic = true, bold = true}},
-    {0, 'ErrorBody',    {fg = red1, bg = none}},
+    {0, 'GhostHead',    {fg = fg3,  bg = _, italic = true}},
+    {0, 'NormalHead',   {fg = aqu1, bg = _,                bold = true}},
+    {0, 'NormalBody',   {fg = fg3,  bg = _}},
+    {0, 'HintHead',     {fg = blu1, bg = _}},
+    {0, 'HintBody',     {fg = blu1, bg = _}},
+    {0, 'InfoHead',     {fg = aqu1, bg = _}},
+    {0, 'InfoBody',     {fg = aqu1, bg = _}},
+    {0, 'WarningHead',  {fg = yel1, bg = _, italic = true, bold = true}},
+    {0, 'WarningBody',  {fg = yel1, bg = _}},
+    {0, 'ErrorHead',    {fg = red1, bg = _, italic = true, bold = true}},
+    {0, 'ErrorBody',    {fg = red1, bg = _}},
 
     -- Float
-    {0, 'NormalFloat',  {fg = none, bg = none}},
-    {0, 'FloatBorder',  {fg = pur1, bg = none}},
+    {0, 'NormalFloat',  {fg = _,    bg = _}},
+    {0, 'FloatBorder',  {fg = pur1, bg = _}},
 
     -- Telescope
     {0, 'TelescopeBorder',        {fg = fg5,  bg = fg5}},
@@ -96,9 +91,9 @@ local set_hl_groups = function()
     {0, 'TelescopePromptTitle',   {fg = fg1,  bg = aqu1}},
 
     -- Gitsigns
-    {0, 'GSAdd',    {fg = gre1, bg = none}},
-    {0, 'GSCha',    {fg = blu1, bg = none}},
-    {0, 'GSDel',    {fg = red1, bg = none}},
+    {0, 'GSAdd',    {fg = gre1, bg = _}},
+    {0, 'GSCha',    {fg = blu1, bg = _}},
+    {0, 'GSDel',    {fg = red1, bg = _}},
     {0, 'GSAddNr',  {link = 'GitsignsAddNr'}},
     {0, 'GSAddLn',  {link = 'GitSignsAddLn'}},
     {0, 'GSChaNr',  {link = 'GitSignsChangeNr'}},
