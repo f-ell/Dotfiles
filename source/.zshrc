@@ -77,7 +77,8 @@ if [[ `xset q 2>/dev/null` ]]; then
     B=`git rev-parse --is-inside-work-tree 2>/dev/null`
     if (( $? == 0 )) && [[ $B == 'true' ]]; then
       B=`git branch --show-current`
-      [[ -n $B ]] || { B=`git rev-parse @`; B=${B:0:7}; }
+      [[ -z $B ]] && B=`git describe --tags @ 2>/dev/null`
+      [[ -z $B ]] && { B=`git rev-parse @`; B=${B:0:7}; }
     else
       unset B
     fi
