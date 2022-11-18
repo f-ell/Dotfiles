@@ -9,8 +9,8 @@ icon_path = /usr/share/icons/Adwaita/16x16/status/:/usr/share/icons/Adwaita/16x1
 
 width  = (0, 1920)
 height = 38
-origin = top-center
-offset = 15x50
+origin = top-right
+offset = 65x50
 follow = keyboard
 
 padding            = 4
@@ -27,10 +27,6 @@ foreground  = "#e0e0e0"
 
 [urgency_low]
 timeout     = 4s
-# foreground  = "#08171e"
-# background  = "#e7e2df"
-# frame_color = "#e5e0dd"
-
 foreground  = "#d3c6aa"
 background  = "#323c41"
 frame_color = "#323c41"
