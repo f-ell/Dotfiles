@@ -7,10 +7,10 @@ mason.setup()
 require('lsp.setup')
 
 local signs = {
-  { name = 'DiagnosticSignError', text = '' },
-  { name = 'DiagnosticSignWarn',  text = '' },
-  { name = 'DiagnosticSignHint',  text = '' },
-  { name = 'DiagnosticSignInfo',  text = '' },
+  { name = 'DiagnosticSignError', text = 'E' }, -- 
+  { name = 'DiagnosticSignWarn',  text = 'W' }, -- 
+  { name = 'DiagnosticSignHint',  text = 'H' }, -- 
+  { name = 'DiagnosticSignInfo',  text = 'I' }, -- 
 }
 for _, sign in pairs(signs) do
   vim.fn.sign_define(sign.name,
@@ -20,7 +20,7 @@ end
 local config = {
   update_in_insert  = true,
   virtual_text      = false,
-  underline         = false,
+  underline         = true,
   severity_sort     = true,
   sign = {
     active = signs

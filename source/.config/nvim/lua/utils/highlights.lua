@@ -39,8 +39,8 @@ local set_hl_groups = function()
     {0, 'modeV',  {fg = fg5, bg = vis}},
 
     -- Search
-    {0, 'Search',     {fg = fg2, bg = red1}},
-    {0, 'IncSearch',  {fg = red2, bg = fg2}},
+    {0, 'Search',     {fg = blu2, bg = fg2}},
+    {0, 'IncSearch',  {fg = fg2,  bg = blu2}},
     {0, 'CurSearch',  {link = 'IncSearch'}},
     {0, 'Substitute', {link = 'IncSearch'}},
 
@@ -56,18 +56,11 @@ local set_hl_groups = function()
     {0, 'TlNor',  {fg = fg3, bg = _}},
     {0, 'TlSel',  {fg = fg2, bg = _, bold = true, underline = true}},
 
-    -- Float-Diagnostics
-    {0, 'GhostHead',    {fg = fg3,  bg = _, italic = true}},
-    {0, 'NormalHead',   {fg = aqu1, bg = _,                bold = true}},
-    {0, 'NormalBody',   {fg = fg3,  bg = _}},
-    {0, 'HintHead',     {fg = blu1, bg = _}},
-    {0, 'HintBody',     {fg = blu1, bg = _}},
-    {0, 'InfoHead',     {fg = aqu1, bg = _}},
-    {0, 'InfoBody',     {fg = aqu1, bg = _}},
-    {0, 'WarningHead',  {fg = yel1, bg = _, italic = true, bold = true}},
-    {0, 'WarningBody',  {fg = yel1, bg = _}},
-    {0, 'ErrorHead',    {fg = red1, bg = _, italic = true, bold = true}},
-    {0, 'ErrorBody',    {fg = red1, bg = _}},
+    -- Diagnostics
+    {0, 'HintText',     {fg = gre1, bg = _, underline = true}},
+    {0, 'InfoText',     {fg = blu1, bg = _, underline = true}},
+    {0, 'WarningText',  {fg = yel1, bg = _, underline = true}},
+    {0, 'ErrorText',    {fg = red1, bg = _, underline = true}},
 
     -- Float
     {0, 'NormalFloat',  {fg = _,    bg = _}},
