@@ -57,10 +57,10 @@ local set_hl_groups = function()
     {0, 'TlSel',  {fg = fg2, bg = _, bold = true, underline = true}},
 
     -- Diagnostics
-    {0, 'HintText',     {fg = gre1, bg = _, underline = true}},
-    {0, 'InfoText',     {fg = blu1, bg = _, underline = true}},
-    {0, 'WarningText',  {fg = yel1, bg = _, underline = true}},
-    {0, 'ErrorText',    {fg = red1, bg = _, underline = true}},
+    {0, 'HintText',     {sp = gre1, underline = true}},
+    {0, 'InfoText',     {sp = blu1, underline = true}},
+    {0, 'WarningText',  {sp = yel1, underline = true}},
+    {0, 'ErrorText',    {sp = red1, underline = true}},
 
     -- Float
     {0, 'NormalFloat',  {fg = _,    bg = _}},
