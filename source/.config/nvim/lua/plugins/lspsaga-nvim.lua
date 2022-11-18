@@ -6,10 +6,11 @@ require('lspsaga').init_lsp_saga({
   code_action_lightbulb = {
     enable            = true,
     enable_in_insert  = false,
-    sign              = false,
+    sign              = true,
+    virtual_text      = false,
     update_time       = 100
   },
-  code_action_icon  = '',
+  code_action_icon  = ' ',
   max_preview_lines = 8,
 
   rename_action_quit  = '<C-c>',
