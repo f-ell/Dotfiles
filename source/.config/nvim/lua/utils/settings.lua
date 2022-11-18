@@ -6,6 +6,8 @@ local F = require('utils.functions')
 -- vim.g['spelllang'] = 'de_de,en_us,en_gb'
 
 -- miscellaneous
+F.g('mapleader', ' ')
+
 F.o('shell',    'dash')
 F.o('cdhome',   true)
 F.o('confirm',  true)

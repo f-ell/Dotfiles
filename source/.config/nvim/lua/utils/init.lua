@@ -1,5 +1,5 @@
-require('utils.keymaps')
 require('utils.settings')
+require('utils.keymaps')
 
 require('utils.colorscheme')
 require('utils.tabline')

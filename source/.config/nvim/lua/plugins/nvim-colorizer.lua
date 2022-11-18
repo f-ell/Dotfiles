@@ -1,3 +1,5 @@
+local F = require('utils.functions')
+
 require('colorizer').setup({'*'}, {
   RGB       = true;
   RRGGBB    = true;
@@ -10,3 +12,7 @@ require('colorizer').setup({'*'}, {
 })
 
 vim.cmd('ColorizerToggle')
+
+
+-- maps
+F.nnmap('<leader>ct', ':ColorizerToggle<CR>')

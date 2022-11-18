@@ -2,21 +2,16 @@ local F = require('utils.functions')
 
 
 local wipe_buf = function()
-  if vim.fn.tabpagenr('$') == 1 then
-    vim.cmd('enew | bw #')
-  else
-    vim.cmd('bw')
-  end
+  if vim.fn.tabpagenr('$') == 1 then  vim.cmd('enew | bw #')
+  else                                vim.cmd('bw') end
 end
 
 
 local tab_bufs = function()
   -- loops over tabs - checks if any window holds target buffer in any tab
   local haswindow = function(target_bufnr)
-    -- return vim.fn.bufwinnr(bufnr) ~= -1
     for i = 1, vim.fn.tabpagenr('$') do
       local tabbuflist = vim.fn.tabpagebuflist(i)
-
       for j = 1, #(tabbuflist) do
         if vim.fn.bufnr(tabbuflist[j]) == target_bufnr then return true end
       end
@@ -52,7 +47,6 @@ local terminal = function()
 
   local bufnr = vim.fn.bufnr(bufname)
   -- buffer doesn't exist -> create buf
-    -- if vim.fn.bufexists('term_buffer') == 0 then
   if bufnr == -1 then
     bufnr = vim.api.nvim_create_buf(false, false)
     if bufnr == 0 then
@@ -76,28 +70,7 @@ local terminal = function()
 end
 
 
-local ls_jump_backwards = function()
-  local ls = require('luasnip')
-  if ls.jumpable(-1) then ls.jump(-1) end
-end
 
-local ls_expand_or_jump = function()
-  local ls = require('luasnip')
-  if ls.expand_or_jumpable() then ls.expand_or_jump() end
-end
-
-local ls_choice_forward = function()
-  local ls = require('luasnip')
-  if ls.choice_active() then ls.change_choice(1) end
-end
-
-local ls_choice_backward = function()
-  local ls = require('luasnip')
-  if ls.choice_active(-1) then ls.change_choice(-1) end
-end
-
-
-vim.g.mapleader = ' '
 
 -- normal
 F.nnmap('<leader>sok', ':so ~/.config/nvim/lua/utils/keymaps.lua<CR>')
@@ -114,30 +87,7 @@ F.nnmap('<leader><CR>', function() terminal() end)
 
 F.nnmap('<leader>~', 'viw~')
 
-
--- insert
-F.inmap('<C-h>', function() ls_jump_backwards() end)
-F.inmap('<C-j>', function() ls_choice_forward() end)
-F.inmap('<C-k>', function() ls_choice_backward() end)
-F.inmap('<C-l>', function() ls_expand_or_jump() end)
-
--- command
-F.cnmap('<C-h>', '<Left>')
-F.cnmap('<C-k>', '<Up>')
-F.cnmap('<C-j>', '<Down>')
-F.cnmap('<C-l>', '<Right>')
-
--- terminal
-F.tnmap('<C-d>', '<C-\\><C-n>')
-
-
--- html / css / js
-F.nnmap('<leader>br', 'oborder: 1px solid red;<Esc>o<Esc>')
-F.nnmap('<leader>bg', 'oborder: 1px solid green;<Esc>o<Esc>')
-F.nnmap('<leader>bb', 'oborder: 1px solid blue;<Esc>o<Esc>')
-
-
--- tabs
+  -- tabs
 F.nnmap('<leader>g0', ':tabfirst<CR>')
 F.nnmap('<leader>g$', ':tablast<CR>')
 F.nnmap('<leader>gh', ':silent! tabmove-<CR>')
@@ -145,46 +95,30 @@ F.nnmap('<leader>gj', ':tabmove0<CR>')
 F.nnmap('<leader>gl', ':silent! tabmove+<CR>')
 F.nnmap('<leader>gk', ':tabmove$<CR>')
 
-
--- windows
+  -- windows
 F.nnmap('<A-h>', '<C-w>h')
 F.nnmap('<A-j>', '<C-w>j')
 F.nnmap('<A-k>', '<C-w>k')
 F.nnmap('<A-l>', '<C-w>l')
 
+  -- html / css / js
+F.nnmap('<leader>br', 'oborder: 1px solid red;<Esc>o<Esc>')
+F.nnmap('<leader>bg', 'oborder: 1px solid green;<Esc>o<Esc>')
+F.nnmap('<leader>bb', 'oborder: 1px solid blue;<Esc>o<Esc>')
 
--- plugins
-  -- packer
-    F.nnmap('<leader>ps', ':PackerStatus<CR>')
-    F.nnmap('<leader>pc', ':PackerCompile<CR>')
-    F.nnmap('<leader>py', ':PackerSync<CR>')
 
-  -- telescope
-    F.nnmap('<leader>f',  ':Telescope find_files<CR>')
-    F.nnmap('<leader>tg', ':Telescope git_files<CR>')
-    F.nnmap('<leader>tr', ':Telescope live_grep<CR>')
-    F.nnmap('<leader>tf', ':Telescope current_buffer_fuzzy_find<CR>')
+-- command
+F.cnmap('<C-h>', '<Left>')
+F.cnmap('<C-k>', '<Up>')
+F.cnmap('<C-j>', '<Down>')
+F.cnmap('<C-l>', '<Right>')
 
-  -- colorizer
-    F.nnmap('<leader>ct', ':ColorizerToggle<CR>')
 
-  -- emmet
-    F.inmap('<A-e>', '<C-y>,<Esc>')
-    F.nnmap('<A-e>', '<C-y>,<Esc>')
+-- terminal
+F.tnmap('<C-d>', '<C-\\><C-n>')
 
-  -- gitsigns
-    F.nnmap('<leader>gsh', ':Gitsigns diffthis<CR>')
-    F.nnmap('<leader>gsj', ':silent Gitsigns next_hunk<CR>')
-    F.nnmap('<leader>gsk', ':silent Gitsigns prev_hunk<CR>')
-    F.nnmap('<leader>gsl', ':Gitsigns toggle_deleted<CR>')
-    F.nnmap('<leader>gsc', ':Gitsigns toggle_linehl<CR>')
 
-  -- markdownpreview
-    F.nnmap('<A-p>', '<plug>MarkdownPreviewToggle')
-
-  -- vimtex
-    F.nnmap('<leader>vcl',  ':VimtexClean<CR>')
-    F.nnmap('<leader>vcp',  ':VimtexCompileSS<CR>')
-    F.nnmap('<leader>vtoc', ':VimTexTocToggle<CR>')
-    F.nnmap('<leader>vst',  ':VimtexStatus!<CR>')
-    F.nnmap('<leader>vv',   ':VimtexView<CR>')
+-- packer
+F.nnmap('<leader>ps', ':PackerStatus<CR>')
+F.nnmap('<leader>pc', ':PackerCompile<CR>')
+F.nnmap('<leader>py', ':PackerSync<CR>')

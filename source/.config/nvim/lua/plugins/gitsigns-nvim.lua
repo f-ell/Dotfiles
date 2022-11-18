@@ -1,3 +1,5 @@
+local F = require('utils.functions')
+
 require('gitsigns').setup({
   attach_to_untracked = false,
 
@@ -19,3 +21,11 @@ require('gitsigns').setup({
     follow_files  = true
   },
 })
+
+
+-- maps
+F.nnmap('<leader>gsh', ':Gitsigns diffthis<CR>')
+F.nnmap('<leader>gsj', ':silent Gitsigns next_hunk<CR>')
+F.nnmap('<leader>gsk', ':silent Gitsigns prev_hunk<CR>')
+F.nnmap('<leader>gsl', ':Gitsigns toggle_deleted<CR>')
+F.nnmap('<leader>gsc', ':Gitsigns toggle_linehl<CR>')

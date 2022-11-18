@@ -140,21 +140,17 @@ return packer.startup(function()
       end
     },
     {
-      'norcalli/nvim-colorizer.lua',
-      event  = 'VimEnter',
-      config = function()
-        require('plugins.nvim-colorizer')
-      end
-    },
-    {
-      'mattn/emmet-vim',
-      ft = 'html'
-    },
-    {
       'lewis6991/gitsigns.nvim',
       event = 'VimEnter',
       config = function()
         require('plugins.gitsigns-nvim')
+      end
+    },
+    {
+      'norcalli/nvim-colorizer.lua',
+      event  = 'VimEnter',
+      config = function()
+        require('plugins.nvim-colorizer')
       end
     },
     {
@@ -164,17 +160,11 @@ return packer.startup(function()
         require('nvim-web-devicons').setup()
       end
     },
-  }
-
-
-  -- Markdown
-  use {
     {
-      'iamcco/markdown-preview.nvim',
-      run = 'cd app && npm install',
-      ft = {'md', 'markdown'},
+      'mattn/emmet-vim',
+      ft      = 'html',
       config  = function()
-        require('plugins.markdown-preview-nvim')
+        require('plugins.emmet-vim')
       end
     },
     {

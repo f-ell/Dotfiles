@@ -1,5 +1,6 @@
 local tls   = require('telescope')
 local tlsal = require('telescope.actions.layout')
+local F     = require('utils.functions')
 
 tls.setup({
   defaults = {
@@ -107,4 +108,12 @@ tls.setup({
   },
   extensions  = {},
 })
+
 tls.load_extension('zf-native')
+
+
+-- maps
+F.nnmap('<leader>f',  ':Telescope find_files<CR>')
+F.nnmap('<leader>tg', ':silent! Telescope git_files<CR>')
+F.nnmap('<leader>tr', ':Telescope live_grep<CR>')
+F.nnmap('<leader>tf', ':Telescope current_buffer_fuzzy_find<CR>')
