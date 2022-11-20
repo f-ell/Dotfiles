@@ -139,23 +139,26 @@ fi
 
 # Colours
 set_colours(){
-  local F GEN AUD PIC VID FILE CODE ARCH PERM SIZE USER TIME STCK
-  F="38;5;"
+  local F GEN AUD PIC VID ARCH CODE CONF FILE FONT SPEC PERM SIZE USER TIME STCK
+  F='38;5;'
 
-  GEN="bd=${F}15:cd=${F}16:di=${F}15;1:ex=${F}14;3;4:fi=${F}01;3:ln=${F}07:or=${F}02;1:*.bak=${F}13;4:*.iso=${F}13;4:*.otf=${F}12;3:*.ttf=${F}12;3:?akefile=${F}11;3;4"
+  GEN="bd=${F}15:cd=${F}16:di=${F}15;1:ex=${F}13;4:fi=${F}01;3:ln=${F}07;4:or=${F}02;1:*.bak=${F}15;4:*.iso=${F}15;4:?akefile=${F}11;3;4"
   AUD=`clsc mp3:wav $F'11' :`
-  PIC=`clsc gif:jpg:png:svg:webp $F'09' :`
+  PIC=`clsc gif:jpg:png:svg:webp $F'07' :`
   VID=`clsc mov:mp4 $F'15' :`
-  FILE=`clsc a:css:h:html:json:md:o:pdf:sty:tex $F'05' :`
-  CODE=`clsc c:java:js:lua:pl:py:sh:ts $F'13;03' :`
-  ARCH=`clsc bz2:gz:jar:rar:tar:xz:zip $F'16;01' :`
+  ARCH=`clsc bz2:gz:jar:rar:tar:xz:zip $F'16;1' :`
+  CODE=`clsc c:java:js:lua:pl:py:rs:sh:ts $F'13;3' :`
+  CONF=`clsc conf:ini:rasi:toml:yml $F'07;3' :`
+  FILE=`clsc a:css:h:html:json:md:o:pdf:sty:tex:xml $F'09' :`
+  FONT=`clsc otf:ttf $F'09;3' :`
+  SPEC=`clsc lt:dt $F'10' :`
   PERM=`clsc -s ur:gr:tr:uw:gw:tw:ux:gx:tx $F'05' :`
   SIZE=`clsc -s sn:sb:df:ds $F'11' :`
   USER=`clsc -s uu:gu $F'15' :`
   TIME=`clsc -s da $F'09' :`
   STCK=`clsc -s su:sf $F'13' :`
 
-  LS_COLORS="${GEN}:${AUD}:${PIC}:${VID}:${FILE}:${CODE}:${ARCH}"
+  LS_COLORS="${GEN}:${AUD}:${PIC}:${VID}:${ARCH}:${CODE}:${CONF}:${FILE}:${FONT}:${SPEC}"
   EXA_COLORS="${PERM}:${SIZE}:${USER}:${TIME}:${STCK}"
 
   local _1=01 _2=02 _3=03 _4=04 _5=05 _6=06 _7=07 _8=08 _9=09
