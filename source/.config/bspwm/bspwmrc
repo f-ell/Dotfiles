@@ -13,15 +13,15 @@ if [ $MACHINE = 'DT' ]; then
   bspc monitor DP-2 -d 1 2 3 4
   bspc monitor DP-0 -d 5
   bspc config pointer_motion_interval 7
-  pgrep ssm || ssm -e b -c 70 -g 70 &
+  pgrep ssm || ssm -t 60 -e b -c 70 -g 70 &
 else
   bspc monitor eDP1 -d 1 2 3 4
   bspc config pointer_motion_interval 16
-  pgrep ssm || ssm -e g -b 30 -c 70 &
+  pgrep ssm || ssm -t 60 -e g -b 30 -c 70 &
 fi
 
 bspc config window_gap      18
-bspc config border_width    1
+bspc config border_width    0
 bspc config split_ratio     0.50
 bspc config top_padding     0
 bspc config right_padding   0
@@ -98,6 +98,8 @@ feh --no-fehbg --bg-fill $Wallpaper &
 bspc rule -a *:*:sFiles hidden=on sticky=on locked=on state=floating rectangle=1280x720+320+180
 bspc rule -a *:*:sMusic hidden=on sticky=on locked=on state=floating rectangle=1280x720+320+180
 bspc rule -a *:*:sCalc  hidden=on sticky=on locked=on state=floating rectangle=300x400+50+50
+# bspc rule -a *:*:SPadFile hidden=on sticky=on locked=on state=floating rectangle=1280x720+320+180
+# bspc rule -a *:*:SPadCalc hidden=on sticky=on locked=on state=floating rectangle=300x400+50+50
 
 # FLOAT windows on desktop '^4' and force Steam games to desktop '^4'
 TargetDeskId=`bspc query -D -d '^4'`
