@@ -1,0 +1,47 @@
+set dbus-service 'false'
+set selection-notification 'false'
+set window-title-basename 'true'
+set window-title-home-tilde 'true'
+set statusbar-basename 'true'
+
+set font 'Ellograph CF 10'
+set page-padding 4
+set show-recent 4
+set scroll-step 60
+set scroll-page-aware 'true'
+set search-hadjust 'false'
+
+set recolor
+set recolor-keephue
+set highlight-transparency 0.7
+
+set statusbar-h-padding 10
+set statusbar-v-padding  4
+
+set window-height 600
+set window-width  800
+
+#############################
+
+set default-fg              '#d3c6aa'
+set default-bg              '#2c363b'
+
+set inputbar-fg             '#d3c6aa'
+set inputbar-bg             '#323c41'
+
+set statusbar-fg            '#7fbbb3'
+set statusbar-bg            '#323c41'
+
+set notification-fg         '#d699b6'
+set notification-bg         '#323c41'
+set notification-warning-fg '#dbbc7f'
+set notification-warning-bg '#323c41'
+set notification-error-fg   '#d3c6aa'
+set notification-error-bg   '#e67e80'
+
+set recolor-lightcolor      '#323c41'
+set recolor-darkcolor       '#d3c6aa'
+
+set highlight-fg            '#323c41'
+set highlight-color         '#dbbc7f'
+set highlight-active-color  '#dfa000'
