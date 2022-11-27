@@ -83,7 +83,8 @@ local set_hl_groups = function()
     {0, 'TelescopePromptPrefix',  {fg = aqu1, bg = _}},
     {0, 'TelescopePromptTitle',   {fg = fg1,  bg = aqu1}},
 
-    -- Gitsigns
+    -- Git(signs)
+    {0, 'DiffText', {bg = '#3d5665', sp = blu1, undercurl = true}},
     {0, 'GSAdd',    {fg = gre1, bg = _}},
     {0, 'GSCha',    {fg = blu1, bg = _}},
     {0, 'GSDel',    {fg = red1, bg = _}},
