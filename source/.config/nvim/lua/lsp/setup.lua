@@ -3,17 +3,21 @@ local F   = require('utils.functions')
 
 local servers = {
   _1 = 'clangd',
-  _2 = 'jdtls',
-  _3 = 'perlpls',
-  _4 = 'pylsp',
-  _5 = 'sumneko_lua',
-  _6 = 'texlab',
-  _7 = 'tsserver'
+  _2 = 'gopls',
+  _3 = 'jdtls',
+  _4 = 'perlpls',
+  _5 = 'pylsp',
+  _6 = 'rust_analyzer',
+  _7 = 'sumneko_lua',
+  _8 = 'texlab',
+  _9 = 'tsserver'
 }
 
 local configs  = {
-  _3 = 'perl',
-  _5 = 'lua'
+  _2 = 'go',
+  _4 = 'perl',
+  _6 = 'rust',
+  _7 = 'lua'
 }
 
 

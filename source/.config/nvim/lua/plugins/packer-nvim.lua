@@ -31,8 +31,8 @@ return packer.startup(function()
     {
       'williamboman/mason.nvim',
       ft  = {
-        'c', 'java', 'javascript', 'latex', 'lua', 'perl', 'plaintex', 'tex',
-        'typescript'
+        'c', 'go', 'java', 'javascript', 'latex', 'lua', 'perl', 'plaintex',
+        'rust', 'tex', 'typescript'
       },
       cmd = {'Mason', 'MasonInstall', 'MasonUninstall'}
     },
