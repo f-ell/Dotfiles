@@ -37,7 +37,6 @@ alias hist='tail -10 <(history)'
 alias psearch='pacman -Ss $1'
 alias pquery='pacman -Q | rg -i $1'
 alias pcount='pacman -Q | wc -l'
-alias sem='cd ~/Documents/Uni/3_Sem'
 alias scripts='cd ~/Git/Scripts/'
 alias v=$EDITOR
 alias va=$EDITOR' ~/.aliases && source ~/.aliases'
@@ -58,3 +57,5 @@ fi
 alias dcr="pkill dunst; dunst $Dconf &; disown dunst"
 alias scr="pkill sxhkd; sxhkd $Sconf &; disown sxhkd"
 unset {D,S}conf
+
+[[ -f $HOME/.aliases_novcs ]] && . $HOME/.aliases_novcs
