@@ -35,7 +35,7 @@ end
 
 
 local get_git = function()
-  local fh; local head  = ''
+  local fh; local head = ''
 
   fh        = io.popen('git rev-parse --is-inside-work-tree 2>/dev/null', 'r')
   local git = F.chop(fh:read('*a')); fh:close()
@@ -43,6 +43,12 @@ local get_git = function()
   if git == 'true' then
     fh    = io.popen('git branch --show-current', 'r')
     head  = F.chop(fh:read('*a')); fh:close()
+
+    if head == '' then
+      fh    = io.popen('git describe --tags @', 'r')
+      head  = 'tag:'..F.chop(fh:read('*a')); fh:close()
+    end
+
     if head == '' then
       fh    = io.popen('git rev-parse @', 'r')
       head  = fh:read('*a'); fh:close()
