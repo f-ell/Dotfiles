@@ -85,6 +85,8 @@ F.nnmap('<leader>%', ':so%<CR>')
 F.nnmap('<leader>tb',   function() tab_bufs() end)
 F.nnmap('<leader><CR>', function() terminal() end)
 
+F.nnmap('<C-u>', '<C-u>zz')
+F.nnmap('<C-d>', '<C-d>zz')
 F.nnmap('<leader>~', 'viw~')
 
   -- tabs
