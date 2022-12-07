@@ -1,6 +1,6 @@
 Err() { printf 'Error: %s\n' "$1" 1>&2 }
 
-Ping=$(command -v ping)
+Ping=/usr/bin/ping
 ping() {
   $Ping -c1 ${1:-archlinux.org}
 }
@@ -45,14 +45,14 @@ alias zt='zathura --fork'
 
 
 Sconf='~/.config/bspwm/sxhkdrc.bspwm ~/.config/sxhkd/sxhkdrc.'
-if [[ $MACHINE = 'DT' ]]; then
+if [[ $MACHINE = DT ]]; then
   Sconf="${Sconf}dt"
   Dconf=''
 else
   Sconf="${Sconf}lt"
   Dconf='-conf ~/.config/dunst/dunstrc.lt' 
-  alias netstart='rfkill unblock wifi; doas systemctl start NetworkManager iwd'
-  alias netstop='doas systemctl stop NetworkManager iwd; rfkill block wifi'
+  alias netstart='rfkill unblock wifi; doas systemctl start NetworkManager'
+  alias netstop='nmcli d disconnect wlan0; doas systemctl stop NetworkManager; rfkill block wifi'
 fi
 alias dcr="pkill dunst; dunst $Dconf &; disown dunst"
 alias scr="pkill sxhkd; sxhkd $Sconf &; disown sxhkd"
