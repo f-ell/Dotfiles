@@ -7,41 +7,55 @@
 # |__| \____| | Author: Nico Pareigis
 #          |__| Zsh
 
-[[ -t 0 && $- = *i* ]] && stty -ixon # alt: stty stop ''
+[[ -t 0 && $- == *i* ]] && stty -ixon # alt: stty stop ''
 
 set -o autocd -o extendedglob -o histexpiredupsfirst -o histignoredups\
   -o histignorespace -o incappendhistory -o kshglob -o pipefail -o promptsubst\
   -o rematchpcre\
   +o automenu +o autoremoveslash
 
-. $HOME'/.env_setup'
-
 SAVEHIST=5000; HISTSIZE=$(($SAVEHIST + 100)); HISTFILE=$HOME'/.zsh_history'
 
-export MACHINE=`< $HOME/Git/machine`
+### LOGIN ONLY ###
+if [[ -o login ]]; then
+  export MACHINE=`< $HOME/Git/machine`
+  export VISUAL='nvim'
+  export EDITOR=$VISUAL
 
-export VISUAL='nvim'
-export EDITOR=$VISUAL
+  Bin='/usr/bin:/usr/local/bin:/usr/local/sbin:'$HOME'/.local/bin'
+  Perl='/usr/bin/core_perl:/usr/bin/site_perl:/usr/bin/vendor_perl'
+  Misc='/opt:'$CARGO_HOME'/bin:'$HOME'/Scripts'
+  export PATH=$Bin':'$Perl':'$Misc
+  unset Bin Perl Misc
+
+  [[ -f $HOME'/.env_setup' ]] && . $HOME'/.env_setup'
+
+  export FZF_DEFAULT_COMMAND='fd -E .cache -tf -H -d10 .'
+  export FZF_DEFAULT_OPTS='-i --tiebreak=begin,length --scroll-off=1 --reverse --prompt="$ " --height=25% --color=bw'
+  # Firefox acts up when killed by bspwm :))
+  export MOZ_CRASHREPORTER_DISABLE=1
+fi
+### END LOGIN ONLY ###
 
 . $HOME'/.aliases'
+ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=20
+ZSH_AUTOSUGGEST_MANUAL_REBIND=True
 . $XDG_CONFIG_HOME'/zsh/zsh-autosuggestions/zsh-autosuggestions.zsh'
-  ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=20
-  ZSH_AUTOSUGGEST_MANUAL_REBIND=True
 . $XDG_CONFIG_HOME'/zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh'
 
-Bin='/usr/bin:/usr/local/bin:/usr/local/sbin:'$HOME'/.local/bin'
-Perl='/usr/bin/core_perl:/usr/bin/site_perl:/usr/bin/vendor_perl'
-Misc='/opt:'$CARGO_HOME'/bin:'$HOME'/Scripts'
-export PATH=$Bin':'$Perl':'$Misc
-unset Bin Perl Misc
-export FZF_DEFAULT_COMMAND='fd -E .cache -tf -H -d10 .'
-export FZF_DEFAULT_OPTS='-i --tiebreak=begin,length --scroll-off=1 --reverse --prompt="$ " --height=25% --color=bw'
 
-# Firefox acts up when killed by bspwm :))
-export MOZ_CRASHREPORTER_DISABLE=1
+# Keybinds
+### WIP ###
+# Switch Caps and Escape:
+# xmodmap -e 'remove Lock = Caps_Lock'
+# xmodmap -e 'keycode 66  = Escape'
+# xmodmap -e 'keycode 9   = Caps_Lock'
+# Switch R_Shift and BackSpace:
+# xmodmap -e 'keycode 62  = BackSpace'
+# xmodmap -e 'remove Shift = BackSpace'
+# xset r 62
+# xmodmap -e 'keycode 22  = Shift_R'
 
-
-# Binds
 autoload edit-command-line; zle -N edit-command-line
 bindkey '^Xe' edit-command-line
 
@@ -60,7 +74,7 @@ bindkey '^[[1;5D' backward-word
 bindkey '^ ' autosuggest-accept
 
 
-# Early exit when running on tty
+# Set fancy prompt in X, simple prompt on tty
 if [[ `xset q 2>/dev/null` ]]; then
   # Prompt
   CE='#e67e80'; CF='#d3c6aa'; CG='#fca326'; CC='#a0a0a0'
@@ -134,33 +148,50 @@ if [[ `xset q 2>/dev/null` ]]; then
   }; zle -N zle-keymap-select
 else
   PS1=$'%1~ $ '
-  return
 fi
 
-# Colours
-set_colours(){
-  local F GEN AUD PIC VID ARCH CODE CONF FILE FONT SPEC PERM SIZE USER TIME STCK
-  F='38;5;'
 
-  GEN="bd=${F}15:cd=${F}16:di=${F}15;1:ex=${F}13;4:fi=${F}01;3:ln=${F}07;4:or=${F}02;1:*.bak=${F}15;4:*.iso=${F}15;4:?akefile=${F}11;3;4"
-  AUD=`clsc mp3:wav $F'11' :`
-  PIC=`clsc gif:jpg:png:svg:webp $F'07' :`
-  VID=`clsc mov:mp4 $F'15' :`
-  ARCH=`clsc bz2:gz:jar:rar:tar:xz:zip $F'16;1' :`
-  CODE=`clsc c:java:js:lua:pl:py:rs:sh:ts $F'13;3' :`
-  CONF=`clsc conf:ini:rasi:toml:yml $F'07;3' :`
-  FILE=`clsc a:css:h:html:json:md:o:pdf:sty:tex:xml $F'09' :`
-  FONT=`clsc otf:ttf $F'09;3' :`
-  SPEC=`clsc lt:dt $F'10' :`
-  PERM=`clsc -s ur:gr:tr:uw:gw:tw:ux:gx:tx $F'05' :`
-  SIZE=`clsc -s sn:sb:df:ds $F'11' :`
-  USER=`clsc -s uu:gu $F'15' :`
-  TIME=`clsc -s da $F'09' :`
-  STCK=`clsc -s su:sf $F'13' :`
+# Colours and highlights
+### LOGIN ONLY ###
+if [[ -o login ]]; then
+  set_colours(){
+    local F GEN AUD PIC VID ARCH CODE CONF FILE FONT SPEC PERM SIZE USER TIME STCK
+    F='38;5;'
 
-  LS_COLORS="${GEN}:${AUD}:${PIC}:${VID}:${ARCH}:${CODE}:${CONF}:${FILE}:${FONT}:${SPEC}"
-  EXA_COLORS="${PERM}:${SIZE}:${USER}:${TIME}:${STCK}"
+    GEN="bd=${F}15:cd=${F}16:di=${F}15;1:ex=${F}13;4:fi=${F}01;3:ln=${F}07;4:or=${F}02;1:*.bak=${F}15;4:*.iso=${F}15;4:?akefile=${F}11;3;4"
+    AUD=`clsc mp3:wav $F'11' :`
+    PIC=`clsc gif:jpg:png:svg:webp $F'07' :`
+    VID=`clsc mov:mp4 $F'15' :`
+    ARCH=`clsc bz2:gz:jar:rar:tar:xz:zip $F'16;1' :`
+    CODE=`clsc c:java:js:lua:pl:py:rs:sh:ts $F'13;3' :`
+    CONF=`clsc conf:ini:rasi:toml:yml $F'07;3' :`
+    FILE=`clsc a:css:h:html:json:md:o:pdf:sty:tex:xml $F'09' :`
+    FONT=`clsc otf:ttf $F'09;3' :`
+    SPEC=`clsc lt:dt $F'10' :`
+    PERM=`clsc -s ur:gr:tr:uw:gw:tw:ux:gx:tx $F'05' :`
+    SIZE=`clsc -s sn:sb:df:ds $F'11' :`
+    USER=`clsc -s uu:gu $F'15' :`
+    TIME=`clsc -s da $F'09' :`
+    STCK=`clsc -s su:sf $F'13' :`
 
+    LS_COLORS="${GEN}:${AUD}:${PIC}:${VID}:${ARCH}:${CODE}:${CONF}:${FILE}:${FONT}:${SPEC}"
+    EXA_COLORS="${PERM}:${SIZE}:${USER}:${TIME}:${STCK}"
+    export LS_COLORS EXA_COLORS
+  }
+  set_colours
+
+  export LESS_TERMCAP_mb=$'\e[1;38;5;9m'
+  export LESS_TERMCAP_md=$'\e[1;38;5;13m'
+  export LESS_TERMCAP_me=$'\e[0m'
+  export LESS_TERMCAP_se=$'\e[0m'
+  export LESS_TERMCAP_so=$'\e[3;38;5;15m'
+  export LESS_TERMCAP_ue=$'\e[0m'
+  export LESS_TERMCAP_us=$'\e[0;38;5;9m'
+  export LESSHISTFILE=-
+fi
+### END LOGIN ONLY ###
+
+set_highlights() {
   local _1=01 _2=02 _3=03 _4=04 _5=05 _6=06 _7=07 _8=08 _9=09
   local _10=10 _11=11 _12=12 _13=13 _14=14 _15=15 _16=16
   ZSH_HIGHLIGHT_STYLES[alias]="fg=$_5,bold"
@@ -188,17 +219,7 @@ set_colours(){
   ZSH_HIGHLIGHT_STYLES[default]="fg=$_1"
   ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=$_2,bold"
 }
-set_colours
-export LS_COLORS EXA_COLORS
-
-export LESS_TERMCAP_mb=$'\e[1;38;5;9m'
-export LESS_TERMCAP_md=$'\e[1;38;5;13m'
-export LESS_TERMCAP_me=$'\e[0m'
-export LESS_TERMCAP_se=$'\e[0m'
-export LESS_TERMCAP_so=$'\e[3;38;5;15m'
-export LESS_TERMCAP_ue=$'\e[0m'
-export LESS_TERMCAP_us=$'\e[0;38;5;9m'
-export LESSHISTFILE=-
+set_highlights
 
 
 # Completion
