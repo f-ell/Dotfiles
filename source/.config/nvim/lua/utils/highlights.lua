@@ -22,25 +22,25 @@ local set_hl_groups = function()
   local yel1 = '#dbbc7f'
   local yel2 = '#dfa000'
 
-  local cmd = red1
-  local ins = aqu1
-  local nor = fg4
+  local cmd = pur1
+  local ins = blu1
+  local nor = aqu1
   local rep = yel1
   local ter = gre1
-  local vis = pur1
+  local vis = red1
 
   local hls = {
     -- Modes
-    {0, 'modeC',  {fg = fg1, bg = cmd}},
-    {0, 'modeI',  {fg = fg5, bg = ins}},
-    {0, 'modeN',  {fg = fg1, bg = nor}},
-    {0, 'modeR',  {fg = fg5, bg = rep}},
-    {0, 'modeT',  {fg = fg5, bg = ter}},
-    {0, 'modeV',  {fg = fg5, bg = vis}},
+    {0, 'modeC',  {fg = fg5, bg = cmd}}, {0, 'modeCx',  {fg = cmd, bg = _}},
+    {0, 'modeI',  {fg = fg5, bg = ins}}, {0, 'modeIx',  {fg = ins, bg = _}},
+    {0, 'modeN',  {fg = fg5, bg = nor}}, {0, 'modeNx',  {fg = nor, bg = _}},
+    {0, 'modeR',  {fg = fg5, bg = rep}}, {0, 'modeRx',  {fg = rep, bg = _}},
+    {0, 'modeT',  {fg = fg5, bg = ter}}, {0, 'modeTx',  {fg = ter, bg = _}},
+    {0, 'modeV',  {fg = fg5, bg = vis}}, {0, 'modeVx',  {fg = vis, bg = _}},
 
     -- Search
-    {0, 'Search',     {fg = blu2, bg = fg2}},
-    {0, 'IncSearch',  {fg = fg2,  bg = blu2}},
+    {0, 'Search',     {fg = red2, bg = fg2}},
+    {0, 'IncSearch',  {fg = fg2,  bg = red2}},
     {0, 'CurSearch',  {link = 'IncSearch'}},
     {0, 'Substitute', {link = 'IncSearch'}},
 

@@ -19,7 +19,9 @@ local get_mode_colour = function()
   if      mode == 'V' or mode == '' then mode = 'v'
   elseif  mode == 'nt'                then mode = 'n' end
 
-  return strf('%s%s#', '%#mode', mode:upper())
+  local main  = strf('%s%s#', '%#mode', mode:upper())
+  local aux   = strf('%s%sx#', '%#mode', mode:upper())
+  return main, aux
 end
 
 
@@ -97,9 +99,9 @@ local get_position = function() return '%l:%v' end
 
 
 local set_statusline = function()
-  local mode_colour = get_mode_colour(vim.api.nvim_get_mode().mode)
-  local mode        = strf('%s %s %s', mode_colour, get_mode(), hl_no)
-  local bufnr       = strf('%s(%s)', hl_no, get_bufnr())
+  local main, aux = get_mode_colour(vim.api.nvim_get_mode().mode)
+  local mode  = strf('%s%s%s%s%s', aux, main, get_mode(), aux, hl_no)
+  local bufnr = strf('%s(%s)', hl_no, get_bufnr())
 
   return table.concat({
     hl_no, ' ', mode, '%<', get_git(), hl_no,
