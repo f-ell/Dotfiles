@@ -1,6 +1,5 @@
-local F = require('utils.functions')
-local strf    = string.format
-local hl_nor  = '%#TlNor#'; local hl_sel = '%#TlSel#'
+local F     = require('utils.functions')
+local strf  = string.format
 
 
 local tabline = function()
@@ -11,28 +10,31 @@ local tabline = function()
     local bufnr = vim.fn.tabpagebuflist(i)[winnr]
 
     local modified = vim.api.nvim_buf_get_option(bufnr, 'modified')
-      if modified then  modified = '*'
-      else              modified = '' end
+    if modified then  modified = '*'
+    else              modified = '' end
 
     local bufname = vim.fn.bufname(bufnr)
-      if bufname ~= '' then
-        bufname = string.gsub(bufname, '.*/', '')
-      else
-        bufname = '[unnamed]'
-      end
+    if bufname == '' then bufname = '[Untitled]'
+    else                  bufname = string.gsub(bufname, '.*/', '') end
 
     -- set highlight groups
-    if i == vim.fn.tabpagenr() then t = strf('%s%s', t, hl_sel)
-    else                            t = strf('%s%s', t, hl_nor) end
+    local hl_type = 'Nor'
+    if i == vim.fn.tabpagenr() then hl_type = 'Sel' end
 
     -- build tabline
-    local items = { modified, bufname, hl_nor }
+    local hl_main = strf('%%#Tl%s#',  hl_type);
+    local hl_aux  = strf('%%#Tl%sx#', hl_type);
+    local items = {
+      hl_aux, '',
+      hl_main, modified, bufname,
+      hl_aux, ''
+    }
 
     -- mouse support with '%iT'
     t = strf('%s%%%sT%s ', t, i, table.concat(items))
   end
 
-  return strf('%s %s%s', hl_nor, t, hl_nor)
+  return strf('%%#blank# %s%%#blank# ', t)
 end
 
 

@@ -30,6 +30,8 @@ local set_hl_groups = function()
   local vis = red1
 
   local hls = {
+    {0, 'blank', {fg = _, bg = _}},
+
     -- Modes
     {0, 'modeC',  {fg = fg5, bg = cmd}}, {0, 'modeCx',  {fg = cmd, bg = _}},
     {0, 'modeI',  {fg = fg5, bg = ins}}, {0, 'modeIx',  {fg = ins, bg = _}},
@@ -47,14 +49,17 @@ local set_hl_groups = function()
     {0, 'Visual',     {link = 'IncSearch'}},
 
     -- Statusline
-    {0, 'SlNo',   {fg = fg1, bg = _}},
-    {0, 'SlIt',   {fg = fg1, bg = _,  italic = true}},
-    {0, 'SlRo',   {fg = fg1, bg = ro,   bold = true}},
-    {0, 'SlGit',  {fg = git, bg =  _, italic = true}},
+    {0, 'SlNo',   {fg = fg1,  bg = _}},
+    {0, 'SlIt',   {fg = fg1,  bg = _,   italic = true}},
+    {0, 'SlRo',   {fg = fg1,  bg = ro,  bold = true}},
+    {0, 'SlRox',  {fg = ro,   bg = _,   bold = true}},
+    {0, 'SlGit',  {fg = git,  bg =  _,  italic = true}},
 
     -- Tabline
-    {0, 'TlNor',  {fg = fg3, bg = _}},
-    {0, 'TlSel',  {fg = fg2, bg = _, bold = true, underline = true}},
+    {0, 'TlNor',  {fg = fg3,  bg = fg4}},
+    {0, 'TlNorx', {fg = fg4,  bg = _}},
+    {0, 'TlSel',  {fg = fg5,  bg = aqu1, bold = true}},
+    {0, 'TlSelx', {fg = aqu1, bg = _}},
 
     -- Diagnostics
     {0, 'HintText',     {sp = gre1, underline = true}},

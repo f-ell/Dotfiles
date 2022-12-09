@@ -63,15 +63,21 @@ local get_git = function()
 end
 
 
-local get_filename = function()
-  local filename = '%t'
-  local readonly, reset = '', ''
+local get_bufname = function()
+  local bufname = vim.fn.bufname()
+  if bufname == '' then bufname = '[Untitled]'
+  else                  bufname = string.gsub(bufname, '.*/', '') end
 
-  if vim.api.nvim_buf_get_option(0, 'readonly') then
-    readonly  = '%#SlRo# '; reset     = ' %#SlNo#'
+  local hl      = false
+  local hl_ro   = '%#SlRo#'
+  local hl_rox  = '%#SlRox#'
+  if vim.api.nvim_buf_get_option(0, 'readonly') then hl = true end
+
+  if hl then
+    return strf('%s%s%s%s', hl_rox, hl_ro, bufname, hl_rox)
+  else
+    return bufname..' '
   end
-
-  return strf('%s%s%s', readonly, filename, reset)
 end
 
 
@@ -91,6 +97,7 @@ end
 
 local get_bytecount = function()
   local count = vim.fn.line2byte('$') + vim.fn.len(vim.fn.getline('$'))
+  if count == -1 then count = 0 end
   return count..'B'
 end
 
@@ -106,7 +113,7 @@ local set_statusline = function()
   return table.concat({
     hl_no, ' ', mode, '%<', get_git(), hl_no,
     '%=',
-    get_modified(), hl_it, get_filename(), bufnr,
+    get_modified(), hl_it, get_bufname(), bufnr,
     '%=',
     get_bytecount(), '  ', get_search_count(), '  ', get_position(), ' '
   })
