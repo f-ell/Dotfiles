@@ -11,7 +11,8 @@ local tabline = function()
 
     local modified = vim.api.nvim_buf_get_option(bufnr, 'modified')
     if modified then  modified = '*'
-    else              modified = '' end
+    else              modified = '' end
+    modified = strf(' %%%sX%s', i, modified)
 
     local bufname = vim.fn.bufname(bufnr)
     if bufname == '' then bufname = '[Untitled]'
@@ -22,11 +23,11 @@ local tabline = function()
     if i == vim.fn.tabpagenr() then hl_type = 'Sel' end
 
     -- build tabline
-    local hl_main = strf('%%#Tl%s#',  hl_type);
-    local hl_aux  = strf('%%#Tl%sx#', hl_type);
+    local hl_main = strf('%%#Tl%s#',  hl_type)
+    local hl_aux  = strf('%%#Tl%sx#', hl_type)
     local items = {
       hl_aux, '',
-      hl_main, modified, bufname,
+      hl_main, bufname, modified,
       hl_aux, ''
     }
 
