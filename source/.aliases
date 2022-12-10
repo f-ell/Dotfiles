@@ -1,8 +1,7 @@
 Err() { printf 'Error: %s\n' "$1" 1>&2 }
 
-Ping=/usr/bin/ping
 ping() {
-  $Ping -c1 ${1:-archlinux.org}
+  /usr/bin/ping -c1 ${1:-archlinux.org}
 }
 
 owns() {
