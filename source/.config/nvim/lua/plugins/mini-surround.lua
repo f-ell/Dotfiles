@@ -4,7 +4,7 @@ require('mini.surround').setup({
   n_lines       = 20,
   search_method = 'cover_or_nearest',
   mappings = {
-    add       = 'ys',
+    add       = '_s',
     replace   = 'cs',
     delete    = 'ds',
     find      = '',

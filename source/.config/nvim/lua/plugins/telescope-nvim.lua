@@ -1,4 +1,6 @@
 local tls   = require('telescope')
+local tlsb  = require('telescope.builtin')
+local tslu  = require('telescope.utils')
 local tlsal = require('telescope.actions.layout')
 local F     = require('utils.functions')
 
@@ -13,7 +15,7 @@ tls.setup({
       shorten = {
         len = 1, exclude = {-2, -1, 1}
       },
-      truncate
+      truncate = 1
     },
 
     sorting_strategy  = 'descending',
@@ -85,11 +87,11 @@ tls.setup({
       }
     }
   },
-  pickers     = {
+  pickers = {
+    cwd     = tslu.buffer_dir(),
+    hidden  = true,
     find_files = {
-      find_command  = {
-        'fd', '-tf', '-H', '-d10', '--strip-cwd-prefix'
-      },
+      find_command = { 'fd', '-tf', '-H', '-d10', '--strip-cwd-prefix' },
     },
 
     live_grep = {
@@ -101,19 +103,34 @@ tls.setup({
     },
 
     current_buffer_fuzzy_find = {
-      preview = {
-        hide_on_startup = false
-      },
+      preview = { hide_on_startup = false },
     }
   },
-  extensions  = {},
+
+  extensions  = {
+    ["zf-native"] = {
+      file = {
+        enable            = true,
+        highlight_results = true,
+        match_filename    = true,
+      },
+    },
+
+    file_browser = {
+      theme = 'dropdown',
+      hijack_netrw = true
+    },
+  }
 })
 
 tls.load_extension('zf-native')
+tls.load_extension('file_browser')
 
 
 -- maps
-F.nnmap('<leader>f',  ':Telescope find_files<CR>')
-F.nnmap('<leader>tg', ':silent! Telescope git_files<CR>')
-F.nnmap('<leader>tr', ':Telescope live_grep<CR>')
-F.nnmap('<leader>tf', ':Telescope current_buffer_fuzzy_find<CR>')
+F.nnmap('<leader>fb', ':Telescope file_browser<CR>')
+F.nnmap('<leader>ff', ':Telescope find_files<CR>')
+F.nnmap('<leader>fg', ':silent! Telescope git_files<CR>')
+F.nnmap('<leader>fh', function() tlsb.find_files({ cwd = os.getenv('HOME') }) end)
+F.nnmap('<leader>rg', ':Telescope live_grep<CR>')
+F.nnmap('<leader>zf', ':Telescope current_buffer_fuzzy_find<CR>')

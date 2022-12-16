@@ -42,17 +42,13 @@ return packer.startup(function()
     },
     {
       'glepnir/lspsaga.nvim',
-      after = 'nvim-lspconfig',
-      config = function()
-        require('plugins.lspsaga-nvim')
-      end
+      after   = 'nvim-lspconfig',
+      config  = function() require('plugins.lspsaga-nvim') end
     },
     {
       'hrsh7th/cmp-nvim-lsp',
       after   = 'nvim-lspconfig',
-      config  = function()
-        require('lsp')
-      end
+      config  = function() require('lsp') end
     }
   }
   use {
@@ -73,9 +69,7 @@ return packer.startup(function()
     {
       'L3MON4D3/LuaSnip',
       after = 'nvim-cmp',
-      config = function()
-        require('plugins.luasnip')
-      end
+      config = function() require('plugins.luasnip') end
     },
     {
       'saadparwaiz1/cmp_luasnip',
@@ -84,26 +78,26 @@ return packer.startup(function()
     {
       'hrsh7th/cmp-buffer',
        after = 'nvim-cmp',
-       config = function()
-         require('plugins.nvim-cmp')
-       end
+       config = function() require('plugins.nvim-cmp') end
     }
   }
 
 
   -- Telescope
-  use 'nvim-lua/plenary.nvim'
-  use 'natecraddock/telescope-zf-native.nvim'
   use {
-    'nvim-telescope/telescope.nvim',
-    event     = 'VimEnter',
-    requires  = {
-      'nvim-lua/plenary.nvim',
-      'natecraddock/telescope-zf-native.nvim'
-    },
-    config    = function()
-      require('plugins.telescope-nvim')
-    end
+    'nvim-lua/plenary.nvim',
+    'natecraddock/telescope-zf-native.nvim',
+    'nvim-telescope/telescope-file-browser.nvim',
+    {
+      'nvim-telescope/telescope.nvim',
+      event     = 'VimEnter',
+      requires  = {
+        'nvim-lua/plenary.nvim',
+        'natecraddock/telescope-zf-native.nvim',
+        'nvim-telescope/telescope-file-browser.nvim',
+      },
+      config = function() require('plugins.telescope-nvim') end
+    }
   }
 
 
@@ -112,9 +106,7 @@ return packer.startup(function()
     'nvim-treesitter/nvim-treesitter',
     run    = ':TSUpdate',
     event  = 'VimEnter',
-    config = function()
-      require('plugins.nvim-treesitter')
-    end
+    config = function() require('plugins.nvim-treesitter') end
   }
 
 
@@ -128,51 +120,37 @@ return packer.startup(function()
     {
       'terrortylor/nvim-comment',
       event = 'VimEnter',
-      config = function()
-        require('plugins.nvim-comment')
-      end
+      config = function() require('plugins.nvim-comment') end
     },
     {
       'echasnovski/mini.surround',
       event = 'VimEnter',
-      config = function()
-        require('plugins.mini-surround')
-      end
+      config = function() require('plugins.mini-surround') end
     },
     {
       'lewis6991/gitsigns.nvim',
       event = 'VimEnter',
-      config = function()
-        require('plugins.gitsigns-nvim')
-      end
+      config = function() require('plugins.gitsigns-nvim') end
     },
     {
       'norcalli/nvim-colorizer.lua',
       event  = 'VimEnter',
-      config = function()
-        require('plugins.nvim-colorizer')
-      end
+      config = function() require('plugins.nvim-colorizer') end
     },
     {
       'kyazdani42/nvim-web-devicons',
       event  = 'VimEnter',
-      config = function()
-        require('nvim-web-devicons').setup()
-      end
+      config = function() require('nvim-web-devicons').setup() end
     },
     {
       'mattn/emmet-vim',
       ft      = 'html',
-      config  = function()
-        require('plugins.emmet-vim')
-      end
+      config  = function() require('plugins.emmet-vim') end
     },
     {
       'dhruvasagar/vim-table-mode',
       cmd     = 'TableModeEnable',
-      config  = function()
-        require('plugins.vim-table-mode')
-      end
+      config  = function() require('plugins.vim-table-mode') end
     }
   }
 
@@ -182,8 +160,6 @@ return packer.startup(function()
   use {
     'lervag/vimtex',
     ft      = {'latex', 'plaintex', 'tex'},
-    config  = function()
-      require('plugins.vimtex')
-    end
+    config  = function() require('plugins.vimtex') end
   }
 end)

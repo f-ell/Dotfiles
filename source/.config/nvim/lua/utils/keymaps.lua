@@ -79,15 +79,26 @@ F.nnmap('<leader>sos', ':so ~/.config/nvim/lua/plugins/luasnip.lua<CR>')
 F.nnmap('--', ':w<CR>')
 F.nnmap('-d', ':bd<CR>')
 F.nnmap('-w', function() wipe_buf() end)
-F.nnmap('<C-l>', ':noh<CR>')
-F.nnmap('<leader>%', ':so%<CR>')
-
 F.nnmap('<leader>tb',   function() tab_bufs() end)
+
+F.nnmap('<C-l>',      ':noh<CR>')
+F.nnmap('<leader>~',  'viw~')
+F.nnmap('<leader>w',  ':w !doas tee %<CR>')
+F.nnmap('<leader>x',  ':!chmod 744 %<CR>')
+F.nnmap('<leader>%',  ':so%<CR>')
+
+F.tnmap('<C-d>', '<C-\\><C-n>')
 F.nnmap('<leader><CR>', function() terminal() end)
 
+-- credits: primeagen
+F.nnmap('n', 'nzz')
+F.nnmap('N', 'Nzz')
 F.nnmap('<C-u>', '<C-u>zz')
 F.nnmap('<C-d>', '<C-d>zz')
-F.nnmap('<leader>~', 'viw~')
+F.nnmap('<leader>y', '"+y')
+F.vnmap('<leader>y', '"+y')
+F.nnmap('<leader>d', '"_d')
+F.vnmap('<leader>d', '"_d')
 
   -- tabs
 F.nnmap('<leader>g0', ':tabfirst<CR>')
@@ -96,6 +107,12 @@ F.nnmap('<leader>gh', ':silent! tabmove-<CR>')
 F.nnmap('<leader>gj', ':tabmove0<CR>')
 F.nnmap('<leader>gl', ':silent! tabmove+<CR>')
 F.nnmap('<leader>gk', ':tabmove$<CR>')
+
+-- ex-mode navigation
+F.cnmap('<C-h>', '<Left>')
+F.cnmap('<C-k>', '<Up>')
+F.cnmap('<C-j>', '<Down>')
+F.cnmap('<C-l>', '<Right>')
 
   -- windows
 F.nnmap('<A-h>', '<C-w>h')
@@ -107,18 +124,6 @@ F.nnmap('<A-l>', '<C-w>l')
 F.nnmap('<leader>br', 'oborder: 1px solid red;<Esc>o<Esc>')
 F.nnmap('<leader>bg', 'oborder: 1px solid green;<Esc>o<Esc>')
 F.nnmap('<leader>bb', 'oborder: 1px solid blue;<Esc>o<Esc>')
-
-
--- command
-F.cnmap('<C-h>', '<Left>')
-F.cnmap('<C-k>', '<Up>')
-F.cnmap('<C-j>', '<Down>')
-F.cnmap('<C-l>', '<Right>')
-
-
--- terminal
-F.tnmap('<C-d>', '<C-\\><C-n>')
-
 
 -- packer
 F.nnmap('<leader>ps', ':PackerStatus<CR>')
