@@ -7,6 +7,6 @@ F.g('vimtex_compiler_method', 'tectonic')
 -- maps
 F.nnmap('<leader>vcl',  ':VimtexClean<CR>')
 F.nnmap('<leader>vcp',  ':VimtexCompileSS<CR>')
-F.nnmap('<leader>vtoc', ':VimTexTocToggle<CR>')
+F.nnmap('<leader>vtoc', ':VimtexTocToggle<CR>')
 F.nnmap('<leader>vst',  ':VimtexStatus!<CR>')
 F.nnmap('<leader>vv',   ':VimtexView<CR>')
