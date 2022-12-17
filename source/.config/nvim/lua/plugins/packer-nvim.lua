@@ -1,5 +1,17 @@
-local success, packer = pcall(require, 'packer')
-if not success then return end
+local ensure_installed = function()
+  local v = vim
+  local path = v.fn.stdpath('data')..'/site/pack/packer/start/packer.nvim'
+  if v.fn.empty(v.fn.glob(path)) > 0 then
+    v.fn.system({ 'git', 'clone', '--depth', '1',
+      'https://github.com/wbthomason/packer.nvim', path })
+    v.cmd([[packadd packer.nvim]])
+    return true
+  end
+  return false
+end
+
+local bootstrap = ensure_installed()
+local packer    = require('packer')
 
 packer.init({
   ensure_dependencies = true,
@@ -7,7 +19,7 @@ packer.init({
   auto_clean = false,
   display = {
     open_fn = function()
-      return require('packer.util').float({border = 'rounded'})
+      return require('packer.util').float({ border = 'rounded' })
     end
   }
 })
@@ -16,13 +28,7 @@ return packer.startup(function()
   -- Packer
   use {
     'wbthomason/packer.nvim',
-    opt = false,
-    cmd = {
-      'PackerClean',          'PackerCompile',  'PackerInstall',
-      'PackerLoad',           'PackerProfile',  'PackerSnapshot',
-      'PackerSnapshotDelete', 'PackerRollback', 'PackerStatus',
-      'PackerSync',           'PackerUpdate'
-    }
+    opt = false
   }
 
 
@@ -34,7 +40,7 @@ return packer.startup(function()
         'c', 'go', 'java', 'javascript', 'latex', 'lua', 'perl', 'plaintex',
         'rust', 'tex', 'typescript'
       },
-      cmd = {'Mason', 'MasonInstall', 'MasonUninstall'}
+      cmd = { 'Mason', 'MasonInstall', 'MasonUninstall' }
     },
     {
       'neovim/nvim-lspconfig',
@@ -61,11 +67,6 @@ return packer.startup(function()
       ft    = 'lua',
       after = 'nvim-cmp'
     },
-    -- {
-    --   'hrsh7th/cmp-omni',
-    --   ft    = {'latex', 'plaintex', 'tex'},
-    --   after = 'nvim-cmp'
-    -- },
     {
       'L3MON4D3/LuaSnip',
       after = 'nvim-cmp',
@@ -85,9 +86,9 @@ return packer.startup(function()
 
   -- Telescope
   use {
-    'nvim-lua/plenary.nvim',
-    'natecraddock/telescope-zf-native.nvim',
-    'nvim-telescope/telescope-file-browser.nvim',
+    { 'nvim-lua/plenary.nvim' },
+    { 'natecraddock/telescope-zf-native.nvim' },
+    { 'nvim-telescope/telescope-file-browser.nvim' },
     {
       'nvim-telescope/telescope.nvim',
       event     = 'VimEnter',
@@ -159,7 +160,12 @@ return packer.startup(function()
   -- compilation with tectonic, texlab for snippets
   use {
     'lervag/vimtex',
-    ft      = {'latex', 'plaintex', 'tex'},
+    ft      = { 'latex', 'plaintex', 'tex' },
     config  = function() require('plugins.vimtex') end
   }
+
+
+  if bootstrap then
+    packer.sync()
+  end
 end)
