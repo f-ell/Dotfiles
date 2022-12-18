@@ -10,7 +10,7 @@ local tabline = function()
     local bufnr = vim.fn.tabpagebuflist(i)[winnr]
 
     local modified = vim.api.nvim_buf_get_option(bufnr, 'modified')
-    if modified then  modified = '*'
+    if modified then  modified = ''
     else              modified = '' end
     modified = strf(' %%%sX%s', i, modified)
 
