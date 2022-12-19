@@ -1,24 +1,23 @@
 #!/bin/sh
-# Dependencies: alacritty, bspc (duh), grep, tr, wmctrl
+# Dependencies: kitty, bspc (duh), grep, tr, wmctrl
 # Scratchpads should be hidden, sticky, and floating
 
 Name=$1
 case $Name in
-  sFiles) Program="ranger $HOME"; break;;
-  sMusic) Program="$HOME/.cargo/bin/spotify_player"; break;;
-  sCalc)  Program='bc -ql'; break;;
+  File) Program="ranger $HOME"; break;;
+  Calc) Program='bc -ql'; break;;
   *)      exit 1;;
 esac
 
 # visible scratchpad (if any)
-Visible=$(bspc query -N -n .\!hidden.sticky.floating | tr [:upper:] [:lower:])
+Visible=`bspc query -N -n .\!hidden.sticky.floating | tr [:upper:] [:lower:]`
 
 # target scratchpad window id
-TargetWid="$(wmctrl -l | grep $Name)"
+TargetWid="`wmctrl -l | grep SPad$Name`"
 
 # run scratchpad if not running; sleep required because wmctrl is slow
-[ -z "$TargetWid" ] && { (alacritty -t $Name -e $Program &); sleep 0.3; \
-                          TargetWid="$(wmctrl -l | grep $Name)"; }
+[ -z "$TargetWid" ] && { (kitty -T "SPad$Name" $Program &); sleep 0.3; \
+                          TargetWid="`wmctrl -l | grep $Name`"; }
 
 TargetWid=${TargetWid%% *}
 

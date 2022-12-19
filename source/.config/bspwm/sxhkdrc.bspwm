@@ -9,8 +9,8 @@ super + control + {r,q}
   bspc {wm -r,quit}
 
 # focus / layout / float
-super + {_, shift +} {1-5}
-  bspc {desktop -f, node focused -d} {1-5}
+super + {_, shift +} {1-6}
+  bspc {desktop -f, node focused -d} {1-6}
 super + {_, shift +} {h,j,k,l}
   bspc node -{f,s} {west,south,north,east}
 
@@ -49,5 +49,4 @@ super + i; s
 
 # scratchpads
 alt + {1,2,3}
-  ~/.config/bspwm/scripts/scratchpad {sFiles,sMusic,sCalc}
-
+  ~/.config/bspwm/scripts/scratchpad {File,Calc}
