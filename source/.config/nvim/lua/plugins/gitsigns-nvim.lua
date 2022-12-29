@@ -1,31 +1,35 @@
-local F = require('utils.functions')
-
-require('gitsigns').setup({
-  attach_to_untracked = false,
-
-  signs = {
-    add          = {hl = 'GSAdd', text = '│', numhl='GSAddNr', linehl='GSAddLn'},
-    change       = {hl = 'GSCha', text = '│', numhl='GSChaNr', linehl='GSChaLn'},
-    delete       = {hl = 'GSDel', text = '│', numhl='GSDelNr', linehl='GSDelLn'},
-    topdelete    = {hl = 'GSDel', text = '‾', numhl='GSDelNr', linehl='GSDelLn'},
-    changedelete = {hl = 'GSCha', text = '~', numhl='GSChaNr', linehl='GSChaLn'},
+return {
+  'lewis6991/gitsigns.nvim',
+  lazy    = true,
+  event   = 'BufReadPre',
+  keys    = {
+    { '<leader>gsh', ':Gitsigns diffthis<CR>' },
+    { '<leader>gsj', ':silent Gitsigns next_hunk<CR>' },
+    { '<leader>gsk', ':silent Gitsigns prev_hunk<CR>' },
+    { '<leader>gsl', ':Gitsigns toggle_deleted<CR>' },
+    { '<leader>gsc', ':Gitsigns toggle_linehl<CR>' }
   },
+  config  = function()
+    require('gitsigns').setup({
+      attach_to_untracked = false,
 
-  signcolumn  = true,
-  numhl       = false,
-  linehl      = false,
-  word_diff   = false,
+      signs = {
+        add          = {hl = 'GSAdd', text = '│', numhl='GSAddNr', linehl='GSAddLn'},
+        change       = {hl = 'GSCha', text = '│', numhl='GSChaNr', linehl='GSChaLn'},
+        delete       = {hl = 'GSDel', text = '│', numhl='GSDelNr', linehl='GSDelLn'},
+        topdelete    = {hl = 'GSDel', text = '‾', numhl='GSDelNr', linehl='GSDelLn'},
+        changedelete = {hl = 'GSCha', text = '~', numhl='GSChaNr', linehl='GSChaLn'},
+      },
 
-  watch_gitdir = {
-    interval      = 500,
-    follow_files  = true
-  },
-})
+      signcolumn  = true,
+      numhl       = false,
+      linehl      = false,
+      word_diff   = false,
 
-
--- maps
-F.nnmap('<leader>gsh', ':Gitsigns diffthis<CR>')
-F.nnmap('<leader>gsj', ':silent Gitsigns next_hunk<CR>')
-F.nnmap('<leader>gsk', ':silent Gitsigns prev_hunk<CR>')
-F.nnmap('<leader>gsl', ':Gitsigns toggle_deleted<CR>')
-F.nnmap('<leader>gsc', ':Gitsigns toggle_linehl<CR>')
+      watch_gitdir = {
+        interval      = 500,
+        follow_files  = true
+      },
+    })
+  end
+}

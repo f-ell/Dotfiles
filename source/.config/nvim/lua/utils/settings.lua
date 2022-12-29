@@ -6,13 +6,11 @@ local F = require('utils.functions')
 -- vim.g['spelllang'] = 'de_de,en_us,en_gb'
 
 -- miscellaneous
-F.g('mapleader', ' ')
-
 F.o('shell',    'dash')
 F.o('cdhome',   true)
 F.o('confirm',  true)
 F.o('showmode', false)
-F.o('cmdheight', 0)
+F.o('cmdheight', 1)
 F.c('filetype plugin indent on')
 
 F.o('list', true)
@@ -26,7 +24,6 @@ F.o('smartcase',  true)
 F.o('wrap', false)
 F.o('textwidth',  80)
 F.o('numberwidth', 3)
--- F.o('signcolumn', 'number')
 F.o('signcolumn', 'yes')
 F.o('number',         true)
 F.o('relativenumber', true)
@@ -59,5 +56,5 @@ F.o('updatecount', 0) -- supersedes F.o('swapfile', false)
 F.o('undofile',    true)
 
 -- transparency
-F.o('pumblend', 0) -- was 8
+F.o('pumblend', 0)
 F.o('winblend', 0)

@@ -1,12 +1,18 @@
-local F = require('utils.functions')
+return {
+  'lervag/vimtex',
+  lazy    = true,
+  ft      = { 'latex', 'plaintex', 'tex' },
+  keys    = {
+    { '<leader>vcl',  ':VimtexClean<CR>' },
+    { '<leader>vcp',  ':VimtexCompileSS<CR>' },
+    { '<leader>vtoc', ':VimtexTocToggle<CR>' },
+    { '<leader>vst',  ':VimtexStatus!<CR>' },
+    { '<leader>vv',   ':VimtexView<CR>' }
+  },
+  config  = function()
+    local F = require('utils.functions')
 
--- Preparation
-F.g('vimtex_view_method',     'zathura')
-F.g('vimtex_compiler_method', 'tectonic')
-
--- maps
-F.nnmap('<leader>vcl',  ':VimtexClean<CR>')
-F.nnmap('<leader>vcp',  ':VimtexCompileSS<CR>')
-F.nnmap('<leader>vtoc', ':VimtexTocToggle<CR>')
-F.nnmap('<leader>vst',  ':VimtexStatus!<CR>')
-F.nnmap('<leader>vv',   ':VimtexView<CR>')
+    F.g('vimtex_view_method',     'zathura')
+    F.g('vimtex_compiler_method', 'tectonic')
+  end
+}

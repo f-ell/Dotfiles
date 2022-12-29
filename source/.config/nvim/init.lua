@@ -5,10 +5,17 @@
 -- |  \   \  | |__/  |
 -- |  |\     | _____/
 -- |__| \____| | Author: Nico Pareigis
---          |__| NeoVim
+--          |__| Neovim
 --
--- Note: for the statusline to reliably display the correct git branch,
--- 'autochdir' needs to be ENABLED (see utils.settings)
+-- Note: for the statusline to reliably display git HEAD information,
+-- 'autochdir' needs to be enabled (see utils.settings).
 
-require('plugins.packer-nvim')
+local F = require('utils.functions')
+F.g('mapleader', ' ')
+
+require('utils.lazy')
+
+F.o('termguicolors', true)
+F.c('colorscheme everforest')
+
 require('utils')

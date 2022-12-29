@@ -72,20 +72,18 @@ end
 
 
 
--- normal
-F.nnmap('<leader>sok', ':so ~/.config/nvim/lua/utils/keymaps.lua<CR>')
-F.nnmap('<leader>sos', ':so ~/.config/nvim/lua/plugins/luasnip.lua<CR>')
-
+-- misc
 F.nnmap('--', ':w<CR>')
 F.nnmap('-d', ':bd<CR>')
 F.nnmap('-w', function() wipe_buf() end)
 F.nnmap('<leader>tb',   function() tab_bufs() end)
 
-F.nnmap('<C-l>',      ':noh<CR>')
 F.nnmap('<leader>~',  'viw~')
 F.nnmap('<leader>w',  ':w !doas tee %<CR>')
 F.nnmap('<leader>x',  ':!chmod 744 %<CR>')
-F.nnmap('<leader>%',  ':so%<CR>')
+F.nnmap('<leader>%%',  ':so %<CR>')
+F.nnmap('<leader>%k', ':so ~/.config/nvim/lua/utils/keymaps.lua<CR>')
+F.nnmap('<leader>%s', ':so ~/.config/nvim/lua/plugins/luasnip.lua<CR>')
 
 F.tnmap('<C-d>', '<C-\\><C-n>')
 F.nnmap('<leader><CR>', function() terminal() end)
@@ -124,8 +122,3 @@ F.nnmap('<A-l>', '<C-w>l')
 F.nnmap('<leader>br', 'oborder: 1px solid red;<Esc>o<Esc>')
 F.nnmap('<leader>bg', 'oborder: 1px solid green;<Esc>o<Esc>')
 F.nnmap('<leader>bb', 'oborder: 1px solid blue;<Esc>o<Esc>')
-
--- packer
-F.nnmap('<leader>ps', ':PackerStatus<CR>')
-F.nnmap('<leader>pc', ':PackerCompile<CR>')
-F.nnmap('<leader>py', ':PackerSync<CR>')
