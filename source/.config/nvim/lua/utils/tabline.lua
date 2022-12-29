@@ -10,12 +10,11 @@ local tabline = function()
     local bufnr = vim.fn.tabpagebuflist(i)[winnr]
 
     local modified = vim.api.nvim_buf_get_option(bufnr, 'modified')
-    if modified then  modified = ''
-    else              modified = '' end
-    modified = strf(' %%%sX%s', i, modified)
+    if modified then  modified = ' '
+    else              modified = '' end
 
     local bufname = vim.fn.bufname(bufnr)
-    if bufname == '' then bufname = '[Untitled]'
+    if bufname == '' then bufname = '[null]'
     else                  bufname = string.gsub(bufname, '.*/', '') end
 
     -- set highlight groups
@@ -27,7 +26,7 @@ local tabline = function()
     local hl_aux  = strf('%%#Tl%sx#', hl_type)
     local items = {
       hl_aux, '',
-      hl_main, bufname, modified,
+      hl_main, modified, bufname,
       hl_aux, ''
     }
 

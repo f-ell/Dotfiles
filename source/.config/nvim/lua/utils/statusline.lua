@@ -65,7 +65,7 @@ end
 
 local get_bufname = function()
   local bufname = vim.fn.bufname()
-  if bufname == '' then bufname = '[Untitled]'
+  if bufname == '' then bufname = '[null]'
   else                  bufname = string.gsub(bufname, '.*/', '') end
 
   local hl      = false
@@ -85,13 +85,9 @@ local get_bufnr = function() return '%n' end
 
 
 local get_modified = function()
-  local modified_status = ''
-
-  if vim.api.nvim_buf_get_option(0, 'modified') then
-    modified_status = '-*- '
-  end
-
-  return modified_status
+  local modified = ''
+  if vim.api.nvim_buf_get_option(0, 'modified') then  modified = ' ' end
+  return modified
 end
 
 
