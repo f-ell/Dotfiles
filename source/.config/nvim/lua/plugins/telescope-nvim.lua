@@ -7,6 +7,12 @@ return {
     'nvim-telescope/telescope-file-browser.nvim',
     { 'kyazdani42/nvim-web-devicons', lazy = true, config = true }
   },
+  init = function()
+    if vim.fn.argc() > 0
+      and vim.loop.fs_stat(vim.fn.argv()[1]).type == 'directory' then
+      require('telescope')
+    end
+  end,
   keys = {
     { '<leader>fb', ':Telescope file_browser<CR>' },
     { '<leader>ff', ':Telescope find_files<CR>' },
@@ -134,8 +140,11 @@ return {
           },
         },
 
-        file_browser = { theme = 'dropdown',
-          hijack_netrw = true
+        file_browser = {
+          initial_mode  = 'normal',
+          theme         = 'dropdown',
+          hidden        = true,
+          hijack_netrw  = true
         },
       }
     })

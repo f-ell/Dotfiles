@@ -3,7 +3,7 @@ local F = require('utils.functions')
 -- bootstrap
 local v     = vim
 local std   = v.fn.stdpath
-local path  = std('data')..'/lazy/lazy.nvim' -- using '-' in place of '.' breaks?
+local path  = std('data')..'/lazy/lazy.nvim'
 
 if not v.loop.fs_stat(path) then
   v.fn.system({
@@ -21,7 +21,7 @@ require('lazy').setup('plugins', {
   root        = std('data') .. '/lazy',
   lockfile    = std('data') .. '/lazy/lazy-lock.json',
   install     = { missing = true, colorscheme = { 'everforest' } },
-  checker     = { enabled = true, frequency   = 7200 },
+  checker     = { enabled = true, frequency   = 86400 },
   ui          = { border = 'rounded' },
   performance = {
     cache = {
