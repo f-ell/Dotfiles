@@ -8,9 +8,11 @@ return {
     { 'kyazdani42/nvim-web-devicons', lazy = true, config = true }
   },
   init = function()
-    if vim.fn.argc() > 0
-      and vim.loop.fs_stat(vim.fn.argv()[1]).type == 'directory' then
-      require('telescope')
+    if vim.fn.argc() > 0 then
+      local stat = vim.loop.fs_stat(vim.fn.argv()[1])
+      if stat ~= nil and stat.type == 'directory' then
+        require('telescope')
+      end
     end
   end,
   keys = {
