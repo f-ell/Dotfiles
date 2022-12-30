@@ -3,11 +3,11 @@ return {
   lazy    = true,
   event   = 'BufReadPre',
   keys    = {
-    { '<leader>gsh', ':Gitsigns diffthis<CR>' },
-    { '<leader>gsj', ':silent Gitsigns next_hunk<CR>' },
-    { '<leader>gsk', ':silent Gitsigns prev_hunk<CR>' },
-    { '<leader>gsl', ':Gitsigns toggle_deleted<CR>' },
-    { '<leader>gsc', ':Gitsigns toggle_linehl<CR>' }
+    { '<leader>gsh', '<CMD>Gitsigns diffthis<CR>' },
+    { '<leader>gsj', '<CMD>silent Gitsigns next_hunk<CR>' },
+    { '<leader>gsk', '<CMD>silent Gitsigns prev_hunk<CR>' },
+    { '<leader>gsl', '<CMD>Gitsigns toggle_deleted<CR>' },
+    { '<leader>gsc', '<CMD>Gitsigns toggle_linehl<CR>' }
   },
   config  = function()
     require('gitsigns').setup({

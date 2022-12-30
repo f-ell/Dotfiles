@@ -73,22 +73,22 @@ end
 
 
 -- misc
-F.nnmap('--', ':w<CR>')
-F.nnmap('-d', ':bd<CR>')
+F.nnmap('--', '<CMD>w<CR>')
+F.nnmap('-d', '<CMD>bd<CR>')
 F.nnmap('-w', function() wipe_buf() end)
 F.nnmap('<leader>tb',   function() tab_bufs() end)
 
 F.nnmap('<leader>~',  'viw~')
-F.nnmap('<leader>w',  ':w !doas tee %<CR>')
-F.nnmap('<leader>x',  ':!chmod 744 %<CR>')
-F.nnmap('<leader>%%',  ':so %<CR>')
-F.nnmap('<leader>%k', ':so ~/.config/nvim/lua/utils/keymaps.lua<CR>')
-F.nnmap('<leader>%s', ':so ~/.config/nvim/lua/plugins/luasnip.lua<CR>')
+F.nnmap('<leader>w',  '<CMD>w !doas tee %<CR>')
+F.nnmap('<leader>x',  '<CMD>!chmod 744 %<CR>')
+F.nnmap('<leader>%%', '<CMD>so %<CR>')
+F.nnmap('<leader>%k', '<CMD>so ~/.config/nvim/lua/utils/keymaps.lua<CR>')
+F.nnmap('<leader>%s', '<CMD>so ~/.config/nvim/lua/plugins/luasnip.lua<CR>')
 
 F.tnmap('<C-d>', '<C-\\><C-n>')
 F.nnmap('<leader><CR>', function() terminal() end)
 
--- credits: primeagen
+-- credits primeagen
 F.nnmap('n', 'nzz')
 F.nnmap('N', 'Nzz')
 F.nnmap('<C-u>', '<C-u>zz')
@@ -99,12 +99,12 @@ F.nnmap('<leader>d', '"_d')
 F.vnmap('<leader>d', '"_d')
 
   -- tabs
-F.nnmap('<leader>g0', ':tabfirst<CR>')
-F.nnmap('<leader>g$', ':tablast<CR>')
-F.nnmap('<leader>gh', ':silent! tabmove-<CR>')
-F.nnmap('<leader>gj', ':tabmove0<CR>')
-F.nnmap('<leader>gl', ':silent! tabmove+<CR>')
-F.nnmap('<leader>gk', ':tabmove$<CR>')
+F.nnmap('<leader>g0', '<CMD>tabfirst<CR>')
+F.nnmap('<leader>g$', '<CMD>tablast<CR>')
+F.nnmap('<leader>gh', '<CMD>silent! tabmove-<CR>')
+F.nnmap('<leader>gj', '<CMD>tabmove0<CR>')
+F.nnmap('<leader>gl', '<CMD>silent! tabmove+<CR>')
+F.nnmap('<leader>gk', '<CMD>tabmove$<CR>')
 
 -- ex-mode navigation
 F.cnmap('<C-h>', '<Left>')
@@ -119,6 +119,6 @@ F.nnmap('<A-k>', '<C-w>k')
 F.nnmap('<A-l>', '<C-w>l')
 
   -- html / css / js
-F.nnmap('<leader>br', 'oborder: 1px solid red;<Esc>o<Esc>')
-F.nnmap('<leader>bg', 'oborder: 1px solid green;<Esc>o<Esc>')
-F.nnmap('<leader>bb', 'oborder: 1px solid blue;<Esc>o<Esc>')
+F.nnmap('<leader>br', 'oborder<CMD> 1px solid red;<Esc>o<Esc>')
+F.nnmap('<leader>bg', 'oborder<CMD> 1px solid green;<Esc>o<Esc>')
+F.nnmap('<leader>bb', 'oborder<CMD> 1px solid blue;<Esc>o<Esc>')

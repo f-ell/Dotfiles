@@ -3,11 +3,11 @@ return {
   lazy    = true,
   ft      = { 'latex', 'plaintex', 'tex' },
   keys    = {
-    { '<leader>vcl',  ':VimtexClean<CR>' },
-    { '<leader>vcp',  ':VimtexCompileSS<CR>' },
-    { '<leader>vtoc', ':VimtexTocToggle<CR>' },
-    { '<leader>vst',  ':VimtexStatus!<CR>' },
-    { '<leader>vv',   ':VimtexView<CR>' }
+    { '<leader>vcl',  '<CMD>VimtexClean<CR>' },
+    { '<leader>vcp',  '<CMD>VimtexCompileSS<CR>' },
+    { '<leader>vtoc', '<CMD>VimtexTocToggle<CR>' },
+    { '<leader>vst',  '<CMD>VimtexStatus!<CR>' },
+    { '<leader>vv',   '<CMD>VimtexView<CR>' }
   },
   config  = function()
     local F = require('utils.functions')

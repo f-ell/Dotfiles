@@ -16,14 +16,14 @@ return {
     end
   end,
   keys = {
-    { '<leader>fb', ':Telescope file_browser<CR>' },
-    { '<leader>ff', ':Telescope find_files<CR>' },
-    { '<leader>fg', ':silent! Telescope git_files<CR>' },
+    { '<leader>fb', '<CMD>Telescope file_browser<CR>' },
+    { '<leader>ff', '<CMD>Telescope find_files<CR>' },
+    { '<leader>fg', '<CMD>silent! Telescope git_files<CR>' },
     { '<leader>fh', function()
       require('telescope.builtin').find_files({ cwd = os.getenv('HOME') })
     end },
-    { '<leader>rg', ':Telescope live_grep<CR>' },
-    { '<leader>zf', ':Telescope current_buffer_fuzzy_find<CR>' }
+    { '<leader>rg', '<CMD>Telescope live_grep<CR>' },
+    { '<leader>zf', '<CMD>Telescope current_buffer_fuzzy_find<CR>' }
   },
   config = function()
     local tls   = require('telescope')

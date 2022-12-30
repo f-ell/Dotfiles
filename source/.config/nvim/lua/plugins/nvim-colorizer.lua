@@ -2,7 +2,7 @@ return {
   'norcalli/nvim-colorizer.lua',
   lazy    = true,
   event   = 'BufReadPost',
-  keys    = { { '<leader>ct', ':ColorizerToggle<CR>' } },
+  keys    = { { '<leader>ct', '<CMD>ColorizerToggle<CR>' } },
   config  = function()
     require('colorizer').setup({'*'}, {
       RGB       = true;
