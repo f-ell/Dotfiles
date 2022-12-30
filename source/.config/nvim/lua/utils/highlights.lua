@@ -2,7 +2,7 @@ local set_hl_groups = function()
   local _ = ''
 
   local fg1   = '#fdf6e3'
-  local fg2   = '#e8e0cc'
+  local fg2   = '#d3c6aa'
   local fg3   = '#859289'
   local fg4   = '#374247'
   local fg5   = '#2a3439'
@@ -24,10 +24,10 @@ local set_hl_groups = function()
 
   local cmd = pur1
   local ins = blu1
-  local nor = aqu1
+  local nor = gre1
   local rep = yel1
-  local ter = gre1
-  local vis = red1
+  local ter = fg3
+  local vis = aqu1
 
   local hls = {
     {0, 'blank', {fg = _, bg = _}},
@@ -41,8 +41,8 @@ local set_hl_groups = function()
     {0, 'modeV',  {fg = fg5, bg = vis}}, {0, 'modeVx',  {fg = vis, bg = _}},
 
     -- Search
-    {0, 'Search',     {fg = red2, bg = fg2}},
-    {0, 'IncSearch',  {fg = fg2,  bg = red2}},
+    {0, 'Search',     {fg = aqu1, bg = fg1}},
+    {0, 'IncSearch',  {fg = fg1,  bg = aqu2}},
     {0, 'CurSearch',  {link = 'IncSearch'}},
     {0, 'Substitute', {link = 'IncSearch'}},
 
@@ -50,16 +50,16 @@ local set_hl_groups = function()
 
     -- Statusline
     {0, 'SlNo',   {fg = fg1,  bg = _}},
-    {0, 'SlIt',   {fg = fg1,  bg = _,   italic = true}},
-    {0, 'SlRo',   {fg = fg1,  bg = ro,  bold = true}},
-    {0, 'SlRox',  {fg = ro,   bg = _,   bold = true}},
-    {0, 'SlGit',  {fg = git,  bg =  _,  italic = true}},
+    {0, 'SlIt',   {fg = fg1,  bg = _,   italic  = true}},
+    {0, 'SlRo',   {fg = fg1,  bg = ro,  bold    = true}},
+    {0, 'SlRox',  {fg = ro,   bg = _,   bold    = true}},
+    {0, 'SlGit',  {fg = git,  bg =  _,  italic  = true}},
 
     -- Tabline
     {0, 'TlNor',  {fg = fg3,  bg = fg4}},
     {0, 'TlNorx', {fg = fg4,  bg = _}},
-    {0, 'TlSel',  {fg = fg5,  bg = aqu1, bold = true}},
-    {0, 'TlSelx', {fg = aqu1, bg = _}},
+    {0, 'TlSel',  {fg = fg5,  bg = gre1, bold = true}},
+    {0, 'TlSelx', {fg = gre1, bg = _}},
 
     -- Diagnostics
     {0, 'HintText',     {sp = gre1, underline = true}},
@@ -72,9 +72,9 @@ local set_hl_groups = function()
     {0, 'FloatBorder',  {fg = pur1, bg = _}},
 
     -- Telescope
-    {0, 'TelescopeBorder',        {fg = fg5,  bg = fg5}},
-    {0, 'TelescopeMatching',      {fg = pur2, bg = fg1}},
-    {0, 'TelescopeSelection',     {fg = fg1,  bg = pur1}},
+    {0, 'TelescopeBorder',        {fg = fg5, bg = fg5}},
+    {0, 'TelescopeMatching',      {fg = fg5, bg = pur1}},
+    {0, 'TelescopeSelection',     {fg = fg1, bg = fg4}},
 
     {0, 'TelescopeTitle',         {fg = fg1, bg = pur1}},
     {0, 'TelescopeNormal',        {fg = fg1, bg = fg5}},
@@ -83,7 +83,7 @@ local set_hl_groups = function()
     {0, 'TelescopePreviewNormal', {fg = fg1, bg = fg5}},
 
     {0, 'TelescopePromptBorder',  {fg = fg4,  bg = fg4}},
-    {0, 'TelescopePromptCounter', {fg = fg2,  bg = _}},
+    {0, 'TelescopePromptCounter', {fg = fg1,  bg = _}},
     {0, 'TelescopePromptNormal',  {fg = fg1,  bg = fg4}},
     {0, 'TelescopePromptPrefix',  {fg = aqu1, bg = _}},
     {0, 'TelescopePromptTitle',   {fg = fg1,  bg = aqu1}},
