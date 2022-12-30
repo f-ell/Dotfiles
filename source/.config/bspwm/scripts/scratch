@@ -1,0 +1,34 @@
+#!/bin/sh
+
+# scratchpads are expected to have .hidden.sticky.floating flags
+
+# dependencies:
+#   coreutils:
+#     grep, tr
+#   other:
+#     bspc, kitty, wmctrl
+
+Scr=$1
+case $Scr in
+  File) Cmd="ranger $HOME";;
+  Calc) Cmd='bc -ql';;
+  *)    printf "${0##*/}: invalid scratchpad '$1'\n"; exit 1;;
+esac
+
+SetId()   { ScrId=`wmctrl -l | grep sp$Scr`; ScrId=${ScrId%% *}; }
+Toggle()  { bspc node $1 -g hidden -f; }
+
+# visible scratch, if any
+VisId=`bspc query -N -n .\!hidden.sticky.floating | tr [:upper:] [:lower:]`
+
+# query scratch window id
+SetId
+
+# start scratch unless running; sleep because wmctrl is not *blazingly fast*
+[ -z "$ScrId" ] && { (kitty -T sp$Scr $Cmd &); sleep 0.2; SetId; }
+
+# toggle visible if not target; prevents overlap
+[ -n "$VisId" ] && [ $VisId != $ScrId ] && Toggle $VisId
+
+# toggle scratch
+Toggle $ScrId

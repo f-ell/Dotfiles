@@ -88,15 +88,14 @@ picom --experimental-backends --unredir-if-possible --config $Piconf &
 feh --no-fehbg --bg-fill $Wallpaper &
 
 # SCRATCHPADS
-bspc rule -a *:*:sFiles hidden=on sticky=on locked=on state=floating rectangle=1280x720+320+180
-bspc rule -a *:*:sMusic hidden=on sticky=on locked=on state=floating rectangle=1280x720+320+180
-bspc rule -a *:*:sCalc  hidden=on sticky=on locked=on state=floating rectangle=300x400+50+50
+bspc rule -a *:*:spFile hidden=on sticky=on locked=on state=floating rectangle=1280x720+320+180
+bspc rule -a *:*:spCalc hidden=on sticky=on locked=on state=floating rectangle=300x400+50+50
 
 # FLOAT windows on desktop '^4' and force Steam games to desktop '^4'
 TargetDeskId=`bspc query -D -d '^4'`
-bspc subscribe node_add | while read NodeInfo; do
-  DeskId=${NodeInfo#node_add 0x* }; DeskId=${DeskId%% *}
-  NodeId=${NodeInfo##* }
+bspc subscribe node_add | while read REPLY; do
+  DeskId=${REPLY#node_add 0x* }; DeskId=${DeskId%% *}
+  NodeId=${REPLY##* }
 
   `xprop -id $NodeId | grep 'STEAM_GAME(CARDINAL)'` && bspc node $NodeId -d '^4'
   [ $TargetDeskId = $DeskId ] && bspc node $NodeId -t floating
