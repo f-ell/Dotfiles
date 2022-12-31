@@ -75,14 +75,14 @@ end
 -- misc
 F.nnmap('--', '<CMD>w<CR>')
 F.nnmap('-d', '<CMD>bd<CR>')
-F.nnmap('-w', function() wipe_buf() end)
-F.nnmap('<leader>tb',   function() tab_bufs() end)
+F.nnmap('-w',         function() wipe_buf() end)
+F.nnmap('<leader>tb', function() tab_bufs() end)
 
 F.nnmap('<leader>~',  'viw~')
 F.nnmap('<leader>w',  '<CMD>w !doas tee %<CR>')
 F.nnmap('<leader>x',  '<CMD>!chmod 744 %<CR>')
 F.nnmap('<leader>%%', '<CMD>so %<CR>')
-F.nnmap('<leader>%k', '<CMD>so ~/.config/nvim/lua/utils/keymaps.lua<CR>')
+F.nnmap('<leader>%k', '<CMD>so ~/.config/nvim/after/plugin/keymaps.lua<CR>')
 F.nnmap('<leader>%s', '<CMD>so ~/.config/nvim/lua/plugins/luasnip.lua<CR>')
 
 F.tnmap('<C-d>', '<C-\\><C-n>')
