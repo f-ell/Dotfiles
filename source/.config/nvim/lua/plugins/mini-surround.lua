@@ -2,7 +2,7 @@ return {
   'echasnovski/mini.surround',
   lazy    = true,
   -- event   = 'BufReadPre',
-  keys    = { '+s', 'cs', 'ds', '<leader>+s', '<leader>ns' },
+  keys    = { '<leader>s', 'cs', 'ds', '<leader><leader>s', '<leader>ns' },
   config  = function()
     require('mini.surround').setup({
       custom_surroundings = nil,
@@ -10,12 +10,12 @@ return {
       n_lines       = 20,
       search_method = 'cover_or_nearest',
       mappings = {
-        add       = '+s',
+        add       = '<leader>s',
         replace   = 'cs',
         delete    = 'ds',
         find      = '',
         find_left = '',
-        highlight = '<leader>+s',
+        highlight = '<leader><leader>s',
         update_n_lines = '<leader>ns',
 
         suffix_last = 'l',

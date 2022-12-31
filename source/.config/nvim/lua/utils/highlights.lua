@@ -6,8 +6,6 @@ local set_hl_groups = function()
   local fg3   = '#859289'
   local fg4   = '#374247'
   local fg5   = '#2a3439'
-  local ro    = '#f85552'
-  local git   = '#fca326'
 
   local aqu1 = '#83c092'
   local aqu2 = '#35a77c'
@@ -28,6 +26,9 @@ local set_hl_groups = function()
   local rep = yel1
   local ter = fg3
   local vis = red1
+
+  local ro  = '#f85552'
+  local git = '#fca326'
 
   local hls = {
     {0, 'blank', {fg = _, bg = _}},
@@ -61,15 +62,15 @@ local set_hl_groups = function()
     {0, 'TlSel',  {fg = fg5,  bg = gre1, bold = true}},
     {0, 'TlSelx', {fg = gre1, bg = _}},
 
+    -- Float
+    {0, 'NormalFloat',  {fg = _,    bg = _}},
+    {0, 'FloatBorder',  {fg = pur1, bg = _}},
+
     -- Diagnostics
     {0, 'HintText',     {sp = gre1, underline = true}},
     {0, 'InfoText',     {sp = blu1, underline = true}},
     {0, 'WarningText',  {sp = yel1, underline = true}},
     {0, 'ErrorText',    {sp = red1, underline = true}},
-
-    -- Float
-    {0, 'NormalFloat',  {fg = _,    bg = _}},
-    {0, 'FloatBorder',  {fg = pur1, bg = _}},
 
     -- Telescope
     {0, 'TelescopeBorder',        {fg = fg5, bg = fg5}},
@@ -88,6 +89,10 @@ local set_hl_groups = function()
     {0, 'TelescopePromptPrefix',  {fg = gre1, bg = _}},
     {0, 'TelescopePromptTitle',   {fg = fg5,  bg = gre1}},
 
+    -- Treesitter
+    {0, 'TreesitterContext',            {fg = _,    bg = fg4}},
+    {0, 'TreesitterContextLineNumber',  {fg = fg3,  bg = _}},
+
     -- Git(signs)
     {0, 'DiffText', {bg = '#3d5665', sp = blu1, undercurl = true}},
     {0, 'GSAdd',    {fg = gre1, bg = _}},
@@ -105,4 +110,5 @@ local set_hl_groups = function()
     vim.api.nvim_set_hl(hlgr[1], hlgr[2], hlgr[3])
   end
 end
+
 set_hl_groups()
