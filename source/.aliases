@@ -22,6 +22,11 @@ ud2() {
   fi
 }
 
+pac() {
+  [[ $1 =~ '[cC]' ]] && { pacman -Q | wc -l; return 0; }
+  pacman -$1 ${2:--}
+}
+
 
 alias -- -='cd -'
 alias code='code --extensions-dir '$XDG_DATA_HOME'/vscode'
@@ -33,9 +38,6 @@ alias el='exa -la'
 alias gff='nff ~/Git'
 alias gl='glow -p'
 alias hist='tail -10 <(history)'
-alias psearch='pacman -Ss $1'
-alias pquery='pacman -Q | rg -i $1'
-alias pcount='pacman -Q | wc -l'
 alias scripts='cd ~/Git/Scripts/'
 alias v=$EDITOR
 alias va=$EDITOR' ~/.aliases && source ~/.aliases'
