@@ -6,16 +6,17 @@ local F = require('utils.functions')
 -- vim.g['spelllang'] = 'de_de,en_us,en_gb'
 
 -- miscellaneous
-F.o('shell',    'dash')
-F.o('cdhome',   true)
-F.o('confirm',  true)
-F.o('showmode', false)
-F.o('cmdheight', 1)
+F.o('shell',      'dash')
+F.o('cdhome',     true)
+F.o('confirm',    true)
+F.o('showmode',   false)
+F.o('showcmd',    false)
+F.o('showbreak',  '> ')
+F.o('cmdheight',  1)
 F.c('filetype plugin indent on')
 
 F.o('list', true)
 F.o('listchars', 'eol:¬,tab:| ,lead:.,trail:~,nbsp:+')
--- F.o('completeopt', 'menu,preview,noinsert')
 
 F.o('cursorline', true)
 F.o('ignorecase', true)
