@@ -46,8 +46,17 @@ local set_hl_groups = function()
     {0, 'IncSearch',  {fg = fg5, bg = red1}},
     {0, 'CurSearch',  {link = 'IncSearch'}},
     {0, 'Substitute', {link = 'IncSearch'}},
-
     {0, 'Visual',     {link = 'IncSearch'}},
+
+    -- Diagnostics
+    {0, 'HintText',     {sp = gre1, underline = true}},
+    {0, 'InfoText',     {sp = blu1, underline = true}},
+    {0, 'WarningText',  {sp = yel1, underline = true}},
+    {0, 'ErrorText',    {sp = red1, underline = true}},
+
+    -- Float
+    {0, 'NormalFloat',  {fg = _,    bg = _}},
+    {0, 'FloatBorder',  {fg = pur1, bg = _}},
 
     -- Statusline
     {0, 'SlNo',   {fg = fg1,  bg = _}},
@@ -62,15 +71,21 @@ local set_hl_groups = function()
     {0, 'TlSel',  {fg = fg5,  bg = gre1, bold = true}},
     {0, 'TlSelx', {fg = gre1, bg = _}},
 
-    -- Float
-    {0, 'NormalFloat',  {fg = _,    bg = _}},
-    {0, 'FloatBorder',  {fg = pur1, bg = _}},
+    -- Misc
+    {0, 'SpellBad',   {sp = red1, undercurl = true}},
 
-    -- Diagnostics
-    {0, 'HintText',     {sp = gre1, underline = true}},
-    {0, 'InfoText',     {sp = blu1, underline = true}},
-    {0, 'WarningText',  {sp = yel1, underline = true}},
-    {0, 'ErrorText',    {sp = red1, underline = true}},
+  -- PLUGINS --
+    -- Git(signs)
+    {0, 'DiffText', {bg = '#3d5665', sp = blu1, undercurl = true}},
+    {0, 'GSAdd',    {fg = gre1, bg = _}},
+    {0, 'GSCha',    {fg = blu1, bg = _}},
+    {0, 'GSDel',    {fg = red1, bg = _}},
+    {0, 'GSAddNr',  {link = 'GitsignsAddNr'}},
+    {0, 'GSAddLn',  {link = 'GitSignsAddLn'}},
+    {0, 'GSChaNr',  {link = 'GitSignsChangeNr'}},
+    {0, 'GSChaLn',  {link = 'GitSignsChangeLn'}},
+    {0, 'GSDelNr',  {link = 'GitSignsDeleteNr'}},
+    {0, 'GSDelLn',  {link = 'GitSignsDeleteLn'}},
 
     -- Telescope
     {0, 'TelescopeBorder',        {fg = fg5, bg = fg5}},
@@ -92,18 +107,6 @@ local set_hl_groups = function()
     -- Treesitter
     {0, 'TreesitterContext',            {fg = _,    bg = fg4}},
     {0, 'TreesitterContextLineNumber',  {fg = fg3,  bg = _}},
-
-    -- Git(signs)
-    {0, 'DiffText', {bg = '#3d5665', sp = blu1, undercurl = true}},
-    {0, 'GSAdd',    {fg = gre1, bg = _}},
-    {0, 'GSCha',    {fg = blu1, bg = _}},
-    {0, 'GSDel',    {fg = red1, bg = _}},
-    {0, 'GSAddNr',  {link = 'GitsignsAddNr'}},
-    {0, 'GSAddLn',  {link = 'GitSignsAddLn'}},
-    {0, 'GSChaNr',  {link = 'GitSignsChangeNr'}},
-    {0, 'GSChaLn',  {link = 'GitSignsChangeLn'}},
-    {0, 'GSDelNr',  {link = 'GitSignsDeleteNr'}},
-    {0, 'GSDelLn',  {link = 'GitSignsDeleteLn'}},
   }
 
   for _, hlgr in pairs(hls) do
