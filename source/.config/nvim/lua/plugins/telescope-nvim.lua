@@ -84,8 +84,6 @@ return {
 
         mappings = {
           i = {
-            ['<C-u>'] = false,
-            ['<C-p>'] = tlsal.toggle_preview,
             ['<CR>']  = 'select_default',
             ['<C-s>'] = 'select_horizontal',
             ['<C-v>'] = 'select_vertical',
@@ -93,11 +91,14 @@ return {
             ['<C-c>'] = 'close',
             ['<C-j>'] = 'move_selection_next',
             ['<C-k>'] = 'move_selection_previous',
-            ['<C-b>'] = 'preview_scrolling_up',
-            ['<C-f>'] = 'preview_scrolling_down',
+            ['<C-b>'] = 'results_scrolling_up',
+            ['<C-f>'] = 'results_scrolling_down',
+            ['<C-p>'] = tlsal.toggle_preview,
+            ['<C-u>'] = 'preview_scrolling_up',
+            ['<C-d>'] = 'preview_scrolling_down',
           },
           n = {
-            ['<C-p>'] = tlsal.toggle_preview,
+            ['<ESC>'] = false,
             ['<CR>']  = 'select_default',
             ['<C-s>'] = 'select_horizontal',
             ['<C-v>'] = 'select_vertical',
@@ -105,11 +106,14 @@ return {
             ['<C-c>'] = 'close',
             ['j']     = 'move_selection_next',
             ['k']     = 'move_selection_previous',
+            ['<C-b>'] = 'results_scrolling_up',
+            ['<C-f>'] = 'results_scrolling_down',
+            ['<C-p>'] = tlsal.toggle_preview,
+            ['<C-u>'] = 'preview_scrolling_up',
+            ['<C-d>'] = 'preview_scrolling_down',
             ['gg']    = 'move_to_top',
             ['G']     = 'move_to_bottom',
             ['M']     = 'move_to_middle',
-            ['<C-b>'] = 'preview_scrolling_up',
-            ['<C-f>'] = 'preview_scrolling_down',
           }
         }
       },
