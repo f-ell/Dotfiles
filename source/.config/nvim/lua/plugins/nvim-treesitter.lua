@@ -4,7 +4,6 @@ return {
   event   = { 'BufReadPost', 'BufNewFile' },
   dependencies = {
     'JoosepAlviste/nvim-ts-context-commentstring',
-    'nvim-treesitter/nvim-treesitter-refactor',
     {
       'nvim-treesitter/nvim-treesitter-context',
       config = {
@@ -30,8 +29,6 @@ return {
         enable          = true,
         enable_autocmd  = false,
       },
-
-      refactor = { highlight_current_scope = { enable = true } }
     })
   end
 }
