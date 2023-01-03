@@ -42,6 +42,7 @@ alias scripts='cd ~/Git/Scripts/'
 alias v=$EDITOR
 alias va=$EDITOR' ~/.aliases && source ~/.aliases'
 alias yeet='doas pacman -Qtdq | doas pacman -Rns -'
+alias xo='xdg-open'
 alias zt='zathura --fork'
 
 
