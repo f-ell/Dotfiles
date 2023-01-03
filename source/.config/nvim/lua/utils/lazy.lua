@@ -21,7 +21,7 @@ require('lazy').setup('plugins', {
   root        = std('data') .. '/lazy',
   lockfile    = std('data') .. '/lazy/lazy-lock.json',
   install     = { missing = true, colorscheme = { 'everforest' } },
-  checker     = { enabled = true, frequency   = 86400 },
+  checker     = { enabled = false, frequency  = 86400 },
   ui          = { border = 'rounded' },
   performance = {
     cache = {
