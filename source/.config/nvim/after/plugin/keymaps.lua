@@ -1,19 +1,20 @@
 local F = require('utils.functions')
+local v = vim
 
 
 local wipe_buf = function()
-  if vim.fn.tabpagenr('$') == 1 then  vim.cmd('enew | bw #')
-  else                                vim.cmd('bw') end
+  if v.fn.tabpagenr('$') == 1 then  v.cmd('enew | bw #')
+  else                              v.cmd('bw') end
 end
 
 
 local tab_bufs = function()
   -- loops over tabs - checks if any window holds target buffer in any tab
   local haswindow = function(target_bufnr)
-    for i = 1, vim.fn.tabpagenr('$') do
-      local tabbuflist = vim.fn.tabpagebuflist(i)
+    for i = 1, v.fn.tabpagenr('$') do
+      local tabbuflist = v.fn.tabpagebuflist(i)
       for j = 1, #(tabbuflist) do
-        if vim.fn.bufnr(tabbuflist[j]) == target_bufnr then return true end
+        if v.fn.bufnr(tabbuflist[j]) == target_bufnr then return true end
       end
     end
 
@@ -21,51 +22,97 @@ local tab_bufs = function()
   end
 
   -- loop over buffers - check if buffer should be split to new tab
-  for _, v in pairs(vim.api.nvim_list_bufs()) do
-    local bufname = vim.fn.bufname(v)
+  for _, b in pairs(v.api.nvim_list_bufs()) do
+    local bufname = v.fn.bufname(b)
 
-    if    vim.fn.buflisted(v) == 1
-      -- and vim.fn.bufloaded(v) == 1
-      and not haswindow(v)
+    if    v.fn.buflisted(b) == 1
+      -- and v.fn.bufloaded(v) == 1
+      and not haswindow(b)
       and bufname ~= '' then
-      vim.cmd('tabe '..bufname)
+      v.cmd('tabe '..bufname)
     end
   end
 
-  vim.cmd('tablast')
+  v.cmd('tablast')
 end
 
 
 local terminal = function()
   local bufname     = 'term_buffer'
-  local termheight  = vim.api.nvim_win_get_height(0) / 4
+  local termheight  = v.api.nvim_win_get_height(0) / 4
 
   -- if focused -> close
-  if string.find(vim.api.nvim_buf_get_name(0), bufname) then
-    return vim.api.nvim_command('close')
+  if string.find(v.api.nvim_buf_get_name(0), bufname) then
+    return v.api.nvim_command('close')
   end
 
-  local bufnr = vim.fn.bufnr(bufname)
+  local bufnr = v.fn.bufnr(bufname)
   -- buffer doesn't exist -> create buf
   if bufnr == -1 then
-    bufnr = vim.api.nvim_create_buf(false, false)
+    bufnr = v.api.nvim_create_buf(false, false)
     if bufnr == 0 then
       return print('Fatal error while spawing new terminal buffer!')
     end
   -- buffer exists ->
   else
     -- window exists? -> focus
-    local winid = vim.fn.bufwinid(bufnr)
-    if winid ~= -1 then return vim.fn.win_gotoid(winid) end
+    local winid = v.fn.bufwinid(bufnr)
+    if winid ~= -1 then return v.fn.win_gotoid(winid) end
   end
 
   -- window doesn't exist? -> split
-  vim.api.nvim_command('bot sb'..bufnr..' | resize '..termheight)
+  v.api.nvim_command('bot sb'..bufnr..' | resize '..termheight)
 
   -- window is empty -> open new terminal and rename
-  if vim.fn.bufname(bufnr) == '' then
-    vim.fn.termopen('/bin/zsh')
-    vim.api.nvim_command('0f | f '..bufname)
+  if v.fn.bufname(bufnr) == '' then
+    v.fn.termopen('/bin/zsh')
+    v.api.nvim_command('0f | f '..bufname)
+  end
+end
+
+
+local polymerize = function()
+  local ft    = F.o('filetype')
+  local dir   = os.getenv('HOME')..'/Media/Pictures/Screenshots/Code/'
+  local file  = 'silicon_'..os.date('%Y%m%d-%H%M%S')..'.png'
+  local args  = {
+    '-l '..ft,
+    '-o '..dir..file,
+    '-f \'Ellograph CF\'',
+    '-b \'#7fbbb3\'',
+    '--shadow-offset-x 4',
+    '--shadow-offset-y 4',
+    '--shadow-blur-radius 6',
+    '--shadow-color \'#374247\'',
+    '--no-window-controls',
+    '--theme everforest_dark'
+  }
+
+  -- get selection contents
+  local s_ln  = v.fn.getpos('v')[2]
+  local e_ln  = v.fn.getpos('.')[2]
+  local sel   = s_ln < e_ln
+    and v.fn.getline(s_ln, e_ln)
+    or  v.fn.getline(e_ln, s_ln)
+
+  -- escape necessary substrings
+  for i, s in pairs(sel) do
+    local mut = string.gsub(s, '"', '\\"')
+          mut = string.gsub(mut, '`', '\\`')
+          mut = string.gsub(mut, '%$', '\\$')
+          mut = string.gsub(mut, '%%', '%%%%')
+    sel[i] = mut
+  end
+
+  -- run silicon
+  local ret = os.execute(
+    'printf "'..table.concat(sel, '\n')..'" | silicon '..table.concat(args, ' ')
+  )
+
+  if ret == 0 then
+    print('screenshot saved as '..file)
+  else
+    print('fatal: couldn\'t create screenshot')
   end
 end
 
@@ -77,6 +124,7 @@ F.nnmap('--', '<CMD>w<CR>')
 F.nnmap('-d', '<CMD>bd<CR>')
 F.nnmap('-w',         function() wipe_buf() end)
 F.nnmap('<leader>tb', function() tab_bufs() end)
+F.vnmap('<leader>p',  function() polymerize() end)
 
 F.nnmap('<leader>~',  'viw~')
 F.nnmap('<leader>w',  '<CMD>w !doas tee %<CR>')
