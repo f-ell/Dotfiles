@@ -1,6 +1,6 @@
 local M   = {}
 local v   = vim
-local va  = vim.api
+local va  = v.api
 
 
 M.c = function(command)
@@ -8,11 +8,19 @@ M.c = function(command)
 end
 
 M.o = function(name, value)
-  v.opt[name] = value
+  if value == nil then
+    return v.o[name]
+  else
+    v.opt[name] = value
+  end
 end
 
 M.g = function(name, value)
-  v.g[name] = value
+  if value == nil then
+    return v.g[name]
+  else
+    v.g[name] = value
+  end
 end
 
 
