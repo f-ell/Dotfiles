@@ -97,9 +97,9 @@ local polymerize = function()
 
   -- escape necessary substrings
   for i, s in pairs(sel) do
-    local mut = string.gsub(s, '"', '\\"')
+    local mut = string.gsub(s, '\\', '\\\\\\\\') -- ???
+          mut = string.gsub(mut, '"', '\\"')
           mut = string.gsub(mut, '`', '\\`')
-          mut = string.gsub(mut, '\\%$', '$')
           mut = string.gsub(mut, '%$', '\\$')
           mut = string.gsub(mut, '%%', '%%%%')
     sel[i] = mut
