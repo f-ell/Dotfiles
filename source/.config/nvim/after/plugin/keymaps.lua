@@ -99,6 +99,7 @@ local polymerize = function()
   for i, s in pairs(sel) do
     local mut = string.gsub(s, '"', '\\"')
           mut = string.gsub(mut, '`', '\\`')
+          mut = string.gsub(mut, '\\%$', '$')
           mut = string.gsub(mut, '%$', '\\$')
           mut = string.gsub(mut, '%%', '%%%%')
     sel[i] = mut
