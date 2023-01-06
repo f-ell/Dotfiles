@@ -5,7 +5,7 @@ local hl_no = '%#SlNo#'; local hl_it = '%#SlIt#'
 
 
 -- auxiliary functions
-local get_fh = function(tbl, err_ign, ret_nil)
+local open = function(tbl, err_ign, ret_nil)
   if err_ign then table.insert(tbl, '2>/dev/null') end
 
   local fh = io.popen(table.concat(tbl, ' '), 'r')
@@ -19,8 +19,18 @@ local read = function(fh)
 end
 
 
+local resolve_dir = function()
+  local buf = v.fn.bufname()
+  local res = v.loop.fs_readlink(buf)
+  local ret = res ~= '' and res or buf
+  return v.fs.dirname(ret)
+end
+
+
 local is_vcs = function()
-  local fh  = get_fh({ 'git', 'rev-parse', '--is-inside-work-tree' }, true, false)
+  local fh  = open({
+    'git', '-C', resolve_dir(),
+    'rev-parse', '--is-inside-work-tree' }, true, false)
   local vcs = read(fh)
 
   if vcs == 'true' then return true
@@ -51,21 +61,23 @@ local get_mode_colour = function()
 end
 
 
--- TODO: test if % is symlink and resolve directory, then test git dir
 local get_git = function()
-  local fh; local head = ''
   if not is_vcs() then return '' end
 
-  fh    = get_fh({ 'git', 'branch', '--show-current' }, false, '')
+  local fh; local head = ''; local dir = resolve_dir()
+
+  fh    = open({ 'git', '-C', dir, 'branch', '--show-current' }, false, '')
   head  = read(fh)
 
   if head == '' then
-    fh    = get_fh({ 'git', 'describe', '--tags', '--exact-match', '@' }, true, '')
+    fh    = open({
+      'git', '-C', dir,
+      'describe', '--tags', '--exact-match', '@' }, true, '')
     head  = 'tag:'..read(fh)
   end
 
   if head == 'tag:' then
-    fh    = get_fh({ 'git', 'rev-parse', '@' }, false, '')
+    fh    = open({ 'git', '-C', dir, 'rev-parse', '@' }, false, '')
     head  = string.sub(read(fh), 1, 7)
   end
   head = strf(' %s %s%s', '%#SlGit#', head, hl_no)
@@ -77,7 +89,9 @@ end
 local get_diff = function()
   if not is_vcs() then return '' end
 
-  local fh      = get_fh({ 'git', 'diff', '--numstat', v.fn.bufname() }, true, '')
+  local fh      = open({
+    'git', '-C', resolve_dir(),
+    'diff', '--numstat', v.fn.bufname() }, true, '')
   local numstat = read(fh)
 
   if numstat == '' then return '%#neutral# +0 -0' end
