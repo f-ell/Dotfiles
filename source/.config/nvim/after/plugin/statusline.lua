@@ -19,11 +19,16 @@ local read = function(fh)
 end
 
 
+local resolve_file = function()
+  local buf   = v.fn.bufname()
+  local res   = v.loop.fs_readlink(buf)
+  return res ~= '' and v.fs.basename(res) or buf
+end
+
 local resolve_dir = function()
   local buf = v.fn.bufname()
   local res = v.loop.fs_readlink(buf)
-  local ret = res ~= '' and res or buf
-  return v.fs.dirname(ret)
+  return v.fs.dirname(res ~= '' and res or buf)
 end
 
 
@@ -91,7 +96,7 @@ local get_diff = function()
 
   local fh      = open({
     'git', '-C', resolve_dir(),
-    'diff', '--numstat', v.fn.bufname() }, true, '')
+    'diff', '--numstat', resolve_file() }, true, '')
   local numstat = read(fh)
 
   if numstat == '' then return '%#neutral# +0 -0' end
