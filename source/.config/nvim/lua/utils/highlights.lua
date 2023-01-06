@@ -31,7 +31,8 @@ local set_hl_groups = function()
   local git = '#fca326'
 
   local hls = {
-    {0, 'blank', {fg = _, bg = _}},
+    {0, 'blank',    {fg = _,    bg = _}},
+    {0, 'neutral',  {fg = fg3,  bg = _}},
 
     -- Modes
     {0, 'modeC',  {fg = fg5, bg = cmd}}, {0, 'modeCx',  {fg = cmd, bg = _}},
@@ -64,6 +65,8 @@ local set_hl_groups = function()
     {0, 'SlRo',   {fg = fg1,  bg = ro,  bold    = true}},
     {0, 'SlRox',  {fg = ro,   bg = _,   bold    = true}},
     {0, 'SlGit',  {fg = git,  bg =  _,  italic  = true}},
+    {0, 'SlGitA', {fg = gre1, bg =  _}},
+    {0, 'SlGitD', {fg = red1, bg =  _}},
 
     -- Tabline
     {0, 'TlNor',  {fg = fg3,  bg = fg4}},
