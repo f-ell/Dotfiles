@@ -5,11 +5,23 @@ local hl_no = '%#SlNo#'; local hl_it = '%#SlIt#'
 
 
 -- auxiliary functions
-local is_vcs = function()
-  local fh = io.popen('git rev-parse --is-inside-work-tree 2>/dev/null', 'r')
-  if fh == nil then return false end
+local get_fh = function(tbl, err_ign, ret_nil)
+  if err_ign then table.insert(tbl, '2>/dev/null') end
 
-  local vcs = F.chop(fh:read('*a')); fh:close()
+  local fh = io.popen(table.concat(tbl, ' '), 'r')
+  if fh == nil then return ret_nil else return fh end
+end
+
+local read = function(fh)
+  local ret = F.chop(fh:read('*a'))
+  fh:close()
+  return ret
+end
+
+
+local is_vcs = function()
+  local fh  = get_fh({ 'git', 'rev-parse', '--is-inside-work-tree' }, true, false)
+  local vcs = read(fh)
 
   if vcs == 'true' then return true
   else                  return false end
@@ -42,24 +54,19 @@ end
 -- TODO: test if % is symlink and resolve directory, then test git dir
 local get_git = function()
   local fh; local head = ''
-
   if not is_vcs() then return '' end
 
-  fh    = io.popen('git branch --show-current', 'r')
-  if fh == nil then return '' end
-  head  = F.chop(fh:read('*a')); fh:close()
+  fh    = get_fh({ 'git', 'branch', '--show-current' }, false, '')
+  head  = read(fh)
 
   if head == '' then
-    fh    = io.popen('git describe --tags @', 'r')
-    if fh == nil then return '' end
-    head  = 'tag:'..F.chop(fh:read('*a')); fh:close()
+    fh    = get_fh({ 'git', 'describe', '--tags', '--exact-match', '@' }, true, '')
+    head  = 'tag:'..read(fh)
   end
 
-  if head == '' then
-    fh    = io.popen('git rev-parse @', 'r')
-    if fh == nil then return '' end
-    head  = fh:read('*a'); fh:close()
-    head  = head:sub(1, 7)
+  if head == 'tag:' then
+    fh    = get_fh({ 'git', 'rev-parse', '@' }, false, '')
+    head  = string.sub(read(fh), 1, 7)
   end
   head = strf(' %s %s%s', '%#SlGit#', head, hl_no)
 
@@ -70,12 +77,10 @@ end
 local get_diff = function()
   if not is_vcs() then return '' end
 
-  local fh = io.popen('git diff --numstat '..v.fn.bufname()..' 2>/dev/null')
-  if fh == nil then return '' end
+  local fh      = get_fh({ 'git', 'diff', '--numstat', v.fn.bufname() }, true, '')
+  local numstat = read(fh)
 
-  local numstat = fh:read('*a'); fh:close()
   if numstat == '' then return '%#neutral# +0 -0' end
-
   local add = string.match(numstat, '%d+')
   local del = string.match(numstat, '%d+', string.len(add) + 1)
 
