@@ -1,25 +1,26 @@
 local F     = require('utils.functions')
+local v     = vim
 local strf  = string.format
 
 
 local tabline = function()
   local t = ''
 
-  for i = 1, vim.fn.tabpagenr('$') do
-    local winnr = vim.fn.tabpagewinnr(i)
-    local bufnr = vim.fn.tabpagebuflist(i)[winnr]
+  for i = 1, v.fn.tabpagenr('$') do
+    local winnr = v.fn.tabpagewinnr(i)
+    local bufnr = v.fn.tabpagebuflist(i)[winnr]
 
-    local modified = vim.api.nvim_buf_get_option(bufnr, 'modified')
+    local modified = v.api.nvim_buf_get_option(bufnr, 'modified')
     if modified then  modified = ' '
     else              modified = '' end
 
-    local bufname = vim.fn.bufname(bufnr)
+    local bufname = v.fn.bufname(bufnr)
     if bufname == '' then bufname = '[null]'
     else                  bufname = string.gsub(bufname, '.*/', '') end
 
     -- set highlight groups
     local hl_type = 'Nor'
-    if i == vim.fn.tabpagenr() then hl_type = 'Sel' end
+    if i == v.fn.tabpagenr() then hl_type = 'Sel' end
 
     -- build tabline
     local hl_main = strf('%%#Tl%s#',  hl_type)
