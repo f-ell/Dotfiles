@@ -29,11 +29,6 @@ if [[ -o login ]]; then
   unset Bin Perl Misc
 
   [[ -f $HOME'/.env_setup' ]] && . $HOME'/.env_setup'
-
-  export FZF_DEFAULT_COMMAND='fd -E .cache -tf -H -d10 .'
-  export FZF_DEFAULT_OPTS='-i --tiebreak=begin,length --scroll-off=1 --reverse --prompt="$ " --height=25% --color=bw'
-  # Firefox acts up when killed by bspwm :))
-  export MOZ_CRASHREPORTER_DISABLE=1
 fi
 ### END LOGIN ONLY ###
 
