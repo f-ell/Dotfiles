@@ -1,20 +1,22 @@
-Err() { printf 'Error: %s\n' "$1" 1>&2 }
+Err() { printf '%s: %s\n' "$1" "$2" 1>&2 }
 
 ping() {
   /usr/bin/ping -c1 ${1:-archlinux.org}
 }
 
 owns() {
-  [[ -z $1 ]] && { Err 'No command specified!'; return 1; }
+  Fn='owns'
+  [[ -z $1 ]] && { Err $Fn 'No command specified!'; return 1; }
   Program=`command -v $1`
   [[ -z $Program ]] \
-    && { Err "$1 not found!"; return 1; } \
+    && { Err $Fn "$1 not found!"; return 1; } \
     || pacman -Qo $Program
 }
 
 ud2() {
+  Fn='ud2'
   Dev=/dev/$1
-  [[ -b $Dev ]] || { Err "${1:--} is not a valid blockdev."; return 1; }
+  [[ -b $Dev ]] || { Err $Fn "${1:--} is not a valid blockdev."; return 1; }
   if [[ -z `udisksctl info -b $Dev | grep -oP '^\s*MountPoints:\s+\K.*$'` ]]; then
     udisksctl mount -b $Dev
   else
