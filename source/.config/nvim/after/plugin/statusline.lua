@@ -5,8 +5,8 @@ local hl_no = '%#SlNo#'; local hl_it = '%#SlIt#'
 
 
 -- auxiliary functions
-local open = function(tbl, err_ign, ret_nil)
-  if err_ign then table.insert(tbl, '2>/dev/null') end
+local open = function(tbl, err_null, ret_nil)
+  if err_null then table.insert(tbl, '2>/dev/null') end
 
   local fh = io.popen(table.concat(tbl, ' '), 'r')
   if fh == nil then return ret_nil else return fh end
@@ -99,7 +99,17 @@ local get_diff = function()
     'diff', '--numstat', resolve_file() }, true, '')
   local numstat = read(fh)
 
-  if numstat == '' then return ' %#neutral#+0 -0' end
+  if numstat == '' then
+    local ret = '+0 -0'
+
+    fh = open({
+      'git', '-C', resolve_dir(),
+      'ls-files', '--error-unmatch', resolve_file() }, true, '')
+    if read(fh) == '' then ret = 'untracked' end
+
+    return ' %#neutral#'..ret
+  end
+
   local add = string.match(numstat, '%d+')
   local del = string.match(numstat, '%d+', string.len(add) + 1)
 
