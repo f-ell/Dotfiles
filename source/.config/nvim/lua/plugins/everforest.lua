@@ -4,6 +4,7 @@ return {
   config    = function()
     local F = require('utils.functions')
 
+    F.o('background', 'dark')
     F.g('everforest_background',              'soft')
     F.g('everforest_enable_bold',             '1')
     F.g('everforest_enable_italic',           '1')
