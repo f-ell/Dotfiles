@@ -1,10 +1,8 @@
 return {
   'L3MON4D3/LuaSnip',
-  lazy  = true,
-  -- event = 'InsertEnter',
-  key   = '_', -- implies snippet leader '_'
-  dependencies  = { 'hrsh7th/nvim-cmp', 'saadparwaiz1/cmp_luasnip' },
-  config        = function()
+  lazy  = true, -- required as dependency by nvim-cmp in cmp_bootstrap.lua
+  dependencies = 'saadparwaiz1/cmp_luasnip',
+  config = function()
     local ls    = require('luasnip')
     local types = require('luasnip.util.types')
     local F     = require('utils.functions')

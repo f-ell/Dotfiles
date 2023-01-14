@@ -5,7 +5,8 @@ return {
   priority      = 1000,
   dependencies  = {
     'hrsh7th/cmp-buffer',
-    { 'hrsh7th/cmp-nvim-lua', ft = 'lua' }
+    { 'hrsh7th/cmp-nvim-lua', ft = 'lua' },
+    'L3MON4D3/LuaSnip'
   },
   config = function()
     local icons = {
