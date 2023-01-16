@@ -56,8 +56,19 @@ local set_hl_groups = function()
     {0, 'ErrorText',    {sp = red1, underline = true}},
 
     -- Float
-    {0, 'NormalFloat',  {fg = _,    bg = _}},
-    {0, 'FloatBorder',  {fg = pur1, bg = _}},
+    {0, 'NormalFloat',    {fg = _,    bg = _}},
+    {0, 'FloatBorder',    {fg = fg2,  bg = _}},
+
+    {0, 'NeutralFloat',   {fg = fg3,  bg = _}},
+    {0, 'ErrorFloat',     {fg = red1, bg = _}},
+    {0, 'WarningFloat',   {fg = yel1, bg = _}},
+    {0, 'HintFloat',      {fg = blu1, bg = _}},
+    {0, 'InfoFloat',      {fg = gre1, bg = _}},
+    {0, 'NeutralFloatSp', {fg = fg3,  bg = _, italic = true, bold = true}},
+    {0, 'ErrorFloatSp',   {fg = red1, bg = _, italic = true, bold = true}},
+    {0, 'WarningFloatSp', {fg = yel1, bg = _, italic = true, bold = true}},
+    {0, 'HintFloatSp',    {fg = blu1, bg = _, italic = true, bold = true}},
+    {0, 'InfoFloatSp',    {fg = gre1, bg = _, italic = true, bold = true}},
 
     -- Statusline
     {0, 'SlNo',   {fg = fg1,  bg = _}},
