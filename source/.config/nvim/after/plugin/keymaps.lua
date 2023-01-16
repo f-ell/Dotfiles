@@ -9,7 +9,7 @@ end
 
 
 local tab_bufs = function()
-  -- loops over tabs - checks if any window holds target buffer in any tab
+  -- loop over tabs - check if any window holds target buffer in any tab
   local haswindow = function(target_bufnr)
     for i = 1, v.fn.tabpagenr('$') do
       local tabbuflist = v.fn.tabpagebuflist(i)
@@ -121,6 +121,7 @@ end
 
 
 -- misc
+F.nnmap('<F12>', '<CMD>syntax sync fromstart<CR>')
 F.nnmap('--', '<CMD>w<CR>')
 F.nnmap('-d', '<CMD>bd<CR>')
 F.nnmap('-w',         function() wipe_buf() end)
