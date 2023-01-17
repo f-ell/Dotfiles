@@ -50,10 +50,10 @@ local set_hl_groups = function()
     {0, 'Visual',     {link = 'IncSearch'}},
 
     -- Diagnostics
-    {0, 'HintText',     {sp = gre1, underline = true}},
-    {0, 'InfoText',     {sp = blu1, underline = true}},
-    {0, 'WarningText',  {sp = yel1, underline = true}},
     {0, 'ErrorText',    {sp = red1, underline = true}},
+    {0, 'WarningText',  {sp = yel1, underline = true}},
+    {0, 'HintText',     {sp = blu1, underline = true}},
+    {0, 'InfoText',     {sp = gre1, underline = true}},
 
     -- Float
     {0, 'NormalFloat',    {fg = _,    bg = _}},

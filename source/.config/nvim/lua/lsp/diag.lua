@@ -8,6 +8,9 @@ local strlen = string.len
 
 local M = {}
 
+
+
+
 -- auxiliary
 local get_longest_line = function(tbl)
   local max = 0
@@ -17,6 +20,7 @@ local get_longest_line = function(tbl)
   end
   return max
 end
+
 
 local preprocess = function(d)
   local tbl   = {}
@@ -38,6 +42,7 @@ local preprocess = function(d)
   return tbl
 end
 
+
 local format_diag = function(t, d)
   local str
 
@@ -52,6 +57,7 @@ local format_diag = function(t, d)
   return str
 end
 
+
 local format_header = function(type, d)
   local d_icon = { '', '', '', '' }
 
@@ -64,6 +70,7 @@ local format_header = function(type, d)
 
   return str
 end
+
 
 local set_highlights = function(bufnr, t, d)
   local neutral     = 'NeutralFloat'
@@ -102,6 +109,7 @@ local set_highlights = function(bufnr, t, d)
     end
   end
 end
+
 
 local render = function(t, d)
   local lines = {}
@@ -151,5 +159,6 @@ M.get_line = function()
   local d     = vd.get(0, { lnum = vf.line('.') - 1 })
   if    d[1] ~= nil then render('line', d) end
 end
+
 
 return M

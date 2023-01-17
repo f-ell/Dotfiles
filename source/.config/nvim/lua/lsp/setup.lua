@@ -1,6 +1,6 @@
 local lsp = require('lspconfig')
 local F   = require('utils.functions')
-local D   = require('lsp.float_diag')
+local D   = require('lsp.diag')
 local v   = vim
 
 local servers = {
