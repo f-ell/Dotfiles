@@ -128,19 +128,20 @@ local render = function(t, d)
   table.insert(lines, 1, format_header(t, processed[1]))
 
   -- do floaty stuff
-  local bufnr = v.lsp.util.open_floating_preview(lines, 'off', {
-    focusable = true,
-    wrap      = true,
-    wrap_at   = max_width,
-    max_width = max_width,
+  v.defer_fn(function()
+    local bufnr = v.lsp.util.open_floating_preview(lines, 'off', {
+      focusable = true,
+      wrap      = true,
+      wrap_at   = max_width,
+      max_width = max_width,
 
-    style     = 'minimal',
-    border    = 'rounded',
+      style     = 'minimal',
+      border    = 'rounded',
 
-    close_events = { 'InsertEnter' } -- CursorMoved instantly hides window?
-  })
-
-  set_highlights(bufnr, t, processed)
+      close_events = { 'CursorMoved', 'InsertEnter' }
+    })
+    set_highlights(bufnr, t, processed)
+  end, 0)
 end
 
 
