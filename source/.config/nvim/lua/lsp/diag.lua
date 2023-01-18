@@ -9,8 +9,6 @@ local strlen = string.len
 local M = {}
 
 
-
-
 -- auxiliary
 local get_longest_line = function(tbl)
   local max = 0
@@ -22,20 +20,20 @@ local get_longest_line = function(tbl)
 end
 
 
-local preprocess = function(d)
-  local tbl   = {}
-  local type  = { 'Error', 'Warn', 'Info', 'Hint' }
+local preprocess = function(type, diag)
+  local tbl       = { hdr = '', type = type, data = {} }
+  local severity  = { 'Error', 'Warn', 'Info', 'Hint' }
 
-  for i = 1, #d do
-    table.insert(tbl, {
-      msg     = d[i].message,
-      src     = F.chop(d[i].source),
-      sev     = d[i].severity,
-      sev_str = type[d[i].severity],
+  for i = 1, #diag do
+    table.insert(tbl.data, {
+      msg     = diag[i].message,
+      src     = F.chop(diag[i].source),
+      sev     = diag[i].severity,
+      sev_str = severity[diag[i].severity],
 
-      ln    = d[i].lnum+1,
-      col   = d[i].col+1,
-      ecol  = d[i].end_col,
+      ln    = diag[i].lnum+1,
+      col   = diag[i].col+1,
+      ecol  = diag[i].end_col,
     })
   end
 
@@ -43,93 +41,102 @@ local preprocess = function(d)
 end
 
 
-local format_diag = function(t, d)
-  local str
+local format_contents = function(diag)
+  local ret   = {}
+  local data  = diag.data
 
-  if t == 'dir' then
-    str = d.msg..' ('..d.src..')'
-  else
-    local col
-    col = d.col <= d.ecol and d.col..'-'..d.ecol or d.col
-    str = d.msg..' '..'col:'..col
+  local str
+  for i = 1, #data do
+    if diag.type == 'dir' then
+      str = data[i].msg..' ('..data[i].src..')'
+    else
+      local col = data[i].col <= data[i].ecol
+        and data[i].col..'-'..data[i].ecol or data[i].col
+      str = data[i].msg..' '..'col:'..col
+    end
+
+    table.insert(ret, str)
   end
 
-  return str
+  return ret
 end
 
 
-local format_header = function(type, d)
-  local d_icon = { '', '', '', '' }
+local generate_header = function(diag)
+  local icon = { '', '', '', '' }
+  local data = diag.data[1]
 
   local str
-  if type == 'dir' then
-    str = d_icon[d.sev]..' '..d.sev_str..' at <'..d.ln..':'..d.col..'>'
+  if diag.type == 'dir' then
+    str = icon[data.sev]..' '..data.sev_str..' at <'..data.ln..':'..data.col..'>'
   else
-    str = ' Diagnostics in line <'..d.ln..'>'
+    str = ' Diagnostics in line <'..data.ln..'>'
   end
-
-  return str
+  -- return str
+  diag.hdr = str
 end
 
 
-local set_highlights = function(bufnr, t, d)
-  local neutral     = 'NeutralFloat'
-  local neutral_sp  = 'NeutralFloatSp'
-  local diag_hl_hdr = { 'ErrorFloatSp', 'WarningFloatSp', 'InfoFloatSp',  'HintFloatSp' }
-  local diag_hl_bdy = { 'ErrorFloat',   'WarningFloat',   'InfoFloat',    'HintFloat' }
+local set_highlights = function(bufnr, diag)
+  local hl_ntl    = 'NeutralFloat'
+  local hl_ntl_sp = 'NeutralFloatSp'
+  local hl_hdr = { 'ErrorFloatSp', 'WarningFloatSp', 'InfoFloatSp',  'HintFloatSp' }
+  local hl_msg = { 'ErrorFloat',   'WarningFloat',   'InfoFloat',    'HintFloat' }
   local hl, len
+  local data = diag.data
 
   -- header
-  if t == 'dir' then
-    hl  = diag_hl_hdr[d[1].sev]
-    len = strlen(d[1].sev_str) + 4 -- multibyte shenanigans
+  if diag.type == 'dir' then
+    hl  = hl_hdr[data[1].sev]
+    len = strlen(data[1].sev_str) + 4 -- multibyte shenanigans
     va.nvim_buf_add_highlight(bufnr, -1, hl,      0,  0, len)
-    va.nvim_buf_add_highlight(bufnr, -1, neutral, 0, len+1, -1)
+    va.nvim_buf_add_highlight(bufnr, -1, hl_ntl, 0, len+1, -1)
   else
     hl  = 'InfoFloatSp'
-    -- TODO: modularize
-    len = strlen(' Diagnostics in line ') - 1 -- multibyte shenanigans
+    len = strlen(diag.hdr) - strlen(data[1].ln) - 3 -- multibyte shenanigans
     va.nvim_buf_add_highlight(bufnr, -1, hl,      0, 0, len)
-    va.nvim_buf_add_highlight(bufnr, -1, neutral, 0, len+1, -1)
+    va.nvim_buf_add_highlight(bufnr, -1, hl_ntl, 0, len+1, -1)
   end
 
   -- separator
-  va.nvim_buf_add_highlight(bufnr, -1, neutral, 1, 0, -1)
+  va.nvim_buf_add_highlight(bufnr, -1, hl_ntl, 1, 0, -1)
 
   -- body
-  for i = 1, #d do
-    hl  = diag_hl_bdy[d[i].sev]
-    len = strlen(d[i].msg)
-    if t == 'dir' then
+  for i = 1, #data do
+    hl  = hl_msg[data[i].sev]
+    len = strlen(data[i].msg)
+    if diag.type == 'dir' then
       va.nvim_buf_add_highlight(bufnr, -1, hl,          i+1, 0, len)
-      va.nvim_buf_add_highlight(bufnr, -1, neutral_sp,  i+1, len+1, -1)
+      va.nvim_buf_add_highlight(bufnr, -1, hl_ntl_sp,  i+1, len+1, -1)
     else
       va.nvim_buf_add_highlight(bufnr, -1, hl,          i+1, 0, len)
-      va.nvim_buf_add_highlight(bufnr, -1, neutral_sp,  i+1, len+1, -1)
+      va.nvim_buf_add_highlight(bufnr, -1, hl_ntl_sp,  i+1, len+1, -1)
     end
   end
 end
 
 
-local render = function(t, d)
-  local lines = {}
+local render = function(type, diag)
   local max_width = 72
-  local processed = preprocess(d)
-
-  -- format window contents
-  for i = 1, #processed do table.insert(lines, format_diag(t, processed[i])) end
+  local formatted = preprocess(type, diag)
+  local content   = format_contents(formatted)
 
   -- move cursor to diagnostic
-  if t == 'dir' then vf.cursor(processed[1].ln, processed[1].col) end
+  if type == 'dir' then
+    vf.cursor(formatted.data[1].ln, formatted.data[1].col)
+  end
 
-  -- insert header
-  local width = get_longest_line(lines)
-  table.insert(lines, 1, string.rep('', width % max_width))
-  table.insert(lines, 1, format_header(t, processed[1]))
+  -- insert header and separator
+  generate_header(formatted)
+  table.insert(content, 1, formatted.hdr)
+
+  local width = get_longest_line(content)
+  table.insert(content, 2,
+    string.rep('', width < max_width and width or max_width))
 
   -- do floaty stuff
   v.defer_fn(function()
-    local bufnr = v.lsp.util.open_floating_preview(lines, 'off', {
+    local bufnr = v.lsp.util.open_floating_preview(content, 'off', {
       focusable = true,
       wrap      = true,
       wrap_at   = max_width,
@@ -140,25 +147,29 @@ local render = function(t, d)
 
       close_events = { 'CursorMoved', 'InsertEnter' }
     })
-    set_highlights(bufnr, t, processed)
+    set_highlights(bufnr, formatted)
   end, 0)
+end
+
+
+local try_render = function(type, diag)
+  if diag[1] == nil then
+    local str = type ==  'dir' and 'No diagnostics to jump to.'
+      or 'No diagnostics in this line.'
+    return v.notify(str, 3)
+  end
+
+  render(type, diag)
 end
 
 
 
 
 -- main
-M.goto_next = function()
-  local d = vd.get_next()
-  if    d then render('dir', { d }) end
-end
-M.goto_prev = function()
-  local d = vd.get_prev()
-  if    d then render('dir', { d }) end
-end
+M.goto_next = function() try_render('dir', { vd.get_next() }) end
+M.goto_prev = function() try_render('dir', { vd.get_prev() }) end
 M.get_line = function()
-  local d     = vd.get(0, { lnum = vf.line('.') - 1 })
-  if    d[1] ~= nil then render('line', d) end
+  try_render('line', vd.get(0, { lnum = vf.line('.') - 1 }))
 end
 
 
