@@ -1,6 +1,7 @@
 local lsp = require('lspconfig')
 local F   = require('utils.functions')
-local D   = require('lsp.diag')
+local dgn = require('lsp.diag')
+local def = require('lsp.definition')
 local v   = vim
 
 local servers = {
@@ -27,19 +28,16 @@ local on_attach = function()
   F.nnmap('<leader>gd', 'gd')
 
   -- TODO: deprecate / implement this block:
-  F.nnmap('gd',         '<CMD>Lspsaga peek_definition<CR>')
   F.nnmap('<leader>ca', '<CMD>Lspsaga code_action<CR>')
-  F.nnmap('<leader>rn', '<CMD>Lspsaga rename<CR>')
 
-  -- F.nnmap('gd', v.lsp.buf.definition, {buffer = 0})
-  F.nnmap('K', v.lsp.buf.hover, {buffer = 0})
-  -- F.nnmap('<leader>ca', v.lsp.buf.code_action,    {buffer = 0})
-  -- F.nnmap('<leader>rn', v.lsp.buf.rename,         {buffer = 0})
-  F.nnmap('<leader>rf', v.lsp.buf.references, {buffer = 0})
+  F.nnmap('gd', def.peek,         { buffer = 0 })
+  F.nnmap('K',  v.lsp.buf.hover,  { buffer = 0 })
+  -- F.nnmap('<leader>ca', v.lsp.buf.code_action, {buffer = 0})
+  F.nnmap('<leader>rn', v.lsp.buf.rename, { buffer = 0 })
 
-  F.nnmap('<leader>h', D.get_line,  { buffer = 0 })
-  F.nnmap('<leader>j', D.goto_next, { buffer = 0 })
-  F.nnmap('<leader>k', D.goto_prev, { buffer = 0 })
+  F.nnmap('<leader>h', dgn.get_line,  { buffer = 0 })
+  F.nnmap('<leader>j', dgn.goto_next, { buffer = 0 })
+  F.nnmap('<leader>k', dgn.goto_prev, { buffer = 0 })
   F.nnmap('<leader>l', '<CMD>silent! Telescope diagnostics<CR>')
 end
 
