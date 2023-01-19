@@ -11,7 +11,7 @@ from ranger.gui.color import default_colors, reverse, bold, normal, default
 
 # pylint: disable=too-many-branches,too-many-statements
 class everforest(ColorScheme):
-    progress_bar_color = 8
+    progress_bar_color = 12
 
     def use(self, context):
         fg, bg, attr = default_colors
@@ -25,45 +25,45 @@ class everforest(ColorScheme):
             else:
                 attr = normal
             if context.empty or context.error:
-                fg = 1
-                bg = 17
-            if context.border:
-                fg = 9
-            if context.image:
                 fg = 7
+                bg = 16
+            if context.border:
+                fg = 2
+            if context.image:
+                fg = 4
             if context.video:
-                fg = 15
+                fg = 5
             if context.audio:
-                fg = 1
+                fg = 2
             if context.document:
-                fg = 9
+                fg = 7
             if context.container:
                 attr |= bold
-                fg = 13
+                fg = 1
             if context.directory:
                 attr |= bold
-                fg = 15
+                fg = 3
             elif context.executable and not \
                     any((context.media, context.container,
                          context.fifo, context.socket)):
                 attr |= bold
-                fg = 13
+                fg = 1
             if context.socket:
-                fg = 2
+                fg = 8
                 attr |= bold
             if context.fifo or context.device:
-                fg = 15
+                fg = 3
                 if context.device:
                     attr |= bold
             if context.link:
-                fg = 7 if context.good else 13
+                fg = 4 if context.good else 1
             if context.bad:
-                bg = 14
+                bg = 9
             if context.tag_marker and not context.selected:
                 attr |= bold
-                fg = 1
+                fg = 7
             if not context.selected and (context.cut or context.copied):
-                fg = 2
+                fg = 8
             if context.main_column:
                 if context.selected:
                     attr |= bold
@@ -72,42 +72,42 @@ class everforest(ColorScheme):
                     fg = 10
             if context.badinfo:
                 if attr & reverse:
-                    bg = 14
+                    bg = 9
                 else:
-                    fg = 14
+                    fg = 9
 
         elif context.in_titlebar:
             attr |= bold
             if context.hostname:
-                fg = 1
+                fg = 7
             elif context.directory:
-                fg = 1
+                fg = 7
             elif context.tab:
                 if context.good:
-                    bg = 2
+                    bg = 8
             elif context.link:
-                fg = 7
+                fg = 4
 
         elif context.in_statusbar:
             if context.permissions:
                 if context.good:
-                    fg = 5
+                    fg = 6
                 elif context.bad:
-                    fg = 13
+                    fg = 1
             if context.marked:
                 attr |= bold | reverse
-                fg = 11
+                fg = 5
             if context.message:
                 if context.bad:
                     attr |= bold
-                    fg = 15
+                    fg = 3
             if context.loaded:
                 bg = self.progress_bar_color
             if context.vcsinfo:
-                fg = 7
+                fg = 4
                 attr &= ~bold
             if context.vcscommit:
-                fg = 5
+                fg = 6
                 attr &= ~bold
 
         if context.text:
@@ -116,7 +116,7 @@ class everforest(ColorScheme):
 
         if context.in_taskview:
             if context.title:
-                fg = 1
+                fg = 7
 
             if context.selected:
                 attr |= reverse
@@ -130,29 +130,29 @@ class everforest(ColorScheme):
         if context.vcsfile and not context.selected:
             attr &= ~bold
             if context.vcsconflict:
-                fg = 13
+                fg = 1
             elif context.vcschanged:
-                fg = 7
+                fg = 4
             elif context.vcsunknown:
-                fg = 2
+                fg = 8
             elif context.vcsstaged:
-                fg = 9
+                fg = 2
             elif context.vcssync:
-                fg = 7
+                fg = 4
             elif context.vcsignored:
                 fg = default
 
         elif context.vcsremote and not context.selected:
             attr &= ~bold
             if context.vcssync:
-                fg = 7
+                fg = 4
             elif context.vcsbehind:
-                fg = 13
+                fg = 1
             elif context.vcsahead:
-                fg = 9
-            elif context.vcsdiverged:
-                fg = 11
-            elif context.vcsunknown:
                 fg = 2
+            elif context.vcsdiverged:
+                fg = 5
+            elif context.vcsunknown:
+                fg = 8
 
         return fg, bg, attr
