@@ -1,10 +1,10 @@
 -- inspired by glepnir's Lspsaga: https://github.com/glepnir/lspsaga.nvim
-local F   = require('utils.functions')
 local v   = vim
 local va  = v.api
 local vd  = v.diagnostic
 local vf  = v.fn
 local strlen = string.len
+local strsub = string.gsub
 
 local M = {}
 
@@ -26,8 +26,8 @@ local preprocess = function(type, diag)
 
   for i = 1, #diag do
     table.insert(tbl.data, {
-      msg     = diag[i].message,
-      src     = F.chop(diag[i].source),
+      msg     = strsub(diag[i].message, '\n', '\\n'),
+      src     = diag[i].source,
       sev     = diag[i].severity,
       sev_str = severity[diag[i].severity],
 
@@ -66,14 +66,16 @@ local generate_header = function(diag)
   local icon = { '', '', '', '' }
   local data = diag.data[1]
 
-  local str
+  local hdr, loc
   if diag.type == 'dir' then
-    str = icon[data.sev]..' '..data.sev_str..' at <'..data.ln..':'..data.col..'>'
+    hdr = icon[data.sev]..' '..data.sev_str
+    loc = ' at <'..data.ln..':'..data.col..'>'
   else
-    str = ' Diagnostics in line <'..data.ln..'>'
+    hdr = ' Diagnostics in line'
+    loc =  ' <'..data.ln..'>'
   end
-  -- return str
-  diag.hdr = str
+  diag.hdr = hdr
+  diag.loc = loc
 end
 
 
@@ -86,16 +88,15 @@ local set_highlights = function(bufnr, diag)
   local data = diag.data
 
   -- header
+  len = strlen(diag.hdr)
   if diag.type == 'dir' then
-    hl  = hl_hdr[data[1].sev]
-    len = strlen(data[1].sev_str) + 4 -- multibyte shenanigans
+    hl = hl_hdr[data[1].sev]
     va.nvim_buf_add_highlight(bufnr, -1, hl,      0,  0, len)
-    va.nvim_buf_add_highlight(bufnr, -1, hl_ntl, 0, len+1, -1)
+    va.nvim_buf_add_highlight(bufnr, -1, hl_ntl,  0, len+1, -1)
   else
-    hl  = 'InfoFloatSp'
-    len = strlen(diag.hdr) - strlen(data[1].ln) - 3 -- multibyte shenanigans
+    hl = 'InfoFloatSp'
     va.nvim_buf_add_highlight(bufnr, -1, hl,      0, 0, len)
-    va.nvim_buf_add_highlight(bufnr, -1, hl_ntl, 0, len+1, -1)
+    va.nvim_buf_add_highlight(bufnr, -1, hl_ntl,  0, len+1, -1)
   end
 
   -- separator
@@ -106,18 +107,18 @@ local set_highlights = function(bufnr, diag)
     hl  = hl_msg[data[i].sev]
     len = strlen(data[i].msg)
     if diag.type == 'dir' then
-      va.nvim_buf_add_highlight(bufnr, -1, hl,          i+1, 0, len)
-      va.nvim_buf_add_highlight(bufnr, -1, hl_ntl_sp,  i+1, len+1, -1)
+      va.nvim_buf_add_highlight(bufnr, -1, hl,        i+1, 0, len)
+      va.nvim_buf_add_highlight(bufnr, -1, hl_ntl_sp, i+1, len+1, -1)
     else
-      va.nvim_buf_add_highlight(bufnr, -1, hl,          i+1, 0, len)
-      va.nvim_buf_add_highlight(bufnr, -1, hl_ntl_sp,  i+1, len+1, -1)
+      va.nvim_buf_add_highlight(bufnr, -1, hl,        i+1, 0, len)
+      va.nvim_buf_add_highlight(bufnr, -1, hl_ntl_sp, i+1, len+1, -1)
     end
   end
 end
 
 
 local render = function(type, diag)
-  local max_width = 72
+  local w_max = math.floor(v.o.columns * 0.8)
   local formatted = preprocess(type, diag)
   local content   = format_contents(formatted)
 
@@ -128,19 +129,19 @@ local render = function(type, diag)
 
   -- insert header and separator
   generate_header(formatted)
-  table.insert(content, 1, formatted.hdr)
+  table.insert(content, 1, formatted.hdr..formatted.loc)
 
-  local width = get_longest_line(content)
+  local w = get_longest_line(content)
   table.insert(content, 2,
-    string.rep('', width < max_width and width or max_width))
+    string.rep('', w < w_max and w or w_max))
 
   -- do floaty stuff
   v.defer_fn(function()
     local bufnr = v.lsp.util.open_floating_preview(content, 'off', {
       focusable = true,
       wrap      = true,
-      wrap_at   = max_width,
-      max_width = max_width,
+      wrap_at   = w_max,
+      max_width = w_max,
 
       style     = 'minimal',
       border    = 'rounded',
