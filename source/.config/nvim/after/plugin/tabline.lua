@@ -19,23 +19,15 @@ local tabline = function()
     else                  bufname = string.gsub(bufname, '.*/', '') end
 
     -- set highlight groups
-    local hl_type = 'Nor'
-    if i == v.fn.tabpagenr() then hl_type = 'Sel' end
+    local hl_type = i == v.fn.tabpagenr() and 'Active' or 'Inactive'
+    local hl_gr = strf('%%#Tl%s#', hl_type)
 
     -- build tabline
-    local hl_main = strf('%%#Tl%s#',  hl_type)
-    local hl_aux  = strf('%%#Tl%sx#', hl_type)
-    local items = {
-      hl_aux, '',
-      hl_main, modified, bufname,
-      hl_aux, ''
-    }
-
-    -- mouse support with '%iT'
-    t = strf('%s%%%sT%s ', t, i, table.concat(items))
+    local items = { hl_gr, ' ', modified, bufname, ' ' }
+    t = strf('%s%%%sT%s', t, i, table.concat(items))
   end
 
-  return strf('%%#blank# %s%%#blank# ', t)
+  return strf('%s%%#TlInactive# ', t)
 end
 
 

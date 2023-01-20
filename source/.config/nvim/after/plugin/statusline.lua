@@ -1,7 +1,7 @@
 local F     = require('utils.functions')
 local v     = vim
 local strf  = string.format
-local hl_no = '%#SlNo#'; local hl_it = '%#SlIt#'
+local hl_no = '%#SlNormal#'; local hl_it = '%#SlItalic#'
 
 
 -- auxiliary functions
@@ -66,7 +66,7 @@ local get_mode_colour = function()
 end
 
 
-local get_git = function()
+local git = function()
   if not is_vcs() then return '' end
 
   local fh; local head = ''; local dir = resolve_dir()
@@ -85,13 +85,13 @@ local get_git = function()
     fh    = open({ 'git', '-C', dir, 'rev-parse', '@' }, false, '')
     head  = string.sub(read(fh), 1, 7)
   end
-  head = strf(' %s %s%s', '%#SlGit#', head, hl_no)
+  head = strf(' %s %s%s', '%#Git#', head, hl_no)
 
   return head
 end
 
 
-local get_diff = function()
+local diff = function()
   if not is_vcs() then return '' end
 
   local fh = open({
@@ -113,21 +113,21 @@ local get_diff = function()
   local add = string.match(numstat, '%d+')
   local del = string.match(numstat, '%d+', string.len(add) + 1)
 
-  local hl_a = add == '0' and '%#neutral#' or '%#SlGitA#'
-  local hl_d = del == '0' and '%#neutral#' or '%#SlGitD#'
+  local hl_a = add == '0' and '%#neutral#' or '%#GitAdd#'
+  local hl_d = del == '0' and '%#neutral#' or '%#GitDel#'
 
   return hl_a..' +'..add..hl_d..' -'..del
 end
 
 
-local get_modified = function()
+local modified = function()
   local modified = ''
   if v.api.nvim_buf_get_option(0, 'modified') then  modified = ' ' end
   return modified
 end
 
 
-local get_bufname = function()
+local bufname = function()
   local bufname = v.fn.bufname()
   if bufname == '' then bufname = '[null]'
   else                  bufname = string.gsub(bufname, '.*/', '') end
@@ -148,14 +148,14 @@ end
 local get_bufnr = function() return '%n' end
 
 
-local get_bytecount = function()
+local bytecount = function()
   local count = v.fn.line2byte('$') + v.fn.len(v.fn.getline('$'))
   if count == -1 then count = 0 end
   return count..'B'
 end
 
 
-local get_search_count = function()
+local searchcount = function()
   local s   = v.fn.searchcount({maxcount=0})
   local cur = s.current; local tot = s.total; local cmp = s.incomplete
 
@@ -166,7 +166,7 @@ local get_search_count = function()
 end
 
 
-local get_position = function() return '%l:%v' end
+local position = function() return '%l:%v' end
 
 
 local set_statusline = function()
@@ -175,11 +175,11 @@ local set_statusline = function()
   local bufnr = strf('%s(%s)', hl_no, get_bufnr())
 
   return table.concat({
-    hl_no, ' ', mode, '%<', get_git(), get_diff(), hl_no,
+    hl_no, ' ', mode, git(), diff(), hl_no,
     '%=',
-    get_modified(), hl_it, get_bufname(), bufnr,
+    '    ', modified(), hl_it, bufname(), bufnr, '    ', '%<',
     '%=',
-    get_bytecount(), '  ', get_search_count(), '  ', get_position(), ' '
+    bytecount(), '  ', searchcount(), '  ', position(), ' '
   })
 end
 

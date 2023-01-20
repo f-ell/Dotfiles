@@ -71,22 +71,20 @@ local set_hl_groups = function()
     {0, 'InfoFloatSp',    {fg = gre1, bg = _, italic = true, bold = true}},
 
     -- Statusline
-    {0, 'SlNo',   {fg = fg1,  bg = _}},
-    {0, 'SlIt',   {fg = fg1,  bg = _,   italic  = true}},
-    {0, 'SlRo',   {fg = fg1,  bg = ro,  bold    = true}},
-    {0, 'SlRox',  {fg = ro,   bg = _,   bold    = true}},
-    {0, 'SlGit',  {fg = git,  bg =  _,  italic  = true}},
-    {0, 'SlGitA', {fg = gre1, bg =  _}},
-    {0, 'SlGitD', {fg = red1, bg =  _}},
+    {0, 'SlNormal', {fg = fg2,  bg = _}},
+    {0, 'SlItalic', {fg = fg2,  bg = _,   italic  = true}},
+    {0, 'SlRo',     {fg = fg1,  bg = ro,  bold    = true}},
+    {0, 'SlRox',    {fg = ro,   bg = _,   bold    = true}},
 
     -- Tabline
-    {0, 'TlNor',  {fg = fg3,  bg = fg4}},
-    {0, 'TlNorx', {fg = fg4,  bg = _}},
-    {0, 'TlSel',  {fg = fg5,  bg = gre1, bold = true}},
-    {0, 'TlSelx', {fg = gre1, bg = _}},
+    {0, 'TlInactive', {fg = fg3,  bg = fg5}},
+    {0, 'TlActive',   {fg = fg2,  bg = fg4, bold = true}},
 
     -- Misc
-    {0, 'SpellBad',   {sp = red1, undercurl = true}},
+    {0, 'SpellBad', {sp = red1, undercurl = true}},
+    {0, 'Git',      {fg = git,  bg =  _, italic  = true}},
+    {0, 'GitAdd',   {fg = gre1, bg =  _}},
+    {0, 'GitDel',   {fg = red1, bg =  _}},
 
   -- PLUGINS --
     -- Git(signs)
