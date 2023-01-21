@@ -73,7 +73,7 @@ local set_hl_groups = function()
     -- Statusline
     {0, 'SlNormal', {fg = fg2,  bg = _}},
     {0, 'SlItalic', {fg = fg2,  bg = _,   italic  = true}},
-    {0, 'SlRo',     {fg = fg1,  bg = ro,  bold    = true}},
+    {0, 'SlRo',     {fg = fg5,  bg = ro,  bold    = true}},
     {0, 'SlRox',    {fg = ro,   bg = _,   bold    = true}},
 
     -- Tabline

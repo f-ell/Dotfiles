@@ -128,20 +128,20 @@ end
 
 
 local bufname = function()
+  local hl_ro   = '%#SlRo#'
+  local hl_rox  = '%#SlRox#'
+
   local bufname = v.fn.bufname()
   if bufname == '' then bufname = '[null]'
   else                  bufname = string.gsub(bufname, '.*/', '') end
 
-  local hl      = false
-  local hl_ro   = '%#SlRo#'
-  local hl_rox  = '%#SlRox#'
-  if v.api.nvim_buf_get_option(0, 'readonly') then hl = true end
-
-  if hl then
-    return strf('%s%s%s%s', hl_rox, hl_ro, bufname, hl_rox)
+  local str
+  if v.api.nvim_buf_get_option(0, 'readonly') then
+    str = strf('%s%s%s%s', hl_rox, hl_ro, bufname, hl_rox)
   else
-    return bufname..' '
+    str = bufname
   end
+  return str..' '
 end
 
 
@@ -177,7 +177,7 @@ local set_statusline = function()
   return table.concat({
     hl_no, ' ', mode, git(), diff(), hl_no,
     '%=',
-    '    ', modified(), hl_it, bufname(), bufnr, '    ', '%<',
+    '    ', modified(), bufname(), bufnr, '    ', '%<',
     '%=',
     bytecount(), '  ', searchcount(), '  ', position(), ' '
   })
