@@ -9,6 +9,8 @@ local strsub = string.gsub
 local M = {}
 
 
+
+
 -- auxiliary
 local get_longest_line = function(tbl)
   local max = 0
@@ -155,9 +157,9 @@ end
 
 local try_render = function(type, diag)
   if diag[1] == nil then
-    local str = type ==  'dir' and 'No diagnostics to jump to.'
+    local str = type == 'dir' and 'No diagnostics to jump to.'
       or 'No diagnostics in this line.'
-    return v.notify(str, 3)
+    return v.notify(str, 2)
   end
 
   render(type, diag)
@@ -172,6 +174,4 @@ M.goto_prev = function() try_render('dir', { vd.get_prev() }) end
 M.get_line = function()
   try_render('line', vd.get(0, { lnum = vf.line('.') - 1 }))
 end
-
-
 return M

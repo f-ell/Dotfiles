@@ -6,6 +6,8 @@ local vl  = v.lsp
 local M = {}
 
 
+
+
 -- auxiliary
 local prepare_result_data = function(res)
   local ret = {}
@@ -45,9 +47,8 @@ end
 
 
 local is_valid_window = function(winnr)
-  if va.nvim_get_current_win() == winnr
-    and va.nvim_win_is_valid(winnr) then return true end
-  return false
+  return (va.nvim_get_current_win() == winnr and va.nvim_win_is_valid(winnr))
+    and true or false
 end
 
 
@@ -116,14 +117,13 @@ local open = function(data)
 end
 
 
-
-
--- main
 -- TODO: consider using tressitter api to select target node and only display implementation in float (can use open_floating_preview())
-M.peek = function()
+local request_definition = function()
   vl.buf_request_all(0, 'textDocument/definition',
     vl.util.make_position_params(), function(res)
-      if not res or next(res) == nil then v.notify('Lsp response is nil.', 3) return end
+      if not res or next(res) == nil then v.notify('Lsp response is nil.', 3)
+        return
+      end
 
       local result
       for _, r in pairs(res) do
@@ -132,9 +132,12 @@ M.peek = function()
       if not result then v.notify('Lsp response is nil.', 3) return end
 
       open(prepare_result_data(result))
-    end
-  )
+    end)
 end
 
 
+
+
+-- main
+M.peek = function() request_definition() end
 return M

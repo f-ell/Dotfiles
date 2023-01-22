@@ -120,7 +120,7 @@ local open = function(cword)
 end
 
 
-local try_open = function(cword)
+local try_rename = function(cword, proj)
   if not cword or cword == '' then return v.notify('Nothing to rename.', 2) end
   open(cword)
 end
@@ -129,5 +129,7 @@ end
 
 
 -- main
-M.rename = function() try_open(vf.expand('<cword>')) end
+M.rename = function() try_rename(vf.expand('<cword>'), false) end
+-- TODO: add project-wide rename
+M.proj_rename = function() try_rename(vf.expand('<cword>'), true) end
 return M
