@@ -12,7 +12,7 @@ local servers = {
   _4 = 'perlpls',
   _5 = 'pylsp',
   _6 = 'rust_analyzer',
-  _7 = 'sumneko_lua',
+  _7 = 'lua_ls',
   _8 = 'texlab',
   _9 = 'tsserver'
 }
