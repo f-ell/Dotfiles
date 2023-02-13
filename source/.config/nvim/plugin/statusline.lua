@@ -11,7 +11,7 @@ local open = function(tbl, err_null, ret_nil)
   if err_null then table.insert(tbl, '2>/dev/null') end
 
   local fh = io.popen(table.concat(tbl, ' '), 'r')
-  if fh == nil then return ret_nil else return fh end
+  return fh == nil and ret_nil or fh
 end
 
 local read = function(fh)
@@ -38,10 +38,7 @@ local is_vcs = function()
   local fh  = open({
     'git', '-C', resolve_dir(),
     'rev-parse', '--is-inside-work-tree' }, true, false)
-  local vcs = read(fh)
-
-  if vcs == 'true' then return true
-  else                  return false end
+  return read(fh) == 'true' and true or false
 end
 
 
@@ -120,25 +117,27 @@ end
 
 -- git components
 local get_head = function()
-  local fh; local head = ''; local dir = resolve_dir()
-
-  fh    = open({ 'git', '-C', dir, 'branch', '--show-current' }, false, '')
-  head  = read(fh)
-
-  if head == '' then
-    fh    = open({
-      'git', '-C', dir,
-      'describe', '--tags', '--exact-match', '@' }, true, '')
-    head  = 'tag:'..read(fh)
+  local get_obj_id = function(str)
+    return str:match('^(%x+) ')
+  end
+  local get_obj_ref = function(str)
+    local prefix = ''
+    if str:match('refs/tags/') then prefix = 't:' end
+    return prefix..str:gsub('%^{}', ''):gsub('^.*/', '')
   end
 
-  if head == 'tag:' then
-    fh    = open({ 'git', '-C', dir, 'rev-parse', '@' }, false, '')
-    head  = string.sub(read(fh), 1, 7)
-  end
-  head = strf(' %s %s%s', '%#Git#', head, hl_no)
+  local fh = open({
+    'git', '-C', resolve_dir(),
+    'show-ref', '--head', '--heads', '--tags', '--abbrev', '-d', }, false, '')
 
-  return head
+  local head = get_obj_id(fh:read('*l'))
+
+  for ln in fh:lines() do
+    if get_obj_id(ln) == head then head = get_obj_ref(ln) end
+  end
+  fh:close()
+
+  return strf(' %s %s%s', '%#Git#', head, hl_no)
 end
 
 
@@ -176,9 +175,7 @@ if git_info.vcs then
   git_info.diff = get_diff()
 end
 
--- TODO: check if BufWriteX needs to be added here
-va.nvim_create_autocmd('BufEnter', {
-  nested = true,
+va.nvim_create_autocmd({ 'BufEnter', 'FileChangedShellPost', 'FocusGained' }, {
   callback = function()
     git_info.vcs = is_vcs()
     if not git_info.vcs then return end
@@ -191,7 +188,9 @@ va.nvim_create_autocmd('BufEnter', {
 va.nvim_create_autocmd('BufWritePre', {
   nested = true,
   callback = function()
-    if not git_info.vcs or not v.bo.modified then return end
+    if not git_info.vcs then return end
+    git_info.head = get_head()
+    if not v.bo.modified then return end
 
     va.nvim_create_autocmd('BufWritePost', {
       once = true,
