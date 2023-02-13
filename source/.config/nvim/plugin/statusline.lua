@@ -123,21 +123,37 @@ local get_head = function()
   local get_obj_ref = function(str)
     local prefix = ''
     if str:match('refs/tags/') then prefix = 't:' end
-    return prefix..str:gsub('%^{}', ''):gsub('^.*/', '')
+    return prefix..str:gsub('^.*/', ''):gsub('%^{}', '')
   end
 
+  local dir = resolve_dir()
+
   local fh = open({
-    'git', '-C', resolve_dir(),
+    'git', '-C', dir,
     'show-ref', '--head', '--heads', '--tags', '--abbrev', '-d', }, false, '')
 
-  local head = get_obj_id(fh:read('*l'))
+  local head_ln = fh:read('*l')
 
+  local b, m = 0, 0
   for ln in fh:lines() do
-    if get_obj_id(ln) == head then head = get_obj_ref(ln) end
+    if get_obj_id(head_ln) == get_obj_id(ln) then
+      m = m + 1
+      if ln:match('refs/heads/') then b = b + 1 end
+      head_ln = ln
+    end
   end
   fh:close()
 
-  return strf(' %s %s%s', '%#Git#', head, hl_no)
+  if m == 0 then
+    head_ln = get_obj_id(head_ln)
+  elseif b > 1 or (m > b and b > 0) then
+    fh    = open({ 'git', '-C', dir, 'branch', '--show-current' })
+    head_ln  = read(fh)
+  else
+    head_ln = get_obj_ref(head_ln)
+  end
+
+  return strf(' %s %s%s', '%#Git#', head_ln, hl_no)
 end
 
 
