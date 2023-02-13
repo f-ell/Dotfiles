@@ -110,11 +110,8 @@ local polymerize = function()
     'printf "'..table.concat(sel, '\n')..'" | silicon '..table.concat(args, ' ')
   )
 
-  if ret == 0 then
-    print('screenshot saved as '..file)
-  else
-    print('fatal: couldn\'t create screenshot')
-  end
+  print(ret == 0 and 'screenshot saved as '..file
+                  or 'fatal: couldn\'t create screenshot')
 end
 
 
