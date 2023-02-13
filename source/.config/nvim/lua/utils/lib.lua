@@ -3,6 +3,32 @@ local v   = vim
 local va  = v.api
 
 
+
+
+-- misc
+M.chop = function(str)
+  return str:sub(0, str:len()-1)
+end
+
+
+M.open = function(tbl, err_null, ret_nil)
+  if err_null then table.insert(tbl, '2>/dev/null') end
+
+  local fh = io.popen(table.concat(tbl, ' '), 'r')
+  return fh == nil and ret_nil or fh
+end
+
+
+M.read = function(fh)
+  local ret = M.chop(fh:read('*a'))
+  fh:close()
+  return ret
+end
+
+
+
+
+-- nvim internal
 M.c = function(command)
   va.nvim_command(command)
 end
@@ -21,11 +47,6 @@ M.g = function(name, value)
   else
     v.g[name] = value
   end
-end
-
-
-M.chop = function(str)
-  return str:sub(0, str:len()-1)
 end
 
 

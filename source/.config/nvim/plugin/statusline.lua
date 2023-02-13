@@ -1,4 +1,4 @@
-local F     = require('utils.functions')
+local L     = require('utils.lib')
 local v     = vim
 local va    = v.api
 local strf  = string.format
@@ -7,20 +7,6 @@ local git_info = {}
 
 
 -- auxiliary
-local open = function(tbl, err_null, ret_nil)
-  if err_null then table.insert(tbl, '2>/dev/null') end
-
-  local fh = io.popen(table.concat(tbl, ' '), 'r')
-  return fh == nil and ret_nil or fh
-end
-
-local read = function(fh)
-  local ret = F.chop(fh:read('*a'))
-  fh:close()
-  return ret
-end
-
-
 local resolve_dir = function()
   local buf = v.fn.bufname()
   local res = v.loop.fs_readlink(buf)
@@ -35,10 +21,10 @@ end
 
 
 local is_vcs = function()
-  local fh  = open({
+  local fh = L.open({
     'git', '-C', resolve_dir(),
     'rev-parse', '--is-inside-work-tree' }, true, false)
-  return read(fh) == 'true' and true or false
+  return L.read(fh) == 'true' and true or false
 end
 
 
@@ -128,7 +114,7 @@ local get_head = function()
 
   local dir = resolve_dir()
 
-  local fh = open({
+  local fh = L.open({
     'git', '-C', dir,
     'show-ref', '--head', '--heads', '--tags', '--abbrev', '-d', }, false, '')
 
@@ -147,8 +133,8 @@ local get_head = function()
   if m == 0 then
     head_ln = get_obj_id(head_ln)
   elseif b > 1 or (m > b and b > 0) then
-    fh    = open({ 'git', '-C', dir, 'branch', '--show-current' })
-    head_ln  = read(fh)
+    fh = L.open({ 'git', '-C', dir, 'branch', '--show-current' })
+    head_ln = L.read(fh)
   else
     head_ln = get_obj_ref(head_ln)
   end
@@ -158,18 +144,18 @@ end
 
 
 local get_diff = function()
-  local fh = open({
+  local fh = L.open({
     'git', '-C', resolve_dir(),
     'diff', '--numstat', resolve_file() }, true, '')
-  local numstat = read(fh)
+  local numstat = L.read(fh)
 
   if numstat == '' then
     local ret = '+0 -0'
 
-    fh = open({
+    fh = L.open({
       'git', '-C', resolve_dir(),
       'ls-files', '--error-unmatch', resolve_file() }, true, '')
-    if read(fh) == '' then ret = 'untracked' end
+    if L.read(fh) == '' then ret = 'untracked' end
 
     return ' %#neutral#'..ret
   end
@@ -236,5 +222,5 @@ end
 
 
 _G.statusline = statusline
-F.o('laststatus', 3)
-F.o('statusline', '%!v:lua.statusline()')
+L.o('laststatus', 3)
+L.o('statusline', '%!v:lua.statusline()')

@@ -1,4 +1,4 @@
-local F     = require('utils.functions')
+local L     = require('utils.lib')
 local v     = vim
 local strf  = string.format
 
@@ -32,5 +32,5 @@ end
 
 
 _G.tabline = tabline
-F.o('showtabline', 1)
-F.o('tabline', '%!v:lua.tabline()')
+L.o('showtabline', 1)
+L.o('tabline', '%!v:lua.tabline()')

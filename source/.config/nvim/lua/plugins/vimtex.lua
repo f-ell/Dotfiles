@@ -10,9 +10,9 @@ return {
     { '<leader>vv',   '<CMD>VimtexView<CR>' }
   },
   config  = function()
-    local F = require('utils.functions')
+    local L = require('utils.lib')
 
-    F.g('vimtex_view_method',     'zathura')
-    F.g('vimtex_compiler_method', 'tectonic')
+    L.g('vimtex_view_method',     'zathura')
+    L.g('vimtex_compiler_method', 'tectonic')
   end
 }

@@ -1,5 +1,5 @@
 local lsp = require('lspconfig')
-local F   = require('utils.functions')
+local L   = require('utils.lib')
 local dgn = require('lsp.diag')
 local def = require('lsp.definition')
 local rnm = require('lsp.rename')
@@ -26,17 +26,17 @@ local configs  = {
 
 
 local on_attach = function()
-  F.nnmap('<leader>gd', 'gd')
+  L.nnmap('<leader>gd', 'gd')
 
-  F.nnmap('gd', def.peek,           { buffer = 0 })
-  F.nnmap('K',  v.lsp.buf.hover,    { buffer = 0 })
-  F.nnmap('<leader>ca', v.lsp.buf.code_action, {buffer = 0})
-  F.nnmap('<leader>rn', rnm.rename, { buffer = 0 })
+  L.nnmap('gd', def.peek,           { buffer = 0 })
+  L.nnmap('K',  v.lsp.buf.hover,    { buffer = 0 })
+  L.nnmap('<leader>ca', v.lsp.buf.code_action, {buffer = 0})
+  L.nnmap('<leader>rn', rnm.rename, { buffer = 0 })
 
-  F.nnmap('<leader>h', dgn.get_line,  { buffer = 0 })
-  F.nnmap('<leader>j', dgn.goto_next, { buffer = 0 })
-  F.nnmap('<leader>k', dgn.goto_prev, { buffer = 0 })
-  F.nnmap('<leader>l', '<CMD>silent! Telescope diagnostics<CR>')
+  L.nnmap('<leader>h', dgn.get_line,  { buffer = 0 })
+  L.nnmap('<leader>j', dgn.goto_next, { buffer = 0 })
+  L.nnmap('<leader>k', dgn.goto_prev, { buffer = 0 })
+  L.nnmap('<leader>l', '<CMD>silent! Telescope diagnostics<CR>')
 end
 
 

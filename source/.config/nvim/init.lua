@@ -7,12 +7,12 @@
 -- |__| \____| | Author: Nico Pareigis
 --          |__| Neovim
 
-local F = require('utils.functions')
-F.g('mapleader', ' ')
+local L = require('utils.lib')
+L.g('mapleader', ' ')
 
 require('utils.lazy')
 
-F.o('termguicolors', true)
-F.c('colorscheme everforest')
+L.o('termguicolors', true)
+L.c('colorscheme everforest')
 
 require('utils')

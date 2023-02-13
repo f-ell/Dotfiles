@@ -1,4 +1,4 @@
-local F = require('utils.functions')
+local L = require('utils.lib')
 
 -- bootstrap
 local v     = vim
@@ -31,4 +31,4 @@ require('lazy').setup('plugins', {
   }
 })
 
-F.nnmap('<leader>*', ':Lazy<CR>')
+L.nnmap('<leader>*', ':Lazy<CR>')

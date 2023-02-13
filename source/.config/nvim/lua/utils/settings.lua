@@ -1,4 +1,4 @@
-local F = require('utils.functions')
+local L = require('utils.lib')
 
 -- spelling
   -- using api functions results in horrendous performance hit
@@ -6,56 +6,56 @@ local F = require('utils.functions')
 -- vim.g['spelllang'] = 'de_de,en_us,en_gb'
 
 -- miscellaneous
-F.o('shell',      'dash')
-F.o('cdhome',     true)
-F.o('confirm',    true)
-F.o('showmode',   false)
-F.o('showcmd',    false)
-F.o('showbreak',  '> ')
-F.o('cmdheight',  1)
-F.c('filetype plugin indent on')
+L.o('shell',      'dash')
+L.o('cdhome',     true)
+L.o('confirm',    true)
+L.o('showmode',   false)
+L.o('showcmd',    false)
+L.o('showbreak',  '> ')
+L.o('cmdheight',  1)
+L.c('filetype plugin indent on')
 
-F.o('list', true)
-F.o('listchars', 'eol:¬,tab:| ,lead:.,trail:~,nbsp:+')
+L.o('list', true)
+L.o('listchars', 'eol:¬,tab:| ,lead:.,trail:~,nbsp:+')
 
-F.o('cursorline', true)
-F.o('ignorecase', true)
-F.o('smartcase',  true)
+L.o('cursorline', true)
+L.o('ignorecase', true)
+L.o('smartcase',  true)
 
-F.o('wrap', false)
-F.o('textwidth',  80)
-F.o('numberwidth', 3)
-F.o('signcolumn', 'yes')
-F.o('number',         true)
-F.o('relativenumber', true)
-F.o('pumheight', 7)
+L.o('wrap', false)
+L.o('textwidth',  80)
+L.o('numberwidth', 3)
+L.o('signcolumn', 'yes')
+L.o('number',         true)
+L.o('relativenumber', true)
+L.o('pumheight', 7)
 
-F.o('clipboard', 'unnamed')
-F.o('guicursor', 'n-v-c-sm:block,i-ci-ve:hor1-blinkon200-blinkoff150,r-cr-o:hor20')
-F.o('scrolloff',  1)
-F.o('mouse', 'a')
+L.o('clipboard', 'unnamed')
+L.o('guicursor', 'n-v-c-sm:block,i-ci-ve:hor1-blinkon200-blinkoff150,r-cr-o:hor20')
+L.o('scrolloff',  1)
+L.o('mouse', 'a')
 
 -- tab-settings
-F.o('expandtab',  true)
-F.o('tabstop',       2)
-F.o('softtabstop',   2)
-F.o('shiftwidth',    2)
+L.o('expandtab',  true)
+L.o('tabstop',       2)
+L.o('softtabstop',   2)
+L.o('shiftwidth',    2)
 
 -- timeouts
-F.o('timeoutlen',  500)
-F.o('ttimeoutlen',   0)
+L.o('timeoutlen',  500)
+L.o('ttimeoutlen',   0)
 
 -- splits
-F.o('splitbelow',  true)
-F.o('splitright',  true)
-F.o('equalalways', false)
-F.o('ruler',       false)
+L.o('splitbelow',  true)
+L.o('splitright',  true)
+L.o('equalalways', false)
+L.o('ruler',       false)
 
 -- buffer-behaviour
-F.o('autochdir',   true)
-F.o('updatecount', 0) -- supersedes F.o('swapfile', false)
-F.o('undofile',    true)
+L.o('autochdir',   true)
+L.o('updatecount', 0) -- supersedes L.o('swapfile', false)
+L.o('undofile',    true)
 
 -- transparency
-F.o('pumblend', 0)
-F.o('winblend', 0)
+L.o('pumblend', 0)
+L.o('winblend', 0)
