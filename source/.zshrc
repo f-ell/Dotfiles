@@ -85,9 +85,33 @@ if [[ `xset q 2>/dev/null` ]]; then
     # Git branch
     B=`git rev-parse --is-inside-work-tree 2>/dev/null`
     if (( $? == 0 )) && [[ $B == 'true' ]]; then
-      B=`git branch --show-current`
-      [[ -z $B ]] && B=`git describe --tags --exact-match @ 2>/dev/null`
-      [[ -z $B ]] && { B=`git rev-parse @`; B=${B:0:7}; }
+      declare -i m b
+      declare -A Refs
+      git -C . show-ref --head --heads --tags --abbrev -d | while read; do
+        Refs+=(${${REPLY#* }%\^\{\}} ${REPLY% *})
+      done
+
+      local HeadRef=HEAD
+      local HeadId=${Refs[HEAD]}
+
+      for Ref Id in ${(@kv)Refs}; do
+        [[ $Ref == HEAD ]] && continue
+
+        if [[ $HeadId == $Id ]]; then
+          let m++
+          [[ $Ref =~ 'refs/heads/' ]] && let b++
+          HeadRef=${Ref##*/}
+          HeadId=$Id
+        fi
+      done
+
+      if (( m == 0 )); then
+        HeadRef=$HeadId
+      elif (( b > 1 )) || (( m > b && b > 0 )); then
+        HeadRef=`git -C . branch --show-current`
+      fi
+
+      B=$HeadRef
     else
       unset B
     fi
