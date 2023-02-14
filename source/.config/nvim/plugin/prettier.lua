@@ -2,7 +2,10 @@ local L   = require('utils.lib')
 local v   = vim
 local va  = v.api
 
-local augroup = va.nvim_create_augroup('prettier', { clear = true })
+
+if v.fn.executable('prettier') ~= 1 then return end
+
+
 local fs_info = {
   env_usr = os.getenv('USER'),
   env_dir = os.getenv('TMPDIR'),
@@ -31,6 +34,8 @@ end
 
 
 -- Save buffer to temporary file and update current buffer with prettier output
+local augroup = va.nvim_create_augroup('prettier', { clear = true })
+
 va.nvim_create_autocmd('BufWritePre', {
   group   = augroup,
   pattern = fs_info.ft,
