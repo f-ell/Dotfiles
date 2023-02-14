@@ -43,7 +43,7 @@ local preprocess = function(type, diag)
 end
 
 
-local format_contents = function(diag)
+local format = function(diag)
   local ret   = {}
   local data  = diag.data
 
@@ -119,19 +119,19 @@ local set_highlights = function(bufnr, diag)
 end
 
 
-local render = function(type, diag)
+local open = function(type, diag)
   local w_max = math.floor(v.o.columns * 0.8)
-  local formatted = preprocess(type, diag)
-  local content   = format_contents(formatted)
+  local processed = preprocess(type, diag)
+  local content   = format(processed)
 
   -- move cursor to diagnostic
   if type == 'dir' then
-    vf.cursor(formatted.data[1].ln, formatted.data[1].col)
+    vf.cursor(processed.data[1].ln, processed.data[1].col)
   end
 
   -- insert header and separator
-  generate_header(formatted)
-  table.insert(content, 1, formatted.hdr..formatted.loc)
+  generate_header(processed)
+  table.insert(content, 1, processed.hdr..processed.loc)
 
   local w = get_longest_line(content)
   table.insert(content, 2,
@@ -150,28 +150,28 @@ local render = function(type, diag)
 
       close_events = { 'CursorMoved', 'InsertEnter' }
     })
-    set_highlights(bufnr, formatted)
+    set_highlights(bufnr, processed)
   end, 0)
 end
 
 
-local try_render = function(type, diag)
+local try_diag = function(type, diag)
   if diag[1] == nil then
     local str = type == 'dir' and 'No diagnostics to jump to.'
       or 'No diagnostics in this line.'
     return v.notify(str, 2)
   end
 
-  render(type, diag)
+  open(type, diag)
 end
 
 
 
 
 -- main
-M.goto_next = function() try_render('dir', { vd.get_next() }) end
-M.goto_prev = function() try_render('dir', { vd.get_prev() }) end
+M.goto_next = function() try_diag('dir', { vd.get_next() }) end
+M.goto_prev = function() try_diag('dir', { vd.get_prev() }) end
 M.get_line = function()
-  try_render('line', vd.get(0, { lnum = vf.line('.') - 1 }))
+  try_diag('line', vd.get(0, { lnum = vf.line('.') - 1 }))
 end
 return M
