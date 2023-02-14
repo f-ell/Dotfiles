@@ -18,7 +18,7 @@ end
 
 
 local highlight_refs = function(data)
-  local client = vl.get_active_clients({ buffer = data.main_buf })[1]
+  local client = vl.get_active_clients({ buffer = data.origin_buf })[1]
   local ref_provider = client.server_capabilities.referencesProvider
   if not ref_provider or ref_provider == false then
     return v.notify('No reference provider found.', 3)
@@ -32,7 +32,7 @@ local highlight_refs = function(data)
       if not res or next(res) == nil then return end
       for _, r in pairs(res) do
         if r.range then
-          va.nvim_buf_add_highlight(data.main_buf, data.ns_id, 'Search',
+          va.nvim_buf_add_highlight(data.origin_buf, data.ns_id, 'Search',
             r.range.start.line, r.range.start.character, r.range['end'].character)
         end
       end
@@ -45,8 +45,8 @@ local register_float_actions = function(data)
     if not va.nvim_win_is_valid(data.winnr) then return end
     v.cmd('stopinsert')
     va.nvim_win_close(data.winnr, true)
-    va.nvim_buf_clear_namespace(data.main_buf, data.ns_id, 0, -1)
-    va.nvim_win_set_cursor(data.main_win, data.pos)
+    va.nvim_buf_clear_namespace(data.origin_buf, data.ns_id, 0, -1)
+    va.nvim_win_set_cursor(data.origin_win, data.pos)
   end
 
   local do_rename = function()
@@ -55,9 +55,9 @@ local register_float_actions = function(data)
 
     if not (data.new and #data.new > 0) or data.new == data.old then return end
 
-    va.nvim_win_set_cursor(data.main_win, data.pos)
+    va.nvim_win_set_cursor(data.origin_win, data.pos)
     vl.buf.rename(data.new, {})
-    va.nvim_win_set_cursor(data.main_win, { data.pos[1], data.pos[2] + 1 })
+    va.nvim_win_set_cursor(data.origin_win, { data.pos[1], data.pos[2] + 1 })
   end
 
   -- register execute and abort keymaps
@@ -79,18 +79,19 @@ end
 
 
 local open = function(cword)
-  local main_buf = va.nvim_get_current_buf()
-  local main_win = va.nvim_get_current_win()
+  local origin_buf = va.nvim_get_current_buf()
+  local origin_win = va.nvim_get_current_win()
   local ns_id = va.nvim_create_namespace('LspUtilsNS')
   local bufnr = va.nvim_create_buf(false, true)
   v.bo[bufnr].bufhidden = 'wipe'
 
   local data = {
-    main_buf = main_buf,
-    main_win = main_win,
+    origin_buf = origin_buf,
+    origin_win = origin_win,
     bufnr = bufnr,
+    winnr = nil,
     ns_id = ns_id,
-    pos   = va.nvim_win_get_cursor(main_win),
+    pos   = va.nvim_win_get_cursor(origin_win),
     old   = cword
   }
 
