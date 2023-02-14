@@ -71,7 +71,7 @@ end
 
 local update_split = function()
   vu.select({ 'hor (-)', 'ver (|)' }, { prompt = 'split type: ' }, function(_, i)
-    if i == nil then return print('aborting...') end
+    if i == nil then return v.notify('aborting...', 2) end
     autoexec.dir = i - 1
   end)
 end
@@ -81,7 +81,7 @@ local update_cmd = function()
   vu.input({ prompt = 'cmd: ',
     default = autoexec.cmd == nil and vf.expand('%:p') or autoexec.cmd },
     function(str)
-      if str == nil then return print('aborting...') end
+      if str == nil then return v.notify('aborting...', 2) end
       if str == '' then autoexec.cmd = vf.expand('%:p') end
       autoexec.cmd = str
   end)
@@ -139,11 +139,11 @@ va.nvim_create_user_command('AutoExec', function()
   autoexec.ogname  = va.nvim_buf_get_name(autoexec.ogbuf)
 
   if autoexec.aebuf == autoexec.ogbuf then
-    return v.notify('autoexec: can\'t attach to AutoExec buffer', 2)
+    return v.notify('autoexec: can\'t attach to autoexec buffer', 2)
   end
   if autoexec.aebuf then reset() end
 
-  print('attaching to buffer...')
+  v.notify('attaching to buffer...', 2)
 
   if not autoexec.aebuf then make_buf() end
 
@@ -154,7 +154,7 @@ va.nvim_create_user_command('AutoExec', function()
   register_cmd()
   register_del()
 
-  print(' \nattached successfully.')
+  v.notify('attached', 2)
   v.cmd('silent w')
 end, { desc = 'Execute <command> whenever current buffer is written.' })
 
@@ -170,3 +170,11 @@ va.nvim_create_user_command('AutoExecDetach', function()
   va.nvim_buf_delete(autoexec.aebuf, { force = true })
   reset()
 end, { desc = 'Clean up AutoExec and wipe AutoExec buffer.' })
+
+
+va.nvim_create_user_command('AutoExecShow', function()
+  if not autoexec.aewin or has_win() then
+    return v.notify('autoexec: no autoexec buffer found', 3)
+  end
+  make_split()
+end, { desc = 'Re-split AutoExec buffer if it exists and isn\'t visible.' })
