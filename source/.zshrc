@@ -245,7 +245,7 @@ set_highlights
 # Completion
 zstyle ':completion:*' completer _expand _complete _ignored _match
 zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
-zstyle ':completion:*' matcher-list 'm:{[:lower:]}={[:upper:]} r:|[._-/]=** r:|=**' 'l:|=* r:|=*'
+zstyle ':completion:*' matcher-list 'm:{[:lower:]}={[:upper:]}' 'l:|=*'
 zstyle ':completion:*' keep-prefix true
 zstyle ':completion:*' verbose false
 
