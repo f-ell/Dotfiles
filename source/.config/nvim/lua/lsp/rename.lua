@@ -99,8 +99,14 @@ local open = function(cword)
 
   -- floaty stuff
   local anchor, offset = get_anchor_offset()
+  local min_w, max_w = math.min(v.o.columns, 18), math.min(v.o.columns, 36)
+  local len = cword:len()
+
+  local width = len < min_w and min_w or len + 1
+  if len > max_w then width = max_w end
+
   local winnr = va.nvim_open_win(bufnr, true, {
-    width     = math.floor(v.o.columns * 0.1),
+    width     = width,
     height    = 1,
 
     relative  = 'cursor',
