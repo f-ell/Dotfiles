@@ -8,11 +8,11 @@
 --          |__| Neovim
 
 local L = require('utils.lib')
-L.g('mapleader', ' ')
+L.vim.g('mapleader', ' ')
 
 require('utils.lazy')
 
-L.o('termguicolors', true)
-L.c('colorscheme everforest')
+L.vim.o('termguicolors', true)
+L.vim.c('colorscheme everforest')
 
 require('utils')

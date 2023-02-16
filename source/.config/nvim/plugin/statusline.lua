@@ -21,10 +21,10 @@ end
 
 
 local is_vcs = function()
-  local fh = L.open({
+  local fh = L.util.open({
     'git', '-C', resolve_dir(),
     'rev-parse', '--is-inside-work-tree' }, true, false)
-  return L.read(fh) == 'true' and true or false
+  return L.util.read(fh) == 'true' and true or false
 end
 
 
@@ -114,7 +114,7 @@ local get_head = function()
 
   local dir = resolve_dir()
 
-  local fh = L.open({
+  local fh = L.util.open({
     'git', '-C', dir,
     'show-ref', '--head', '--heads', '--tags', '--abbrev', '-d', }, false, '')
 
@@ -133,8 +133,8 @@ local get_head = function()
   if m == 0 then
     head_ln = get_obj_id(head_ln)
   elseif b > 1 or (m > b and b > 0) then
-    fh = L.open({ 'git', '-C', dir, 'branch', '--show-current' })
-    head_ln = L.read(fh)
+    fh = L.util.open({ 'git', '-C', dir, 'branch', '--show-current' }, true)
+    head_ln = L.util.read(fh)
   else
     head_ln = get_obj_ref(head_ln)
   end
@@ -144,18 +144,18 @@ end
 
 
 local get_diff = function()
-  local fh = L.open({
+  local fh = L.util.open({
     'git', '-C', resolve_dir(),
     'diff', '--numstat', resolve_file() }, true, '')
-  local numstat = L.read(fh)
+  local numstat = L.util.read(fh)
 
   if numstat == '' then
     local ret = '+0 -0'
 
-    fh = L.open({
+    fh = L.util.open({
       'git', '-C', resolve_dir(),
       'ls-files', '--error-unmatch', resolve_file() }, true, '')
-    if L.read(fh) == '' then ret = 'untracked' end
+    if L.util.read(fh) == '' then ret = 'untracked' end
 
     return ' %#neutral#'..ret
   end
@@ -222,5 +222,5 @@ end
 
 
 _G.statusline = statusline
-L.o('laststatus', 3)
-L.o('statusline', '%!v:lua.statusline()')
+L.vim.o('laststatus', 3)
+L.vim.o('statusline', '%!v:lua.statusline()')

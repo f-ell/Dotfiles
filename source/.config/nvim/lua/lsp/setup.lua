@@ -1,5 +1,5 @@
 local lsp = require('lspconfig')
-local L   = require('utils.lib')
+local key = require('utils.lib').key
 local dgn = require('lsp.diag')
 local def = require('lsp.definition')
 local rnm = require('lsp.rename')
@@ -26,29 +26,29 @@ local configs  = {
 
 
 local on_attach = function()
-  L.nnmap('<leader>gd', 'gd')
+  key.nnmap('<leader>gd', 'gd')
 
-  L.nnmap('gd', def.peek,           { buffer = 0 })
-  L.nnmap('K',  v.lsp.buf.hover,    { buffer = 0 })
-  L.nnmap('<leader>ca', v.lsp.buf.code_action, {buffer = 0})
-  L.nnmap('<leader>rn', rnm.rename, { buffer = 0 })
+  key.nnmap('gd', def.peek,           { buffer = 0 })
+  key.nnmap('K',  v.lsp.buf.hover,    { buffer = 0 })
+  key.nnmap('<leader>ca', v.lsp.buf.code_action, {buffer = 0})
+  key.nnmap('<leader>rn', rnm.rename, { buffer = 0 })
 
-  L.nnmap('<leader>h', dgn.get_line,  { buffer = 0 })
-  L.nnmap('<leader>j', dgn.goto_next, { buffer = 0 })
-  L.nnmap('<leader>k', dgn.goto_prev, { buffer = 0 })
-  L.nnmap('<leader>l', '<CMD>silent! Telescope diagnostics<CR>')
+  key.nnmap('<leader>h', dgn.get_line,  { buffer = 0 })
+  key.nnmap('<leader>j', dgn.goto_next, { buffer = 0 })
+  key.nnmap('<leader>k', dgn.goto_prev, { buffer = 0 })
+  key.nnmap('<leader>l', '<CMD>silent! Telescope diagnostics<CR>')
 end
 
 
-for key, server in pairs(servers) do
+for idx, server in pairs(servers) do
   local capabilities = v.lsp.protocol.make_client_capabilities()
   local opts = {
     on_attach     = on_attach,
     capabilities  = require('cmp_nvim_lsp').default_capabilities(capabilities)
   }
 
-  if configs[key] then
-    local config = require('lsp.servers.' .. configs[key])
+  if configs[idx] then
+    local config = require('lsp.servers.' .. configs[idx])
     v.tbl_deep_extend('force', config, opts)
   end
 

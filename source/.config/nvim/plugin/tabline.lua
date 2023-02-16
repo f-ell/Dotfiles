@@ -32,5 +32,5 @@ end
 
 
 _G.tabline = tabline
-L.o('showtabline', 1)
-L.o('tabline', '%!v:lua.tabline()')
+L.vim.o('showtabline', 1)
+L.vim.o('tabline', '%!v:lua.tabline()')

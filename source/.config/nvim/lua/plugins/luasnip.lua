@@ -5,7 +5,7 @@ return {
   config = function()
     local ls    = require('luasnip')
     local types = require('luasnip.util.types')
-    local L     = require('utils.lib')
+    local key   = require('utils.lib').key
 
     ls.config.setup({
       history       = true,
@@ -44,9 +44,9 @@ return {
       if ls.choice_active(-1) then ls.change_choice(-1) end
     end
 
-    L.inmap('<C-h>', function() ls_jump_backwards() end)
-    L.inmap('<C-j>', function() ls_choice_forward() end)
-    L.inmap('<C-k>', function() ls_choice_backward() end)
-    L.inmap('<C-l>', function() ls_expand_or_jump() end)
+    key.inmap('<C-h>', function() ls_jump_backwards() end)
+    key.inmap('<C-j>', function() ls_choice_forward() end)
+    key.inmap('<C-k>', function() ls_choice_backward() end)
+    key.inmap('<C-l>', function() ls_expand_or_jump() end)
   end
 }

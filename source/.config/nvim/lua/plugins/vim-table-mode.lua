@@ -3,13 +3,13 @@ return {
   lazy    = true,
   cmd     = 'TableModeEnable',
   config  = function()
-    local L = require('utils.lib')
+    local v = require('utils.lib').vim
 
-    L.g('table_mode_relign_map',                '<leader>tr')
-    L.g('table_mode_tableize_map',              '<leader>tt')
-    L.g('table_mode_delete_row_map',            '<leader>tdr')
-    L.g('table_mode_delete_column_map',         '<leader>tdc')
-    L.g('table_mode_insert_column_before_map',  '<leader>tic')
-    L.g('table_mode_insert_column_after_map',   '<leader>tac')
+    v.g('table_mode_relign_map',                '<leader>tr')
+    v.g('table_mode_tableize_map',              '<leader>tt')
+    v.g('table_mode_delete_row_map',            '<leader>tdr')
+    v.g('table_mode_delete_column_map',         '<leader>tdc')
+    v.g('table_mode_insert_column_before_map',  '<leader>tic')
+    v.g('table_mode_insert_column_after_map',   '<leader>tac')
   end
 }

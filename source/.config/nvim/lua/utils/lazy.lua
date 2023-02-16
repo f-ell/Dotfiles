@@ -31,4 +31,4 @@ require('lazy').setup('plugins', {
   }
 })
 
-L.nnmap('<leader>*', ':Lazy<CR>')
+L.key.nnmap('<leader>*', ':Lazy<CR>')

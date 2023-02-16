@@ -2,14 +2,14 @@ return {
   'sainnhe/everforest',
   lazy      = true,
   config    = function()
-    local L = require('utils.lib')
+    local v = require('utils.lib').vim
 
-    L.o('background', 'dark')
-    L.g('everforest_background',              'soft')
-    L.g('everforest_enable_bold',             '1')
-    L.g('everforest_enable_italic',           '1')
-    L.g('everforest_transparent_background',  '1')
-    L.g('everforest_spell_foreground',        'colored')
-    L.g('everforest_better_performance',      '1')
+    v.o('background', 'dark')
+    v.g('everforest_background',              'soft')
+    v.g('everforest_enable_bold',             '1')
+    v.g('everforest_enable_italic',           '1')
+    v.g('everforest_transparent_background',  '1')
+    v.g('everforest_spell_foreground',        'colored')
+    v.g('everforest_better_performance',      '1')
   end
 }

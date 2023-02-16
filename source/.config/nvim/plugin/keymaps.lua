@@ -1,5 +1,5 @@
-local L = require('utils.lib')
-local v = vim
+local key = require('utils.lib').key
+local v   = vim
 
 
 local wipe_buf = function()
@@ -118,54 +118,54 @@ end
 
 
 -- misc
-L.nnmap('<F12>', '<CMD>syntax sync fromstart<CR>')
-L.nnmap('--', '<CMD>w<CR>')
-L.nnmap('-d', '<CMD>bd<CR>')
-L.nnmap('-w',         function() wipe_buf() end)
-L.nnmap('<leader>tb', function() tab_bufs() end)
-L.vnmap('<leader>p',  function() polymerize() end)
+key.nnmap('<F12>', '<CMD>syntax sync fromstart<CR>')
+key.nnmap('--', '<CMD>w<CR>')
+key.nnmap('-d', '<CMD>bd<CR>')
+key.nnmap('-w',         function() wipe_buf() end)
+key.nnmap('<leader>tb', function() tab_bufs() end)
+key.vnmap('<leader>p',  function() polymerize() end)
 
-L.nnmap('<leader>~',  'viw~')
-L.nnmap('<leader>w',  '<CMD>w !doas tee %<CR>')
-L.nnmap('<leader>x',  '<CMD>!chmod 744 %<CR>')
-L.nnmap('<leader>%%', '<CMD>so %<CR>')
-L.nnmap('<leader>%k', '<CMD>so ~/.config/nvim/after/plugin/keymaps.lua<CR>')
-L.nnmap('<leader>%s', '<CMD>so ~/.config/nvim/lua/plugins/luasnip.lua<CR>')
+key.nnmap('<leader>~',  'viw~')
+key.nnmap('<leader>w',  '<CMD>w !doas tee %<CR>')
+key.nnmap('<leader>x',  '<CMD>!chmod 744 %<CR>')
+key.nnmap('<leader>%%', '<CMD>so %<CR>')
+key.nnmap('<leader>%k', '<CMD>so ~/.config/nvim/after/plugin/keymaps.lua<CR>')
+key.nnmap('<leader>%s', '<CMD>so ~/.config/nvim/lua/plugins/luasnip.lua<CR>')
 
-L.tnmap('<C-d>', '<C-\\><C-n>')
-L.nnmap('<leader><CR>', function() terminal() end)
+key.tnmap('<C-d>', '<C-\\><C-n>')
+key.nnmap('<leader><CR>', function() terminal() end)
 
 -- credits primeagen
-L.nnmap('n', 'nzz')
-L.nnmap('N', 'Nzz')
-L.nnmap('<C-u>', '<C-u>zz')
-L.nnmap('<C-d>', '<C-d>zz')
-L.nnmap('<leader>y', '"+y')
-L.vnmap('<leader>y', '"+y')
-L.nnmap('<leader>d', '"_d')
-L.vnmap('<leader>d', '"_d')
+key.nnmap('n', 'nzz')
+key.nnmap('N', 'Nzz')
+key.nnmap('<C-u>', '<C-u>zz')
+key.nnmap('<C-d>', '<C-d>zz')
+key.nnmap('<leader>y', '"+y')
+key.vnmap('<leader>y', '"+y')
+key.nnmap('<leader>d', '"_d')
+key.vnmap('<leader>d', '"_d')
 
   -- tabs
-L.nnmap('<leader>g0', '<CMD>tabfirst<CR>')
-L.nnmap('<leader>g$', '<CMD>tablast<CR>')
-L.nnmap('<leader>gh', '<CMD>silent! tabmove-<CR>')
-L.nnmap('<leader>gj', '<CMD>tabmove0<CR>')
-L.nnmap('<leader>gl', '<CMD>silent! tabmove+<CR>')
-L.nnmap('<leader>gk', '<CMD>tabmove$<CR>')
+key.nnmap('<leader>g0', '<CMD>tabfirst<CR>')
+key.nnmap('<leader>g$', '<CMD>tablast<CR>')
+key.nnmap('<leader>gh', '<CMD>silent! tabmove-<CR>')
+key.nnmap('<leader>gj', '<CMD>tabmove0<CR>')
+key.nnmap('<leader>gl', '<CMD>silent! tabmove+<CR>')
+key.nnmap('<leader>gk', '<CMD>tabmove$<CR>')
 
 -- ex-mode navigation
-L.cnmap('<C-h>', '<Left>')
-L.cnmap('<C-k>', '<Up>')
-L.cnmap('<C-j>', '<Down>')
-L.cnmap('<C-l>', '<Right>')
+key.cnmap('<C-h>', '<Left>')
+key.cnmap('<C-k>', '<Up>')
+key.cnmap('<C-j>', '<Down>')
+key.cnmap('<C-l>', '<Right>')
 
   -- windows
-L.nnmap('<A-h>', '<C-w>h')
-L.nnmap('<A-j>', '<C-w>j')
-L.nnmap('<A-k>', '<C-w>k')
-L.nnmap('<A-l>', '<C-w>l')
+key.nnmap('<A-h>', '<C-w>h')
+key.nnmap('<A-j>', '<C-w>j')
+key.nnmap('<A-k>', '<C-w>k')
+key.nnmap('<A-l>', '<C-w>l')
 
   -- html / css / js
-L.nnmap('<leader>br', 'oborder<CMD> 1px solid red;<Esc>o<Esc>')
-L.nnmap('<leader>bg', 'oborder<CMD> 1px solid green;<Esc>o<Esc>')
-L.nnmap('<leader>bb', 'oborder<CMD> 1px solid blue;<Esc>o<Esc>')
+key.nnmap('<leader>br', 'oborder<CMD> 1px solid red;<Esc>o<Esc>')
+key.nnmap('<leader>bg', 'oborder<CMD> 1px solid green;<Esc>o<Esc>')
+key.nnmap('<leader>bb', 'oborder<CMD> 1px solid blue;<Esc>o<Esc>')
