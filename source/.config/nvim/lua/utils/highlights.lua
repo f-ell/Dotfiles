@@ -86,6 +86,8 @@ local set_hl_groups = function()
     {0, 'GitAdd',   {fg = gre1, bg =  _}},
     {0, 'GitDel',   {fg = red1, bg =  _}},
 
+    {0, 'CodeAction', {fg = fg5, bg = gre1}},
+
   -- PLUGINS --
     -- Git(signs)
     {0, 'DiffText', {bg = '#3d5665', sp = blu1, undercurl = true}},
