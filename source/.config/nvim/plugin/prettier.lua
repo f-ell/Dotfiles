@@ -45,12 +45,12 @@ va.nvim_create_autocmd('BufWritePre', {
 
     write_tmpfile(va.nvim_buf_get_lines(0, 0, -1, true))
 
-    local fh = L.open({ 'prettier',
+    local fh = L.util.open({ 'prettier',
       '--cache-strategy', 'content', '--cache',
       '--parser', v.bo.filetype, fs_info.fn }, false, '')
 
     local lines = {}
-    for ln in L.read_no_chop(fh):gmatch('(.-)\r?\n') do
+    for ln in L.util.read_no_chop(fh):gmatch('(.-)\r?\n') do
       table.insert(lines, ln)
     end
 
