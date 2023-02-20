@@ -59,15 +59,22 @@ end
 
 
 local set_highlights = function(bufnr, data)
+  local hlgr = { 'HintFloatInv', 'InfoFloatInv', 'WarningFloatInv', 'ErrorFloatInv' }
+
   for i = 1, #data do
+    local hlidx = i % #hlgr ~= 0 and i % #hlgr or 4
     local len = 2 + strlen(data[i].idx)
     if data[i].ind then len = len + 1 end
 
+    -- header
+    va.nvim_buf_add_highlight(bufnr, -1, 'InfoFloatSp', 0, 0, -1)
+    va.nvim_buf_add_highlight(bufnr, -1, 'NeutralFloat', 1, 0, -1)
+
     -- prefix
-    va.nvim_buf_add_highlight(bufnr, -1, 'CodeAction', i-1, 0, len)
+    va.nvim_buf_add_highlight(bufnr, -1, hlgr[hlidx], i+1, 0, len)
 
     -- body
-    va.nvim_buf_add_highlight(bufnr, -1, 'NeutralFloatSp', i-1, len+#data[i].msg, -1)
+    va.nvim_buf_add_highlight(bufnr, -1, 'NeutralFloatSp', i+1, len+#data[i].msg, -1)
   end
 end
 
@@ -83,12 +90,9 @@ end
 
 
 local do_codeaction = function(data, num)
-  local idx
-  if num then idx = num
-  else        idx = vf.line('.') end
   close_win(data)
 
-  local response = data.res[idx]
+  local response = data.res[num]
   local action = response.action
   local client = v.lsp.get_client_by_id(response.id)
 
@@ -103,7 +107,12 @@ end
 local register_float_actions = function(data)
   -- register execute and abort keymaps
   v.keymap.set('n', '<C-c>',  function() close_win(data) end, { buffer = true })
-  v.keymap.set('n', '<CR>',   function() do_codeaction(data) end, { buffer = true })
+  v.keymap.set('n', '<CR>',   function()
+    local num = vf.line('.') - 2
+    if num < 1 then return end
+    do_codeaction(data, num)
+  end, { buffer = true })
+
   for i = 1, data.len do
     v.keymap.set('n', tostring(i), function() do_codeaction(data, i) end,
       { buffer = true})
@@ -140,6 +149,13 @@ local open = function(responses)
 
   local processed = preprocess(responses)
   local content   = format(processed)
+
+  -- insert header and separator
+  table.insert(content, 1, ' Code Actions')
+
+  local w = get_longest_line(content)
+  table.insert(content, 2, string.rep('', w))
+
   va.nvim_buf_set_lines(bufnr, 0, -1, true, content)
   set_highlights(bufnr, processed)
 
@@ -151,14 +167,14 @@ local open = function(responses)
     bufnr = bufnr,
     winnr = nil,
     pos   = va.nvim_win_get_cursor(origin_win),
-    len   = #content,
+    len   = #content - 2,
     res   = responses
   }
 
   -- floaty stuff
   local anchor, offset = get_anchor_offset()
   local winnr = va.nvim_open_win(bufnr, true, {
-    width   = get_longest_line(content),
+    width   = w,
     height  = #content,
 
     relative  = 'cursor',
@@ -170,6 +186,8 @@ local open = function(responses)
     border  = 'rounded'
   })
   data.winnr = winnr
+
+  va.nvim_win_set_cursor(data.winnr, { 3, 0 })
 
   register_float_actions(data)
 end

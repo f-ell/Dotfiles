@@ -60,15 +60,20 @@ local set_hl_groups = function()
     {0, 'FloatBorder',    {fg = fg2,  bg = _}},
 
     {0, 'NeutralFloat',   {fg = fg3,  bg = _}},
-    {0, 'ErrorFloat',     {fg = red1, bg = _}},
-    {0, 'WarningFloat',   {fg = yel1, bg = _}},
-    {0, 'HintFloat',      {fg = blu1, bg = _}},
-    {0, 'InfoFloat',      {fg = gre1, bg = _}},
     {0, 'NeutralFloatSp', {fg = fg3,  bg = _, italic = true, bold = true}},
-    {0, 'ErrorFloatSp',   {fg = red1, bg = _, italic = true, bold = true}},
-    {0, 'WarningFloatSp', {fg = yel1, bg = _, italic = true, bold = true}},
-    {0, 'HintFloatSp',    {fg = blu1, bg = _, italic = true, bold = true}},
-    {0, 'InfoFloatSp',    {fg = gre1, bg = _, italic = true, bold = true}},
+
+    {0, 'ErrorFloat',       {fg = red1, bg = _}},
+    {0, 'WarningFloat',     {fg = yel1, bg = _}},
+    {0, 'InfoFloat',        {fg = gre1, bg = _}},
+    {0, 'HintFloat',        {fg = blu1, bg = _}},
+    {0, 'ErrorFloatSp',     {fg = red1, bg = _, italic = true, bold = true}},
+    {0, 'WarningFloatSp',   {fg = yel1, bg = _, italic = true, bold = true}},
+    {0, 'InfoFloatSp',      {fg = gre1, bg = _, italic = true, bold = true}},
+    {0, 'HintFloatSp',      {fg = blu1, bg = _, italic = true, bold = true}},
+    {0, 'ErrorFloatInv',    {fg = fg5, bg = red1}},
+    {0, 'WarningFloatInv',  {fg = fg5, bg = yel1}},
+    {0, 'InfoFloatInv',     {fg = fg5, bg = gre1}},
+    {0, 'HintFloatInv',     {fg = fg5, bg = blu1}},
 
     -- Statusline
     {0, 'SlNormal', {fg = fg2,  bg = _}},
@@ -85,8 +90,6 @@ local set_hl_groups = function()
     {0, 'Git',      {fg = git,  bg =  _, italic  = true}},
     {0, 'GitAdd',   {fg = gre1, bg =  _}},
     {0, 'GitDel',   {fg = red1, bg =  _}},
-
-    {0, 'CodeAction', {fg = fg5, bg = gre1}},
 
   -- PLUGINS --
     -- Git(signs)
