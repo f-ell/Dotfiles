@@ -9,8 +9,8 @@ local M = {}
 
 
 -- auxiliary
-local prepare_result_data = function(res)
-  local ret = {}
+local preprocess = function(cword, switch, res)
+  local ret = { cword = cword, switch = switch }
   local range
 
   if type(res[1]) == 'table' then
@@ -69,7 +69,15 @@ local set_highlights = function(bufnr, winnr, data)
     va.nvim_buf_add_highlight(bufnr, ns_id, 'Search', last, 0, data._end[2])
   end
 
+  -- register mapping for clearing highlight
+  v.keymap.set('n', '<C-l>', function()
+    va.nvim_buf_clear_namespace(bufnr, ns_id, 0, -1)
+    v.keymap.del('n', '<C-l>', { buffer = true })
+  end, { buffer = true, remap = false })
+
   -- register close autocommands
+  if winnr == nil then return end
+
   va.nvim_create_autocmd('QuitPre', {
     buffer    = bufnr,
     once      = true,
@@ -91,8 +99,18 @@ local set_highlights = function(bufnr, winnr, data)
 end
 
 
-local open = function(data)
+local open = function(cword, result, switch)
+  local data  = preprocess(cword, switch, result)
   local bufnr = v.uri_to_bufnr(data.uri)
+
+  if data.switch or bufnr == va.nvim_get_current_buf() then
+    if data.switch then v.cmd('buffer '..bufnr) end
+
+    set_highlights(bufnr, nil, data)
+    v.fn.cursor(data.start[1], data.start[2]+1)
+    return
+  end
+
   v.bo[bufnr].bufhidden = 'wipe'
 
   -- floaty stuff
@@ -118,7 +136,7 @@ end
 
 
 -- TODO: consider using tressitter api to select target node and only display implementation in float (can use open_floating_preview())
-local request_definition = function()
+local request_definition = function(switch)
   vl.buf_request_all(0, 'textDocument/definition',
     vl.util.make_position_params(), function(res)
       if not res or next(res) == nil then v.notify('Lsp response is nil.', 3)
@@ -131,7 +149,7 @@ local request_definition = function()
       end
       if not result then v.notify('Lsp response is nil.', 3) return end
 
-      open(prepare_result_data(result))
+      open(v.fn.expand('<cword>'), result, switch)
     end)
 end
 
@@ -139,5 +157,6 @@ end
 
 
 -- main
-M.peek = function() request_definition() end
+M.peek = function() request_definition(false) end
+M.open = function() request_definition(true) end
 return M

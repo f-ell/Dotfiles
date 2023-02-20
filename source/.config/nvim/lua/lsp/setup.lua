@@ -1,7 +1,8 @@
 local lsp = require('lspconfig')
 local key = require('utils.lib').key
-local dgn = require('lsp.diag')
+local cda = require('lsp.codeaction')
 local def = require('lsp.definition')
+local dgn = require('lsp.diag')
 local rnm = require('lsp.rename')
 local v   = vim
 
@@ -26,12 +27,11 @@ local configs  = {
 
 
 local on_attach = function()
-  key.nnmap('<leader>gd', 'gd')
-
-  key.nnmap('gd', def.peek,           { buffer = 0 })
-  key.nnmap('K',  v.lsp.buf.hover,    { buffer = 0 })
-  key.nnmap('<leader>ca', v.lsp.buf.code_action, {buffer = 0})
-  key.nnmap('<leader>rn', rnm.rename, { buffer = 0 })
+  key.nnmap('gd', def.peek,               { buffer = 0 })
+  key.nnmap('<leader>gd', def.open,       { buffer = 0 })
+  key.nnmap('K', v.lsp.buf.hover,         { buffer = 0 })
+  key.nnmap('<leader>ca', cda.codeaction, { buffer = 0 })
+  key.nnmap('<leader>rn', rnm.rename,     { buffer = 0 })
 
   key.nnmap('<leader>h', dgn.get_line,  { buffer = 0 })
   key.nnmap('<leader>j', dgn.goto_next, { buffer = 0 })
