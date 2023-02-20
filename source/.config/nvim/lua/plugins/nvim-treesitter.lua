@@ -6,7 +6,7 @@ return {
     'JoosepAlviste/nvim-ts-context-commentstring',
     {
       'nvim-treesitter/nvim-treesitter-context',
-      config = {
+      opts = {
         enable      = true,
         mode        = 'cursor',
         trim_scope  = 'outer',
