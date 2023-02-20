@@ -1,62 +1,83 @@
 local L     = require('utils.lib')
 local v     = vim
 local va    = v.api
+local vf    = v.fn
 local strf  = string.format
 local hl_no = '%#SlNormal#'
 local git_info = {}
 
 
 -- auxiliary
-local resolve_dir = function()
-  local buf = v.fn.bufname()
-  local res = v.loop.fs_readlink(buf)
-  return v.fs.dirname(res ~= '' and res or buf)
+local readlink = function()
+  local buf = vf.expand('%:p:h') .. '/' .. vf.expand('%:t')
+  local src = v.loop.fs_readlink(buf)
+
+  return src and src or buf
 end
 
-local resolve_file = function()
-  local buf   = v.fn.bufname()
-  local res   = v.loop.fs_readlink(buf)
-  return res ~= '' and res or buf
+local readlink_dir = function()
+  return v.fs.dirname(readlink())
 end
 
 
 local is_vcs = function()
   local fh = L.util.open({
-    'git', '-C', resolve_dir(),
+    'git', '-C', readlink_dir(),
     'rev-parse', '--is-inside-work-tree' }, true, false)
   return L.util.read(fh) == 'true' and true or false
+end
+
+local git_dir = function()
+  local dir = nil
+  local cwd = readlink_dir()
+
+  while cwd do
+    local current = cwd .. '/.git'
+    local stat    = v.loop.fs_stat(current)
+    if not stat then goto continue end
+
+    -- INFO: potentially inefficient
+    -- loop doesn't break when encoutering .git *files* from submodules
+    if stat.type == 'directory' then
+      dir = current
+      break
+    end
+
+    ::continue::
+    cwd = cwd:match('^(.+)/.-$')
+  end
+
+  return dir
 end
 
 
 
 
 -- misc components
-local get_mode = function()
-  local mode = v.api.nvim_get_mode().mode
+local mode = function()
+  local m = va.nvim_get_mode().mode
 
-  if      mode == 'V'   then mode = 'VL'
-  elseif  mode == ''  then mode = 'VB' end
+  if      m == 'V'   then m = 'VL'
+  elseif  m == ''  then m = 'VB' end
 
-  return mode:upper()
+  return m:upper()
 end
 
 
-local get_mode_colour = function()
-  local mode = v.api.nvim_get_mode().mode
+local mode_colour = function()
+  local m = va.nvim_get_mode().mode
 
-  if      mode == 'V' or mode == '' then mode = 'v'
-  elseif  mode == 'nt'                then mode = 'n' end
+  if      m == 'V' or m == '' then m = 'v'
+  elseif  m == 'nt'             then m = 'n' end
 
-  local main  = strf('%s%s#', '%#mode', mode:upper())
-  local aux   = strf('%s%sx#', '%#mode', mode:upper())
+  local main  = strf('%s%s#', '%#mode', m:upper())
+  local aux   = strf('%s%sx#', '%#mode', m:upper())
   return main, aux
 end
 
 
 local modified = function()
-  local modified = ''
-  if v.api.nvim_buf_get_option(0, 'modified') then  modified = ' ' end
-  return modified
+  return va.nvim_buf_get_option(0, 'modified') and ' ' or ''
 end
 
 
@@ -64,32 +85,29 @@ local bufname = function()
   local hl_ro   = '%#SlRo#'
   local hl_rox  = '%#SlRox#'
 
-  local bufname = v.fn.bufname()
-  if bufname == '' then bufname = '[null]'
-  else                  bufname = string.gsub(bufname, '.*/', '') end
+  local buf = vf.bufname()
+  if buf == '' then buf = '[null]'
+  else              buf = string.gsub(buf, '.*/', '') end
 
   local str
-  if v.api.nvim_buf_get_option(0, 'readonly') then
-    str = strf('%s%s%s%s', hl_rox, hl_ro, bufname, hl_rox)
+  if va.nvim_buf_get_option(0, 'readonly') then
+    str = strf('%s%s%s%s', hl_rox, hl_ro, buf, hl_rox)
   else
-    str = bufname
+    str = buf
   end
   return str..' '
 end
 
 
-local get_bufnr = function() return '%n' end
-
-
 local bytecount = function()
-  local count = v.fn.line2byte('$') + v.fn.len(v.fn.getline('$'))
+  local count = vf.line2byte('$') + vf.len(vf.getline('$'))
   if count == -1 then count = 0 end
   return count..'B'
 end
 
 
 local searchcount = function()
-  local s   = v.fn.searchcount({maxcount=0})
+  local s   = vf.searchcount({ maxcount = 0 })
   local cur = s.current; local tot = s.total; local cmp = s.incomplete
 
   if s.exact_match == 0 then cur = 0 end
@@ -102,62 +120,42 @@ end
 
 
 -- git components
-local get_head = function()
-  local get_obj_id = function(str)
-    return str:match('^(%x+) ')
-  end
-  local get_obj_ref = function(str)
-    local prefix = ''
-    if str:match('refs/tags/') then prefix = 't:' end
-    return prefix..str:gsub('^.*/', ''):gsub('%^{}', '')
-  end
+local git_head = function()
+  local fh = io.open(git_info.dir..'/HEAD', 'r')
+  if fh == nil then return '' end
 
-  local dir = resolve_dir()
+  local content = L.util.read(fh)
+  local head = content:match('^ref: refs/heads/(.+)$')
 
-  local fh = L.util.open({
-    'git', '-C', dir,
-    'show-ref', '--head', '--heads', '--tags', '--abbrev', '-d', }, false, '')
-
-  local head_ln = fh:read('*l')
-
-  local b, m = 0, 0
-  for ln in fh:lines() do
-    if get_obj_id(head_ln) == get_obj_id(ln) then
-      m = m + 1
-      if ln:match('refs/heads/') then b = b + 1 end
-      head_ln = ln
-    end
-  end
-  fh:close()
-
-  if m == 0 then
-    head_ln = get_obj_id(head_ln)
-  elseif b > 1 or (m > b and b > 0) then
-    fh = L.util.open({ 'git', '-C', dir, 'branch', '--show-current' }, true)
-    head_ln = L.util.read(fh)
-  else
-    head_ln = get_obj_ref(head_ln)
+  if not head then
+    fh = L.util.open({
+      'git', '-C', readlink_dir(),
+      'describe', '--tags', '--exact-match', '@' }, true, '')
+    local tag = L.util.read(fh)
+    head = tag ~= '' and 't:'..tag or content:sub(1, 8)
   end
 
-  return strf(' %s %s%s', '%#Git#', head_ln, hl_no)
+  return strf(' %s %s%s', '%#Git#', head, hl_no)
 end
 
 
-local get_diff = function()
+local git_diff = function()
+  local ustr = ' %#neutral#untracked'
+  local file = readlink()
+  if file:match('/$') then return ustr end
+
   local fh = L.util.open({
-    'git', '-C', resolve_dir(),
-    'diff', '--numstat', resolve_file() }, true, '')
+    'git', '-C', readlink_dir(),
+    'diff', '--numstat', file }, true, '')
   local numstat = L.util.read(fh)
 
   if numstat == '' then
-    local ret = '+0 -0'
-
     fh = L.util.open({
-      'git', '-C', resolve_dir(),
-      'ls-files', '--error-unmatch', resolve_file() }, true, '')
-    if L.util.read(fh) == '' then ret = 'untracked' end
+      'git', '-C', readlink_dir(),
+      'ls-files', '--error-unmatch', file }, true, '')
+    if L.util.read(fh) == '' then return ustr end
 
-    return ' %#neutral#'..ret
+    return ' %#neutral#+0 -0'
   end
 
   local add = string.match(numstat, '%d+')
@@ -170,20 +168,15 @@ local get_diff = function()
 end
 
 
--- populate git information and register autocommands
-git_info.vcs  = is_vcs()
-if git_info.vcs then
-  git_info.head = get_head()
-  git_info.diff = get_diff()
-end
-
-va.nvim_create_autocmd({ 'BufEnter', 'FileChangedShellPost', 'FocusGained' }, {
-  callback = function()
+-- register autocommands
+va.nvim_create_autocmd({ 'BufEnter', 'BufFilePost', 'FileChangedShellPost',
+  'FocusGained' }, { callback = function()
     git_info.vcs = is_vcs()
     if not git_info.vcs then return end
 
-    git_info.head = get_head()
-    git_info.diff = get_diff()
+    git_info.dir  = git_dir()
+    git_info.head = git_head()
+    git_info.diff = git_diff()
   end
 })
 
@@ -191,12 +184,12 @@ va.nvim_create_autocmd('BufWritePre', {
   nested = true,
   callback = function()
     if not git_info.vcs then return end
-    git_info.head = get_head()
+    git_info.head = git_head()
     if not v.bo.modified then return end
 
     va.nvim_create_autocmd('BufWritePost', {
       once = true,
-      callback = function() git_info.diff = get_diff() end
+      callback = function() git_info.diff = git_diff() end
     })
   end
 })
@@ -206,9 +199,9 @@ va.nvim_create_autocmd('BufWritePre', {
 
 -- statusline definition
 local statusline = function()
-  local main, aux = get_mode_colour()
-  local mode  = strf('%s%s%s%s%s', aux, main, get_mode(), aux, hl_no)
-  local bufnr = strf('%s(%s)', hl_no, get_bufnr())
+  local main, aux = mode_colour()
+  local mode  = strf('%s%s%s%s%s', aux, main, mode(), aux, hl_no)
+  local bufnr = strf('%s(%s)', hl_no, '%n')
   local git   = git_info.vcs and git_info.head .. git_info.diff or ''
 
   return table.concat({
