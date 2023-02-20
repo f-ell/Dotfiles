@@ -76,7 +76,7 @@ end
 ---Returns the option value otherwise.
 ---
 ---@param name string
----@param value string
+---@param value? any
 M.vim.o = function(name, value)
   if value == nil then
     return v.o[name]
@@ -89,7 +89,7 @@ end
 ---Returns the option value otherwise.
 ---
 ---@param name string
----@param value string
+---@param value? any
 M.vim.g = function(name, value)
   if value == nil then
     return v.g[name]
