@@ -1,22 +1,28 @@
 local L   = require('utils.lib')
 local v   = vim
 local va  = v.api
+local vf  = v.fn
 
 
-if v.fn.executable('prettier') ~= 1 then return end
+if vf.executable('prettier') ~= 1 then return end
 
 
 local fs_info = {
-  env_usr = os.getenv('USER'),
-  env_dir = os.getenv('TMPDIR'),
-  ft = { '*.js', '*.[cm]js', '*.ts', '*.[jt]sx' }
+  ft  = { '*.js', '*.[cm]js', '*.ts', '*.[jt]sx' },
+  dir = vf.stdpath('run')..'/nvim.user'
 }
+fs_info.fn  = fs_info.dir..'/nvim_prettier'..v.loop.os_getpid()
 
-fs_info.dir = fs_info.env_dir == nil and '/tmp' or fs_info.env_dir
-fs_info.dir = fs_info.env_usr == nil
-  and fs_info.dir or fs_info.dir..'/nvim.'..fs_info.env_usr
 
-fs_info.fn = fs_info.dir..'/nvim_prettier'..v.loop.os_getpid()
+-- INFO: for more efficient writing (prettier makes it slow enough as is), this
+-- is only run once. Deleting or making fs_info.dir inaccessible while nvim is
+-- running will break the autocommand.
+if not v.loop.fs_stat(fs_info.dir) then
+  local dir = v.loop.fs_mkdir(fs_info.dir, 111000000)
+  if not dir then
+    return v.notify('couldn\'t create temporary directory '..fs_info.dir, 4)
+  end
+end
 
 
 local write_tmpfile = function(lines)
