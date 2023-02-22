@@ -8,11 +8,26 @@ local git_info = {}
 
 
 -- auxiliary
+-- INFO: this may match an incorrect location with nested links
 local readlink = function()
-  local buf = vf.expand('%:p:h') .. '/' .. vf.expand('%:t')
-  local src = v.loop.fs_readlink(buf)
+  local buf = vf.expand('%:p:h')..'/'..vf.expand('%:t')
+  local src
 
-  return src and src or buf
+  -- file itself is a link
+  src = v.loop.fs_readlink(buf)
+  if src then return src end
+
+  -- link in directory structure
+  local dir = ''
+  for subdir in buf:sub(2):gmatch('(.-)/') do
+    dir = dir..'/'..subdir
+    src = v.loop.fs_readlink(dir)
+    if src then break end
+  end
+  if src then return src..buf:gsub(dir, '') end
+
+  -- no link in directory structure
+  return buf
 end
 
 local readlink_dir = function()
@@ -32,7 +47,7 @@ local git_dir = function()
   local cwd = readlink_dir()
 
   while cwd do
-    local current = cwd .. '/.git'
+    local current = cwd..'/.git'
     local stat    = v.loop.fs_stat(current)
     if not stat then goto continue end
 
@@ -202,7 +217,7 @@ local statusline = function()
   local main, aux = mode_colour()
   local mode  = strf('%s%s%s%s%s', aux, main, mode(), aux, hl_no)
   local bufnr = strf('%s(%s)', hl_no, '%n')
-  local git   = git_info.vcs and git_info.head .. git_info.diff or ''
+  local git   = git_info.vcs and git_info.head..git_info.diff or ''
 
   return table.concat({
     hl_no, ' ', mode, git, hl_no,
