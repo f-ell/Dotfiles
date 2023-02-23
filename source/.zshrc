@@ -211,33 +211,37 @@ if [[ -o login ]]; then
 fi
 ### END LOGIN ONLY ###
 
+typeset -a ZSH_HIGHLIGHT_HIGHLIGHTERS=(main regexp)
+typeset -A ZSH_HIGHLIGHT_STYLES ZSH_HIGHLIGHT_REGEXP
 set_highlights() {
   local _1=01 _2=02 _3=03 _4=04 _5=05 _6=06 _7=07 _8=08 _9=09
   local _10=10 _11=11 _12=12 _13=13 _14=14 _15=15 _16=16
-  ZSH_HIGHLIGHT_STYLES[alias]="fg=$_6,bold"
-  ZSH_HIGHLIGHT_STYLES[assign]="fg=$_4,bold"
-  ZSH_HIGHLIGHT_STYLES[autodirectory]="fg=$_3,bold"
+  ZSH_HIGHLIGHT_STYLES[alias]="fg=$_6"
+  ZSH_HIGHLIGHT_STYLES[assign]="fg=$_4"
+  ZSH_HIGHLIGHT_STYLES[autodirectory]="fg=$_3"
   ZSH_HIGHLIGHT_STYLES[back-quoted-argument]="fg=$_8"
-  ZSH_HIGHLIGHT_STYLES[builtin]="fg=$_14,bold"
+  ZSH_HIGHLIGHT_STYLES[builtin]="fg=$_4"
   ZSH_HIGHLIGHT_STYLES[command]="fg=$_6,bold"
   ZSH_HIGHLIGHT_STYLES[commandseparator]="fg=$_7"
   ZSH_HIGHLIGHT_STYLES[command-substitution]="fg=$_7"
   ZSH_HIGHLIGHT_STYLES[dollar-quoted-argument]="fg=$_2"
   ZSH_HIGHLIGHT_STYLES[double-hyphen-option]="fg=$_7"
   ZSH_HIGHLIGHT_STYLES[double-quoted-argument]="fg=$_10"
-  ZSH_HIGHLIGHT_STYLES[function]="fg=$_6,bold"
-  ZSH_HIGHLIGHT_STYLES[globbing]="fg=$_5,bold"
-  ZSH_HIGHLIGHT_STYLES[history-expansion]="fg=$_5,bold"
-  ZSH_HIGHLIGHT_STYLES[path]="fg=$_7,italic"
-  ZSH_HIGHLIGHT_STYLES[precommand]="fg=$_14"
+  ZSH_HIGHLIGHT_STYLES[function]="fg=$_3"
+  ZSH_HIGHLIGHT_STYLES[globbing]="fg=$_5"
+  ZSH_HIGHLIGHT_STYLES[history-expansion]="fg=$_5"
+  ZSH_HIGHLIGHT_STYLES[path]="fg=$_3"
+  ZSH_HIGHLIGHT_STYLES[precommand]="fg=$_7"
   ZSH_HIGHLIGHT_STYLES[process-substitution]="fg=$_7"
-  ZSH_HIGHLIGHT_STYLES[redirection]="fg=$_7"
+  ZSH_HIGHLIGHT_STYLES[redirection]="fg=$_5"
   ZSH_HIGHLIGHT_STYLES[reserved-word]="fg=$_1"
   ZSH_HIGHLIGHT_STYLES[single-hyphen-option]="fg=$_7"
   ZSH_HIGHLIGHT_STYLES[single-quoted-argument]="fg=$_2"
-  ZSH_HIGHLIGHT_STYLES[unknown-token]="fg=$_1,bold"
+  ZSH_HIGHLIGHT_STYLES[unknown-token]="fg=$_1"
   ZSH_HIGHLIGHT_STYLES[default]="fg=$_7"
-  ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=$_8,bold"
+  ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=$_8"
+
+  ZSH_HIGHLIGHT_REGEXP+=('\$(\w+|\{.+?\})' "fg=$_5")
 }
 set_highlights
 
