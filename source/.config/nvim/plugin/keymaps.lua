@@ -71,50 +71,6 @@ local terminal = function()
 end
 
 
-local polymerize = function()
-  local ft    = L.o('filetype')
-  local dir   = os.getenv('HOME')..'/Media/Pictures/Screenshots/Code/'
-  local file  = 'silicon_'..os.date('%Y%m%d-%H%M%S')..'.png'
-  local args  = {
-    '-l '..ft,
-    '-o '..dir..file,
-    '-f \'Ellograph CF\'',
-    '-b \'#7fbbb3\'',
-    '--shadow-offset-x 4',
-    '--shadow-offset-y 4',
-    '--shadow-blur-radius 6',
-    '--shadow-color \'#374247\'',
-    '--no-window-controls',
-    '--theme everforest_dark'
-  }
-
-  -- get selection contents
-  local s_ln  = v.fn.getpos('v')[2]
-  local e_ln  = v.fn.getpos('.')[2]
-  local sel   = s_ln < e_ln
-    and v.fn.getline(s_ln, e_ln)
-    or  v.fn.getline(e_ln, s_ln)
-
-  -- escape necessary substrings
-  for i, s in pairs(sel) do
-    local mut = string.gsub(s, '\\', '\\\\\\\\') -- ???
-          mut = string.gsub(mut, '"', '\\"')
-          mut = string.gsub(mut, '`', '\\`')
-          mut = string.gsub(mut, '%$', '\\$')
-          mut = string.gsub(mut, '%%', '%%%%')
-    sel[i] = mut
-  end
-
-  -- run silicon
-  local ret = os.execute(
-    'printf "'..table.concat(sel, '\n')..'" | silicon '..table.concat(args, ' ')
-  )
-
-  print(ret == 0 and 'screenshot saved as '..file
-                  or 'fatal: couldn\'t create screenshot')
-end
-
-
 
 
 -- misc
@@ -123,7 +79,6 @@ key.nnmap('--', '<CMD>w<CR>')
 key.nnmap('-d', '<CMD>bd<CR>')
 key.nnmap('-w',         function() wipe_buf() end)
 key.nnmap('<leader>tb', function() tab_bufs() end)
-key.vnmap('<leader>p',  function() polymerize() end)
 
 key.nnmap('<leader>~',  'viw~')
 key.nnmap('<leader>w',  '<CMD>w !doas tee %<CR>')
