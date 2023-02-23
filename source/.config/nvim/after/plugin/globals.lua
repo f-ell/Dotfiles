@@ -1,4 +1,2 @@
-P = function(t)
-  print(vim.inspect(t))
-  return t
-end
+---@param input string|table
+P = function(input) vim.pretty_print(input) end
