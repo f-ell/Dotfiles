@@ -242,6 +242,7 @@ set_highlights() {
   ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=$_8"
 
   ZSH_HIGHLIGHT_REGEXP+=('\$(\w+|\{.+?\})' "fg=$_5")
+  ZSH_HIGHLIGHT_REGEXP+=('^\s*(doas|sudo)(\s|$)' "fg=$_5")
 }
 set_highlights
 
@@ -257,7 +258,7 @@ autoload -Uz compinit
 compinit -d $XDG_CONFIG_HOME'/zsh/zcomp'
 
 
-# Run fetch ONLY when X-Server is running, not on TTY
+# Run fetch ONLY in X
 # [[ `xset q 2>/dev/null` ]] \
   # && printf "'Whose is the dying flame?' asked the Witcher.\n    'Yours,' Death replied.\n"
   # && printf "In his strong hand the man held a Rose.\n      And his aura burned bright.\n"
