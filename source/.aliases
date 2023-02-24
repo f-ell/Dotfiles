@@ -5,6 +5,7 @@ ping() {
 }
 
 owns() {
+  local Fn Program
   Fn='owns'
   [[ -z $1 ]] && { Err $Fn 'No command specified!'; return 1; }
   Program=`command -v $1`
@@ -14,48 +15,47 @@ owns() {
 }
 
 ud2() {
+  local Fn Dev Un
   Fn='ud2'
   Dev=/dev/$1
   [[ -b $Dev ]] || { Err $Fn "${1:--} is not a valid blockdev."; return 1; }
-  if [[ -z `udisksctl info -b $Dev | grep -oP '^\s*MountPoints:\s+\K.*$'` ]]; then
-    udisksctl mount -b $Dev
-  else
-    udisksctl unmount -b $Dev
-  fi
+  [[ -z `udisksctl info -b $Dev | grep -oP '^\s*MountPoints:\s+\K.*$'` ]] \
+    && Un=un
+  udisksctl ${Un}mount -b $Dev
 }
 
 pac() {
   [[ $1 =~ '[cC]' ]] && { pacman -Q | wc -l; return 0; }
-  pacman -$1 ${2:--}
+  pacman -$1 $2
 }
 
 
 alias -- -='cd -'
 alias code='code --extensions-dir '$XDG_DATA_HOME'/vscode'
-alias dots='cd ~/Git/Dotfiles/'
+alias dots='cd $HOME/Git/Dotfiles/'
 alias e='exa'
 alias e1='exa -1'
 alias ed='exa -ld'
 alias el='exa -la'
 alias feh='feh --no-fehbg'
-alias gff='nff ~/Git'
+alias gff='nff $HOME/Git'
 alias gl='glow -p'
 alias hist='tail -10 <(history)'
-alias scripts='cd ~/Git/Scripts/'
+alias scripts='cd $HOME/Git/Scripts/'
 alias v=$EDITOR
-alias va=$EDITOR' ~/.aliases && source ~/.aliases'
+alias va=$EDITOR' $HOME/.aliases && . $HOME/.aliases'
 alias yeet='doas pacman -Qtdq | doas pacman -Rns -'
 alias xo='xdg-open'
 alias zt='zathura --fork'
 
 
-Sconf='~/.config/bspwm/sxhkdrc.bspwm ~/.config/sxhkd/sxhkdrc.'
+Sconf='$HOME/.config/bspwm/sxhkdrc.bspwm $HOME/.config/sxhkd/sxhkdrc.'
 if [[ $MACHINE = DT ]]; then
   Sconf="${Sconf}dt"
   Dconf=''
 else
   Sconf="${Sconf}lt"
-  Dconf='-conf ~/.config/dunst/dunstrc.lt' 
+  Dconf='-conf $HOME/.config/dunst/dunstrc.lt' 
   alias netstart='rfkill unblock wifi; doas systemctl start NetworkManager'
   alias netstop='nmcli d disconnect wlan0; doas systemctl stop NetworkManager; rfkill block wifi'
 fi
