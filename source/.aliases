@@ -25,8 +25,14 @@ ud2() {
 }
 
 pac() {
+  local Root
+  if [[ $1 =~ '[rR]' ]]; then
+    Root=/usr/bin/doas
+    [[ ! -f $Root ]] && Root=${Root%/*}/sudo
+    shift
+  fi
   [[ $1 =~ '[cC]' ]] && { pacman -Q | wc -l; return 0; }
-  pacman -$1 $2
+  $Root pacman -$1 $2
 }
 
 
