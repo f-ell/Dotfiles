@@ -39,7 +39,7 @@ ZSH_AUTOSUGGEST_MANUAL_REBIND=True
 . $XDG_CONFIG_HOME'/zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh'
 
 
-# Keybinds
+# KEYBINDS
 ### WIP ###
 # Switch Caps and Escape:
 # xmodmap -e 'remove Lock = Caps_Lock'
@@ -69,20 +69,20 @@ bindkey '^[[1;5D' backward-word
 bindkey '^ ' autosuggest-accept
 
 
-# Set fancy prompt in X, simple prompt on tty
+# PROMPT
 if [[ `xset q 2>/dev/null` ]]; then
-  # Prompt
   CE='#e67e80'; CF='#d3c6aa'; CG='#fca326'; CC='#a0a0a0'
   Prompt() {
     unset {,R}PS1
-    # M -> 'mode' - 0 for compact single-line, 1 for long single-line,
-    # anything else for multi-line
+    # $1 -> mode - 0: compact single-line, 1: long single-line, *: multi-line
+    # $2 -> exit status
+    # $3 -> viins prompt char
     M=$1; X=$2; C=$3
 
     # Exit code
     (( $X == 0 )) && unset X
 
-    # Git branch
+    # Git HEAD
     B=`git rev-parse --is-inside-work-tree 2>/dev/null`
     if (( $? == 0 )) && [[ $B == 'true' ]]; then
       declare -i m b
@@ -94,6 +94,7 @@ if [[ `xset q 2>/dev/null` ]]; then
       local HeadRef=HEAD
       local HeadId=${Refs[HEAD]}
 
+      local Ref Id
       for Ref Id in ${(@kv)Refs}; do
         [[ $Ref == HEAD ]] && continue
 
@@ -116,27 +117,38 @@ if [[ `xset q 2>/dev/null` ]]; then
       unset B
     fi
 
+    # Git stash
+    [[ -n $B && -f `git rev-parse --show-toplevel`/.git/refs/stash ]] && B+=\~
+
     if (( $M == 0 )); then
       [[ $PWD == / ]] && P=/ || P=${PWD##*/}
       PS1=$'%F{$CF}• %B%S';
-      [[ $PWD != $HOME ]] && PS1=$PS1\ $P; PS1=$PS1$'%s%b'          # working dir
+      # cwd
+      [[ $PWD != $HOME ]] && PS1+=\ $P; PS1+=$'%s%b'
+      # git
       [[ -n $B ]] \
-        && PS1=$PS1$'%K{$CG} %k%F{$CG}%S $B%s%f' \
-        || PS1=$PS1$''                                             # git branch
-      [[ -n $X ]] && PS1=$PS1$' %F{$CE}%B%{\e[3m%}$X%{\e[0m%}%b%f'  # exit code
-      PS1=$PS1$' %F{$CC}$C%f '                                      # prompt char
+        && PS1+=$'%K{$CG} %k%F{$CG}%S $B%s%f' \
+        || PS1+=$''
+      # exit status
+      [[ -n $X ]] && PS1+=$' %F{$CE}%B%{\e[3m%}$X%{\e[0m%}%b%f'
+      # prompt char
+      PS1+=$' %F{$CC}$C%f '
 
     elif (( $M == 1 )); then
-      [[ -n $X ]] && PS1=$'%F{$CE}%B%S$X%s%b%f '      # exit code
-      PS1=$PS1$'%F{$CF}• %B%S %1~%s%b '              # working dir
-      [[ -n $B ]] && PS1=$PS1$'on %F{$CG}%S $B%s%f ' # git branch
-      PS1=$PS1$'%F{$CC}$C%f '                           # prompt char
+      # exit status
+      [[ -n $X ]] && PS1=$'%F{$CE}%B%S$X%s%b%f '
+      # cwd
+      PS1+=$'%F{$CF}• %B%S %1~%s%b '
+      # git
+      [[ -n $B ]] && PS1+=$'on %F{$CG}%S $B%s%f '
+      # prompt char
+      PS1+=$'%F{$CC}$C%f '
 
     else
       PS1=$'%F{$CF}%B%S%~%s%b%f\n'
-      [[ -n $X ]] && PS1=$PS1$'%F{$CE}%B$X%b%f '
-      [[ -n $B ]] && PS1=$PS1$'%F{$CG}%B $B%b%f '
-      PS1=$PS1$'%F{$CC}$C%f '
+      [[ -n $X ]] && PS1+=$'%F{$CE}%B$X%b%f '
+      [[ -n $B ]] && PS1+=$'%F{$CG}%B $B%b%f '
+      PS1+=$'%F{$CC}$C%f '
     fi
 
 
@@ -153,11 +165,11 @@ if [[ `xset q 2>/dev/null` ]]; then
       local Len; [[ ${R:0:1} == '~' ]] && Len=8 || { R='/'$R; Len=9; }
       (( $#R > $Len )) && R=${R:0:$Len}'..'
       [[ $R != '~' ]] && RPS1=$'  %F{$CF}%B%S$R%s%b%f'
-      RPS1=$RPS1$' •'
+      RPS1+=$' •'
     fi
   }
   precmd() {
-    LAST_EXIT=$?; Prompt 0 $LAST_EXIT ''
+    LAST_EXIT=$?; Prompt 0 $LAST_EXIT '' # ›
   }
 
   zle-keymap-select() {
@@ -170,7 +182,7 @@ else
 fi
 
 
-# Colours and highlights
+# COLOURS AND HIGHLIGHTS
 ### LOGIN ONLY ###
 if [[ -o login ]]; then
   set_colours(){
@@ -247,7 +259,7 @@ set_highlights() {
 set_highlights
 
 
-# Completion
+# COMPLETION
 zstyle ':completion:*' completer _expand _complete _ignored _match
 zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 zstyle ':completion:*' matcher-list 'm:{[:lower:]}={[:upper:]}' 'l:|=*'
@@ -258,7 +270,7 @@ autoload -Uz compinit
 compinit -d $XDG_CONFIG_HOME'/zsh/zcomp'
 
 
-# Run fetch ONLY in X
+# FETCH
 # [[ `xset q 2>/dev/null` ]] \
   # && printf "'Whose is the dying flame?' asked the Witcher.\n    'Yours,' Death replied.\n"
   # && printf "In his strong hand the man held a Rose.\n      And his aura burned bright.\n"
