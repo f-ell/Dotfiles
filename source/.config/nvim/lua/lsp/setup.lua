@@ -5,7 +5,6 @@ local def = require('lsp.definition')
 local dgn = require('lsp.diag')
 local rnm = require('lsp.rename')
 local v   = vim
-
 local servers = {
   _1 = 'clangd',
   _2 = 'gopls',
@@ -36,7 +35,10 @@ local on_attach = function()
   key.nnmap('<leader>h', dgn.get_line,  { buffer = 0 })
   key.nnmap('<leader>j', dgn.goto_next, { buffer = 0 })
   key.nnmap('<leader>k', dgn.goto_prev, { buffer = 0 })
-  key.nnmap('<leader>l', '<CMD>silent! Telescope diagnostics<CR>')
+  key.nnmap('<leader>l', function()
+    require('telescope')
+    v.cmd('silent! Telescope diagnostics')
+  end)
 end
 
 
