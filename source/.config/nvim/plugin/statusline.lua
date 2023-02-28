@@ -36,10 +36,10 @@ end
 
 
 local is_vcs = function()
-  local fh = L.util.open({
+  local fh = L.io.open({
     'git', '-C', readlink_dir(),
     'rev-parse', '--is-inside-work-tree' }, true, false)
-  return L.util.read(fh) == 'true' and true or false
+  return L.io.read(fh) == 'true' and true or false
 end
 
 local git_dir = function()
@@ -139,14 +139,14 @@ local git_head = function()
   local fh = io.open(git_info.dir..'/HEAD', 'r')
   if fh == nil then return '' end
 
-  local content = L.util.read(fh)
+  local content = L.io.read(fh)
   local head = content:match('^ref: refs/heads/(.+)$')
 
   if not head then
-    fh = L.util.open({
+    fh = L.io.open({
       'git', '-C', readlink_dir(),
       'describe', '--tags', '--exact-match', '@' }, true, '')
-    local tag = L.util.read(fh)
+    local tag = L.io.read(fh)
     head = tag ~= '' and 't:'..tag or content:sub(1, 8)
   end
 
@@ -159,16 +159,16 @@ local git_diff = function()
   local file = readlink()
   if file:match('/$') then return ustr end
 
-  local fh = L.util.open({
+  local fh = L.io.open({
     'git', '-C', readlink_dir(),
     'diff', '--numstat', file }, true, '')
-  local numstat = L.util.read(fh)
+  local numstat = L.io.read(fh)
 
   if numstat == '' then
-    fh = L.util.open({
+    fh = L.io.open({
       'git', '-C', readlink_dir(),
       'ls-files', '--error-unmatch', file }, true, '')
-    if L.util.read(fh) == '' then return ustr end
+    if L.io.read(fh) == '' then return ustr end
 
     return ' %#neutral#+0 -0'
   end
