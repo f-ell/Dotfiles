@@ -1,19 +1,19 @@
 local v   = vim
 local va  = v.api
 local vf  = v.fn
+local vl  = v.lsp
 
 local M = {
   io  = {},
   key = {},
+  lsp = {},
   str = {},
   tbl = {},
   vim = {},
   win = {}
 }
 
-
-
-
+--------------------------------------------------------------------------------
 ---Open a readonly filehandle.
 ---
 ---The handle is opened with io.popen(); fd2 may be redirected to /dev/null.
@@ -54,9 +54,74 @@ M.io.read_no_chop = function(fh)
   return str
 end
 
+--------------------------------------------------------------------------------
+---Applies a workspace edit. 'res' is a table with the same fields as returned
+---by client_responses().
+---
+---@param response table
+M.lsp.apply_edit = function(response)
+  local edit = response.result
+  local oenc = vl.get_client_by_id(response.id).offset_encoding
+
+  if edit.edit then vl.util.apply_workspace_edit(edit.edit, oenc) end
+  if edit.action and type(edit.action) == 'function' then edit.action() end
+end
 
 
+---Returns table containing all servers with server_capabilities[cap..'Provider'],
+---that are attached to the current buffer.
+---
+---@param cap string
+---@return table
+M.lsp.clients_by_cap = function(cap)
+  local capable   = {}
+  local available = vl.get_active_clients({ buffer = va.nvim_get_current_buf() })
 
+  for i = 1, #available do
+    if available[i].server_capabilities[cap..'Provider'] then
+      table.insert(capable, available[i])
+    end
+  end
+
+  if #capable == 0 then v.notify('No provider found.', 3) end
+  return capable
+end
+
+
+---Returns table consisting of concatenated results from all clients, where each
+---table field is { id: number, name: string, result: table }.
+---
+---'cb', if present, will be called after all results have been gathered, the
+---result-table is passed as the first argument to the function.
+---
+---@param method string
+---@param params TextDocumentPositionParams
+---@param clients table
+---@param cb function|nil
+---@return table|nil
+M.lsp.request = function(method, params, clients, cb)
+  if M.tbl.is_empty(clients) then return v.notify('Invalid clients.', 3) end
+  local responses = {}
+
+  for i = 1, #clients do
+    local client  = clients[i]
+    local dict    = client.request_sync(method, params, 500,
+      va.nvim_get_current_buf())
+    if next(dict) == nil or dict.err then goto continue end
+
+    for _, res in pairs(dict.result) do
+      table.insert(responses, { id = client.id, name = client.name, result = res })
+    end
+    ::continue::
+  end
+
+  if M.tbl.is_empty(responses) then return v.notify('No results found.', 3) end
+
+  if cb ~= nil then cb(responses) end
+  return responses
+end
+
+--------------------------------------------------------------------------------
 ---Acts similarly to Perl's chop(), removing the string's last character.
 ---
 ---@param str string
@@ -65,9 +130,7 @@ M.str.chop = function(str)
   return str:sub(0, str:len() - 1)
 end
 
-
-
-
+--------------------------------------------------------------------------------
 ---Returns the length of the longest line in tbl.
 ---
 ---@param tbl table
@@ -81,9 +144,16 @@ M.tbl.longest_line = function(tbl)
   return max
 end
 
+--------------------------------------------------------------------------------
+---Returns true if tbl is empty or nil, false otherwise.
+---
+---@param tbl table|nil
+---@returns boolean
+M.tbl.is_empty = function(tbl)
+  return (tbl == nil or next(tbl) == nil) and true or false
+end
 
-
-
+--------------------------------------------------------------------------------
 ---Wraps vim.api.nvim_command(cmd).
 ---
 ---@param cmd string
@@ -119,9 +189,7 @@ M.vim.o = function(name, value)
   end
 end
 
-
-
-
+--------------------------------------------------------------------------------
 ---Returns the window anchor (NW or SW) and the required window offset (1 or 0),
 ---based on the cursor position in the current window.
 ---
@@ -174,9 +242,7 @@ M.win.open = function(lines, modify, enter, config)
   return data
 end
 
-
-
-
+--------------------------------------------------------------------------------
 ---Meta-function for easier keymap definition.
 ---
 ---@param mode string
@@ -200,8 +266,6 @@ M.key.nnmap = map('n')
 M.key.vnmap = map('v')
 M.key.cnmap = map('c')
 M.key.tnmap = map('t')
-
-
 
 
 return M

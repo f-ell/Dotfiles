@@ -12,22 +12,15 @@ local M = {}
 -- auxiliary
 local preprocess = function(raw)
   local ret = { cword = raw.cword, switch = raw.sw }
+
   local res = raw.res
-  local range
+  if type(res[1]) == 'table' then res = res[1] end
+  ret.uri = res.result.uri or res.result.targetUri
 
-  if type(res[1]) == 'table' then
-    ret.uri = res[1].uri or res[1].targetUri
-    range   = res[1].targetSelectionRange
-  else
-    ret.uri = res.uri or res.targetUri
-    range   = res.targetSelectionRange
-  end
+  local range = res.result.targetSelectionRange
+  ret.start = { range.start.line + 1, range.start.character }
+  ret._end  = { range['end'].line + 1, range['end'].character }
 
-  local start = { range.start.line + 1, range.start.character }
-  local _end  = { range['end'].line + 1, range['end'].character }
-
-  ret.start = start
-  ret._end  = _end
   return ret
 end
 
@@ -132,27 +125,18 @@ end
 
 
 -- TODO: consider using tressitter api to select target node and only display implementation in float (can use open_floating_preview())
-local request_definition = function(switch)
-  vl.buf_request_all(0, 'textDocument/definition',
-    vl.util.make_position_params(), function(res)
-      if not res or next(res) == nil then v.notify('Lsp response is nil.', 3)
-        return
-      end
+local try_definition = function(switch)
+  local res = L.lsp.request('textDocument/definition',
+    vl.util.make_position_params(), L.lsp.clients_by_cap('definition'))[1]
+  if L.tbl.is_empty(res) then return end
 
-      local result
-      for _, r in pairs(res) do
-        if r.result then result = r.result end
-      end
-      if not result then v.notify('Lsp response is nil.', 3) return end
-
-      open({ cword = v.fn.expand('<cword>'), res = result, sw = switch })
-    end)
+  open({ cword = v.fn.expand('<cword>'), res = res, sw = switch })
 end
 
 
 
 
 -- main
-M.peek = function() request_definition(false) end
-M.open = function() request_definition(true) end
+M.peek = function() try_definition(false) end
+M.open = function() try_definition(true) end
 return M

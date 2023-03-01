@@ -18,7 +18,7 @@ local preprocess = function(raw)
   for _, res in pairs(raw) do
     local ind = (#raw > 9 and idx < 10) and true or false
     table.insert(ret, {
-      idx = idx, ind = ind, msg = res.action.title, src = res.name
+      idx = idx, ind = ind, msg = res.result.title, src = res.name
     })
     idx = idx + 1
   end
@@ -74,16 +74,7 @@ end
 
 local do_codeaction = function(data, num)
   close_win(data)
-
-  local response = data.res[num]
-  local action = response.action
-  local client = v.lsp.get_client_by_id(response.id)
-
-  if action.edit then
-    vl.util.apply_workspace_edit(action.edit, client.offset_encoding)
-  end
-
-  if action.action and type(action.action) == 'function' then action.action() end
+  L.lsp.apply_edit(data.res[num])
 end
 
 
@@ -177,41 +168,14 @@ end
 
 
 local try_action = function()
-  -- get capable clients
-  local capable_clients = {}
-  local buf = va.nvim_get_current_buf()
-  local available_clients = vl.get_active_clients({ buffer = buf })
-
-  for i = 1, #available_clients do
-    if available_clients[i].server_capabilities.codeActionProvider then
-      table.insert(capable_clients, available_clients[i])
-    end
-  end
-  if #capable_clients == 0 then
-    return v.notify('No codeaction provider found.', 3)
-  end
-
-
-  -- prepare lsp request
   local params    = vl.util.make_range_params()
   params.context  = { diagnostics = vl.diagnostic.get_line_diagnostics(0) }
 
+  local res = L.lsp.request('textDocument/codeAction', params,
+    L.lsp.clients_by_cap('codeAction'))
+  if L.tbl.is_empty(res) then return end
 
-  -- request and collect codeactions from all capable servers
-  local responses = {}
-  for i = 1, #capable_clients do
-    local client  = capable_clients[i]
-    local dict    = client.request_sync('textDocument/codeAction', params, 500, buf)
-    if next(dict) == nil or dict.err then goto continue end
-
-    for _, act in pairs(dict.result) do
-      table.insert(responses, { id = client.id, name = client.name, action = act })
-    end
-    ::continue::
-  end
-
-  if next(responses) == nil then return v.notify('No code actions available.', 3) end
-  open(responses)
+  open(res)
 end
 
 
