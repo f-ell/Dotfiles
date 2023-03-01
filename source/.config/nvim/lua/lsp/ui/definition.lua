@@ -1,4 +1,5 @@
 -- inspired by glepnir's Lspsaga: https://github.com/glepnir/lspsaga.nvim
+local L   = require('utils.lib')
 local v   = vim
 local va  = v.api
 local vl  = v.lsp
@@ -9,8 +10,9 @@ local M = {}
 
 
 -- auxiliary
-local preprocess = function(cword, switch, res)
-  local ret = { cword = cword, switch = switch }
+local preprocess = function(raw)
+  local ret = { cword = raw.cword, switch = raw.sw }
+  local res = raw.res
   local range
 
   if type(res[1]) == 'table' then
@@ -46,12 +48,6 @@ local get_row_offset = function()
 end
 
 
-local is_valid_window = function(winnr)
-  return (va.nvim_get_current_win() == winnr and va.nvim_win_is_valid(winnr))
-    and true or false
-end
-
-
 local set_highlights = function(bufnr, winnr, data)
   local ns_id = va.nvim_create_namespace('LspUtilsNS')
 
@@ -82,7 +78,7 @@ local set_highlights = function(bufnr, winnr, data)
     buffer    = bufnr,
     once      = true,
     callback  = function()
-      if not is_valid_window(winnr) then return end
+      if not L.win.is_valid(winnr) then return end
       va.nvim_buf_clear_namespace(bufnr, ns_id, 0, -1)
     end
   })
@@ -91,7 +87,7 @@ local set_highlights = function(bufnr, winnr, data)
     buffer    = bufnr,
     once      = true,
     callback  = function()
-      if not is_valid_window(winnr) then return end
+      if not L.win.is_valid(winnr) then return end
       va.nvim_buf_clear_namespace(bufnr, ns_id, 0, -1)
       va.nvim_win_close(winnr, false)
     end
@@ -99,15 +95,15 @@ local set_highlights = function(bufnr, winnr, data)
 end
 
 
-local open = function(cword, result, switch)
-  local data  = preprocess(cword, switch, result)
-  local bufnr = v.uri_to_bufnr(data.uri)
+local open = function(raw)
+  local proc  = preprocess(raw)
+  local bufnr = v.uri_to_bufnr(proc.uri)
 
-  if data.switch or bufnr == va.nvim_get_current_buf() then
-    if data.switch then v.cmd('buffer '..bufnr) end
+  if proc.switch or bufnr == va.nvim_get_current_buf() then
+    if proc.switch then v.cmd('buffer '..bufnr) end
 
-    set_highlights(bufnr, nil, data)
-    v.fn.cursor(data.start[1], data.start[2]+1)
+    set_highlights(bufnr, nil, proc)
+    v.fn.cursor(proc.start[1], proc.start[2]+1)
     return
   end
 
@@ -129,8 +125,8 @@ local open = function(cword, result, switch)
     border  = 'rounded'
   })
 
-  set_highlights(bufnr, winnr, data)
-  va.nvim_win_set_cursor(winnr, data.start)
+  set_highlights(bufnr, winnr, proc)
+  va.nvim_win_set_cursor(winnr, proc.start)
   v.cmd('norm! zt')
 end
 
@@ -149,7 +145,7 @@ local request_definition = function(switch)
       end
       if not result then v.notify('Lsp response is nil.', 3) return end
 
-      open(v.fn.expand('<cword>'), result, switch)
+      open({ cword = v.fn.expand('<cword>'), res = result, sw = switch })
     end)
 end
 

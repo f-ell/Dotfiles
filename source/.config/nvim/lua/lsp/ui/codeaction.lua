@@ -1,9 +1,9 @@
 -- inspired by glepnir's Lspsaga: https://github.com/glepnir/lspsaga.nvim
+local L   = require('utils.lib')
 local v   = vim
 local va  = v.api
 local vf  = v.fn
 local vl  = v.lsp
-local strlen = string.len
 
 local M = {}
 
@@ -11,29 +11,12 @@ local M = {}
 
 
 -- auxiliary
-local get_anchor_offset = function()
-    local anchor = vf.winline() - (vf.winheight(0) / 2) > 0 and 'SW' or 'NW'
-    local offset = anchor == 'NW' and 1 or 0
-    return anchor, offset
-end
-
-
-local get_longest_line = function(tbl)
-  local max = 0
-  for i = 1, #tbl do
-    local len = strlen(tbl[i])
-    if len > max then max = len end
-  end
-  return max
-end
-
-
-local preprocess = function(responses)
+local preprocess = function(raw)
   local ret = {}
   local idx = 1
 
-  for _, res in pairs(responses) do
-    local ind = (#responses > 9 and idx < 10) and true or false
+  for _, res in pairs(raw) do
+    local ind = (#raw > 9 and idx < 10) and true or false
     table.insert(ret, {
       idx = idx, ind = ind, msg = res.action.title, src = res.name
     })
@@ -44,10 +27,10 @@ local preprocess = function(responses)
 end
 
 
-local format = function(res)
+local format = function(proc)
   local ret = {}
 
-  for _, r in pairs(res) do
+  for _, r in pairs(proc) do
     local prefix = ' '..r.idx..'  '
     if r.ind then prefix = ' '..prefix end
 
@@ -63,7 +46,7 @@ local set_highlights = function(bufnr, data)
 
   for i = 1, #data do
     local hlidx = i % #hlgr ~= 0 and i % #hlgr or 4
-    local len = 2 + strlen(data[i].idx)
+    local len = 2 + string.len(data[i].idx)
     if data[i].ind then len = len + 1 end
 
     -- header
@@ -80,7 +63,7 @@ end
 
 
 local close_win = function(data)
-  if not va.nvim_win_is_valid(data.winnr) then return end
+  if not L.win.is_valid(data.winnr) then return end
 
   va.nvim_win_close(data.winnr, true)
   va.nvim_win_set_cursor(data.origin_win, data.pos)
@@ -119,21 +102,21 @@ local register_float_actions = function(data)
   end
 
   -- disable unwanted keys
-  v.keymap.set('n', 'h',      '', { buffer = true })
-  v.keymap.set('n', 'l',      '', { buffer = true })
-  v.keymap.set('n', 'w',      '', { buffer = true })
-  v.keymap.set('n', 'W',      '', { buffer = true })
-  v.keymap.set('n', 'b',      '', { buffer = true })
-  v.keymap.set('n', 'B',      '', { buffer = true })
-  v.keymap.set('n', 'e',      '', { buffer = true })
-  v.keymap.set('n', 'E',      '', { buffer = true })
-  v.keymap.set('n', 'f',      '', { buffer = true })
-  v.keymap.set('n', 'F',      '', { buffer = true })
-  v.keymap.set('n', 't',      '', { buffer = true })
-  v.keymap.set('n', 'T',      '', { buffer = true })
-  v.keymap.set('n', 'v',      '', { buffer = true })
-  v.keymap.set('n', 'V',      '', { buffer = true })
-  v.keymap.set('n', '<C-v>',  '', { buffer = true })
+  L.key.nnmap('h',      '', { buffer = true })
+  L.key.nnmap('l',      '', { buffer = true })
+  L.key.nnmap('w',      '', { buffer = true })
+  L.key.nnmap('W',      '', { buffer = true })
+  L.key.nnmap('b',      '', { buffer = true })
+  L.key.nnmap('B',      '', { buffer = true })
+  L.key.nnmap('e',      '', { buffer = true })
+  L.key.nnmap('E',      '', { buffer = true })
+  L.key.nnmap('f',      '', { buffer = true })
+  L.key.nnmap('F',      '', { buffer = true })
+  L.key.nnmap('t',      '', { buffer = true })
+  L.key.nnmap('T',      '', { buffer = true })
+  L.key.nnmap('v',      '', { buffer = true })
+  L.key.nnmap('V',      '', { buffer = true })
+  L.key.nnmap('<C-v>',  '', { buffer = true })
 
   -- register autocommands
   va.nvim_create_autocmd({ 'WinLeave', 'QuitPre' }, {
@@ -143,21 +126,21 @@ local register_float_actions = function(data)
 end
 
 
-local open = function(responses)
+local open = function(raw)
   local origin_win = va.nvim_get_current_win()
   local bufnr = va.nvim_create_buf(false, true)
 
-  local processed = preprocess(responses)
-  local content   = format(processed)
+  local proc = preprocess(raw)
+  local content = format(proc)
 
   -- insert header and separator
   table.insert(content, 1, ' Code Actions')
 
-  local w = get_longest_line(content)
+  local w = L.tbl.longest_line(content)
   table.insert(content, 2, string.rep('', w))
 
   va.nvim_buf_set_lines(bufnr, 0, -1, true, content)
-  set_highlights(bufnr, processed)
+  set_highlights(bufnr, proc)
 
   v.bo[bufnr].bufhidden   = 'wipe'
   v.bo[bufnr].modifiable  = false
@@ -168,11 +151,11 @@ local open = function(responses)
     winnr = nil,
     pos   = va.nvim_win_get_cursor(origin_win),
     len   = #content - 2,
-    res   = responses
+    res   = raw
   }
 
   -- floaty stuff
-  local anchor, offset = get_anchor_offset()
+  local anchor, offset = L.win.anchor_offset()
   local winnr = va.nvim_open_win(bufnr, true, {
     width   = w,
     height  = #content,

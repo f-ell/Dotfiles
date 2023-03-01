@@ -1,4 +1,5 @@
 -- inspired by glepnir's Lspsaga: https://github.com/glepnir/lspsaga.nvim
+local L   = require('utils.lib')
 local v   = vim
 local va  = v.api
 local vf  = v.fn
@@ -10,13 +11,6 @@ local M = {}
 
 
 -- auxiliary
-local get_anchor_offset = function()
-    local anchor = v.fn.winline() - (v.fn.winheight(0) / 2) > 0 and 'SW' or 'NW'
-    local offset = anchor == 'NW' and 1 or 0
-    return anchor, offset
-end
-
-
 local highlight_refs = function(data)
   local client = vl.get_active_clients({ buffer = data.origin_buf })[1]
   local ref_provider = client.server_capabilities.referencesProvider
@@ -98,7 +92,7 @@ local open = function(cword)
   highlight_refs(data)
 
   -- floaty stuff
-  local anchor, offset = get_anchor_offset()
+  local anchor, offset = L.win.anchor_offset()
   local min_w, max_w = math.min(v.o.columns, 18), math.min(v.o.columns, 36)
   local len = cword:len()
 

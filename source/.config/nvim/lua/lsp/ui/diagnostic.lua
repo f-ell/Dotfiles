@@ -1,4 +1,5 @@
 -- inspired by glepnir's Lspsaga: https://github.com/glepnir/lspsaga.nvim
+local L   = require('utils.lib')
 local v   = vim
 local va  = v.api
 local vd  = v.diagnostic
@@ -12,18 +13,9 @@ local M = {}
 
 
 -- auxiliary
-local get_longest_line = function(tbl)
-  local max = 0
-  for i = 1, #tbl do
-    local len = strlen(tbl[i])
-    if len > max then max = len end
-  end
-  return max
-end
-
-
-local preprocess = function(type, diag)
-  local tbl       = { hdr = '', type = type, data = {} }
+local preprocess = function(raw)
+  local diag = raw.diag
+  local tbl       = { hdr = '', type = raw.type, data = {} }
   local severity  = { 'Error', 'Warn', 'Info', 'Hint' }
 
   for i = 1, #diag do
@@ -43,13 +35,13 @@ local preprocess = function(type, diag)
 end
 
 
-local format = function(diag)
+local format = function(proc)
   local ret   = {}
-  local data  = diag.data
+  local data  = proc.data
 
   local str
   for i = 1, #data do
-    if diag.type == 'dir' then
+    if proc.type == 'dir' then
       str = data[i].msg..' ('..data[i].src..')'
     else
       local col = data[i].col <= data[i].ecol
@@ -119,21 +111,21 @@ local set_highlights = function(bufnr, diag)
 end
 
 
-local open = function(type, diag)
+local open = function(raw)
   local w_max = math.floor(v.o.columns * 0.8)
-  local processed = preprocess(type, diag)
-  local content   = format(processed)
+  local proc  = preprocess(raw)
+  local content = format(proc)
 
   -- move cursor to diagnostic
-  if type == 'dir' then
-    vf.cursor(processed.data[1].ln, processed.data[1].col)
+  if raw.type == 'dir' then
+    vf.cursor(proc.data[1].ln, proc.data[1].col)
   end
 
   -- insert header and separator
-  generate_header(processed)
-  table.insert(content, 1, processed.hdr..processed.loc)
+  generate_header(proc)
+  table.insert(content, 1, proc.hdr..proc.loc)
 
-  local w = get_longest_line(content)
+  local w = L.tbl.longest_line(content)
   table.insert(content, 2,
     string.rep('', w < w_max and w or w_max))
 
@@ -150,7 +142,7 @@ local open = function(type, diag)
 
       close_events = { 'CursorMoved', 'InsertEnter' }
     })
-    set_highlights(bufnr, processed)
+    set_highlights(bufnr, proc)
   end, 0)
 end
 
@@ -162,7 +154,7 @@ local try_diag = function(type, diag)
     return v.notify(str, 2)
   end
 
-  open(type, diag)
+  open({ type = type, diag = diag })
 end
 
 

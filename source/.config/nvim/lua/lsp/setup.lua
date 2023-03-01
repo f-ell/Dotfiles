@@ -1,10 +1,8 @@
 local lsp = require('lspconfig')
 local key = require('utils.lib').key
-local cda = require('lsp.codeaction')
-local def = require('lsp.definition')
-local dgn = require('lsp.diag')
-local rnm = require('lsp.rename')
+local ui  = require('lsp.ui')
 local v   = vim
+
 local servers = {
   _1 = 'clangd',
   _2 = 'gopls',
@@ -16,7 +14,6 @@ local servers = {
   _8 = 'texlab',
   _9 = 'tsserver'
 }
-
 local configs  = {
   _2 = 'go',
   _4 = 'perl',
@@ -26,15 +23,15 @@ local configs  = {
 
 
 local on_attach = function()
-  key.nnmap('gd', def.peek,               { buffer = 0 })
-  key.nnmap('<leader>gd', def.open,       { buffer = 0 })
-  key.nnmap('K', v.lsp.buf.hover,         { buffer = 0 })
-  key.nnmap('<leader>ca', cda.codeaction, { buffer = 0 })
-  key.nnmap('<leader>rn', rnm.rename,     { buffer = 0 })
+  key.nnmap('gd',         ui.def.peek,        { buffer = 0 })
+  key.nnmap('<leader>gd', ui.def.open,        { buffer = 0 })
+  key.nnmap('K',          v.lsp.buf.hover,    { buffer = 0 })
+  key.nnmap('<leader>ca', ui.cda.codeaction,  { buffer = 0 })
+  key.nnmap('<leader>rn', ui.ren.rename,      { buffer = 0 })
 
-  key.nnmap('<leader>h', dgn.get_line,  { buffer = 0 })
-  key.nnmap('<leader>j', dgn.goto_next, { buffer = 0 })
-  key.nnmap('<leader>k', dgn.goto_prev, { buffer = 0 })
+  key.nnmap('<leader>h', ui.dgn.get_line,   { buffer = 0 })
+  key.nnmap('<leader>j', ui.dgn.goto_next,  { buffer = 0 })
+  key.nnmap('<leader>k', ui.dgn.goto_prev,  { buffer = 0 })
   key.nnmap('<leader>l', function()
     require('telescope')
     v.cmd('silent! Telescope diagnostics')
