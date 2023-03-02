@@ -12,7 +12,6 @@ local M = {}
 
 
 
--- auxiliary
 local preprocess = function(raw)
   local diag = raw.diag
   local tbl       = { hdr = '', type = raw.type, data = {} }
@@ -112,8 +111,7 @@ end
 
 
 local open = function(raw)
-  local w_max = math.floor(v.o.columns * 0.8)
-  local proc  = preprocess(raw)
+  local proc = preprocess(raw)
   local content = format(proc)
 
   -- move cursor to diagnostic
@@ -124,46 +122,26 @@ local open = function(raw)
   -- insert header and separator
   generate_header(proc)
   table.insert(content, 1, proc.hdr..proc.loc)
-
-  local w = L.tbl.longest_line(content)
-  table.insert(content, 2,
-    string.rep('', w < w_max and w or w_max))
+  table.insert(content, 2, string.rep('', L.tbl.longest_line(content)))
 
   -- do floaty stuff
-  v.defer_fn(function()
-    local bufnr = v.lsp.util.open_floating_preview(content, 'off', {
-      focusable = true,
-      wrap      = true,
-      wrap_at   = w_max,
-      max_width = w_max,
-
-      style     = 'minimal',
-      border    = 'rounded',
-
-      close_events = { 'CursorMoved', 'InsertEnter' }
-    })
-    set_highlights(bufnr, proc)
-  end, 0)
+  local data = L.win.open(content, false, false, { focusable = false })
+  -- TODO: register close autocommands for 'CursorMoved', 'InsertEnter'
+  set_highlights(data.nbuf, proc)
 end
 
 
-local try_diag = function(type, diag)
-  if diag[1] == nil then
-    local str = type == 'dir' and 'No diagnostics to jump to.'
-      or 'No diagnostics in this line.'
-    return v.notify(str, 2)
-  end
-
+local try_diagnostic = function(type, diag)
+  if diag[1] == nil then return v.notify('No diagnostics found.', 2) end
   open({ type = type, diag = diag })
 end
 
 
 
 
--- main
-M.goto_next = function() try_diag('dir', { vd.get_next() }) end
-M.goto_prev = function() try_diag('dir', { vd.get_prev() }) end
+M.goto_next = function() try_diagnostic('dir', { vd.get_next() }) end
+M.goto_prev = function() try_diagnostic('dir', { vd.get_prev() }) end
 M.get_line = function()
-  try_diag('line', vd.get(0, { lnum = vf.line('.') - 1 }))
+  try_diagnostic('line', vd.get(0, { lnum = vf.line('.') - 1 }))
 end
 return M

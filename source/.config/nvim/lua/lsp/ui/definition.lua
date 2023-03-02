@@ -9,7 +9,6 @@ local M = {}
 
 
 
--- auxiliary
 local preprocess = function(raw)
   local ret = { cword = raw.cword, switch = raw.sw }
 
@@ -22,22 +21,6 @@ local preprocess = function(raw)
   ret._end  = { range['end'].line + 1, range['end'].character }
 
   return ret
-end
-
-
-local get_row_offset = function()
-  local status  = v.o.laststatus
-  local tabline = v.o.showtabline
-  local offset  = 0
-
-  if status == 1 and #va.nvim_tabpage_list_wins() > 1 or status > 1 then
-    offset = offset + 1
-  end
-  if tabline == 1 and #va.nvim_list_tabpages() > 1 or tabline > 1 then
-    offset = offset + 1
-  end
-
-  return v.o.cmdheight + offset
 end
 
 
@@ -93,41 +76,23 @@ local open = function(raw)
   local bufnr = v.uri_to_bufnr(proc.uri)
 
   if proc.switch or bufnr == va.nvim_get_current_buf() then
-    if proc.switch then v.cmd('buffer '..bufnr) end
-
+    va.nvim_win_set_buf(0, bufnr)
     set_highlights(bufnr, nil, proc)
-    v.fn.cursor(proc.start[1], proc.start[2]+1)
+    va.nvim_win_set_cursor(0, proc.start)
     return
   end
 
-  v.bo[bufnr].bufhidden = 'wipe'
-
-  -- floaty stuff
-  local w = math.floor(v.o.columns * 0.7)
-  local h = math.floor(v.o.lines * 0.7)
-  local winnr = va.nvim_open_win(bufnr, true, {
-    width   = w,
-    height  = h,
-
-    relative  = 'editor',
-    anchor    = 'NW';
-    row = math.floor((v.o.lines - h) / 2) - get_row_offset(),
-    col = math.floor((v.o.columns - w) / 2),
-
-    style   = 'minimal',
-    border  = 'rounded'
-  })
-
-  set_highlights(bufnr, winnr, proc)
-  va.nvim_win_set_cursor(winnr, proc.start)
+  local data = L.win.open(bufnr, true, true)
+  set_highlights(data.nbuf, data.nwin, proc)
+  va.nvim_win_set_cursor(data.nwin, proc.start)
   v.cmd('norm! zt')
 end
 
 
 -- TODO: consider using tressitter api to select target node and only display implementation in float (can use open_floating_preview())
 local try_definition = function(switch)
-  local res = L.lsp.request('textDocument/definition',
-    vl.util.make_position_params(), L.lsp.clients_by_cap('definition'))[1]
+  local res = L.lsp.request(L.lsp.clients_by_cap('definition')[1],
+    'textDocument/definition', vl.util.make_position_params(), 0)
   if L.tbl.is_empty(res) then return end
 
   open({ cword = v.fn.expand('<cword>'), res = res, sw = switch })
@@ -136,7 +101,6 @@ end
 
 
 
--- main
 M.peek = function() try_definition(false) end
 M.open = function() try_definition(true) end
 return M
