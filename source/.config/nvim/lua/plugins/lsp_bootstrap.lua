@@ -7,7 +7,6 @@ return {
   },
   cmd           = { 'Mason', 'MasonInstall', 'MasonUninstall' },
   dependencies  = {
-    'glepnir/lspsaga.nvim',
     'hrsh7th/cmp-nvim-lsp',
     'neovim/nvim-lspconfig'
   },
