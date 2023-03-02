@@ -27,7 +27,7 @@ local set_hl_groups = function()
   local ter = fg3
   local vis = red1
 
-  local ro  = '#f85552'
+  local ro  = '#e67e80'
   local git = '#fca326'
 
   local hls = {
@@ -89,6 +89,7 @@ local set_hl_groups = function()
     {0, 'SpellBad', {sp = red1, undercurl = true}},
     {0, 'Git',      {fg = git,  bg =  _, italic  = true}},
     {0, 'GitAdd',   {fg = gre1, bg =  _}},
+    {0, 'GitCha',   {fg = blu1, bg =  _}},
     {0, 'GitDel',   {fg = red1, bg =  _}},
 
   -- PLUGINS --
