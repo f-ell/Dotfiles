@@ -49,25 +49,15 @@ local set_highlights = function(bufnr, winnr, data)
 
   -- register close autocommands
   if winnr == nil then return end
-
-  va.nvim_create_autocmd('QuitPre', {
-    buffer    = bufnr,
-    once      = true,
-    callback  = function()
-      if not L.win.is_valid(winnr) then return end
+  L.cmd.event('QuitPre', bufnr, function()
+      if not L.win.is_cur_valid(winnr) then return end
       va.nvim_buf_clear_namespace(bufnr, ns_id, 0, -1)
-    end
-  })
-
-  va.nvim_create_autocmd('WinLeave', {
-    buffer    = bufnr,
-    once      = true,
-    callback  = function()
-      if not L.win.is_valid(winnr) then return end
+  end)
+  L.cmd.event('WinLeave', bufnr, function()
+      if not L.win.is_cur_valid(winnr) then return end
       va.nvim_buf_clear_namespace(bufnr, ns_id, 0, -1)
       va.nvim_win_close(winnr, false)
-    end
-  })
+  end)
 end
 
 

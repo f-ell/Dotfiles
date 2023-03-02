@@ -59,10 +59,7 @@ local register_float_actions = function(data)
   end
 
   -- register autocommands
-  v.api.nvim_create_autocmd({ 'WinLeave', 'QuitPre' }, {
-    buffer    = data.nbuf,
-    callback  = function() close_win() end
-  })
+  L.cmd.event({ 'WinLeave', 'QuitPre' }, data.nbuf, function() close_win() end)
 end
 
 

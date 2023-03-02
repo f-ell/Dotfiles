@@ -4,6 +4,7 @@ local vf  = v.fn
 local vl  = v.lsp
 
 local M = {
+  cmd = {},
   io  = {},
   key = {},
   lsp = {},
@@ -12,6 +13,19 @@ local M = {
   vim = {},
   win = {}
 }
+
+--------------------------------------------------------------------------------
+---Registers 'events' with 'cb' as a buffer-local autocommand on 'bufnr'.
+---
+---@param events string|table
+---@param bufnr number
+---@param cb string|function
+M.cmd.event = function(events, bufnr, cb)
+  v.defer_fn(function() va.nvim_create_autocmd(events, {
+    buffer = bufnr, once = true, nested = true,
+    callback = type(cb) == 'string' and cb or function(tbl) cb(tbl) end
+  }) end, 0)
+end
 
 --------------------------------------------------------------------------------
 ---Open a readonly filehandle.
@@ -207,7 +221,7 @@ end
 ---@param owin number?
 ---@pos table?
 M.win.close = function(nwin, owin, pos)
-  if not M.win.is_valid(nwin) then return end
+  if not va.nvim_win_is_valid(nwin) then return end
   va.nvim_win_close(nwin, true)
   if owin and pos then va.nvim_win_set_cursor(owin, pos) end
 end
@@ -218,7 +232,7 @@ end
 ---
 ---@param winnr number
 ---@return boolean
-M.win.is_valid = function(winnr)
+M.win.is_cur_valid = function(winnr)
   return (va.nvim_get_current_win() == winnr and va.nvim_win_is_valid(winnr))
     and true or false
 end

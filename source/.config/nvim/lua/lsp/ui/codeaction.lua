@@ -61,8 +61,6 @@ local set_highlights = function(bufnr, data)
 end
 
 
-
-
 local register_float_actions = function(data)
   local do_action = function(num)
     L.win.close(data.nwin, data.owin, data.pos)
@@ -100,10 +98,8 @@ local register_float_actions = function(data)
   L.key.nnmap('<C-v>',  '', { buffer = true })
 
   -- register autocommands
-  va.nvim_create_autocmd({ 'WinLeave', 'QuitPre' }, {
-    buffer    = data.nbuf,
-    callback  = function() L.win.close(data.nwin, data.owin, data.pos) end
-  })
+  L.cmd.event({ 'WinLeave', 'QuitPre' }, data.nbuf, function()
+    L.win.close(data.nwin, data.owin, data.pos) end)
 end
 
 

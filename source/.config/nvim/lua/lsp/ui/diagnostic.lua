@@ -115,9 +115,7 @@ local open = function(raw)
   local content = format(proc)
 
   -- move cursor to diagnostic
-  if raw.type == 'dir' then
-    vf.cursor(proc.data[1].ln, proc.data[1].col)
-  end
+  if proc.type == 'dir' then vf.cursor(proc.data[1].ln, proc.data[1].col) end
 
   -- insert header and separator
   generate_header(proc)
@@ -126,8 +124,9 @@ local open = function(raw)
 
   -- do floaty stuff
   local data = L.win.open(content, false, false, { focusable = false })
-  -- TODO: register close autocommands for 'CursorMoved', 'InsertEnter'
   set_highlights(data.nbuf, proc)
+  L.cmd.event({ 'CursorMoved', 'InsertEnter' }, data.obuf, function()
+    L.win.close(data.nwin) end)
 end
 
 
