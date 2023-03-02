@@ -81,7 +81,7 @@ end
 
 -- TODO: consider using tressitter api to select target node and only display implementation in float (can use open_floating_preview())
 local try_definition = function(switch)
-  local res = L.lsp.request(L.lsp.clients_by_cap('definition')[1],
+  local res = L.lsp.request(L.lsp.clients_by_cap('definition'),
     'textDocument/definition', vl.util.make_position_params(), 0)
   if L.tbl.is_empty(res) then return end
 
