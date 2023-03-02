@@ -72,7 +72,7 @@ local open = function(raw)
     return
   end
 
-  local data = L.win.open(bufnr, true, true)
+  local data = L.win.open_center(bufnr, true, true)
   set_highlights(data.nbuf, data.nwin, proc)
   va.nvim_win_set_cursor(data.nwin, proc.start)
   v.cmd('norm! zt')

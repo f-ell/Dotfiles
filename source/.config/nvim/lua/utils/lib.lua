@@ -3,6 +3,9 @@ local va  = v.api
 local vf  = v.fn
 local vl  = v.lsp
 
+-- TODO: define center-float width and height / offset here, allows reusing, and
+-- easier adaptation
+
 local M = {
   cmd = {},
   io  = {},
@@ -57,7 +60,7 @@ M.io.read = function(fh)
 end
 
 
----Same as read(), but don't chop trailing newline character.
+---Same as io.read(), but don't chop trailing newline character.
 ---
 ---@param fh file*
 ---@return string
@@ -238,8 +241,6 @@ M.win.is_cur_valid = function(winnr)
 end
 
 
--- TODO: create wrappers for open_cursor and open_center instead
-
 ---Opens a new floating window holding a scratch buffer. If 'id' is a table, the
 ---content will be set as the buffer contents, otherwise 'id' will be used as a
 ---buffer handle to display.
@@ -258,40 +259,24 @@ M.win.open = function(id, modifiable, enter, config)
     nbuf = -1,
     nwin = -1
   }
-
-  local w = math.floor(v.o.columns * 0.7)
-  local h = math.floor(v.o.lines * 0.7)
-  local anc, col, off, rel
-  if type(id) == 'number' then
-    data.nbuf = id
-    rel = 'editor'
-    anc = 'NW'
-    off = math.floor((v.o.lines - h) / 2) + M.win.vert_offset()
-    col = math.floor((v.o.columns - w) / 2)
-  else
-    data.nbuf = va.nvim_create_buf(false, true)
-    rel = 'cursor'
-    anc, off = M.win.anchor_offset()
-    col = 0
-  end
+  if type(id) == 'table' then data.nbuf = va.nvim_create_buf(false, true)
+  else                        data.nbuf = id end
 
   local conf = v.tbl_extend('keep', config or {}, {
-    relative = rel,
-    anchor  = anc,
-    row     = off,
-    col     = col,
-    width   = type(id) == 'table' and M.tbl.longest_line(id) or w,
-    height  = type(id) == 'table' and #id or h,
+    relative = type(id) == 'table' and 'cursor' or 'editor',
+    anchor = 'NW',
+    row = 1,
+    col = type(id) == 'table' and -1 or math.floor((v.o.columns * 0.3) / 2),
+
+    width   = type(id) == 'table' and M.tbl.longest_line(id) or math.floor(v.o.columns * 0.7),
+    height  = type(id) == 'table' and #id or math.floor(v.o.lines * 0.7),
     style   = 'minimal',
     border  = 'rounded'
   })
 
   data.nwin = va.nvim_open_win(data.nbuf, enter, conf)
-  if type(id) == 'number' then
-    va.nvim_win_set_buf(data.nwin, data.nbuf)
-  else
-    va.nvim_buf_set_lines(data.nbuf, 0, -1, true, id)
-  end
+  if type(id) == 'table' then va.nvim_buf_set_lines(data.nbuf, 0, -1, true, id)
+  else                        va.nvim_win_set_buf(data.nwin, data.nbuf) end
 
   v.bo[data.nbuf].bufhidden = 'wipe'
   v.bo[data.nbuf].modifiable = modifiable
@@ -300,6 +285,40 @@ M.win.open = function(id, modifiable, enter, config)
   v.wo[data.nwin].wrap = true
 
   return data
+end
+
+
+---Wraps win.open(), with default position centered relative to editor.
+---
+---@param id number|table
+---@param modifiable boolean
+---@param enter boolean
+---@param config table?
+---@return table
+M.win.open_center = function(id, modifiable, enter, config)
+  local conf = v.tbl_extend('keep', config or {}, {
+    relative = 'editor', anchor = 'NW',
+    row = math.floor((v.o.lines * 0.3) / 2) + M.win.vert_offset(),
+    col = math.floor((v.o.columns * 0.3) / 2)
+  })
+  return M.win.open(id, modifiable, enter, conf)
+end
+
+---Wraps win.open(), with default position at cursor.
+---
+---@param id number|table
+---@param modifiable boolean
+---@param enter boolean
+---@param config table?
+---@return table
+M.win.open_cursor = function(id, modifiable, enter, config)
+  local anchor, row = M.win.anchor_offset()
+
+  local conf = v.tbl_extend('keep', config or {}, {
+    relative = 'cursor', anchor = anchor,
+    row = row, col = -1
+  })
+  return M.win.open(id, modifiable, enter, conf)
 end
 
 

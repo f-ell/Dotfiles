@@ -123,7 +123,7 @@ local open = function(raw)
   table.insert(content, 2, string.rep('', L.tbl.longest_line(content)))
 
   -- do floaty stuff
-  local data = L.win.open(content, false, false, { focusable = false })
+  local data = L.win.open_cursor(content, false, false, { focusable = false })
   set_highlights(data.nbuf, proc)
   L.cmd.event({ 'CursorMoved', 'InsertEnter' }, data.obuf, function()
     L.win.close(data.nwin) end)

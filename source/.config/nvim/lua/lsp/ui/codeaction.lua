@@ -111,7 +111,7 @@ local open = function(raw)
   table.insert(content, 1, ' Code Actions')
   table.insert(content, 2, string.rep('', L.tbl.longest_line(content)))
 
-  local data = L.win.open(content, false, true)
+  local data = L.win.open_cursor(content, false, true)
   data.res = raw
   data.pos = va.nvim_win_get_cursor(data.owin)
   data.len = #content - 2
