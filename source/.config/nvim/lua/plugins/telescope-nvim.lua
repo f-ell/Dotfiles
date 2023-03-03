@@ -5,6 +5,7 @@ return {
     'natecraddock/telescope-zf-native.nvim',
     'nvim-lua/plenary.nvim',
     'nvim-telescope/telescope-file-browser.nvim',
+    'debugloop/telescope-undo.nvim',
     { 'kyazdani42/nvim-web-devicons', lazy = true, config = true }
   },
   init = function()
@@ -17,12 +18,11 @@ return {
     end
   end,
   keys = {
-    { '<leader>fb', '<CMD>Telescope file_browser<CR>' },
+    { '<leader>e',  '<CMD>Telescope file_browser<CR>' },
+    { '<leader>u',  '<CMD>Telescope undo<CR>' },
     { '<leader>ff', '<CMD>Telescope find_files<CR>' },
     { '<leader>fg', '<CMD>silent! Telescope git_files<CR>' },
-    { '<leader>fh', function()
-      require('telescope.builtin').find_files({ cwd = os.getenv('HOME') })
-    end },
+    { '<leader>fh', function() require('telescope.builtin').find_files({ cwd = os.getenv('HOME') }) end },
     { '<leader>rg', '<CMD>Telescope live_grep<CR>' },
     { '<leader>zf', '<CMD>Telescope current_buffer_fuzzy_find<CR>' }
   },
@@ -33,11 +33,9 @@ return {
 
     tls.setup({
       defaults = {
-        initial_mode      = 'normal',
+        initial_mode = 'normal',
         path_display = {
-          shorten = {
-            len = 1, exclude = {-2, -1, 1}
-          },
+          shorten = { len = 1, exclude = {-2, -1, 1} },
           truncate = 1
         },
 
@@ -152,10 +150,14 @@ return {
           hidden        = true,
           hijack_netrw  = true
         },
+
+        undo = {
+        }
       }
     })
 
     tls.load_extension('zf-native')
     tls.load_extension('file_browser')
+    tls.load_extension('undo')
   end
 }
