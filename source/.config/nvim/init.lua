@@ -16,3 +16,5 @@ L.vim.o('termguicolors', true)
 L.vim.c('colorscheme everforest')
 
 require('utils')
+
+L.fs.mktmpdir()

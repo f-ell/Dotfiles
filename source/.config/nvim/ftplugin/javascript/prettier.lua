@@ -15,11 +15,7 @@ local file  = dir..'/nvim_prettier'..v.loop.os_getpid()
 -- INFO: for more efficient writing (prettier makes it slow enough as is), this
 -- is only run once. Deleting or making dir inaccessible while nvim is running
 -- will break the autocommand.
-if not v.loop.fs_stat(dir) then
-  if not v.loop.fs_mkdir(dir, 111000000) then
-    return v.notify('couldn\'t create temporary directory '..dir, 4)
-  end
-end
+L.fs.mktmpdir()
 
 
 
@@ -57,7 +53,7 @@ local attach = function()
 
       write_tmpfile(va.nvim_buf_get_lines(0, 0, -1, true))
 
-      local fh = L.io.open({ 'prettier',
+      local fh = L.io.popen({ 'prettier',
         '--cache-strategy', 'content', '--cache',
         '--parser', v.bo.filetype, file }, false, '')
 

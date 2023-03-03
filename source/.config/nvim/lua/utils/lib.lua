@@ -8,6 +8,7 @@ local vl  = v.lsp
 
 local M = {
   cmd = {},
+  fs  = {},
   io  = {},
   key = {},
   lsp = {},
@@ -31,20 +32,35 @@ M.cmd.event = function(events, bufnr, cb)
 end
 
 --------------------------------------------------------------------------------
----Open a readonly filehandle.
+---Create directory for temporary user files.
 ---
----The handle is opened with io.popen(); fd2 may be redirected to /dev/null.
----Returns the filehandle if not nil; retval_nil otherwise.
----
----@param tbl table
----@param err_to_devnull boolean
----@param retval_nil any?
----@return any
-M.io.open = function(tbl, err_to_devnull, retval_nil)
-  if err_to_devnull then table.insert(tbl, '2>/dev/null') end
+M.fs.mktmpdir = function()
+  local dir = vf.stdpath('run')..'/nvim.user'
+  if v.loop.fs_stat(dir) then return end
+  if not v.loop.fs_mkdir(dir, 448) then
+    return v.notify('Couldn\'t create temporary directory \''..dir..'\'', 4)
+  end
+end
 
-  local fh = io.popen(table.concat(tbl, ' '), 'r')
-  return fh == nil and retval_nil or fh
+
+-- TODO: implement | remove
+---Write to temporary file. Registers delete autocommands on 'VimLeavePre'.
+---
+-- M.fs.writetmpfile = function()
+-- end
+
+--------------------------------------------------------------------------------
+---Open a readonly filehandle through io.popen(), where fd2 may be redirected
+---to /dev/null. Returns the filehandle if not nil; 'ret' otherwise.
+---
+---@param cmd table
+---@param devnull boolean
+---@param ret any?
+---@return any
+M.io.popen = function(cmd, devnull, ret)
+  if devnull then table.insert(cmd, '2>/dev/null') end
+  local fh = io.popen(table.concat(cmd, ' '), 'r')
+  return fh == nil and ret or fh
 end
 
 
@@ -54,6 +70,7 @@ end
 ---@param fh file*
 ---@return string
 M.io.read = function(fh)
+  if fh == nil then return '' end
   local str = M.str.chop(fh:read('*a'))
   fh:close()
   return str
@@ -68,6 +85,17 @@ M.io.read_no_chop = function(fh)
   local str = fh:read('*a')
   fh:close()
   return str
+end
+
+
+---Write 'content' to 'file' linewise in update mode.
+---
+---@param file string
+---@param content table
+M.io.write = function(file, content)
+  local fh = io.open(file, 'w+')
+  if fh == nil then return v.notify('Write to \''..file..'\' failed.') end
+  fh:write(table.concat(content, '\n')..'\n'); fh:flush(); fh:close()
 end
 
 --------------------------------------------------------------------------------
@@ -281,6 +309,7 @@ M.win.open = function(id, modifiable, enter, config)
   v.bo[data.nbuf].bufhidden = 'wipe'
   v.bo[data.nbuf].modifiable = modifiable
   -- TODO: remove / change / conditionally set this?
+  -- TODO: should this stay - height needs updating for #wraps foreach line
   v.bo[data.nbuf].wrapmargin = 1
   v.wo[data.nwin].wrap = true
 
