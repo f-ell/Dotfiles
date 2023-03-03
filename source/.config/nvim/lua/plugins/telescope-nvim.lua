@@ -33,11 +33,7 @@ return {
 
     tls.setup({
       defaults = {
-        initial_mode      = 'insert',
-        vimgrep_arguments = {
-          'rg', '--color=never', '--no-heading', '--with-filename', '--column',
-          '--smart-case'
-        },
+        initial_mode      = 'normal',
         path_display = {
           shorten = {
             len = 1, exclude = {-2, -1, 1}
@@ -47,6 +43,7 @@ return {
 
         sorting_strategy  = 'descending',
         scroll_strategy   = 'limit',
+        file_ignore_patterns = { '.cache/', 'undo/' },
 
         layout_strategy   = 'vertical',
         theme = 'dropdown',
@@ -69,19 +66,12 @@ return {
         entry_prefix      = '  ',
         selection_caret   = '> ',
         winblend          = 0,
-
-        results_title     = 'Files',
-        prompt_title      = 'Query String',
         preview = {
           filesize_limit  = 0.3,
           timeout         = 100,
           hide_on_startup = true
         },
         color_devicons    = true,
-
-        file_ignore_patterns = {
-          "undo/"
-        },
 
         mappings = {
           i = {
@@ -92,11 +82,11 @@ return {
             ['<C-c>'] = 'close',
             ['<C-j>'] = 'move_selection_next',
             ['<C-k>'] = 'move_selection_previous',
-            ['<C-b>'] = 'results_scrolling_up',
-            ['<C-f>'] = 'results_scrolling_down',
             ['<C-p>'] = tlsal.toggle_preview,
-            ['<C-u>'] = 'preview_scrolling_up',
-            ['<C-d>'] = 'preview_scrolling_down',
+            ['<C-b>'] = 'preview_scrolling_up',
+            ['<C-f>'] = 'preview_scrolling_down',
+            ['<C-u>'] = false,
+            ['<C-d>'] = false
           },
           n = {
             ['<ESC>'] = false,
@@ -107,25 +97,32 @@ return {
             ['<C-c>'] = 'close',
             ['j']     = 'move_selection_next',
             ['k']     = 'move_selection_previous',
-            ['<C-b>'] = 'results_scrolling_up',
-            ['<C-f>'] = 'results_scrolling_down',
-            ['<C-p>'] = tlsal.toggle_preview,
-            ['<C-u>'] = 'preview_scrolling_up',
-            ['<C-d>'] = 'preview_scrolling_down',
             ['gg']    = 'move_to_top',
             ['G']     = 'move_to_bottom',
-            ['M']     = 'move_to_middle',
+            ['<C-p>'] = tlsal.toggle_preview,
+            ['<C-b>'] = 'preview_scrolling_up',
+            ['<C-f>'] = 'preview_scrolling_down',
+            ['<C-u>'] = false,
+            ['<C-d>'] = false
           }
         }
       },
       pickers = {
         cwd     = tslu.buffer_dir(),
         hidden  = true,
+
         find_files = {
-          find_command = { 'fd', '-tf', '-H', '-d10', '--strip-cwd-prefix' },
+          initial_mode  = 'insert',
+          results_title = false,
+          find_command  = { 'fd', '-tf', '-H', '-d10', '--strip-cwd-prefix' },
+        },
+        git_files = {
+          initial_mode = 'insert',
+          results_title = false
         },
 
         live_grep = {
+          initial_mode = 'insert',
           preview = {
             filesize_limit  = 0.3,
             timeout         = 100,
@@ -134,12 +131,14 @@ return {
         },
 
         current_buffer_fuzzy_find = {
-          preview = { hide_on_startup = false },
+          initial_mode  = 'insert',
+          results_title = false,
+          skip_empty_lines = true
         }
       },
 
       extensions  = {
-        ["zf-native"] = {
+        ['zf-native'] = {
           file = {
             enable            = true,
             highlight_results = true,
