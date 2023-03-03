@@ -35,8 +35,15 @@ local readlink_dir = function()
 end
 
 
+local is_tracked = function()
+  local fh = L.io.popen({
+    'git', '-C', v.fs.dirname(git_info.dir),
+    'ls-files', '--error-unmatch', readlink() }, true, '')
+  return L.io.read(fh) ~= '' and true or false
+end
+
 local is_vcs = function()
-  local fh = L.io.open({
+  local fh = L.io.popen({
     'git', '-C', readlink_dir(),
     'rev-parse', '--is-inside-work-tree' }, true, false)
   return L.io.read(fh) == 'true' and true or false
@@ -51,12 +58,8 @@ local git_dir = function()
     local stat    = v.loop.fs_stat(current)
     if not stat then goto continue end
 
-    -- INFO: potentially inefficient
-    -- loop doesn't break when encoutering .git *files* from submodules
-    if stat.type == 'directory' then
-      dir = current
-      break
-    end
+    -- INFO: potentially inefficient; loop doesn't break on .git *files*
+    if stat.type == 'directory' then dir = current; break end
 
     ::continue::
     cwd = cwd:match('^(.+)/.-$')
@@ -143,7 +146,7 @@ local git_head = function()
   local head = content:match('^ref: refs/heads/(.+)$')
 
   if not head then
-    fh = L.io.open({
+    fh = L.io.popen({
       'git', '-C', readlink_dir(),
       'describe', '--tags', '--exact-match', '@' }, true, '')
     local tag = L.io.read(fh)
@@ -155,41 +158,51 @@ end
 
 
 local git_diff = function()
-  local ustr = ' %#neutral#untracked'
   local file = readlink()
-  if file:match('/$') then return ustr end
-
-  local fh = L.io.open({
-    'git', '-C', readlink_dir(),
-    'diff', '--numstat', file }, true, '')
-  local numstat = L.io.read(fh)
-
-  if numstat == '' then
-    fh = L.io.open({
-      'git', '-C', readlink_dir(),
-      'ls-files', '--error-unmatch', file }, true, '')
-    if L.io.read(fh) == '' then return ustr end
-
-    return ' %#neutral#+0 -0'
+  if not git_info.tracked or file:match('/$') then
+    return ' %#neutral#untracked'
   end
 
-  local add = string.match(numstat, '%d+')
-  local del = string.match(numstat, '%d+', string.len(add) + 1)
+  -- TODO: diff tmpfile to update without writing (e.g. InsertLeave)
+  local fh = L.io.popen({
+    'git', '-C', readlink_dir(),
+    'diff', '-U0', '--no-color', file }, true, '')
 
-  local hl_a = add == '0' and '%#neutral#' or '%#GitAdd#'
-  local hl_d = del == '0' and '%#neutral#' or '%#GitDel#'
+  local add, cha, del = 0, 0, 0
+  for ln in L.io.read(fh):gmatch('(.-)\r?\n') do
+    if not v.startswith(ln, '@@') then goto continue end
 
-  return hl_a..' +'..add..hl_d..' -'..del
+    local caps = { ln:match('^@@ %-%d+,?(%d*) %+%d+,?(%d*) @@') }
+    local old, new = caps[1], caps[2]
+
+    if old == '' then old = '1' end
+    if new == '' then new = '1' end
+    if      old == '0' then add = add + new
+    elseif  new == '0' then del = del + old
+    else
+      cha = cha + math.min(old, new)
+      if      tonumber(new) > tonumber(old) then add = add + (new - old)
+      elseif  tonumber(new) < tonumber(old) then del = del + (old - new) end
+    end
+
+    ::continue::
+  end
+
+  local hl_a = add == 0 and '%#neutral#' or '%#GitAdd#'
+  local hl_c = cha == 0 and '%#neutral#' or '%#GitCha#'
+  local hl_d = del == 0 and '%#neutral#' or '%#GitDel#'
+  return hl_a..' +'..add..hl_c..' ~'..cha..hl_d..' -'..del
 end
 
 
 -- register autocommands
 va.nvim_create_autocmd({ 'BufEnter', 'BufFilePost', 'FileChangedShellPost',
-  'FocusGained' }, { callback = function()
+  'FocusGained', 'WinClosed' }, { callback = function()
     git_info.vcs = is_vcs()
     if not git_info.vcs then return end
 
     git_info.dir  = git_dir()
+    git_info.tracked = is_tracked()
     git_info.head = git_head()
     git_info.diff = git_diff()
   end
