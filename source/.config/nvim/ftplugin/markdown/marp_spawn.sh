@@ -34,7 +34,7 @@ gid=`id -g`
 # check prerequisites
 dep dockerd docker
 
-[ "${groups#docker}" = "$groups" -a ! $uid -eq 0 ] \
+[ "${groups#docker}" = "$groups" -a $uid -ne 0 ] \
   && err 1 'user is not in `docker` group.' || unset groups
 
 [ -z `pidof dockerd` ] && err 1 'dockerd is not running.'

@@ -1,7 +1,6 @@
 local v   = vim
 local va  = v.api
 local vf  = v.fn
-local uv  = v.loop
 
 local attached = false
 local bufnr   = va.nvim_get_current_buf()
@@ -10,12 +9,12 @@ local conf    = vf.expand('%:p:h')
 local data    = conf
 local file    = vf.bufname()
 local theme   = 'theme.css'
-local suffix  = uv.os_getpid()..'-'..bufnr
+local suffix  = v.loop.os_getpid()..'-'..bufnr
 
 if not vf.expand('%:t'):match('%.slides%.md$') then return end
 
 local spawn = function(name, args)
-  uv.spawn(name, { args = args, stdio = { nil, nil, nil } }, function(code, _)
+  v.loop.spawn(name, { args = args, stdio = { nil, nil, nil } }, function(code, _)
     if code ~= 0 then return print('autorender: couldn\'t spawn process.') end
   end)
 end
@@ -45,7 +44,7 @@ end, { nargs = '?', complete = 'file', desc = 'Register BufWritePost autocommand
 
 
 va.nvim_buf_create_user_command(0, 'AutoRenderStop', function()
-  if not suffix then return v.notify('autorender: no process running.', 2) end
-  attached = false
+  if not attached then return v.notify('autorender: no process running.', 2) end
   spawn(std..'/ftplugin/markdown/marp_kill.sh', { suffix })
+  attached = false
 end, { desc = 'Delete autocommand registered by AutoRenderStart.' })
