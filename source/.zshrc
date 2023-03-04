@@ -16,9 +16,12 @@ set -o autocd -o extendedglob -o histexpiredupsfirst -o histignoredups\
 
 SAVEHIST=5000; HISTSIZE=$(($SAVEHIST + 100)); HISTFILE=$HOME'/.zsh_history'
 
+[[ -f $HOME/.prompt ]] && PSM=`< $HOME/.prompt`
+export PSM=${PSM:-0}
 ### LOGIN ONLY ###
 if [[ -o login ]]; then
-  export MACHINE=`< $HOME/Git/machine`
+  [[ -f $HOME/.machine ]] && MACHINE=`< $HOME/.machine`
+  export MACHINE=${MACHINE:-DT}
   export VISUAL='nvim'
   export EDITOR=$VISUAL
 
@@ -74,10 +77,14 @@ if [[ `xset q 2>/dev/null` ]]; then
   CE='#e67e80'; CF='#d3c6aa'; CG='#fca326'; CC='#a0a0a0'
   Prompt() {
     unset {,R}PS1
-    # $1 -> mode - 0: compact single-line, 1: long single-line, *: multi-line
+    # prompt modes:
+    #   * 0: compact single-line, plain
+    #   * 1: compact single-line, decorated
+    #   * 2: verbose single-line, decorated
+    #   * *: multi-line (outdated)
     # $2 -> exit status
     # $3 -> viins prompt char
-    M=$1; X=$2; C=$3
+    X=$1; C=$2
 
     # Exit code
     (( $X == 0 )) && unset X
@@ -120,7 +127,20 @@ if [[ `xset q 2>/dev/null` ]]; then
     # Git stash
     [[ -n $B && -f `git rev-parse --show-toplevel`/.git/refs/stash ]] && B+=\~
 
-    if (( $M == 0 )); then
+    if (( $PSM == 0 )); then
+      [[ $PWD == / ]] && P=/ || P=${PWD##*/}
+      PS1=$'%F{$CF}%B';
+      # cwd
+      [[ $PWD != $HOME ]] && PS1+=\ $P; PS1+=$'%b'
+      # git
+      [[ -n $B ]] \
+        && PS1+=$' %F{$CG} $B%f' \
+      # exit status
+      [[ -n $X ]] && PS1+=$' %F{$CE}%B%{\e[3m%}$X%{\e[0m%}%b%f'
+      # prompt char
+      PS1+=$' %F{$CC}$C%f '
+
+    elif (( $PSM == 1 )); then
       [[ $PWD == / ]] && P=/ || P=${PWD##*/}
       PS1=$'%F{$CF}• %B%S';
       # cwd
@@ -134,11 +154,11 @@ if [[ `xset q 2>/dev/null` ]]; then
       # prompt char
       PS1+=$' %F{$CC}$C%f '
 
-    elif (( $M == 1 )); then
+    elif (( $PSM == 2 )); then
       # exit status
       [[ -n $X ]] && PS1=$'%F{$CE}%B%S$X%s%b%f '
       # cwd
-      PS1+=$'%F{$CF}• %B%S %1~%s%b '
+      PS1+=$'%F{$CF}• %B%S %1~%s%b '
       # git
       [[ -n $B ]] && PS1+=$'on %F{$CG}%S $B%s%f '
       # prompt char
@@ -153,7 +173,7 @@ if [[ `xset q 2>/dev/null` ]]; then
 
 
     # RPS1
-    if (( $M == 1 )); then
+    if (( $PSM == 2 )); then
       #   1. replace $HOME in $OLDPWD
       #   2. split to array       - (s)
       #   3. strip leading '.'    - (#)
@@ -169,12 +189,12 @@ if [[ `xset q 2>/dev/null` ]]; then
     fi
   }
   precmd() {
-    LAST_EXIT=$?; Prompt 0 $LAST_EXIT '' # ›
+    LAST_EXIT=$?; Prompt $LAST_EXIT '' # ›
   }
 
   zle-keymap-select() {
-    [[ $KEYMAP == 'main' ]]   && Prompt 0 $LAST_EXIT ''
-    [[ $KEYMAP == 'vicmd' ]]  && Prompt 0 $LAST_EXIT ''
+    [[ $KEYMAP == 'main' ]]   && Prompt $LAST_EXIT ''
+    [[ $KEYMAP == 'vicmd' ]]  && Prompt $LAST_EXIT ''
     zle reset-prompt
   }; zle -N zle-keymap-select
 else

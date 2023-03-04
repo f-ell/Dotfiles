@@ -31,8 +31,7 @@ Screenshots:   scrot  (https://github.com/resurrecting-open-source-projects/scro
     that's used
     * device-specific files end in `.dt` and `.lt` respectively
       * semantically: _**D**esk**t**op_ and _**L**ap**t**op_
-    * the device type is read from `$HOME/Git/machine` (should contain either
-    'DT' or 'LT') on login and exported as `$MACHINE`
+    * the device type is read from `$MACHINE` (should be either 'DT' or 'LT')
     * e.g. `Alt + b` returns
       * mouse's battery percentage on a desktop
       * laptop's battery percentage on a laptop
