@@ -19,7 +19,7 @@ ud2() {
   Fn='ud2'
   Dev=/dev/$1
   [[ -b $Dev ]] || { Err $Fn "${1:--} is not a valid blockdev."; return 1; }
-  [[ -z `udisksctl info -b $Dev | grep -oP '^\s*MountPoints:\s+\K.*$'` ]] \
+  [[ -n `udisksctl info -b $Dev | grep -oP '^\s*MountPoints:\s+\K.*$'` ]] \
     && Un=un
   udisksctl ${Un}mount -b $Dev
 }
