@@ -13,7 +13,7 @@ super + {_,shift +} + r
 
 super + {_, shift +} m
   scrot -i -q 100 -F ~/Media/Pictures/Screenshots/scrot_$(date +%Y%m%d-%H%M%S).png \
-  {-s -l style=dash\,width=2\,opacity=100, -a 0\,0\,1920\,1080}
+  {-s -f -l style=dash\,width=2\,opacity=100, -a 0\,0\,1920\,1080}
 
 super + o; {b,c,d,g,s}
   ~/Scripts/lof {qutebrowser,code,discord,gimp,steamwrap}
