@@ -20,12 +20,10 @@ dep() {
 }
 
 # container variables
-STD="$1"
-CONF="$2"
-DATA="$3"
+SUFFIX=$1
+DATA="$2"
+THEME="$3"
 FILE="$4"
-THEME="$5"
-SUFFIX=$6
 # script variables
 groups=`groups`
 uid=`id -u`
@@ -49,8 +47,8 @@ fi
 # start container
 docker run --rm --name marp-watch-pdf-$SUFFIX\
   -e MARP_USER=$uid:$gid\
-  -v "$CONF":/home/marp/app -v "$STD"/ftplugin/markdown:$DATA\
-  $image --theme $DATA/$THEME -w --pdf "$FILE" 1>/dev/null 2>&1
+  -v "$PWD":/home/marp/app -v "$DATA":/home/marp/data\
+  $image --theme /home/marp/data/"$THEME" -w --pdf "$FILE" 1>/dev/null 2>&1
 
 [ $? -ne 0 ] && err 1 'docker run fatal'
 
