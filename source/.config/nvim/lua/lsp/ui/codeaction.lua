@@ -68,34 +68,22 @@ local register_float_actions = function(data)
   end
 
   -- register execute and abort keymaps
-  v.keymap.set('n', '<C-c>',  function()
+  L.key.nnmap('<C-c>', function()
     L.win.close(data.nwin, data.owin, data.pos) end, { buffer = true })
-  v.keymap.set('n', '<CR>',   function()
+  L.key.nnmap('<CR>', function()
     local num = vf.line('.') - 2
     if num < 1 then return end
     do_action(num)
   end, { buffer = true })
 
   for i = 1, data.len do
-    v.keymap.set('n', tostring(i), function() do_action(i) end, { buffer = true})
+    L.key.nnmap(tostring(i), function() do_action(i) end, { buffer = true})
   end
 
   -- disable unwanted keys
-  L.key.nnmap('h',      '', { buffer = true })
-  L.key.nnmap('l',      '', { buffer = true })
-  L.key.nnmap('w',      '', { buffer = true })
-  L.key.nnmap('W',      '', { buffer = true })
-  L.key.nnmap('b',      '', { buffer = true })
-  L.key.nnmap('B',      '', { buffer = true })
-  L.key.nnmap('e',      '', { buffer = true })
-  L.key.nnmap('E',      '', { buffer = true })
-  L.key.nnmap('f',      '', { buffer = true })
-  L.key.nnmap('F',      '', { buffer = true })
-  L.key.nnmap('t',      '', { buffer = true })
-  L.key.nnmap('T',      '', { buffer = true })
-  L.key.nnmap('v',      '', { buffer = true })
-  L.key.nnmap('V',      '', { buffer = true })
-  L.key.nnmap('<C-v>',  '', { buffer = true })
+  for _, lhs in pairs({ 'h', 'l', 'w', 'W', 'b', 'B', 'e', 'E', 'f', 'F', 't', 'T', 'v', 'V', '<C-v>' }) do
+    L.key.nnmap(lhs, '', { buffer = true })
+  end
 
   -- register autocommands
   L.cmd.event({ 'WinLeave', 'QuitPre' }, data.nbuf, function()

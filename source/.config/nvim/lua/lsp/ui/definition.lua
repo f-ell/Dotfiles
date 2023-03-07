@@ -42,9 +42,9 @@ local set_highlights = function(bufnr, winnr, data)
   end
 
   -- register mapping for clearing highlight
-  v.keymap.set('n', '<C-l>', function()
+  L.key.nnmap('<C-l>', function()
     va.nvim_buf_clear_namespace(bufnr, ns_id, 0, -1)
-    v.keymap.del('n', '<C-l>', { buffer = true })
+    L.key.unmap('n', '<C-l>', { buffer = true })
   end, { buffer = true, remap = false })
 
   -- register close autocommands

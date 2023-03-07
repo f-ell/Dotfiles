@@ -49,14 +49,8 @@ local register_float_actions = function(data)
   end
 
   -- register execute and abort keymaps
-  local modes = { 'n', 'i', 'v' }
-  for _, m in pairs(modes) do
-    v.keymap.set(m, '<C-c>', function() close_win() end, { buffer = true })
-
-    if m ~= 'v' then
-      v.keymap.set(m, '<CR>', function() do_rename() end, { buffer = true })
-    end
-  end
+  L.key.modemap({ 'n', 'i', 'v' }, '<C-c>', function() close_win() end, { buffer = true })
+  L.key.modemap({ 'n', 'i' }, '<CR>', function() do_rename() end, {buffer = true })
 
   -- register autocommands
   L.cmd.event({ 'WinLeave', 'QuitPre' }, data.nbuf, function() close_win() end)

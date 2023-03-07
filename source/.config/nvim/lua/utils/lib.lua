@@ -310,8 +310,8 @@ M.win.open = function(id, modifiable, enter, config)
   v.bo[data.nbuf].modifiable = modifiable
   -- TODO: remove / change / conditionally set this?
   -- TODO: should this stay - height needs updating for #wraps foreach line
-  v.bo[data.nbuf].wrapmargin = 1
-  v.wo[data.nwin].wrap = true
+  -- v.bo[data.nbuf].wrapmargin = 1
+  -- v.wo[data.nwin].wrap = true
 
   return data
 end
@@ -365,20 +365,17 @@ M.win.vert_offset = function()
 end
 
 --------------------------------------------------------------------------------
----Meta-function for easier keymap definition.
----
----@param mode string
----@param opt table?
-local map = function(mode, opt)
-    opt = opt or { noremap = true }
-    ---Wraps vim.keymap.set, where the mode is derived from the overarching map() call.
+local map = function(mode, map_opts)
+    map_opts = map_opts or { noremap = true }
+    ---Wraps vim.keymap.set, where the mode is derived from the overarching
+    ---map() call.
     ---
     ---@param lhs string
     ---@param rhs string | function
-    ---@param re table?
-    return function(lhs, rhs, re)
-        re = v.tbl_extend('force', opt, re or {})
-        v.keymap.set(mode, lhs, rhs, re)
+    ---@param opts table?
+    return function(lhs, rhs, opts)
+        opts = v.tbl_extend('force', map_opts, opts or {})
+        v.keymap.set(mode, lhs, rhs, opts)
     end
 end
 
@@ -388,6 +385,28 @@ M.key.nnmap = map('n')
 M.key.vnmap = map('v')
 M.key.cnmap = map('c')
 M.key.tnmap = map('t')
+
+---Creates the keymap 'lhs' for each mode in 'modes'.
+---
+---@param modes string|table
+---@param lhs string
+---@param rhs string|function
+---@params opts table?
+M.key.modemap = function(modes, lhs, rhs, opts)
+  opts = v.tbl_extend('force', { noremap = true }, opts)
+  if type(modes) == 'string' then modes = { modes } end
+  for _, mode in pairs(modes) do v.keymap.set(mode, lhs, rhs, opts) end
+end
+
+---Deletes the keymap 'lhs' for each mode in 'modes'.
+---
+---@param modes string|table
+---@param lhs string
+---@param opts table?
+M.key.unmap = function(modes, lhs, opts)
+  if type(modes) == 'string' then modes = { modes } end
+  for mode in modes do v.keymap.del(mode, lhs, opts or {}) end
+end
 
 
 return M
