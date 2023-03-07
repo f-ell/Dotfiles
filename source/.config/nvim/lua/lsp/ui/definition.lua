@@ -24,21 +24,21 @@ local preprocess = function(raw)
 end
 
 
-local set_highlights = function(bufnr, winnr, data)
+local set_highlights = function(bufnr, proc)
   local ns_id = va.nvim_create_namespace('LspUtilsNS')
 
-  va.nvim_buf_add_highlight(bufnr, ns_id, 'Search', data.start[1] - 1,
-    data.start[2], data._end[2])
+  va.nvim_buf_add_highlight(bufnr, ns_id, 'Search', proc.start[1] - 1,
+    proc.start[2], proc._end[2])
 
-  if data.start[2] > data.start[1] + 1 then
-    local current = data.start[1]
-    local last    = data._end[1]
+  if proc.start[2] > proc.start[1] + 1 then
+    local current = proc.start[1]
+    local last    = proc._end[1]
 
     while current < last do
       va.nvim_buf_add_highlight(bufnr, ns_id, 'Search', current, 0, -1)
       current = current + 1
     end
-    va.nvim_buf_add_highlight(bufnr, ns_id, 'Search', last, 0, data._end[2])
+    va.nvim_buf_add_highlight(bufnr, ns_id, 'Search', last, 0, proc._end[2])
   end
 
   -- register mapping for clearing highlight
@@ -46,7 +46,11 @@ local set_highlights = function(bufnr, winnr, data)
     va.nvim_buf_clear_namespace(bufnr, ns_id, 0, -1)
     L.key.unmap('n', '<C-l>', { buffer = true })
   end, { buffer = true, remap = false })
+end
 
+
+local register_float_actions = function(bufnr, winnr)
+  local ns_id = va.nvim_create_namespace('LspUtilsNS')
   -- register close autocommands
   if winnr == nil then return end
   L.cmd.event('QuitPre', bufnr, function()
@@ -67,13 +71,14 @@ local open = function(raw)
 
   if proc.switch or bufnr == va.nvim_get_current_buf() then
     va.nvim_win_set_buf(0, bufnr)
-    set_highlights(bufnr, nil, proc)
+    set_highlights(bufnr, proc)
     va.nvim_win_set_cursor(0, proc.start)
     return
   end
 
   local data = L.win.open_center(bufnr, true, true)
-  set_highlights(data.nbuf, data.nwin, proc)
+  set_highlights(data.nbuf, proc)
+  register_float_actions(data.nbuf, data.nwin)
   va.nvim_win_set_cursor(data.nwin, proc.start)
   v.cmd('norm! zt')
 end

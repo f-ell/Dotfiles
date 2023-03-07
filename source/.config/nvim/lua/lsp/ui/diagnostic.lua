@@ -72,17 +72,17 @@ local generate_header = function(diag)
 end
 
 
-local set_highlights = function(bufnr, diag)
+local set_highlights = function(bufnr, proc)
   local hl_ntl    = 'NeutralFloat'
   local hl_ntl_sp = 'NeutralFloatSp'
   local hl_hdr = { 'ErrorFloatSp', 'WarningFloatSp', 'InfoFloatSp',  'HintFloatSp' }
   local hl_msg = { 'ErrorFloat',   'WarningFloat',   'InfoFloat',    'HintFloat' }
   local hl, len
-  local data = diag.data
+  local data = proc.data
 
   -- header
-  len = strlen(diag.hdr)
-  if diag.type == 'dir' then
+  len = strlen(proc.hdr)
+  if proc.type == 'dir' then
     hl = hl_hdr[data[1].sev]
     va.nvim_buf_add_highlight(bufnr, -1, hl,      0,  0, len)
     va.nvim_buf_add_highlight(bufnr, -1, hl_ntl,  0, len+1, -1)
@@ -99,7 +99,7 @@ local set_highlights = function(bufnr, diag)
   for i = 1, #data do
     hl  = hl_msg[data[i].sev]
     len = strlen(data[i].msg)
-    if diag.type == 'dir' then
+    if proc.type == 'dir' then
       va.nvim_buf_add_highlight(bufnr, -1, hl,        i+1, 0, len)
       va.nvim_buf_add_highlight(bufnr, -1, hl_ntl_sp, i+1, len+1, -1)
     else

@@ -40,13 +40,13 @@ local format = function(proc)
 end
 
 
-local set_highlights = function(bufnr, data)
+local set_highlights = function(bufnr, proc)
   local hlgr = { 'HintFloatInv', 'InfoFloatInv', 'WarningFloatInv', 'ErrorFloatInv' }
 
-  for i = 1, #data do
+  for i = 1, #proc do
     local hlidx = i % #hlgr ~= 0 and i % #hlgr or 4
-    local len = 2 + string.len(data[i].idx)
-    if data[i].ind then len = len + 1 end
+    local len = 2 + string.len(proc[i].idx)
+    if proc[i].ind then len = len + 1 end
 
     -- header
     va.nvim_buf_add_highlight(bufnr, -1, 'InfoFloatSp', 0, 0, -1)
@@ -56,7 +56,7 @@ local set_highlights = function(bufnr, data)
     va.nvim_buf_add_highlight(bufnr, -1, hlgr[hlidx], i+1, 0, len)
 
     -- body
-    va.nvim_buf_add_highlight(bufnr, -1, 'NeutralFloatSp', i+1, len+#data[i].msg, -1)
+    va.nvim_buf_add_highlight(bufnr, -1, 'NeutralFloatSp', i+1, len+#proc[i].msg, -1)
   end
 end
 
