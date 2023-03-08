@@ -27,105 +27,105 @@ local set_hl_groups = function()
   local ter = fg3
   local vis = red1
 
-  local ro  = '#e67e80'
+  local ro  = '#f85552'
   local git = '#fca326'
 
-  local hls = {
-    {0, 'blank',    {fg = _,    bg = _}},
-    {0, 'neutral',  {fg = fg3,  bg = _}},
+  local hls = { 
+    { 0, 'blank',   { fg = _,   bg = _ }},
+    { 0, 'neutral', { fg = fg3, bg = _ }},
 
     -- Modes
-    {0, 'modeC',  {fg = fg5, bg = cmd}}, {0, 'modeCx',  {fg = cmd, bg = _}},
-    {0, 'modeI',  {fg = fg5, bg = ins}}, {0, 'modeIx',  {fg = ins, bg = _}},
-    {0, 'modeN',  {fg = fg5, bg = nor}}, {0, 'modeNx',  {fg = nor, bg = _}},
-    {0, 'modeR',  {fg = fg5, bg = rep}}, {0, 'modeRx',  {fg = rep, bg = _}},
-    {0, 'modeT',  {fg = fg5, bg = ter}}, {0, 'modeTx',  {fg = ter, bg = _}},
-    {0, 'modeV',  {fg = fg5, bg = vis}}, {0, 'modeVx',  {fg = vis, bg = _}},
+    { 0, 'modeC', { fg = fg5, bg = cmd }}, { 0, 'modeCx', { fg = cmd, bg = _ }},
+    { 0, 'modeI', { fg = fg5, bg = ins }}, { 0, 'modeIx', { fg = ins, bg = _ }},
+    { 0, 'modeN', { fg = fg5, bg = nor }}, { 0, 'modeNx', { fg = nor, bg = _ }},
+    { 0, 'modeR', { fg = fg5, bg = rep }}, { 0, 'modeRx', { fg = rep, bg = _ }},
+    { 0, 'modeT', { fg = fg5, bg = ter }}, { 0, 'modeTx', { fg = ter, bg = _ }},
+    { 0, 'modeV', { fg = fg5, bg = vis }}, { 0, 'modeVx', { fg = vis, bg = _ }},
 
     -- Search
-    {0, 'Search',     {fg = fg5, bg = aqu1}},
-    {0, 'IncSearch',  {fg = fg5, bg = red1}},
-    {0, 'CurSearch',  {link = 'IncSearch'}},
-    {0, 'Substitute', {link = 'IncSearch'}},
-    {0, 'Visual',     {link = 'IncSearch'}},
+    { 0, 'Search',     { fg = fg5, bg = aqu1 }},
+    { 0, 'IncSearch',  { fg = fg5, bg = red1 }},
+    { 0, 'CurSearch',  { link = 'IncSearch' }},
+    { 0, 'Substitute', { link = 'IncSearch' }},
+    { 0, 'Visual',     { link = 'IncSearch' }},
 
     -- Diagnostics
-    {0, 'ErrorText',    {sp = red1, underline = true}},
-    {0, 'WarningText',  {sp = yel1, underline = true}},
-    {0, 'HintText',     {sp = blu1, underline = true}},
-    {0, 'InfoText',     {sp = gre1, underline = true}},
+    { 0, 'ErrorText',   { sp = red1, underline = true }},
+    { 0, 'WarningText', { sp = yel1, underline = true }},
+    { 0, 'HintText',    { sp = blu1, underline = true }},
+    { 0, 'InfoText',    { sp = gre1, underline = true }},
 
     -- Float
-    {0, 'NormalFloat',    {fg = _,    bg = _}},
-    {0, 'FloatBorder',    {fg = fg2,  bg = _}},
+    { 0, 'NormalFloat', { fg = _,    bg = _ }},
+    { 0, 'FloatBorder', { fg = fg2,  bg = _ }},
 
-    {0, 'NeutralFloat',   {fg = fg3,  bg = _}},
-    {0, 'NeutralFloatSp', {fg = fg3,  bg = _, italic = true, bold = true}},
+    { 0, 'NeutralFloat',    { fg = fg3,  bg = _ }},
+    { 0, 'NeutralFloatSp',  { fg = fg3,  bg = _, italic = true, bold = true }},
 
-    {0, 'ErrorFloat',       {fg = red1, bg = _}},
-    {0, 'WarningFloat',     {fg = yel1, bg = _}},
-    {0, 'InfoFloat',        {fg = gre1, bg = _}},
-    {0, 'HintFloat',        {fg = blu1, bg = _}},
-    {0, 'ErrorFloatSp',     {fg = red1, bg = _, italic = true, bold = true}},
-    {0, 'WarningFloatSp',   {fg = yel1, bg = _, italic = true, bold = true}},
-    {0, 'InfoFloatSp',      {fg = gre1, bg = _, italic = true, bold = true}},
-    {0, 'HintFloatSp',      {fg = blu1, bg = _, italic = true, bold = true}},
-    {0, 'ErrorFloatInv',    {fg = fg5, bg = red1}},
-    {0, 'WarningFloatInv',  {fg = fg5, bg = yel1}},
-    {0, 'InfoFloatInv',     {fg = fg5, bg = gre1}},
-    {0, 'HintFloatInv',     {fg = fg5, bg = blu1}},
+    { 0, 'ErrorFloat',      { fg = red1, bg = _ }},
+    { 0, 'WarningFloat',    { fg = yel1, bg = _ }},
+    { 0, 'InfoFloat',       { fg = gre1, bg = _ }},
+    { 0, 'HintFloat',       { fg = blu1, bg = _ }},
+    { 0, 'ErrorFloatSp',    { fg = red1, bg = _, italic = true, bold = true }},
+    { 0, 'WarningFloatSp',  { fg = yel1, bg = _, italic = true, bold = true }},
+    { 0, 'InfoFloatSp',     { fg = gre1, bg = _, italic = true, bold = true }},
+    { 0, 'HintFloatSp',     { fg = blu1, bg = _, italic = true, bold = true }},
+    { 0, 'ErrorFloatInv',   { fg = fg5, bg = red1 }},
+    { 0, 'WarningFloatInv', { fg = fg5, bg = yel1 }},
+    { 0, 'InfoFloatInv',    { fg = fg5, bg = gre1 }},
+    { 0, 'HintFloatInv',    { fg = fg5, bg = blu1 }},
 
     -- Statusline
-    {0, 'SlNormal', {fg = fg2,  bg = _}},
-    {0, 'SlItalic', {fg = fg2,  bg = _,   italic  = true}},
-    {0, 'SlRo',     {fg = fg5,  bg = ro,  bold    = true}},
-    {0, 'SlRox',    {fg = ro,   bg = _,   bold    = true}},
+    { 0, 'SlNormal',  { fg = fg2,  bg = _ }},
+    { 0, 'SlItalic',  { fg = fg2,  bg = _,   italic  = true }},
+    { 0, 'SlRo',      { fg = fg5,  bg = ro,  bold    = true }},
+    { 0, 'SlRox',     { fg = ro,   bg = _,   bold    = true }},
 
     -- Tabline
-    {0, 'TlInactive', {fg = fg3,  bg = fg5}},
-    {0, 'TlActive',   {fg = fg2,  bg = fg4, bold = true}},
+    { 0, 'TlInactive',  { fg = fg3,  bg = fg5 }},
+    { 0, 'TlActive',    { fg = fg2,  bg = fg4, bold = true }},
 
     -- Misc
-    {0, 'SpellBad', {sp = red1, undercurl = true}},
-    {0, 'Git',      {fg = git,  bg =  _, italic  = true}},
-    {0, 'GitAdd',   {fg = gre1, bg =  _}},
-    {0, 'GitCha',   {fg = blu1, bg =  _}},
-    {0, 'GitDel',   {fg = red1, bg =  _}},
+    { 0, 'SpellBad',  { sp = red1, undercurl = true }},
+    { 0, 'Git',       { fg = git,  bg =  _, italic  = true }},
+    { 0, 'GitAdd',    { fg = gre1, bg =  _ }},
+    { 0, 'GitCha',    { fg = blu1, bg =  _ }},
+    { 0, 'GitDel',    { fg = red1, bg =  _ }},
 
   -- PLUGINS --
     -- Git(signs)
-    {0, 'DiffText', {bg = '#3d5665', sp = blu1, undercurl = true}},
-    {0, 'GSAdd',    {fg = gre1, bg = _}},
-    {0, 'GSCha',    {fg = blu1, bg = _}},
-    {0, 'GSDel',    {fg = red1, bg = _}},
-    {0, 'GSAddNr',  {link = 'GitsignsAddNr'}},
-    {0, 'GSAddLn',  {link = 'GitSignsAddLn'}},
-    {0, 'GSChaNr',  {link = 'GitSignsChangeNr'}},
-    {0, 'GSChaLn',  {link = 'GitSignsChangeLn'}},
-    {0, 'GSDelNr',  {link = 'GitSignsDeleteNr'}},
-    {0, 'GSDelLn',  {link = 'GitSignsDeleteLn'}},
+    { 0, 'DiffText',  { bg = '#3d5665', sp = blu1, underline = true }},
+    { 0, 'GSAdd',     { fg = gre1, bg = _ }},
+    { 0, 'GSCha',     { fg = blu1, bg = _ }},
+    { 0, 'GSDel',     { fg = red1, bg = _ }},
+    { 0, 'GSAddNr',   { link = 'GitsignsAddNr' }},
+    { 0, 'GSAddLn',   { link = 'GitSignsAddLn' }},
+    { 0, 'GSChaNr',   { link = 'GitSignsChangeNr' }},
+    { 0, 'GSChaLn',   { link = 'GitSignsChangeLn' }},
+    { 0, 'GSDelNr',   { link = 'GitSignsDeleteNr' }},
+    { 0, 'GSDelLn',   { link = 'GitSignsDeleteLn' }},
 
     -- Telescope
-    {0, 'TelescopeBorder',        {fg = fg5, bg = fg5}},
-    {0, 'TelescopeMatching',      {fg = fg5, bg = red1}},
-    {0, 'TelescopeSelection',     {fg = fg1, bg = fg4}},
+    { 0, 'TelescopeBorder',         { fg = fg3, bg = fg5 }},
+    { 0, 'TelescopeMatching',       { fg = fg5, bg = red1 }},
+    { 0, 'TelescopeSelection',      { fg = fg1, bg = fg4 }},
 
-    {0, 'TelescopeTitle',         {fg = fg5, bg = red1}},
-    {0, 'TelescopeNormal',        {fg = fg1, bg = fg5}},
+    { 0, 'TelescopeTitle',          { fg = fg5, bg = red1 }},
+    { 0, 'TelescopeNormal',         { fg = fg1, bg = fg5 }},
 
-    {0, 'TelescopePreviewTitle',  {fg = fg5, bg = blu1}},
-    {0, 'TelescopePreviewNormal', {fg = fg1, bg = fg5}},
+    { 0, 'TelescopePreviewTitle',   { fg = fg5, bg = blu1 }},
+    { 0, 'TelescopePreviewNormal',  { fg = fg1, bg = fg5 }},
 
-    {0, 'TelescopePromptBorder',  {fg = fg4,  bg = fg4}},
-    {0, 'TelescopePromptCounter', {fg = fg1,  bg = _}},
-    {0, 'TelescopePromptNormal',  {fg = fg1,  bg = fg4}},
-    {0, 'TelescopePromptPrefix',  {fg = gre1, bg = _}},
-    {0, 'TelescopePromptTitle',   {fg = fg5,  bg = gre1}},
+    { 0, 'TelescopePromptBorder',   { fg = fg3,  bg = fg4 }},
+    { 0, 'TelescopePromptCounter',  { fg = fg1,  bg = _ }},
+    { 0, 'TelescopePromptNormal',   { fg = fg1,  bg = fg4 }},
+    { 0, 'TelescopePromptPrefix',   { fg = gre1, bg = _ }},
+    { 0, 'TelescopePromptTitle',    { fg = fg5,  bg = gre1 }},
 
     -- Treesitter
-    {0, 'TreesitterContext',            {fg = _,    bg = fg4}},
-    {0, 'TreesitterContextLineNumber',  {fg = fg3,  bg = _}},
-  }
+    { 0, 'TreesitterContext',           { fg = _,    bg = fg4 }},
+    { 0, 'TreesitterContextLineNumber', { fg = fg3,  bg = _ }},
+   }
 
   for _, hlgr in pairs(hls) do
     vim.api.nvim_set_hl(hlgr[1], hlgr[2], hlgr[3])
