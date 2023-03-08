@@ -21,6 +21,7 @@ v.o('listchars', 'eol:¬,tab:| ,lead:.,trail:~,nbsp:+')
 v.o('cursorline', true)
 v.o('ignorecase', true)
 v.o('smartcase',  true)
+v.o('shortmess', 'asWFS')
 
 v.o('wrap', false)
 v.o('textwidth',  80)
