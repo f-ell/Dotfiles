@@ -18,7 +18,7 @@ local M = {
   win = {}
 }
 
---------------------------------------------------------------------------------
+---------------------------------------------------------------------------- cmd
 ---Registers 'events' with 'cb' as a buffer-local autocommand on 'bufnr'.
 ---
 ---@param events string|table
@@ -31,7 +31,7 @@ M.cmd.event = function(events, bufnr, cb)
   }) end, 0)
 end
 
---------------------------------------------------------------------------------
+----------------------------------------------------------------------------- fs
 ---Create directory for temporary user files.
 ---
 M.fs.mktmpdir = function()
@@ -49,7 +49,7 @@ end
 -- M.fs.writetmpfile = function()
 -- end
 
---------------------------------------------------------------------------------
+----------------------------------------------------------------------------- io
 ---Open a readonly filehandle through io.popen(), where fd2 may be redirected
 ---to /dev/null. Returns the filehandle if not nil; 'ret' otherwise.
 ---
@@ -98,7 +98,7 @@ M.io.write = function(file, content)
   fh:write(table.concat(content, '\n')..'\n'); fh:flush(); fh:close()
 end
 
---------------------------------------------------------------------------------
+---------------------------------------------------------------------------- lsp
 ---Applies a workspace edit. 'res' is a table with the same fields as returned
 ---by client_responses().
 ---
@@ -167,7 +167,7 @@ M.lsp.request = function(clients, method, params, bufnr, cb)
   return responses
 end
 
---------------------------------------------------------------------------------
+---------------------------------------------------------------------------- str
 ---Acts similarly to Perl's chop(), removing the string's last character.
 ---
 ---@param str string
@@ -176,7 +176,7 @@ M.str.chop = function(str)
   return str:sub(0, str:len() - 1)
 end
 
---------------------------------------------------------------------------------
+---------------------------------------------------------------------------- tbl
 ---Returns the length of the longest line in tbl.
 ---
 ---@param tbl table
@@ -199,7 +199,7 @@ M.tbl.is_empty = function(tbl)
   return (tbl == nil or next(tbl) == nil) and true or false
 end
 
---------------------------------------------------------------------------------
+---------------------------------------------------------------------------- vim
 ---Wraps vim.api.nvim_command(cmd).
 ---
 ---@param cmd string
@@ -233,7 +233,7 @@ M.vim.o = function(name, value)
   end
 end
 
---------------------------------------------------------------------------------
+---------------------------------------------------------------------------- win
 ---Returns the window anchor (NW or SW) and the required window offset (1 or 0),
 ---based on the cursor position in the current window.
 ---
@@ -333,6 +333,7 @@ M.win.open_center = function(id, modifiable, enter, config)
   return M.win.open(id, modifiable, enter, conf)
 end
 
+
 ---Wraps win.open(), with default position at cursor.
 ---
 ---@param id number|table
@@ -364,8 +365,8 @@ M.win.vert_offset = function()
   return o
 end
 
---------------------------------------------------------------------------------
-local map = function(mode, map_opts)
+---------------------------------------------------------------------------- key
+M.key._map = function(mode, map_opts)
     map_opts = map_opts or { noremap = true }
     ---Wraps vim.keymap.set, where the mode is derived from the overarching
     ---map() call.
@@ -379,12 +380,13 @@ local map = function(mode, map_opts)
     end
 end
 
-M.key.inmap = map('i')
-M.key.nmap  = map('n', { noremap = false })
-M.key.nnmap = map('n')
-M.key.vnmap = map('v')
-M.key.cnmap = map('c')
-M.key.tnmap = map('t')
+M.key.inmap = M.key._map('i')
+M.key.nmap  = M.key._map('n', { noremap = false })
+M.key.nnmap = M.key._map('n')
+M.key.vnmap = M.key._map('v')
+M.key.cnmap = M.key._map('c')
+M.key.tnmap = M.key._map('t')
+
 
 ---Creates the keymap 'lhs' for each mode in 'modes'.
 ---
@@ -398,6 +400,7 @@ M.key.modemap = function(modes, lhs, rhs, opts)
   for _, mode in pairs(modes) do v.keymap.set(mode, lhs, rhs, opts) end
 end
 
+
 ---Deletes the keymap 'lhs' for each mode in 'modes'.
 ---
 ---@param modes string|table
@@ -405,7 +408,7 @@ end
 ---@param opts table?
 M.key.unmap = function(modes, lhs, opts)
   if type(modes) == 'string' then modes = { modes } end
-  for mode in modes do v.keymap.del(mode, lhs, opts or {}) end
+  for _, mode in pairs(modes) do v.keymap.del(mode, lhs, opts or {}) end
 end
 
 
