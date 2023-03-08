@@ -36,7 +36,11 @@ return {
         initial_mode = 'normal',
         path_display = {
           shorten = { len = 1, exclude = {-2, -1, 1} },
-          truncate = 1
+          truncate = 1,
+          vimgrep_arguments = {
+            'rg', '--color=never', '--no-heading', '-H',
+            '--column', '-n', '-S', '--hidden', '--max-depth', '8'
+          }
         },
 
         sorting_strategy  = 'descending',
