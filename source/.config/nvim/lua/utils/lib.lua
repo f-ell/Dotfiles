@@ -180,14 +180,14 @@ end
 ---Returns the length of the longest line in tbl.
 ---
 ---@param tbl table
----@return number
+---@return number?
 M.tbl.longest_line = function(tbl)
   local max = 0
   for i = 1, #tbl do
     local len = vf.strdisplaywidth(tbl[i])
     if len > max then max = len end
   end
-  return max
+  return tonumber(max)
 end
 
 
@@ -269,49 +269,82 @@ M.win.is_cur_valid = function(winnr)
 end
 
 
----Opens a new floating window holding a scratch buffer. If 'id' is a table, the
----content will be set as the buffer contents, otherwise 'id' will be used as a
----buffer handle to display.
+---Opens a new floating window holding a scratch buffer. If 'bl' is a number, it
+---is interpreted as a buffer (b) handle to display. Otherwise, the table
+---contents are used as the lines (l) to display in the buffer.
 ---
 ---Returns a table containing the new and old buffer and window handles.
 ---
----@param id number|table
+---@param bl number|table
 ---@param modifiable boolean
 ---@param enter boolean
 ---@param config table?
 ---@return table
-M.win.open = function(id, modifiable, enter, config)
+M.win.open = function(bl, modifiable, enter, config)
   local data = {
     obuf = va.nvim_get_current_buf(),
     owin = va.nvim_get_current_win(),
     nbuf = -1,
-    nwin = -1
+    nwin = -1,
+    height  = math.floor(v.o.lines * 0.7),
+    width   = math.floor(v.o.columns * 0.7)
   }
-  if type(id) == 'table' then data.nbuf = va.nvim_create_buf(false, true)
-  else                        data.nbuf = id end
+  if type(bl) == 'table' then data.nbuf = va.nvim_create_buf(false, true)
+  else                        data.nbuf = bl end
+
+  if type(bl) == 'table' then
+    data.height = 0
+    data.width  = M.tbl.longest_line(bl)
+
+    if M.tbl.longest_line(bl) < v.o.columns - 2 then
+      data.height = #bl
+      goto endif
+    end
+
+    -- calculate height, accounting for wrap
+    local sblen = vf.strdisplaywidth(v.o.showbreak)
+    local maxwidth = v.o.columns - 2
+
+    for _, ln in pairs(bl) do
+      data.height = data.height + 1
+
+      local lnlen = vf.strdisplaywidth(ln)
+      if lnlen > maxwidth then
+        lnlen = lnlen - maxwidth
+        data.height = data.height + 1
+      end
+
+      while lnlen > maxwidth do
+        lnlen = lnlen - maxwidth + sblen
+        data.height = data.height + 1
+      end
+    end
+    ::endif::
+  end
 
   local conf = v.tbl_extend('keep', config or {}, {
-    relative = type(id) == 'table' and 'cursor' or 'editor',
+    relative = type(bl) == 'table' and 'cursor' or 'editor',
     anchor = 'NW',
     row = 1,
-    col = type(id) == 'table' and -1 or math.floor((v.o.columns * 0.3) / 2),
+    col = type(bl) == 'table' and -1 or math.floor((v.o.columns * 0.3) / 2),
 
-    width   = type(id) == 'table' and M.tbl.longest_line(id) or math.floor(v.o.columns * 0.7),
-    height  = type(id) == 'table' and #id or math.floor(v.o.lines * 0.7),
+    width   = data.width,
+    height  = data.height,
     style   = 'minimal',
     border  = 'rounded'
   })
 
   data.nwin = va.nvim_open_win(data.nbuf, enter, conf)
-  if type(id) == 'table' then va.nvim_buf_set_lines(data.nbuf, 0, -1, true, id)
+  if type(bl) == 'table' then va.nvim_buf_set_lines(data.nbuf, 0, -1, true, bl)
   else                        va.nvim_win_set_buf(data.nwin, data.nbuf) end
 
   v.bo[data.nbuf].bufhidden = 'wipe'
   v.bo[data.nbuf].modifiable = modifiable
-  -- TODO: remove / change / conditionally set this?
-  -- TODO: should this stay - height needs updating for #wraps foreach line
-  -- v.bo[data.nbuf].wrapmargin = 1
-  -- v.wo[data.nwin].wrap = true
+  -- TODO: change / conditionally set this?
+  if type(bl) == 'table' then
+    v.wo[data.nwin].wrap = true
+    v.bo[data.nbuf].wrapmargin = 0
+  end
 
   return data
 end
@@ -355,7 +388,7 @@ end
 ---Returns necessary offset from the top of the window to vertically center a
 ---float. Accounts for status- and tabline, as well as vim.opt.cmdheight.
 ---
----@return number
+---@return integer
 M.win.vert_offset = function()
   local o = math.floor(-v.o.cmdheight / 2)
   local s = v.o.laststatus

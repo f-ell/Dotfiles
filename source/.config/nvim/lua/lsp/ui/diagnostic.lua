@@ -118,9 +118,11 @@ local open = function(raw)
   if proc.type == 'dir' then vf.cursor(proc.data[1].ln, proc.data[1].col) end
 
   -- insert header and separator
+  local len = L.tbl.longest_line(content)
+  local max = v.o.columns - 2
   generate_header(proc)
   table.insert(content, 1, proc.hdr..proc.loc)
-  table.insert(content, 2, string.rep('', L.tbl.longest_line(content)))
+  table.insert(content, 2, string.rep('', len > max and max or len))
 
   -- do floaty stuff
   local data = L.win.open_cursor(content, false, false, { focusable = false })
