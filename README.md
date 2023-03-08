@@ -48,10 +48,10 @@ Screenshots:   scrot  (https://github.com/resurrecting-open-source-projects/scro
 
 ## Pictures
 Zsh prompt:  
-![](Pictures/zsh.png)  
+![](Pictures/prompt.png)  
 
 Neovim:  
-![](Pictures/nvim.png)
+![](Pictures/neovim.png)
 
 ## Keybindings
 Keybindings needed to get up and running. Not exhaustive and subject to change.  
