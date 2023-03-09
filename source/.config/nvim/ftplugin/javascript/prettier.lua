@@ -3,8 +3,7 @@ local v   = vim
 local va  = v.api
 local vf  = v.fn
 
-
-if vf.executable('prettierd') ~= 1 then return end
+if vf.executable(vf.stdpath('data')..'/mason/bin/prettierd') ~= 1 then return end
 
 local augroup = va.nvim_create_augroup('prettierd', { clear = false })
 local dir   = vf.stdpath('run')..'/nvim.user'
