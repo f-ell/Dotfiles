@@ -16,6 +16,7 @@ local servers = {
 }
 local configs  = {
   ['2'] = 'go',
+  ['3'] = 'java',
   ['4'] = 'perl',
   ['6'] = 'rust',
   ['7'] = 'lua'
