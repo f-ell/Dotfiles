@@ -33,17 +33,17 @@ L.key.vnmap('<leader>p', function()
 
   -- escape substrings
   for i, s in pairs(sel) do
-    local mut = s:gsub('\\', '\\\\\\\\') -- ????
+    local mut = s:gsub('\\', '\\\\')
           mut = mut:gsub('"', '\\"')
           mut = mut:gsub('`', '\\`')
+          mut = mut:gsub('!', '\\!')
           mut = mut:gsub('%$', '\\$')
-          mut = mut:gsub('%%', '%%%%')
     sel[i] = mut
   end
 
   -- run silicon
   local ret = os.execute(
-    'printf "'..table.concat(sel, '\n')..'" | silicon '..table.concat(args, ' ')
+    'printf \'%s\' "'..table.concat(sel, '\n')..'" | silicon '..table.concat(args, ' ')
   )
 
   if ret == 0 then  v.notify('silicon: saved as '..file, 2)
