@@ -4,21 +4,21 @@ local ui  = require('lsp.ui')
 local v   = vim
 
 local servers = {
-  _1 = 'clangd',
-  _2 = 'gopls',
-  _3 = 'jdtls',
-  _4 = 'perlpls',
-  _5 = 'pylsp',
-  _6 = 'rust_analyzer',
-  _7 = 'lua_ls',
-  _8 = 'texlab',
-  _9 = 'tsserver'
+  ['1'] = 'clangd',
+  ['2'] = 'gopls',
+  ['3'] = 'jdtls',
+  ['4'] = 'perlpls',
+  ['5'] = 'pylsp',
+  ['6'] = 'rust_analyzer',
+  ['7'] = 'lua_ls',
+  ['8'] = 'texlab',
+  ['9'] = 'tsserver'
 }
 local configs  = {
-  _2 = 'go',
-  _4 = 'perl',
-  _6 = 'rust',
-  _7 = 'lua'
+  ['2'] = 'go',
+  ['4'] = 'perl',
+  ['6'] = 'rust',
+  ['7'] = 'lua'
 }
 
 
@@ -33,21 +33,20 @@ local on_attach = function()
   key.nnmap('<leader>j', ui.dgn.goto_next,  { buffer = 0 })
   key.nnmap('<leader>k', ui.dgn.goto_prev,  { buffer = 0 })
   key.nnmap('<leader>l', function()
-    require('telescope')
-    v.cmd('silent! Telescope diagnostics')
+    require('telescope'); v.cmd('silent! Telescope diagnostics')
   end)
 end
 
 
-for idx, server in pairs(servers) do
-  local capabilities = v.lsp.protocol.make_client_capabilities()
+for i, server in pairs(servers) do
+  local caps = v.lsp.protocol.make_client_capabilities()
   local opts = {
     on_attach     = on_attach,
-    capabilities  = require('cmp_nvim_lsp').default_capabilities(capabilities)
+    capabilities  = require('cmp_nvim_lsp').default_capabilities(caps)
   }
 
-  if configs[idx] then
-    local config = require('lsp.servers.' .. configs[idx])
+  if configs[i] then
+    local config = require('lsp.servers.' .. configs[i])
     v.tbl_deep_extend('force', config, opts)
   end
 

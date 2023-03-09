@@ -23,24 +23,7 @@ v.diagnostic.config({
   underline         = true,
   virtual_text      = false,
   severity_sort     = true,
-
-  sign = {
-    active = signs
-  },
-  float = {
-    focusable = false,
-    source    = 'always',
-    scope     = 'line',
-
-    wrap      = true,
-    wrap_at   = 72,
-    max_width = 72,
-    style     = 'minimal',
-    border    = 'rounded',
-
-    header = '',
-    prefix = ''
-  }
+  sign = { active = signs }
 })
 
 v.lsp.handlers['textDocument/hover'] =
