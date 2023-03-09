@@ -2,9 +2,7 @@ local v   = vim
 local va  = v.api
 local vf  = v.fn
 local vl  = v.lsp
-
--- TODO: define center-float width and height / offset here, allows reusing, and
--- easier adaptation
+local EW, CW = 0.7, 0.8 -- window width when 'relative' is editor/cursor
 
 local M = {
   cmd = {},
@@ -180,14 +178,15 @@ end
 ---Returns the length of the longest line in tbl.
 ---
 ---@param tbl table
----@return number?
+---@return integer
 M.tbl.longest_line = function(tbl)
   local max = 0
   for i = 1, #tbl do
     local len = vf.strdisplaywidth(tbl[i])
     if len > max then max = len end
   end
-  return tonumber(max)
+  max = tonumber(max)
+  if max == nil then return -1 else return max end
 end
 
 
@@ -234,6 +233,36 @@ M.vim.o = function(name, value)
 end
 
 ---------------------------------------------------------------------------- win
+M.win._height = function(content)
+  if type(content) == 'number' then return math.floor(v.o.lines * EW) end
+
+  local _mw = M.win._max_width()
+  if M.tbl.longest_line(content) < _mw then return #content end
+
+  local h, sb = 0, vf.strdisplaywidth(v.o.showbreak)
+  for _, line in pairs(content) do
+    h = h + 1
+    local ln = vf.strdisplaywidth(line)
+
+    -- first wrap
+    if ln > _mw then ln = ln - _mw; h = h + 1 end
+    -- all subsequent wraps
+    while ln > _mw do
+      ln = ln - _mw + sb
+      h = h + 1
+    end
+  end
+  return h
+end
+
+M.win._max_width = function() return math.floor(v.o.columns * CW) - 2 end
+
+M.win._width = function(content)
+  return type(content) == 'number' and math.floor(v.o.columns * EW)
+    or math.min(M.tbl.longest_line(content), M.win._max_width())
+end
+
+
 ---Returns the window anchor (NW or SW) and the required window offset (1 or 0),
 ---based on the cursor position in the current window.
 ---
@@ -286,47 +315,17 @@ M.win.open = function(bl, modifiable, enter, config)
     owin = va.nvim_get_current_win(),
     nbuf = -1,
     nwin = -1,
-    height  = math.floor(v.o.lines * 0.7),
-    width   = math.floor(v.o.columns * 0.7)
+    height  = M.win._height(bl),
+    width   = M.win._width(bl)
   }
   if type(bl) == 'table' then data.nbuf = va.nvim_create_buf(false, true)
   else                        data.nbuf = bl end
-
-  if type(bl) == 'table' then
-    data.height = 0
-    data.width  = M.tbl.longest_line(bl)
-
-    if M.tbl.longest_line(bl) < v.o.columns - 2 then
-      data.height = #bl
-      goto endif
-    end
-
-    -- calculate height, accounting for wrap
-    local sblen = vf.strdisplaywidth(v.o.showbreak)
-    local maxwidth = v.o.columns - 2
-
-    for _, ln in pairs(bl) do
-      data.height = data.height + 1
-
-      local lnlen = vf.strdisplaywidth(ln)
-      if lnlen > maxwidth then
-        lnlen = lnlen - maxwidth
-        data.height = data.height + 1
-      end
-
-      while lnlen > maxwidth do
-        lnlen = lnlen - maxwidth + sblen
-        data.height = data.height + 1
-      end
-    end
-    ::endif::
-  end
 
   local conf = v.tbl_extend('keep', config or {}, {
     relative = type(bl) == 'table' and 'cursor' or 'editor',
     anchor = 'NW',
     row = 1,
-    col = type(bl) == 'table' and -1 or math.floor((v.o.columns * 0.3) / 2),
+    col = type(bl) == 'table' and -1 or math.floor((v.o.columns * (1 - EW)) / 2),
 
     width   = data.width,
     height  = data.height,
@@ -352,36 +351,36 @@ end
 
 ---Wraps win.open(), with default position centered relative to editor.
 ---
----@param id number|table
+---@param bl number|table
 ---@param modifiable boolean
 ---@param enter boolean
 ---@param config table?
 ---@return table
-M.win.open_center = function(id, modifiable, enter, config)
+M.win.open_center = function(bl, modifiable, enter, config)
   local conf = v.tbl_extend('keep', config or {}, {
     relative = 'editor', anchor = 'NW',
-    row = math.floor((v.o.lines * 0.3) / 2) + M.win.vert_offset(),
-    col = math.floor((v.o.columns * 0.3) / 2)
+    row = math.floor((v.o.lines * (1 - EW)) / 2) + M.win._voffset(),
+    col = math.floor((v.o.columns * (1 - EW)) / 2)
   })
-  return M.win.open(id, modifiable, enter, conf)
+  return M.win.open(bl, modifiable, enter, conf)
 end
 
 
 ---Wraps win.open(), with default position at cursor.
 ---
----@param id number|table
+---@param bl number|table
 ---@param modifiable boolean
 ---@param enter boolean
 ---@param config table?
 ---@return table
-M.win.open_cursor = function(id, modifiable, enter, config)
+M.win.open_cursor = function(bl, modifiable, enter, config)
   local anchor, row = M.win.anchor_offset()
 
   local conf = v.tbl_extend('keep', config or {}, {
     relative = 'cursor', anchor = anchor,
     row = row, col = -1
   })
-  return M.win.open(id, modifiable, enter, conf)
+  return M.win.open(bl, modifiable, enter, conf)
 end
 
 
