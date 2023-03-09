@@ -262,6 +262,15 @@ M.win._width = function(content)
     or math.min(M.tbl.longest_line(content), M.win._max_width())
 end
 
+M.win._voffset = function()
+  local o = math.floor(-v.o.cmdheight / 2)
+  local s = v.o.laststatus
+  local t = v.o.showtabline
+  if s > 1 or s == 1 and #va.nvim_tabpage_list_wins() > 1 then o = o - 1 end
+  if t > 1 or t == 1 and #va.nvim_list_tabpages()     > 1 then o = o + 1 end
+  return o
+end
+
 
 ---Returns the window anchor (NW or SW) and the required window offset (1 or 0),
 ---based on the cursor position in the current window.
@@ -384,17 +393,14 @@ M.win.open_cursor = function(bl, modifiable, enter, config)
 end
 
 
----Returns necessary offset from the top of the window to vertically center a
----float. Accounts for status- and tabline, as well as vim.opt.cmdheight.
+---Generate a separation line, with the length accounting for the maximum window
+---width.
 ---
----@return integer
-M.win.vert_offset = function()
-  local o = math.floor(-v.o.cmdheight / 2)
-  local s = v.o.laststatus
-  local t = v.o.showtabline
-  if s > 1 or s == 1 and #va.nvim_tabpage_list_wins() > 1 then o = o - 1 end
-  if t > 1 or t == 1 and #va.nvim_list_tabpages()     > 1 then o = o + 1 end
-  return o
+---@param lines table
+M.win.separator = function(lines)
+  local _mw = M.win._max_width()
+  local len = M.tbl.longest_line(lines)
+  return string.rep('', len > _mw and _mw or len)
 end
 
 ---------------------------------------------------------------------------- key

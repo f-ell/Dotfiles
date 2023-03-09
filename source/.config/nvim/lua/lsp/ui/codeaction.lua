@@ -96,10 +96,8 @@ local open = function(raw)
   local content = format(proc)
 
   -- insert header and separator
-  local len = L.tbl.longest_line(content)
-  local max = v.o.columns - 2
   table.insert(content, 1, ' Code Actions')
-  table.insert(content, 2, string.rep('', len > max and max or len))
+  table.insert(content, 2, L.win.separator(content))
 
   local data = L.win.open_cursor(content, false, true)
   data.res = raw
