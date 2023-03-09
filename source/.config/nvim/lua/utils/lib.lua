@@ -111,17 +111,22 @@ end
 
 
 ---Returns table containing all servers with server_capabilities[cap..'Provider'],
----that are attached to the current buffer.
+---that are attached to the current buffer. If 'cb' is present it will be called
+---for each client, passing it as an argument. If it returns false, the client
+---will not be returned, even it has 'cap'.
 ---
 ---@param cap string
+---@param cb function?
 ---@return table
-M.lsp.clients_by_cap = function(cap)
+M.lsp.clients_by_cap = function(cap, cb)
   local capable   = {}
   local available = vl.get_active_clients({ buffer = va.nvim_get_current_buf() })
 
   for i = 1, #available do
     if available[i].server_capabilities[cap..'Provider'] then
-      table.insert(capable, available[i])
+      if cb ~= nil and cb(available[i]) then
+        table.insert(capable, available[i])
+      end
     end
   end
 
@@ -138,7 +143,7 @@ end
 ---
 ---@param clients table
 ---@param method string
----@param params TextDocumentPositionParams
+---@param params TextDocumentPositionParams|string
 ---@param bufnr number
 ---@param cb function?
 ---@return table|nil
