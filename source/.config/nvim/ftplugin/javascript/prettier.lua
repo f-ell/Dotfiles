@@ -4,20 +4,11 @@ local va  = v.api
 local vf  = v.fn
 
 
-if vf.executable('prettier') ~= 1 then return end
+if vf.executable('prettierd') ~= 1 then return end
 
-
-local augroup = va.nvim_create_augroup('prettier', { clear = false })
+local augroup = va.nvim_create_augroup('prettierd', { clear = false })
 local dir   = vf.stdpath('run')..'/nvim.user'
 local file  = dir..'/nvim_prettier'..v.loop.os_getpid()
-
-
--- INFO: for more efficient writing (prettier makes it slow enough as is), this
--- is only run once. Deleting or making dir inaccessible while nvim is running
--- will break the autocommand.
-L.fs.mktmpdir()
-
-
 
 
 local get_cmds = function()
@@ -53,10 +44,8 @@ local attach = function()
 
       write_tmpfile(va.nvim_buf_get_lines(0, 0, -1, true))
 
-      local fh = L.io.popen({ 'prettier',
-        '--cache-strategy', 'content', '--cache',
-        '--parser', v.bo.filetype, file }, false, '')
-
+      -- TODO: run process with uv.spawn to get pid and kill on VimLeavePre
+      local fh = L.io.popen({ 'cat', file, '| prettierd', vf.expand('%') }, false, '')
       local lines = {}
       for ln in L.io.read_no_chop(fh):gmatch('(.-)\r?\n') do
         table.insert(lines, ln)
@@ -74,6 +63,7 @@ end
 if next(get_cmds()) == nil then
   va.nvim_create_autocmd('VimLeavePre', {
     group = augroup,
+    once  = true,
     desc  = 'Remove temporary file.',
     callback = function()
       if not v.loop.fs_stat(file) then return end
