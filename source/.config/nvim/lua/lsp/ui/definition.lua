@@ -26,6 +26,7 @@ end
 
 local set_highlights = function(bufnr, proc)
   local ns_id = va.nvim_create_namespace('LspUtilsNS')
+  va.nvim_buf_clear_namespace(bufnr, ns_id, 0, -1)
 
   va.nvim_buf_add_highlight(bufnr, ns_id, 'Search', proc.start[1] - 1,
     proc.start[2], proc._end[2])
