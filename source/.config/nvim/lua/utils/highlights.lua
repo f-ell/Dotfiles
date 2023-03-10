@@ -106,7 +106,7 @@ local set_hl_groups = function()
     { 0, 'GSDelLn',   { link = 'GitSignsDeleteLn' }},
 
     -- Telescope
-    { 0, 'TelescopeBorder',         { fg = fg3, bg = fg5 }},
+    { 0, 'TelescopeBorder',         { fg = fg4, bg = fg5 }},
     { 0, 'TelescopeMatching',       { fg = fg5, bg = red1 }},
     { 0, 'TelescopeSelection',      { fg = fg1, bg = fg4 }},
 
@@ -116,7 +116,7 @@ local set_hl_groups = function()
     { 0, 'TelescopePreviewTitle',   { fg = fg5, bg = blu1 }},
     { 0, 'TelescopePreviewNormal',  { fg = fg1, bg = fg5 }},
 
-    { 0, 'TelescopePromptBorder',   { fg = fg3,  bg = fg4 }},
+    { 0, 'TelescopePromptBorder',   { fg = fg4,  bg = fg4 }},
     { 0, 'TelescopePromptCounter',  { fg = fg1,  bg = _ }},
     { 0, 'TelescopePromptNormal',   { fg = fg1,  bg = fg4 }},
     { 0, 'TelescopePromptPrefix',   { fg = gre1, bg = _ }},

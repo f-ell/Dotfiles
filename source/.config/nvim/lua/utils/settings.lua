@@ -1,9 +1,8 @@
 local v = require('utils.lib').vim
 
 -- spelling
-  -- using api functions results in horrendous performance hit
--- vim.opt['spell'] = true
--- vim.g['spelllang'] = 'de_de,en_us,en_gb'
+-- v.o('spell', true) -- horrendous performance hit
+v.o('spelllang', 'en_gb,de_de')
 
 -- miscellaneous
 v.o('shell',      'dash')
@@ -54,7 +53,7 @@ v.o('ruler',       false)
 
 -- buffer-behaviour
 v.o('autochdir',   true)
-v.o('updatecount', 0) -- supersedes L.o('swapfile', false)
+v.o('updatecount', 0)
 v.o('undofile',    true)
 
 -- transparency
