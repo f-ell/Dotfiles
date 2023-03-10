@@ -31,7 +31,7 @@ local format = function(proc)
 
   for _, r in pairs(proc) do
     local prefix = ' '..r.idx..'  '
-    if r.ind then prefix = ' '..prefix end
+    if r.ind then prefix = prefix..' ' end
 
     table.insert(ret, prefix..r.msg..' ('..r.src..')')
   end
@@ -46,7 +46,6 @@ local set_highlights = function(bufnr, proc)
   for i = 1, #proc do
     local hlidx = i % #hlgr ~= 0 and i % #hlgr or 4
     local len = 2 + string.len(proc[i].idx)
-    if proc[i].ind then len = len + 1 end
 
     -- header
     va.nvim_buf_add_highlight(bufnr, -1, 'InfoFloatSp', 0, 0, -1)
@@ -55,6 +54,7 @@ local set_highlights = function(bufnr, proc)
     -- prefix
     va.nvim_buf_add_highlight(bufnr, -1, hlgr[hlidx], i+1, 0, len)
 
+    -- TODO: jdtls entries are partially highlighted incorrectly
     -- body
     va.nvim_buf_add_highlight(bufnr, -1, 'NeutralFloatSp', i+1, len+#proc[i].msg, -1)
   end

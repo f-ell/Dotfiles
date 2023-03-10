@@ -16,7 +16,7 @@ local preprocess = function(raw)
   if type(res[1]) == 'table' then res = res[1] end
   ret.uri = res.result.uri or res.result.targetUri
 
-  local range = res.result.targetSelectionRange
+  local range = res.result.range or res.result.targetSelectionRange
   ret.start = { range.start.line + 1, range.start.character }
   ret._end  = { range['end'].line + 1, range['end'].character }
 
