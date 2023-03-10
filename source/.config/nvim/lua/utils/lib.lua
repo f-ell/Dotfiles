@@ -124,6 +124,7 @@ M.lsp.clients_by_cap = function(cap, cb)
 
   for i = 1, #available do
     if available[i].server_capabilities[cap..'Provider'] then
+      if cb == nil then table.insert(capable, available[i]) end
       if cb ~= nil and cb(available[i]) then
         table.insert(capable, available[i])
       end
