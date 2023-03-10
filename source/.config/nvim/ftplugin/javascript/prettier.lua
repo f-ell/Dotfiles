@@ -44,12 +44,16 @@ local attach = function()
       write_tmpfile(va.nvim_buf_get_lines(0, 0, -1, true))
 
       -- TODO: run process with uv.spawn to get pid and kill on VimLeavePre
-      local fh = L.io.popen({ 'cat', file, '| prettierd', vf.expand('%') }, false, '')
+      local fh = L.io.popen({ 'cat', file, '| prettierd', vf.expand('%'), '; echo $?' }, false, '')
       local lines = {}
       for ln in L.io.read_no_chop(fh):gmatch('(.-)\r?\n') do
         table.insert(lines, ln)
       end
 
+      if (lines[#lines]) ~= '0' then
+        return v.notify('prettier: prettierd returned non-zero exit code.', 3)
+      end
+      table.remove(lines, #lines)
       va.nvim_buf_set_lines(0, 0, -1, true, lines)
     end
   })
