@@ -64,7 +64,13 @@ end
 local register_float_actions = function(data)
   local do_action = function(num)
     L.win.close(data.nwin, data.owin, data.pos)
-    L.lsp.apply_edit(data.res[num])
+    if data.res[num].result.edit then
+      L.lsp.apply_edit(data.res[num])
+    else
+      v.lsp.buf.code_action({ filter = function(c)
+        return c.title == data.res[num].result.title and true or false
+      end, apply = true })
+    end
   end
 
   -- register execute and abort keymaps
