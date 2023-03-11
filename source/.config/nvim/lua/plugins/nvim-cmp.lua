@@ -38,7 +38,6 @@ return {
       Variable      = ""
     }
 
-
     local cmp = require('cmp')
     cmp.setup({
       enabled = function()
@@ -74,12 +73,8 @@ return {
         }
       },
 
-      window = {
-        completion = {
-          col_offset   = 1,
-          side_padding = 0
-        }
-      },
+      window = { completion = { col_offset   = 1, side_padding = 0 } },
+      view = { entries = { name = 'custom', selection_order = 'near_cursor' } },
 
       formatting = {
         fields = { 'kind', 'abbr', 'menu' },
@@ -97,29 +92,15 @@ return {
         end
       },
 
-      view = {
-        entries = {
-          name = 'custom',
-          selection_order = 'near_cursor'
-        }
-      },
-
       mapping = {
-        ['<C-k>'] = cmp.mapping.select_prev_item(),
-        ['<C-j>'] = cmp.mapping.select_next_item(),
-        ['<C-e>'] = cmp.mapping.abort(),
-        ['<C-Space>'] = cmp.mapping(cmp.mapping.complete()),
-        ['<Tab>'] = cmp.mapping(function(fallback)
-            if    cmp.visible() then cmp.confirm({ select = true })
-            else  fallback()    end
-          end)
+        ['<C-l>']     = cmp.mapping.confirm({ select = true }),
+        ['<C-k>']     = cmp.mapping.select_prev_item(),
+        ['<C-j>']     = cmp.mapping.select_next_item(),
+        ['<C-e>']     = cmp.mapping.abort(),
+        ['<C-Space>'] = cmp.mapping(cmp.mapping.complete())
       },
 
-      confirm_opts = {
-        behavior = cmp.ConfirmBehavior.Replace,
-        select   = false
-      },
-
+      confirm_opts = { behavior = cmp.ConfirmBehavior.Replace, select = false },
       experimental = { ghost_text = true }
     })
 
