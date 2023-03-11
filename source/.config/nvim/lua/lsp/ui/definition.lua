@@ -31,7 +31,8 @@ local set_highlights = function(bufnr, proc)
   va.nvim_buf_add_highlight(bufnr, ns_id, 'Search', proc.start[1] - 1,
     proc.start[2], proc._end[2])
 
-  if proc.start[2] > proc.start[1] + 1 then
+    -- TODO: revise this for multi-line highlights
+  if proc._end[1] > proc.start[1] then
     local current = proc.start[1]
     local last    = proc._end[1]
 
@@ -82,6 +83,7 @@ local open = function(raw)
   register_float_actions(data.nbuf, data.nwin)
   va.nvim_win_set_cursor(data.nwin, proc.start)
   v.cmd('norm! zt')
+  v.wo.winbar = '%#TlActive# '..v.fn.expand('%')..' %#blank#'
 end
 
 
