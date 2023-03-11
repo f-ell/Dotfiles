@@ -139,8 +139,8 @@ end
 ---Returns table consisting of concatenated results from all clients, where each
 ---table field is { id: number, name: string, result: table }.
 ---
----'cb', if present, will be called after all results have been gathered, the
----result-table is passed as the first argument to the function.
+---If 'cb' is present, it will be called on the raw response data of each client.
+---In case an error is returned, the function is responsible for handling it.
 ---
 ---@param clients table
 ---@param method string
@@ -157,8 +157,17 @@ M.lsp.request = function(clients, method, params, bufnr, cb)
   for i = 1, #clients do
     local client  = clients[i]
     local dict    = client.request_sync(method, params, 500, bufnr)
-    if next(dict) == nil or dict.err then goto continue end
+    if dict == nil or next(dict) == nil then goto continue end
+    if cb == nil then
+      if dict.err then goto continue end
+    else
+      if type(cb) == 'function' then cb(dict) end
+    end
 
+    if type(dict.result) ~= 'table' then
+      table.insert(responses, { id = client.id, name = client.name, result = dict.result })
+      goto continue
+    end
     for _, res in pairs(dict.result) do
       table.insert(responses, { id = client.id, name = client.name, result = res })
     end
@@ -166,8 +175,6 @@ M.lsp.request = function(clients, method, params, bufnr, cb)
   end
 
   if M.tbl.is_empty(responses) then return v.notify('No results found.', 3) end
-
-  if cb ~= nil and type(cb) == 'function' then cb(responses) end
   return responses
 end
 
