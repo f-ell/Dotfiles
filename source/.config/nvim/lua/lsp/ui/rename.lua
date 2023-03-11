@@ -15,16 +15,16 @@ local highlight_refs = function(data)
   local params = vl.util.make_position_params(data.owin)
   params.context = { includeDeclaration = true }
 
-  L.lsp.request(client, 'textDocument/references', params, data.obuf,
-    function(res)
-      for i=1, #res do
-        local r = res[i].result
-        if r.range then
-          va.nvim_buf_add_highlight(data.obuf, data.ns_id, 'Search',
-          r.range.start.line, r.range.start.character, r.range['end'].character)
-        end
-      end
-  end)
+  local res = L.lsp.request(client, 'textDocument/references', params, data.obuf)
+  if res == nil then return end
+
+  for i=1, #res do
+    local r = res[i].result
+    if r.range then
+      va.nvim_buf_add_highlight(data.obuf, data.ns_id, 'Search',
+      r.range.start.line, r.range.start.character, r.range['end'].character)
+    end
+  end
 end
 
 
