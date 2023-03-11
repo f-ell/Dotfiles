@@ -93,6 +93,13 @@ local set_hl_groups = function()
     { 0, 'GitDel',    { fg = red1, bg =  _ }},
 
   -- PLUGINS --
+    -- Dap
+    { 0, 'DapStopped',             { fg = gre1 } },
+    { 0, 'DapLogPoint',            { fg = yel1 } },
+    { 0, 'DapBreakpoint',          { fg = pur1 } },
+    { 0, 'DapBreakpointCondition', { fg = pur2 } },
+    { 0, 'DapBreakpointRejected',  { fg = red2 } },
+
     -- Git(signs)
     { 0, 'DiffText',  { bg = '#3d5665', sp = blu1, underline = true }},
     { 0, 'GSAdd',     { fg = gre1, bg = _ }},
@@ -127,9 +134,7 @@ local set_hl_groups = function()
     { 0, 'TreesitterContextLineNumber', { fg = fg3,  bg = _ }},
    }
 
-  for _, hlgr in pairs(hls) do
-    vim.api.nvim_set_hl(hlgr[1], hlgr[2], hlgr[3])
-  end
+  for _, hlgr in pairs(hls) do vim.api.nvim_set_hl(hlgr[1], hlgr[2], hlgr[3]) end
 end
 
 set_hl_groups()
