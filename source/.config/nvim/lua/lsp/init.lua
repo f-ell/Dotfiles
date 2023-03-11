@@ -8,14 +8,13 @@ mason.setup()
 require('lsp.setup')
 
 local signs = {
-  { name = 'DiagnosticSignError', text = 'E' }, -- 
-  { name = 'DiagnosticSignWarn',  text = 'W' }, -- 
-  { name = 'DiagnosticSignHint',  text = 'H' }, -- 
-  { name = 'DiagnosticSignInfo',  text = 'I' }, -- 
+  { 'DiagnosticSignError',  'E' }, -- 
+  { 'DiagnosticSignWarn',   'W' }, -- 
+  { 'DiagnosticSignHint',   'H' }, -- 
+  { 'DiagnosticSignInfo',   'I' }, -- 
 }
 for _, sign in pairs(signs) do
-  v.fn.sign_define(sign.name,
-    { texthl = sign.name, text = sign.text, numhl = '' })
+  v.fn.sign_define(sign[1], { texthl = sign[1], text = sign[2] })
 end
 
 v.diagnostic.config({
@@ -26,7 +25,5 @@ v.diagnostic.config({
   sign = { active = signs }
 })
 
-v.lsp.handlers['textDocument/hover'] =
-  v.lsp.with(v.lsp.handlers.hover, { border = 'rounded' })
-v.lsp.handlers['textDocument/signatureHelp'] =
-  v.lsp.with(v.lsp.handlers.signature_help, { border = 'rounded' })
+v.lsp.handlers['textDocument/hover']          = v.lsp.with(v.lsp.handlers.hover,          { border = 'rounded' })
+v.lsp.handlers['textDocument/signatureHelp']  = v.lsp.with(v.lsp.handlers.signature_help, { border = 'rounded' })
