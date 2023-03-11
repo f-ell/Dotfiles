@@ -47,7 +47,7 @@ for i, server in pairs(servers) do
   }
 
   if configs[i] then
-    opts = v.tbl_extend('force', opts, require('lsp.servers.' .. configs[i]))
+    opts = v.tbl_deep_extend('force', opts, require('lsp.servers.' .. configs[i]))
   end
   lsp[server].setup(opts)
 end
