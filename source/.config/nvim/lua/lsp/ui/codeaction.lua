@@ -15,11 +15,18 @@ local preprocess = function(raw)
   local idx = 1
 
   for _, res in pairs(raw) do
+    -- FIX: this filter is quite aggressive / inconsiderate
+    for _, proc in pairs(ret) do
+      if res.result.title == proc.msg then goto continue end
+    end
+
     local ind = (#raw > 9 and idx < 10) and true or false
     table.insert(ret, {
       idx = idx, ind = ind, msg = res.result.title, src = res.name
     })
     idx = idx + 1
+
+    ::continue::
   end
 
   return ret
