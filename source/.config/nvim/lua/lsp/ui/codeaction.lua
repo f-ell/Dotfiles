@@ -68,8 +68,10 @@ local register_float_actions = function(data)
     if data.res[num].result.edit then
       L.lsp.apply_edit(data.res[num])
     else
+      local done = false
       v.lsp.buf.code_action({ filter = function(c)
-        return c.title == data.res[num].result.title and true or false
+        if c.title == data.res[num].result.title then done = true end
+        return c.title ~= data.res[num].result.title or done and false or true
       end, apply = true })
     end
   end
