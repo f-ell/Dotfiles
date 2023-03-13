@@ -21,15 +21,21 @@ return {
     '-data', vf.stdpath('data')..'/jdtls-workspace/'..vf.fnamemodify(vf.getcwd(), ':p:t')
   },
 
+  handlers = {
+    ['language/status'] = function(_, result) --[[ disable prints ]] end,
+    ['$/progress'] = function(_, result, ctx) --[[ disable progress warnings ]] end
+  },
+
   -- https://github.com/eclipse/eclipse.jdt.ls/wiki/Running-the-JAVA-LS-server-from-the-command-line#initialize-request
   settings = { java = {} },
+
   init_options = {
     bundles = {
       vf.glob(mpc..'/java-debug-adapter/extension/server/com.microsoft.java.debug.plugin-*.jar'),
       vf.glob(mpc..'/java-test/extension/server/*.jar'),
       mpc..'/jdtls/lombok.jar'
     },
-    gibberish = 'str',
+
     extendedClientCapabilities = {
       classFileContentsSupport              = true,
       generateToStringPromptSupport         = true,
@@ -48,6 +54,7 @@ return {
       }
     }
   },
+
   capabilities = {
     textDocument = {
       codeAction = {
