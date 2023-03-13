@@ -6,13 +6,15 @@ return {
     'mfussenegger/nvim-jdtls'
   },
   keys = {
+    -- TODO: dap.run() with only console window
     { '<leader>dr',     '<CMD>DapContinue<CR>' },
     { '<leader>dq',     '<CMD>DapTerminate<CR>' },
     { '<leader>di',     '<CMD>DapStepInto<CR>' },
     { '<leader>do',     '<CMD>DapStepOut<CR>' },
     { '<leader>d<S-o>', '<CMD>DapStepOver<CR>' },
-    { '<leader>dc',     function() require('dap').clear_breakpoints() end},
-    { '<leader>dt',     '<CMD>DapToggleBreakpoint<CR>' }
+    { '<leader>dc',     function() require('dap').clear_breakpoints() end },
+    { '<leader>dt',     '<CMD>DapToggleBreakpoint<CR>' },
+    { '<leader>du',     function() require('dapui').toggle() end }
   },
   config = function()
     local L = require('utils.lib')
@@ -31,8 +33,6 @@ return {
 
     ui.setup()
     dap.listeners.after.event_initialized['dapui_config'] = function() ui.open()  end
-    dap.listeners.before.event_terminated["dapui_config"] = function() ui.close() end
-    dap.listeners.before.event_exited["dapui_config"]     = function() ui.close() end
 
     local clients = L.lsp.clients_by_cap('executeCommand')
     local execute = function(clients, args)
