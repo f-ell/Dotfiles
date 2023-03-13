@@ -39,13 +39,12 @@ return {
       return L.lsp.request(clients, 'workspace/executeCommand', args, 0)
     end
 
+    ----------------------------------------------------------------------- java
     local resolve = execute(clients, { command = 'vscode.java.resolveMainClass' })[1].result
-    local main  = resolve.mainClass
-    local proj  = resolve.project or ''
+    local main, proj = resolve.mainClass, resolve.project or ''
     local exec  = execute(clients, { command = 'vscode.java.resolveJavaExecutable', arguments = { main, proj }})[1].result
     local paths = execute(clients, { command = 'vscode.java.resolveClasspath',      arguments = { main, proj }})
 
-    ----------------------------------------------------------------------- java
     dap.configurations.java = {{
       name = 'launch '..proj..':'..main,
       type = 'java',
