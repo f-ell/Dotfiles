@@ -1,6 +1,6 @@
 return {
   'L3MON4D3/LuaSnip',
-  lazy  = true, -- required as dependency in cmp_bootstrap.lua
+  lazy = true, -- required as dependency in cmp_bootstrap.lua
   dependencies = 'saadparwaiz1/cmp_luasnip',
   config = function()
     local ls    = require('luasnip')
@@ -12,41 +12,29 @@ return {
       update_events = 'TextChanged,TextChangedI',
       delete_check_events = 'InsertLeave',
       ext_opts = {
-        [types.insertNode] = {
-          active = { hl_group = 'modeI' }
-        },
-        [types.choiceNode] = {
-          active = {
-            hl_group = 'modeI', virt_text = { '<- choice', '<- error' }
-          }
-        }
+        [types.insertNode] = { active = { hl_group = 'modeI' } },
+        [types.choiceNode] = { active = {
+            hl_group = 'modeI', virt_text = { '<- choice', '<- error' } } }
       }
     })
 
     require('luasnip.loaders.from_lua')
       .lazy_load({paths = {'~/.config/nvim/lua/snippets'}})
 
-
-    -- maps
-    local ls_jump_backwards = function()
-      if ls.jumpable(-1) then ls.jump(-1) end
-    end
-
-    local ls_expand_or_jump = function()
+    local jump_backward = function() if ls.jumpable(-1) then ls.jump(-1) end end
+    local expand_or_jump = function()
       if ls.expand_or_jumpable() then ls.expand_or_jump() end
     end
-
-    local ls_choice_forward = function()
+    local choice_forward = function()
       if ls.choice_active() then ls.change_choice(1) end
     end
-
-    local ls_choice_backward = function()
+    local choice_backward = function()
       if ls.choice_active(-1) then ls.change_choice(-1) end
     end
 
-    key.inmap('<C-h>', function() ls_jump_backwards() end)
-    key.inmap('<C-j>', function() ls_choice_forward() end)
-    key.inmap('<C-k>', function() ls_choice_backward() end)
-    key.inmap('<C-l>', function() ls_expand_or_jump() end)
+    key.inmap('<C-h>', function() jump_backward() end)
+    key.inmap('<C-j>', function() choice_forward() end)
+    key.inmap('<C-k>', function() choice_backward() end)
+    key.inmap('<C-l>', function() expand_or_jump() end)
   end
 }
