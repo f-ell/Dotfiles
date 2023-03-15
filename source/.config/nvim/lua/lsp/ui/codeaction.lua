@@ -70,8 +70,11 @@ local register_float_actions = function(data)
     else
       local done = false
       v.lsp.buf.code_action({ filter = function(c)
-        if c.title == data.res[num].result.title then done = true end
-        return c.title ~= data.res[num].result.title or done and false or true
+        if done or c.title ~= data.res[num].result.title then
+          return false
+        else
+          done = true; return true
+        end
       end, apply = true })
     end
   end
