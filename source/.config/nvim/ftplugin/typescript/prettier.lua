@@ -1,1 +1,0 @@
-../javascript/prettier.lua
