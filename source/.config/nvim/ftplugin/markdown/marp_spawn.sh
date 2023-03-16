@@ -20,10 +20,11 @@ dep() {
 }
 
 # container variables
-SUFFIX=$1
-DATA="$2"
-THEME="$3"
-FILE="$4"
+[ $1 -eq 1 ] && WATCH=-w || unset WATCH
+SUFFIX=$2
+DATA="$3"
+THEME="$4"
+FILE="$5"
 # script variables
 groups=`groups`
 uid=`id -u`
@@ -32,7 +33,7 @@ gid=`id -g`
 # check prerequisites
 dep dockerd docker
 
-[ "${groups#docker}" = "$groups" -a $uid -ne 0 ] \
+[ "${groups#*docker}" = "$groups" -a $uid -ne 0 ] \
   && err 1 'user is not in `docker` group.' || unset groups
 
 [ -z `pidof dockerd` ] && err 1 'dockerd is not running.'
@@ -48,7 +49,7 @@ fi
 docker run --rm --name marp-watch-pdf-$SUFFIX\
   -e MARP_USER=$uid:$gid\
   -v "$PWD":/home/marp/app -v "$DATA":/home/marp/data\
-  $image --theme /home/marp/data/"$THEME" -w --pdf "$FILE" 1>/dev/null 2>&1
+  $image --theme /home/marp/data/"$THEME" $WATCH --pdf "$FILE" 1>/dev/null 2>&1
 
 [ $? -ne 0 ] && err 1 'docker run fatal'
 
