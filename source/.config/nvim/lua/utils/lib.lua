@@ -147,10 +147,11 @@ end
 ---@param params TextDocumentPositionParams|string
 ---@param bufnr number
 ---@param cb function?
----@return table|nil
+---@return table
 M.lsp.request = function(clients, method, params, bufnr, cb)
   if type(clients) ~= 'table' or M.tbl.is_empty(clients) then
-    return v.notify('Invalid clients.', 3)
+    v.notify('Invalid clients.', 3)
+    return {}
   end
   local responses = {}
 
@@ -174,7 +175,7 @@ M.lsp.request = function(clients, method, params, bufnr, cb)
     ::continue::
   end
 
-  if M.tbl.is_empty(responses) then return v.notify('No results found.', 3) end
+  if M.tbl.is_empty(responses) then v.notify('No results found.', 3) end
   return responses
 end
 
