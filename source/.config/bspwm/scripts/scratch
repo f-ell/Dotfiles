@@ -1,34 +1,95 @@
-#!/bin/sh
+#!/bin/bash
+# TODO: separate version utilizing wmutils
+# lsw to query visible scratchpads / windows; pipe to atomx WM_NAME to match names
+# -> unmapping floating windows shouldn't mess with placement
 
-# scratchpads are expected to have .hidden.sticky.floating flags
+# SYNOPSIS
+#   /path/to/script INDEX
+#
+# DESCRIPTION
+#   Scratchpads are read from '$HOME/.config/bspwm/scratchpads' (respects
+#   $XDG_CONFIG_HOME), where each scratchpad is specified on its own line.
+#   The individual lines should conform to the syntax outlined below.
+#
+#   INDEX is required and should be a positive, non-zero integer. It's
+#   interpreted as the one-indexed line number of the scratchpad to run.
+#
+#     SCRATCHPAD := NAME : COMMAND [: RULE_OPTIONS]
+#
+#   Each SCRATCHPAD has a NAME and COMMAND associated with it, as well as
+#   optional rule modifiers. The latter will be passed verbatim to a oneshot
+#   rule when spawning the scratchpad (see bspc(1) 451ff.) and can be used to
+#   override the default options.
+#
+#   NAME will be set as the window title; the command will be passed directlry
+#   to a shell for execution (supports parameter expansion, but relies on `eval`
+#   to do so; beware!).
+#
+#   This syntax comes with the serious limitation of not being able to use a
+#   literal ':' in any of the SCRATCHPAD fields (i.e. no `while :; do`-loops or
+#   similar).
+#
+# KNOWN BUGS
+#   Scratchpad names, commands, or rule modifiers may not contain a literal ':'.
+#   Scratchpads MUST currently be floating in order to query / toggle them.
+#
+# DEPENDENCIES
+#   bspc
+#   kitty
+#   wmctrl
 
-# dependencies:
-#   coreutils:
-#     grep, tr
-#   other:
-#     bspc, kitty, wmctrl
+err() {
+  printf 'scratch: %s\n' "$2" 1>&2
+  (( $1 > 0 )) && exit $1
+}
+toggle() { bspc node $1 -g hidden -f; }
 
-Scr=$1
-case $Scr in
-  File) Cmd="ranger $HOME";;
-  Calc) Cmd='bc -ql';;
-  *)    printf "${0##*/}: invalid scratchpad '$1'\n"; exit 1;;
-esac
+SCRATCH_FILE=${XDG_CONFIG_HOME:-$HOME/.config}/bspwm/scratchpads
+OPTSTR='sticky=on locked=on state=floating rectangle=960x720+480+180'
 
-SetId()   { ScrId=`wmctrl -l | grep sp$Scr`; ScrId=${ScrId%% *}; }
-Toggle()  { bspc node $1 -g hidden -f; }
+[[ -f $SCRATCH_FILE && -r $SCRATCH_FILE ]]\
+  || err 1 "'$SCRATCH_FILE' doesn't exist or isn't readable"
+[[ $1 =~ [1-9][0-9]* ]] || err 1 'expected index greater than zero'
 
-# visible scratch, if any
-VisId=`bspc query -N -n .\!hidden.sticky.floating | tr [:upper:] [:lower:]`
 
-# query scratch window id
-SetId
+# get scratchpad name and command
+declare -i lnum=0 index=$1
+while read -r; do
+  (( ++lnum < index )) && { unset REPLY; continue; } || break
+done < $SCRATCH_FILE
 
-# start scratch unless running; sleep because wmctrl is not *blazingly fast*
-[ -z "$ScrId" ] && { (kitty -T sp$Scr $Cmd &); sleep 0.2; SetId; }
+[[ -z $REPLY ]] && err 1 'index out of bounds'
+declare name=${REPLY%% :*} cmd=${REPLY#*: }
+# WARN: potentially unsafe, used as crutch to allow parameter expansion:
+cmd=$(eval echo `echo ${cmd% :*}`)
 
-# toggle visible if not target; prevents overlap
-[ -n "$VisId" ] && [ $VisId != $ScrId ] && Toggle $VisId
+# TODO: make more robust
+# -> split optstring on '=' (req. logic to handle keys without values)
+# -> index into assoc. array
+# -> override keys with user opts
+declare override="${REPLY/*:*:}"
+(( ${#override} < ${#REPLY} )) && OPTSTR+="$override"
 
-# toggle scratch
-Toggle $ScrId
+
+# get scratchpad window id and visible scratchpad (if any)
+declare wid vis
+# NOTE: WILL behave unexpectedly when mutliple windows with the same title exist
+while read; do
+  [[ $REPLY =~ $name$ ]] && { wid="${REPLY%% *}"; break; }
+done < <(wmctrl -l)
+
+# FIX: read all scratchpads to array -> check if any exist (makes flags obsolete)
+vis=`bspc query -N -n .\!hidden.sticky.floating`
+vis=${vis,,}
+
+
+# toggle / spawn scratchpads as necessary
+[[ -n $vis && $vis != $wid ]] && toggle $vis
+if [[ -z $wid ]]; then
+  bspc rule -a *:*:$name -o $OPTSTR
+  # FIX: allow using different terminal emulators / graphical applications
+  # (-> separate spawn function with additional logic?)
+  kitty -T $name $cmd &
+else
+  toggle $wid
+fi

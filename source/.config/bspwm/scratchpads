@@ -1,0 +1,2 @@
+file : ranger $HOME
+calc : bc -ql : rectangle=300x400+50+50

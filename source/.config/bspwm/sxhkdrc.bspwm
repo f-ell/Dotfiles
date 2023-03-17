@@ -49,4 +49,4 @@ super + i; s
 
 # scratchpads
 alt + {1,2}
-  ~/.config/bspwm/scripts/scratch {File,Calc}
+  ~/.config/bspwm/scripts/scratch {1,2}

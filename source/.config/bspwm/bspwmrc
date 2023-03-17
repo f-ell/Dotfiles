@@ -66,9 +66,6 @@ bspc rule -a Steam    desktop='^4' follow=off state=floating
 bspc rule -a ftb-app  desktop='^4' follow=off state=floating
 bspc rule -a Gimp                             state=floating
 bspc rule -a *:*:Picture-in-Picture           state=floating
-# SCRATCHPADS
-bspc rule -a *:*:spFile hidden=on sticky=on locked=on state=floating rectangle=1280x720+320+180
-bspc rule -a *:*:spCalc hidden=on sticky=on locked=on state=floating rectangle=300x400+50+50
 
 
 # AUTOSTART
