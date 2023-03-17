@@ -194,7 +194,7 @@ if [[ `xset q 2>/dev/null` ]]; then
 
   zle-keymap-select() {
     [[ $KEYMAP == 'main' ]]   && Prompt $LAST_EXIT ''
-    [[ $KEYMAP == 'vicmd' ]]  && Prompt $LAST_EXIT ''
+    [[ $KEYMAP == 'vicmd' ]]  && Prompt $LAST_EXIT ':'
     zle reset-prompt
   }; zle -N zle-keymap-select
 else
