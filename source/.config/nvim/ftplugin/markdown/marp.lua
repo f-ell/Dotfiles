@@ -4,7 +4,7 @@ local vf  = v.fn
 
 local cmd_id  = nil
 local bufnr   = va.nvim_get_current_buf()
-local std     = vf.stdpath('config')..'/ftplugin/markdown/'
+local std     = vf.stdpath('config')..'/ftplugin/markdown'
 local suffix  = v.loop.os_getpid()..'-'..bufnr
 
 if not vf.expand('%:t'):match('%.slides%.md$') then return end
@@ -19,11 +19,12 @@ end
 local get_data_and_theme = function(tbl)
   local data, theme = nil, 'theme.css'
   if tbl.args ~= '' then
-    data, theme = v.fs.dirname(tbl.args), v.fs.basename(tbl.args)
+    data  = vf.fnamemodify(v.fs.dirname(tbl.args), ':p')
+    theme = v.fs.basename(tbl.args)
   else
     local cwd = v.loop.cwd()
-    if v.loop.fs_stat(cwd..'/theme.css') then data = cwd
-    else                                      data = std end
+    if v.loop.fs_stat(cwd..'/'..theme) then data = cwd
+    else                                    data = std end
   end
   return data, theme
 end
