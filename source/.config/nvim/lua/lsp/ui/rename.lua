@@ -11,13 +11,8 @@ local M = {}
 
 
 local highlight_refs = function(data)
-  local client = L.lsp.clients_by_cap('references')
-  local params = vl.util.make_position_params(data.owin)
-  params.context = { includeDeclaration = true }
-
-  local res = L.lsp.request(client, 'textDocument/references', params, data.obuf)
-  for i=1, #res do
-    local r = res[i].result
+  for i=1, #data.refs do
+    local r = data.refs[i].result
     if r.range then
       va.nvim_buf_add_highlight(data.obuf, data.ns_id, 'Search',
       r.range.start.line, r.range.start.character, r.range['end'].character)
@@ -55,16 +50,18 @@ local register_float_actions = function(data)
 end
 
 
-local open = function(cword)
+local open = function(raw)
   local min_w, max_w = math.min(v.o.columns, 18), math.min(v.o.columns, 36)
-  local len = cword:len()
+  local len = raw.cword:len()
   local w = len < min_w and min_w or len + 1
   if len > max_w then w = max_w end
 
-  local data = L.win.open_cursor({ cword }, true, true, { width = w, col = -1 })
-  data.ns_id = va.nvim_create_namespace('LspUtilNS')
+  va.nvim_win_set_cursor(0, { raw.pos[1] + 1, raw.pos[2] })
+  local data = L.win.open_cursor({ raw.cword }, true, true, { width = w, col = -1 })
+  data.ns_id = va.nvim_create_namespace('LspUi')
   data.pos   = va.nvim_win_get_cursor(data.owin)
-  data.old   = cword
+  data.old   = raw.cword
+  data.refs  = raw.refs
 
   highlight_refs(data)
   register_float_actions(data)
@@ -72,13 +69,34 @@ local open = function(cword)
 end
 
 
-local try_rename = function(cword)
-  if not cword or cword == '' then v.notify('Nothing to rename.', 2) return end
-  open(cword)
+local try_rename = function()
+  local client = L.lsp.clients_by_cap('references')
+  local params = vl.util.make_position_params(0)
+  params.context = { includeDeclaration = true }
+
+  local refs = L.lsp.request(client, 'textDocument/references', params, 0)
+  if L.tbl.is_empty(refs) then return end
+
+  local ln, col = params.position.line, params.position.character
+
+  local declaration
+  for _, ref in pairs(refs) do
+    local s, e = ref.result.range.start, ref.result.range['end']
+    if s.line == ln and s.character <= col and e.character >= col then
+      declaration = ref; break
+    end
+  end
+
+  local s, e  = declaration.result.range.start, declaration.result.range['end']
+  local cword = declaration
+    and va.nvim_buf_get_text(0, s.line, s.character, e.line, e.character, {})[1]
+    or ''
+
+  open({ cword = cword, refs = refs, pos = { s.line, s.character } })
 end
 
 
 
 
-M.rename = function() try_rename(vf.expand('<cword>')) end
+M.rename = function() try_rename() end
 return M

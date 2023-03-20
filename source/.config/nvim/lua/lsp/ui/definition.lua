@@ -25,7 +25,7 @@ end
 
 
 local set_highlights = function(bufnr, proc)
-  local ns_id = va.nvim_create_namespace('LspUtilsNS')
+  local ns_id = va.nvim_create_namespace('LspUi')
   va.nvim_buf_clear_namespace(bufnr, ns_id, 0, -1)
 
   va.nvim_buf_add_highlight(bufnr, ns_id, 'Search', proc.start[1] - 1,
@@ -52,7 +52,7 @@ end
 
 
 local register_float_actions = function(bufnr, winnr)
-  local ns_id = va.nvim_create_namespace('LspUtilsNS')
+  local ns_id = va.nvim_create_namespace('LspUi')
   -- register close autocommands
   if winnr == nil then return end
   L.cmd.event('QuitPre', bufnr, function()
