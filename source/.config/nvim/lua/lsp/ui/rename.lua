@@ -16,8 +16,6 @@ local highlight_refs = function(data)
   params.context = { includeDeclaration = true }
 
   local res = L.lsp.request(client, 'textDocument/references', params, data.obuf)
-  if res == nil then return end
-
   for i=1, #res do
     local r = res[i].result
     if r.range then
@@ -74,15 +72,13 @@ local open = function(cword)
 end
 
 
-local try_rename = function(cword, proj)
-  if not cword or cword == '' then return v.notify('Nothing to rename.', 2) end
+local try_rename = function(cword)
+  if not cword or cword == '' then v.notify('Nothing to rename.', 2) return end
   open(cword)
 end
 
 
 
 
-M.rename = function() try_rename(vf.expand('<cword>'), false) end
--- TODO: add project-wide rename
-M.proj_rename = function() try_rename(vf.expand('<cword>'), true) end
+M.rename = function() try_rename(vf.expand('<cword>')) end
 return M
