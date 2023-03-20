@@ -171,6 +171,7 @@ local git_diff = function()
   local add, cha, del = 0, 0, 0
   for ln in L.io.read(fh):gmatch('(.-)\r?\n') do
     if not v.startswith(ln, '@@') then goto continue end
+    if v.startswith(ln, '@@@')    then return ' %#GitDel#unmerged' end
 
     local caps = { ln:match('^@@ %-%d+,?(%d*) %+%d+,?(%d*) @@') }
     local old, new = caps[1], caps[2]
