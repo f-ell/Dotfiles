@@ -89,7 +89,7 @@ local register_float_actions = function(data)
   end, { buffer = true })
 
   for i = 1, data.len do
-    L.key.nnmap(tostring(i), function() do_action(i) end, { buffer = true})
+    L.key.nnmap(tostring(i), function() do_action(i) end, { buffer = true })
   end
 
   -- disable unwanted keys
