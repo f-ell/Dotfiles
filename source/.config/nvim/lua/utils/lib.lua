@@ -158,19 +158,20 @@ M.lsp.request = function(clients, method, params, bufnr, cb)
   for i = 1, #clients do
     local client  = clients[i]
     local dict    = client.request_sync(method, params, 500, bufnr)
-    if dict == nil or next(dict) == nil then goto continue end
-    if cb == nil then
-      if dict.err then goto continue end
-    else
+
+    if M.tbl.is_empty(dict) or M.tbl.is_empty(dict.result) then goto continue end
+    if cb ~= nil then
       if type(cb) == 'function' then cb(dict) end
+    else
+      if dict.err then goto continue end
     end
 
-    if type(dict.result) ~= 'table' then
+    if type(dict.result[1]) == 'table' then
+      for j=1, #dict.result do
+        table.insert(responses, { id = client.id, name = client.name, result = dict.result[j] })
+      end
+    else
       table.insert(responses, { id = client.id, name = client.name, result = dict.result })
-      goto continue
-    end
-    for _, res in pairs(dict.result) do
-      table.insert(responses, { id = client.id, name = client.name, result = res })
     end
     ::continue::
   end

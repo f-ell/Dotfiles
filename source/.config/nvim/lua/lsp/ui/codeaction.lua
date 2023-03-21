@@ -12,19 +12,20 @@ local M = {}
 
 local preprocess = function(raw)
   local ret = {}
-  local idx = 1
+  local i = 1
 
   for _, res in pairs(raw) do
-    -- FIX: this filter is quite aggressive / inconsiderate
+    -- filter duplicate code actions (jdtls is such a great ls...)
+    -- TODO: tbl deep_compare with proc.idx, if same -> skip
     for _, proc in pairs(ret) do
-      if res.result.title == proc.msg then goto continue end
+      if res.name == proc.src and res.result.title == proc.msg then goto continue end
     end
 
-    local ind = (#raw > 9 and idx < 10) and true or false
+    local ind = (#raw > 9 and i < 10) and true or false
     table.insert(ret, {
-      idx = idx, ind = ind, msg = res.result.title, src = res.name
+      idx = i, ind = ind, msg = res.result.title, src = res.name
     })
-    idx = idx + 1
+    i = i + 1
 
     ::continue::
   end
@@ -35,11 +36,9 @@ end
 
 local format = function(proc)
   local ret = {}
-
   for _, r in pairs(proc) do
     table.insert(ret, ' '..r.idx..'  '..r.msg..' ('..r.src..')')
   end
-
   return ret
 end
 
@@ -65,17 +64,30 @@ end
 local register_float_actions = function(data)
   local do_action = function(num)
     L.win.close(data.nwin, data.owin, data.pos)
-    if data.res[num].result.edit then
+
+    local act = data.res[num]
+    local res = act.result
+
+    if res.edit then
       L.lsp.apply_edit(data.res[num])
+    elseif res.action and type(res.action) == 'function' then
+      res.action()
+    elseif res.command then
+      local cmd = type(res.command) == 'table' and res.command or act.result
+      local client = vim.lsp.get_client_by_id(act.id)
+
+      if not client.server_capabilities.executeCommandProvider.commands[cmd] then
+        v.notify('Client doesn\'t support requested command.', 4) return
+      end
+
+      L.lsp.request(client, 'workspace/executeCommand', { command = cmd.command,
+        arguments = cmd.arguments, workDoneToken = cmd.workDoneToken }, 0)
     else
-      local done = false
-      v.lsp.buf.code_action({ filter = function(c)
-        if done or c.title ~= data.res[num].result.title then
-          return false
-        else
-          done = true; return true
-        end
-      end, apply = true })
+      local client = vl.get_client_by_id(act.id)
+      local resolved = L.lsp.request({ client }, 'codeAction/resolve',
+        data.res[num].result, 0)[1]
+
+      L.lsp.apply_edit(resolved)
     end
   end
 
