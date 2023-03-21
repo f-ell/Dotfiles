@@ -22,7 +22,7 @@ require('lazy').setup('plugins', {
   lockfile    = std('data') .. '/lazy/lazy-lock.json',
   install     = { missing = true, colorscheme = { 'everforest' } },
   checker     = { enabled = false, frequency  = 86400 },
-  ui          = { border = 'rounded' },
+  ui          = { border = 'single' },
   performance = {
     cache = {
       enabled = true,

@@ -25,5 +25,5 @@ v.diagnostic.config({
   sign = { active = signs }
 })
 
-v.lsp.handlers['textDocument/hover']          = v.lsp.with(v.lsp.handlers.hover,          { border = 'rounded' })
-v.lsp.handlers['textDocument/signatureHelp']  = v.lsp.with(v.lsp.handlers.signature_help, { border = 'rounded' })
+v.lsp.handlers['textDocument/hover']          = v.lsp.with(v.lsp.handlers.hover,          { border = 'single' })
+v.lsp.handlers['textDocument/signatureHelp']  = v.lsp.with(v.lsp.handlers.signature_help, { border = 'single' })

@@ -47,6 +47,7 @@ return {
         scroll_strategy   = 'limit',
         file_ignore_patterns = { '.cache/', 'undo/' },
 
+        borderchars       = { '─', '│', '─', '│', '┌', '┐', '┘', '└' },
         layout_strategy   = 'vertical',
         theme = 'dropdown',
         layout_config     = {

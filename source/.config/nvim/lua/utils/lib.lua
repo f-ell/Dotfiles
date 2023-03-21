@@ -353,7 +353,7 @@ M.win.open = function(bl, modifiable, enter, config)
     width   = data.width,
     height  = data.height,
     style   = 'minimal',
-    border  = 'rounded'
+    border  = 'single'
   })
 
   data.nwin = va.nvim_open_win(data.nbuf, enter, conf)
