@@ -12,20 +12,19 @@ local M = {}
 
 local preprocess = function(raw)
   local ret = {}
-  local i = 1
+  local v_idx = 1
 
-  for _, res in pairs(raw) do
-    -- filter duplicate code actions (jdtls is such a great ls...)
-    -- TODO: tbl deep_compare with proc.idx, if same -> skip
+  for idx, res in pairs(raw) do
+    -- filter duplicate code actions (jdt is such a fantastic ls...)
     for _, proc in pairs(ret) do
-      if res.name == proc.src and res.result.title == proc.msg then goto continue end
+      if v.deep_equal(res.result, raw[proc.idx].result) then goto continue end
     end
 
-    local ind = (#raw > 9 and i < 10) and true or false
+    local ind = (#raw > 9 and v_idx < 10) and true or false
     table.insert(ret, {
-      idx = i, ind = ind, msg = res.result.title, src = res.name
+      vis = v_idx, idx = idx, ind = ind, msg = res.result.title, src = res.name
     })
-    i = i + 1
+    v_idx = v_idx + 1
 
     ::continue::
   end
@@ -37,7 +36,7 @@ end
 local format = function(proc)
   local ret = {}
   for _, r in pairs(proc) do
-    table.insert(ret, ' '..r.idx..'  '..r.msg..' ('..r.src..')')
+    table.insert(ret, ' '..r.vis..'  '..r.msg..' ('..r.src..')')
   end
   return ret
 end
@@ -48,7 +47,7 @@ local set_highlights = function(bufnr, proc)
 
   for i = 1, #proc do
     local hlidx = i % #hlgr ~= 0 and i % #hlgr or 4
-    local len = 2 + string.len(proc[i].idx)
+    local len = 2 + string.len(proc[i].vis)
 
     -- header
     va.nvim_buf_add_highlight(bufnr, -1, 'InfoFloatSp', 0, 0, -1)
@@ -65,11 +64,11 @@ local register_float_actions = function(data)
   local do_action = function(num)
     L.win.close(data.nwin, data.owin, data.pos)
 
-    local act = data.res[num]
+    local act = data.res[data.proc[num].idx]
     local res = act.result
 
     if res.edit then
-      L.lsp.apply_edit(data.res[num])
+      L.lsp.apply_edit(act)
     elseif res.action and type(res.action) == 'function' then
       res.action()
     elseif res.command then
@@ -84,8 +83,7 @@ local register_float_actions = function(data)
         arguments = cmd.arguments, workDoneToken = cmd.workDoneToken }, 0)
     else
       local client = vl.get_client_by_id(act.id)
-      local resolved = L.lsp.request({ client }, 'codeAction/resolve',
-        data.res[num].result, 0)[1]
+      local resolved = L.lsp.request({ client }, 'codeAction/resolve', res, 0)[1]
 
       L.lsp.apply_edit(resolved)
     end
@@ -124,6 +122,7 @@ local open = function(raw)
   table.insert(content, 2, L.win.separator(content))
 
   local data = L.win.open_cursor(content, false, true)
+  data.proc = proc
   data.res = raw
   data.pos = va.nvim_win_get_cursor(data.owin)
   data.len = #content - 2
