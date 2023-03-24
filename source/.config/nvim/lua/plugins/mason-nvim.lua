@@ -1,14 +1,33 @@
 return {
   'williamboman/mason.nvim',
-  lazy  = true,
-  ft    = {
-    'c', 'go', 'java', 'javascript', 'latex', 'lua', 'perl', 'plaintex',
-    'rust', 'tex', 'typescript'
-  },
-  cmd           = { 'Mason', 'MasonInstall', 'MasonUninstall' },
-  dependencies  = {
-    'hrsh7th/cmp-nvim-lsp',
-    'neovim/nvim-lspconfig'
-  },
-  config = function() require('lsp') end
+  lazy = true,
+  dependencies = { 'hrsh7th/cmp-nvim-lsp', 'neovim/nvim-lspconfig' },
+  cmd   = 'Mason',
+  event = 'FileType',
+  config = function()
+    local v = vim
+    local signs = {
+      { 'DiagnosticSignError',  'E' }, -- 
+      { 'DiagnosticSignWarn',   'W' }, -- 
+      { 'DiagnosticSignHint',   'H' }, -- 
+      { 'DiagnosticSignInfo',   'I' }, -- 
+    }
+    for _, sign in pairs(signs) do
+      v.fn.sign_define(sign[1], { texthl = sign[1], text = sign[2] })
+    end
+
+    v.diagnostic.config({
+      update_in_insert  = true,
+      underline         = true,
+      virtual_text      = false,
+      severity_sort     = true,
+      sign = { active = signs }
+    })
+
+    v.lsp.handlers['textDocument/hover'] = v.lsp.with(v.lsp.handlers.hover, { border = 'single' })
+    v.lsp.handlers['textDocument/signatureHelp'] = v.lsp.with(v.lsp.handlers.signature_help, { border = 'single' })
+
+    require('mason').setup({ ui = { border = 'single' } })
+    require('lsp.setup')
+  end
 }
