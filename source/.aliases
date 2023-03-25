@@ -32,7 +32,7 @@ pac() {
     shift
   fi
   [[ $1 =~ '[cC]' ]] && { pacman -Q | wc -l; return 0; }
-  $Root pacman -$1 $2
+  $Root pacman -$1 ${@:2}
 }
 
 
@@ -45,7 +45,6 @@ alias ed='exa -ld'
 alias el='exa -la'
 alias ex='exec $SHELL'
 alias feh='feh --no-fehbg'
-alias gff='nff $HOME/Git'
 alias gl='glow -p'
 alias hist='tail -10 <(history)'
 alias scripts='cd $HOME/Git/Scripts/'
