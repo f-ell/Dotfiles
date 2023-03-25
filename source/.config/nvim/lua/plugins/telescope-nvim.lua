@@ -15,8 +15,7 @@ return {
     'natecraddock/telescope-zf-native.nvim',
     'nvim-lua/plenary.nvim',
     'nvim-telescope/telescope-file-browser.nvim',
-    'debugloop/telescope-undo.nvim',
-    { 'kyazdani42/nvim-web-devicons', lazy = true, config = true }
+    'nvim-tree/nvim-web-devicons'
   },
   init = function()
     local v = vim
