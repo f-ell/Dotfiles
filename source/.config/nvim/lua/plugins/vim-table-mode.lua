@@ -1,10 +1,9 @@
 return {
   'dhruvasagar/vim-table-mode',
-  lazy    = true,
-  cmd     = 'TableModeEnable',
-  config  = function()
+  lazy = true,
+  cmd = 'TableModeEnable',
+  config = function()
     local v = require('utils.lib').vim
-
     v.g('table_mode_relign_map',                '<leader>tr')
     v.g('table_mode_tableize_map',              '<leader>tt')
     v.g('table_mode_delete_row_map',            '<leader>tdr')

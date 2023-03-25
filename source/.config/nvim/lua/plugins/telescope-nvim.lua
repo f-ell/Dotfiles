@@ -1,7 +1,17 @@
 return {
   'nvim-telescope/telescope.nvim',
   lazy = true,
+  keys = {
+    { '<leader>e',  '<CMD>Telescope file_browser<CR>' },
+    { '<leader>u',  '<CMD>Telescope undo<CR>' },
+    { '<leader>ff', '<CMD>Telescope find_files<CR>' },
+    { '<leader>fg', '<CMD>silent! Telescope git_files<CR>' },
+    { '<leader>fp', function() require('telescope.builtin').find_files({ cwd = '..' }) end },
+    { '<leader>rg', '<CMD>Telescope live_grep<CR>' },
+    { '<leader>zf', '<CMD>Telescope current_buffer_fuzzy_find<CR>' }
+  },
   dependencies = {
+    'debugloop/telescope-undo.nvim',
     'natecraddock/telescope-zf-native.nvim',
     'nvim-lua/plenary.nvim',
     'nvim-telescope/telescope-file-browser.nvim',
@@ -17,15 +27,6 @@ return {
       end
     end
   end,
-  keys = {
-    { '<leader>e',  '<CMD>Telescope file_browser<CR>' },
-    { '<leader>u',  '<CMD>Telescope undo<CR>' },
-    { '<leader>ff', '<CMD>Telescope find_files<CR>' },
-    { '<leader>fg', '<CMD>silent! Telescope git_files<CR>' },
-    { '<leader>fh', function() require('telescope.builtin').find_files({ cwd = os.getenv('HOME') }) end },
-    { '<leader>rg', '<CMD>Telescope live_grep<CR>' },
-    { '<leader>zf', '<CMD>Telescope current_buffer_fuzzy_find<CR>' }
-  },
   config = function()
     local tls   = require('telescope')
     local tslu  = require('telescope.utils')

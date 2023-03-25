@@ -1,9 +1,8 @@
 return {
   'echasnovski/mini.surround',
-  lazy    = true,
-  -- event   = 'BufReadPre',
-  keys    = { '<leader>s', 'cs', 'ds', '<leader><leader>s', '<leader>ns' },
-  config  = function()
+  lazy = true,
+  keys = { '<leader>s', 'cs', 'ds', '<leader><leader>s', '<leader>ns' },
+  config = function()
     require('mini.surround').setup({
       custom_surroundings = nil,
       highlight_duration  = 1000,

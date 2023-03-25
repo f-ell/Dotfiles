@@ -1,7 +1,7 @@
 return {
   'nvim-treesitter/nvim-treesitter',
-  lazy    = true,
-  event   = { 'BufNewFile', 'BufReadPost' },
+  lazy = true,
+  event = { 'BufNewFile', 'BufReadPost' },
   dependencies = {
     'JoosepAlviste/nvim-ts-context-commentstring',
     {
@@ -16,7 +16,7 @@ return {
     },
     'nvim-treesitter/nvim-treesitter-textobjects'
   },
-  config  = function()
+  config = function()
     require('nvim-treesitter.configs').setup({
       auto_install      = false,
       ensure_installed  = {},

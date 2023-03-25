@@ -1,9 +1,9 @@
 return {
   'williamboman/mason.nvim',
   lazy = true,
+  cmd = 'Mason',
+  event = { 'BufNewFile', 'BufReadPost' },
   dependencies = { 'hrsh7th/cmp-nvim-lsp', 'neovim/nvim-lspconfig' },
-  cmd   = 'Mason',
-  event = 'FileType',
   config = function()
     local v = vim
     local signs = {

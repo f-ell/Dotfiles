@@ -1,7 +1,7 @@
 return {
   'jose-elias-alvarez/null-ls.nvim',
-  lazy = true,
-  event = 'VimEnter',
+  lazy  = true,
+  event = { 'BufNewFile', 'BufReadPost' },
   dependencies = 'nvim-lua/plenary.nvim',
   config = function()
     local v = vim
@@ -13,16 +13,16 @@ return {
 
       local eslint_d_conf = {
         command = mpc..'/eslint_d',
-        condition = function(utils)
-          return utils.has_file({ '.eslintrc.js', '.eslintrc.json', '.eslintrc.yml' })
-        end
+        -- condition = function(utils)
+        --   return utils.has_file({ '.eslintrc.js', '.eslintrc.json', '.eslintrc.yml' })
+        -- end
       }
 
       local prettierd_conf = {
         command = mpc..'/prettierd',
-        condition = function(utils)
-          return utils.has_file({ '.prettierrc', '.prettierrc.js', '.prettierrc.json', '.prettierrc.yml' })
-        end
+        -- condition = function(utils)
+        --   return utils.has_file({ '.prettierrc', '.prettierrc.js', '.prettierrc.json', '.prettierrc.yml' })
+        -- end
       }
 
     null.setup({

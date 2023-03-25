@@ -1,9 +1,8 @@
 return {
   'sainnhe/everforest',
-  lazy      = true,
-  config    = function()
+  lazy = true,
+  config = function()
     local v = require('utils.lib').vim
-
     v.o('background', 'dark')
     v.g('everforest_background',              'soft')
     v.g('everforest_enable_bold',             '1')

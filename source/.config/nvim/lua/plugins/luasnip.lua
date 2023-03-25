@@ -1,6 +1,6 @@
 return {
   'L3MON4D3/LuaSnip',
-  lazy = true, -- required as dependency in cmp_bootstrap.lua
+  lazy = true,
   dependencies = 'saadparwaiz1/cmp_luasnip',
   config = function()
     local ls    = require('luasnip')

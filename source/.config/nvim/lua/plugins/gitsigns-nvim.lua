@@ -1,15 +1,15 @@
 return {
   'lewis6991/gitsigns.nvim',
-  lazy    = true,
-  event   = 'BufReadPre',
-  keys    = {
+  lazy = true,
+  event = 'BufReadPre',
+  keys = {
     { '<leader>gsh', '<CMD>Gitsigns diffthis<CR>' },
     { '<leader>gsj', '<CMD>silent Gitsigns next_hunk<CR>' },
     { '<leader>gsk', '<CMD>silent Gitsigns prev_hunk<CR>' },
     { '<leader>gsl', '<CMD>Gitsigns toggle_deleted<CR>' },
     { '<leader>gsc', '<CMD>Gitsigns toggle_linehl<CR>' }
   },
-  config  = function()
+  config = function()
     require('gitsigns').setup({
       attach_to_untracked = false,
 

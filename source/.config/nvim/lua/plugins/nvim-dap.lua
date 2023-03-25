@@ -1,10 +1,6 @@
 return {
   'mfussenegger/nvim-dap',
   lazy = true,
-  dependencies = {
-    'rcarriga/nvim-dap-ui',
-    'mfussenegger/nvim-jdtls'
-  },
   keys = {
     -- TODO: dap.run() with only console window
     { '<leader>dr',     '<CMD>DapContinue<CR>' },
@@ -16,6 +12,7 @@ return {
     { '<leader>dt',     '<CMD>DapToggleBreakpoint<CR>' },
     { '<leader>du',     function() require('dapui').toggle() end }
   },
+  dependencies = 'rcarriga/nvim-dap-ui',
   config = function()
     local L = require('utils.lib')
     local dap, ui = require('dap'), require('dapui')
@@ -32,7 +29,7 @@ return {
     end
 
     ui.setup()
-    dap.listeners.after.event_initialized['dapui_config'] = function() ui.open()  end
+    dap.listeners.after.event_initialized['dapui_config'] = function() ui.open() end
 
     local clients = L.lsp.clients_by_cap('executeCommand')
     local execute = function(clients, args)

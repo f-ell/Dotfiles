@@ -1,41 +1,23 @@
 return {
   'hrsh7th/nvim-cmp',
-  lazy  = true,
+  lazy = true,
+  priority = 1000,
   event = 'InsertEnter',
-  priority      = 1000,
-  dependencies  = {
-    { 'hrsh7th/cmp-cmdline', event = 'CmdlineEnter' },
+  dependencies = {
     'hrsh7th/cmp-buffer',
-    { 'hrsh7th/cmp-nvim-lua', ft = 'lua' },
-    'L3MON4D3/LuaSnip'
+    'L3MON4D3/LuaSnip',
+    { 'hrsh7th/cmp-cmdline', event = 'CmdlineEnter' },
+    { 'hrsh7th/cmp-nvim-lua', ft = 'lua' }
   },
   config = function()
     local icons = {
-      Class         = "",
-      Color         = "",
-      Constructor   = "",
-      Enum          = "",
-      EnumMember    = "",
-      Event         = "",
-      Field         = "",
-      File          = "",
-      Folder        = "",
-      Function      = "",
-      Interface     = "",
-      Keyword       = "",
-      Method        = "m",
-      Module        = "",
-      Property      = "",
-      Reference     = "",
-      Snippet       = "",
-      Text          = "",
-      TypeParameter = "",
-      Unit          = "",
-      Constant      = "",
-      Struct        = "",
-      Operator      = "",
-      Value         = "",
-      Variable      = ""
+      Class       = "", Color    = "", Constructor   = "", Enum      = "",
+      EnumMember  = "", Event    = "", Field         = "", File      = "",
+      Folder      = "", Function = "", Interface     = "", Keyword   = "",
+      Method      = "m", Module   = "", Property      = "", Reference = "",
+      Snippet     = "", Text     = "", TypeParameter = "", Unit      = "",
+      Constant    = "", Struct   = "", Operator      = "", Value     = "",
+      Variable    = ""
     }
 
     local cmp = require('cmp')

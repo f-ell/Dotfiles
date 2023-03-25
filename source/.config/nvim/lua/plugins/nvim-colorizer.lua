@@ -1,9 +1,9 @@
 return {
   'norcalli/nvim-colorizer.lua',
-  lazy    = true,
-  event   = 'BufReadPost',
-  keys    = { { '<leader>ct', '<CMD>ColorizerToggle<CR>' } },
-  config  = function()
+  lazy = true,
+  event = 'BufReadPost',
+  keys = { { '<leader>ct', '<CMD>ColorizerToggle<CR>' } },
+  config = function()
     require('colorizer').setup({'*'}, {
       RGB       = true;
       RRGGBB    = true;
@@ -14,7 +14,6 @@ return {
       css_fn    = true;
       mode = 'background'
     })
-
     vim.cmd('ColorizerToggle')
   end
 }
