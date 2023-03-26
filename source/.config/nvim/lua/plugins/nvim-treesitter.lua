@@ -3,7 +3,7 @@ return {
   lazy = true,
   event = { 'BufNewFile', 'BufReadPost' },
   dependencies = {
-    'JoosepAlviste/nvim-ts-context-commentstring',
+    'nvim-treesitter/nvim-treesitter-textobjects',
     {
       'nvim-treesitter/nvim-treesitter-context',
       opts = {
@@ -13,8 +13,7 @@ return {
         max_lines         = 4,
         min_window_height = 24
       }
-    },
-    'nvim-treesitter/nvim-treesitter-textobjects'
+    }
   },
   config = function()
     require('nvim-treesitter.configs').setup({
@@ -24,11 +23,6 @@ return {
       highlight = {
         enable  = true,
         additional_vim_regex_highlighting = false
-      },
-
-      context_commentstring = {
-        enable          = true,
-        enable_autocmd  = false,
       },
 
       textobjects = {
