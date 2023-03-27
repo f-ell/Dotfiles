@@ -67,6 +67,7 @@ local register_float_actions = function(data)
     local act = data.res[data.proc[num].idx]
     local res = act.result
 
+    P(act)
     if res.edit then
       L.lsp.apply_edit(act)
     elseif res.action and type(res.action) == 'function' then
@@ -75,7 +76,8 @@ local register_float_actions = function(data)
       local cmd = type(res.command) == 'table' and res.command or act.result
       local client = vim.lsp.get_client_by_id(act.id)
 
-      if not client.server_capabilities.executeCommandProvider.commands[cmd] then
+      local prov = client.server_capabilities.executeCommandProvider
+      if not prov or not (type(prov) ~= 'boolean' and prov.commands[cmd]) then
         v.notify('Client doesn\'t support requested command.', 4) return
       end
 
