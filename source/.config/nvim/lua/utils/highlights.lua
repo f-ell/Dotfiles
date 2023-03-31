@@ -30,7 +30,7 @@ local set_hl_groups = function()
   local ro  = '#f85552'
   local git = '#fca326'
 
-  local hls = { 
+  local hls = {
     { 0, 'blank',   { fg = _,   bg = _ }},
     { 0, 'neutral', { fg = fg3, bg = _ }},
 
@@ -47,17 +47,17 @@ local set_hl_groups = function()
     { 0, 'IncSearch',  { fg = fg5, bg = red1 }},
     { 0, 'CurSearch',  { link = 'IncSearch' }},
     { 0, 'Substitute', { link = 'IncSearch' }},
-    { 0, 'Visual',     { link = 'IncSearch' }},
+    { 0, 'Visual',     { fg = _, bg = '#3d5665' }},
 
     -- Diagnostics
     { 0, 'ErrorText',   { sp = red1, underline = true }},
     { 0, 'WarningText', { sp = yel1, underline = true }},
-    { 0, 'HintText',    { sp = blu1, underline = true }},
     { 0, 'InfoText',    { sp = gre1, underline = true }},
+    { 0, 'HintText',    { sp = blu1, underline = true }},
 
     -- Float
     { 0, 'NormalFloat', { fg = _,    bg = _ }},
-    { 0, 'FloatBorder', { fg = fg2,  bg = _ }},
+    { 0, 'FloatBorder', { fg = fg3,  bg = _ }},
 
     { 0, 'NeutralFloat',    { fg = fg3,  bg = _ }},
     { 0, 'NeutralFloatSp',  { fg = fg3,  bg = _, italic = true, bold = true }},
@@ -93,6 +93,11 @@ local set_hl_groups = function()
     { 0, 'GitDel',    { fg = red1, bg =  _ }},
 
   -- PLUGINS --
+    -- Cmp
+    { 0, 'CmpItemMenu',           { fg = fg3, bg = _ } },
+    { 0, 'CmpItemAbbrMatch',      { fg = red1, bg = _ } },
+    { 0, 'CmpItemAbbrMatchFuzzy', { fg = red1, bg = _ } },
+
     -- Dap
     { 0, 'DapStopped',             { fg = gre1 } },
     { 0, 'DapLogPoint',            { fg = yel1 } },

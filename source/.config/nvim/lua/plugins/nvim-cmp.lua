@@ -11,13 +11,19 @@ return {
   },
   config = function()
     local icons = {
-      Class       = "", Color    = "", Constructor   = "", Enum      = "",
-      EnumMember  = "", Event    = "", Field         = "", File      = "",
-      Folder      = "", Function = "", Interface     = "", Keyword   = "",
-      Method      = "m", Module   = "", Property      = "", Reference = "",
-      Snippet     = "", Text     = "", TypeParameter = "", Unit      = "",
-      Constant    = "", Struct   = "", Operator      = "", Value     = "",
-      Variable    = ""
+      Class       = '', Color    = '', Constructor   = '', Enum      = '',
+      EnumMember  = '', Event    = '', Field         = '', File      = '',
+      Folder      = '', Function = '', Interface     = '', Keyword   = '',
+      Method      = 'm', Module   = '', Property      = '', Reference = '',
+      Snippet     = '', Text     = '', TypeParameter = '', Unit      = '',
+      Constant    = '', Struct   = '', Operator      = '', Value     = '',
+      Variable    = ''
+    }
+    local opts = {
+      border = 'single',
+      winhighlight = 'FloatBorder:FloatBorder',
+      side_padding = 1,
+      col_offset = 1
     }
 
     local cmp = require('cmp')
@@ -36,9 +42,9 @@ return {
         { name = 'luasnip',
           max_item_count = 4,
           keyword_length = 1 },
-        { name = 'nvim_lsp',
-          keyword_length = 1 },
         { name = 'nvim_lua',
+          keyword_length = 1 },
+        { name = 'nvim_lsp',
           keyword_length = 1 },
         { name = 'buffer',
           max_item_count = 4,
@@ -55,7 +61,7 @@ return {
         }
       },
 
-      window = { completion = { col_offset   = 1, side_padding = 0 } },
+      window = { completion = opts, documentation = opts },
       view = { entries = { name = 'custom', selection_order = 'near_cursor' } },
 
       formatting = {
@@ -65,9 +71,8 @@ return {
           item.kind = string.format('%s', icons[item.kind])
           item.menu = ({
             luasnip   = '-Snp-',
-            nvim_lsp  = '-Lsp-',
             nvim_lua  = '-Lua-',
-            omni      = '-Omn-',
+            nvim_lsp  = '-Lsp-',
             buffer    = '-Buf-'
           })[entry.source.name]
           return item
