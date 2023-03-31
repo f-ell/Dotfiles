@@ -87,6 +87,10 @@ local try_rename = function()
     end
   end
 
+  if not declaration then
+    v.notify('Could not get declaration for symbol under cursor.', 4)
+    return
+  end
   local s, e  = declaration.result.range.start, declaration.result.range['end']
   local cword = declaration
     and va.nvim_buf_get_text(0, s.line, s.character, e.line, e.character, {})[1]
