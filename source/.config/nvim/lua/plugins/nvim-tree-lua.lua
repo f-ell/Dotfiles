@@ -86,7 +86,8 @@ return {
         L.key.nnmap('<C-l>',  function() a.live_filter.clear() end, { buffer = bufnr })
 
         L.key.nnmap('c', function() a.fs.create() end,  { buffer = bufnr })
-        L.key.nnmap('d', function() a.fs.cut() end,     { buffer = bufnr })
+        L.key.nnmap('d', function() a.fs.remove() end,  { buffer = bufnr })
+        L.key.nnmap('x', function() a.fs.cut() end,     { buffer = bufnr })
         L.key.nnmap('p', function() a.fs.paste() end,   { buffer = bufnr })
         L.key.nnmap('r', function() a.fs.rename() end,  { buffer = bufnr })
       end
