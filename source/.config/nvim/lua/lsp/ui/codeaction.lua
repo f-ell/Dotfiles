@@ -67,7 +67,6 @@ local register_float_actions = function(data)
     local act = data.res[data.proc[num].idx]
     local res = act.result
 
-    P(act)
     if res.edit then
       L.lsp.apply_edit(act)
     elseif res.action and type(res.action) == 'function' then
@@ -87,7 +86,8 @@ local register_float_actions = function(data)
       local client = vl.get_client_by_id(act.id)
       local resolved = L.lsp.request({ client }, 'codeAction/resolve', res, 0)[1]
 
-      L.lsp.apply_edit(resolved)
+      if resolved then  L.lsp.apply_edit(resolved)
+      else              v.notify('Failed to resolve code-action.', 4) end
     end
   end
 
