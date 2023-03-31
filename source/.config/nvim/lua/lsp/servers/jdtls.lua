@@ -5,7 +5,6 @@ local mpc = msn..'/packages'
 
 return {
   cmd = {
-    -- '/usr/lib/jvm/java-19-openjdk/bin/java',
     msn..'/bin/jdtls',
     '-Declipse.application=org.eclipse.jdt.ls.core.id1',
     '-Dosgi.bundles.defaultStartLevel=4',
@@ -16,6 +15,7 @@ return {
     '--add-modules=ALL-SYSTEM',
     '--add-opens', 'java.base/java.util=ALL-UNNAMED',
     '--add-opens', 'java.base/java.lang=ALL-UNNAMED',
+    '--jvm-arg=-javaagent:'..mpc..'/jdtls/lombok.jar',
     '-jar', vf.glob(mpc..'/jdtls/plugins/org.eclipse.equinox.launcher_*.jar'),
     '-configuration', mpc..'/jdtls/config_linux',
     '-data', vf.stdpath('data')..'/jdtls-workspace/'..vf.fnamemodify(vf.getcwd(), ':p:t')
@@ -33,7 +33,6 @@ return {
     bundles = {
       vf.glob(mpc..'/java-debug-adapter/extension/server/com.microsoft.java.debug.plugin-*.jar'),
       vf.glob(mpc..'/java-test/extension/server/*.jar'),
-      mpc..'/jdtls/lombok.jar'
     },
 
     extendedClientCapabilities = {
