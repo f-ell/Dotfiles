@@ -2,7 +2,6 @@ return {
   'nvim-telescope/telescope.nvim',
   lazy = true,
   keys = {
-    { '<leader>e',  '<CMD>Telescope file_browser<CR>' },
     { '<leader>u',  '<CMD>Telescope undo<CR>' },
     { '<leader>ff', '<CMD>Telescope find_files<CR>' },
     { '<leader>fg', '<CMD>silent! Telescope git_files<CR>' },
@@ -14,18 +13,8 @@ return {
     'debugloop/telescope-undo.nvim',
     'natecraddock/telescope-zf-native.nvim',
     'nvim-lua/plenary.nvim',
-    'nvim-telescope/telescope-file-browser.nvim',
     'nvim-tree/nvim-web-devicons'
   },
-  init = function()
-    local v = vim
-    if v.fn.argc() > 0 then
-      local stat = v.loop.fs_stat(v.fn.argv()[1])
-      if stat ~= nil and stat.type == 'directory' then
-        require('telescope')
-      end
-    end
-  end,
   config = function()
     local tls   = require('telescope')
     local tslu  = require('telescope.utils')
@@ -149,20 +138,11 @@ return {
           },
         },
 
-        file_browser = {
-          initial_mode  = 'normal',
-          theme         = 'dropdown',
-          hidden        = true,
-          hijack_netrw  = true
-        },
-
-        undo = {
-        }
+        undo = {}
       }
     })
 
     tls.load_extension('zf-native')
-    tls.load_extension('file_browser')
     tls.load_extension('undo')
   end
 }

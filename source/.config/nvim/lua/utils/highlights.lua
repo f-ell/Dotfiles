@@ -117,6 +117,15 @@ local set_hl_groups = function()
     { 0, 'GSDelNr',   { link = 'GitSignsDeleteNr' }},
     { 0, 'GSDelLn',   { link = 'GitSignsDeleteLn' }},
 
+    -- NvimTree
+    { 0, 'NvimTreeGitNew',      { fg = pur1, bg = _ }},
+    { 0, 'NvimTreeGitDirty',    { fg = blu1, bg = _ }},
+    { 0, 'NvimTreeGitStaged',   { fg = gre1, bg = _ }},
+    { 0, 'NvimTreeGitRenamed',  { fg = gre1, bg = _ }},
+    { 0, 'NvimTreeGitMerge',    { fg = yel1, bg = _ }},
+    { 0, 'NvimTreeGitDeleted',  { fg = red1, bg = _ }},
+    { 0, 'NvimTreeSymlink',     { fg = blu1, bg = _ }},
+
     -- Telescope
     { 0, 'TelescopeBorder',         { fg = fg4, bg = fg5 }},
     { 0, 'TelescopeMatching',       { fg = fg5, bg = red1 }},
