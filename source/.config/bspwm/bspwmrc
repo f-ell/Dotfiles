@@ -83,7 +83,7 @@ else
     sxhkd $XDG_CONFIG_HOME/sxhkd/sxhkdrc.lt $XDG_CONFIG_HOME/bspwm/sxhkdrc.bspwm &
   pgrep ssm || ssm -t 60 -e g -b 30 -c 70 &
 fi
-picom --experimental-backends --unredir-if-possible --config $Piconf &
+picom --config $Piconf &
 feh --no-fehbg --bg-fill $Wallpaper &
 
 
