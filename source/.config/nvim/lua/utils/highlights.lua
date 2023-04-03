@@ -27,7 +27,6 @@ local set_hl_groups = function()
   local ter = fg3
   local vis = red1
 
-  local ro  = '#f85552'
   local git = '#fca326'
 
   local hls = {
@@ -77,13 +76,15 @@ local set_hl_groups = function()
 
     -- Statusline
     { 0, 'SlNormal',  { fg = fg2,  bg = _ }},
-    { 0, 'SlItalic',  { fg = fg2,  bg = _,   italic  = true }},
-    { 0, 'SlRo',      { fg = fg5,  bg = ro,  bold    = true }},
-    { 0, 'SlRox',     { fg = ro,   bg = _,   bold    = true }},
+    { 0, 'SlItalic',  { fg = fg2,  bg = _,    italic = true }},
+    { 0, 'SlRo',      { fg = fg5,  bg = red2, bold   = true }},
+    { 0, 'SlRoX',     { fg = red2, bg = _,    bold   = true }},
 
     -- Tabline
-    { 0, 'TlInactive',  { fg = fg3,  bg = fg5 }},
-    { 0, 'TlActive',    { fg = fg2,  bg = fg4, bold = true }},
+    { 0, 'TlModActive',   { fg = gre1, bg = fg4 }},
+    { 0, 'TlModInactive', { fg = gre2, bg = fg5 }},
+    { 0, 'TlActive',      { fg = fg2, bg = fg4, bold = true }},
+    { 0, 'TlInactive',    { fg = fg3, bg = fg5 }},
 
     -- Misc
     { 0, 'SpellBad',  { sp = red1, undercurl = true }},

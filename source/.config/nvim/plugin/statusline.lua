@@ -101,7 +101,7 @@ end
 
 local bufname = function()
   local hl_ro   = '%#SlRo#'
-  local hl_rox  = '%#SlRox#'
+  local hl_rox  = '%#SlRoX#'
 
   local buf = vf.bufname()
   if buf == '' then buf = '[null]'
