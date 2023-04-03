@@ -1,38 +1,44 @@
-Err() { printf '%s: %s\n' "$1" "$2" 1>&2 }
+err() { printf '%s: %s\n' "$1" "$2" 1>&2 }
 
 ping() {
   /usr/bin/ping -c1 ${1:-archlinux.org}
 }
 
 owns() {
-  local Fn Program
-  Fn='owns'
-  [[ -z $1 ]] && { Err $Fn 'No command specified!'; return 1; }
-  Program=`command -v $1`
-  [[ -z $Program ]] \
-    && { Err $Fn "$1 not found!"; return 1; } \
-    || pacman -Qo $Program
+  local fn=owns program=`command -v $1`
+  [[ -z $1 ]] && { err $fn 'no command specified!'; return 1; }
+  [[ -z $program ]] \
+    && { err $fn "$1 not found!"; return 1; } \
+    || pacman -Qo $program
 }
 
 ud2() {
-  local Fn Dev Un
-  Fn='ud2'
-  Dev=/dev/$1
-  [[ -b $Dev ]] || { Err $Fn "${1:--} is not a valid blockdev."; return 1; }
-  [[ -n `udisksctl info -b $Dev | grep -oP '^\s*MountPoints:\s+\K.*$'` ]] \
-    && Un=un
-  udisksctl ${Un}mount -b $Dev
+  local fn=ud2 dev=/dev/$1 un
+  [[ -b $dev ]] || { err $fn "${1:--} is not a valid blockdev."; return 1; }
+  [[ -n `udisksctl info -b $dev | grep -oP '^\s*MountPoints:\s+\K.*$'` ]] \
+    && un=un
+  udisksctl ${un}mount -b $dev
 }
 
 pac() {
-  local Root
+  local root
   if [[ $1 =~ '[rR]' ]]; then
-    Root=/usr/bin/doas
-    [[ ! -f $Root ]] && Root=${Root%/*}/sudo
+    root=/usr/bin/doas
+    [[ ! -f $root ]] && root=${root%/*}/sudo
     shift
   fi
   [[ $1 =~ '[cC]' ]] && { pacman -Q | wc -l; return 0; }
-  $Root pacman -$1 ${@:2}
+  $root pacman -$1 ${@:2}
+}
+
+wnvm() {
+  local fn=wnvm root=pom.xml mvnw=./mvnw
+  pushd $PWD &>/dev/null
+  until [[ $PWD == / || -f ./$root ]]; do cd ..; done
+  [[ $PWD == / ]]\
+    && { err $fn 'no maven root found.'; popd &>/dev/null; return 1; }
+  [[ -f ./mvnw ]] && ./mvnw $@ || mvn $@
+  popd &>/dev/null
 }
 
 
@@ -55,18 +61,18 @@ alias xo='xdg-open'
 alias zt='zathura --fork'
 
 
-Sconf='$HOME/.config/bspwm/sxhkdrc.bspwm $HOME/.config/sxhkd/sxhkdrc.'
+sconf='$HOME/.config/bspwm/sxhkdrc.bspwm $HOME/.config/sxhkd/sxhkdrc.'
 if [[ $MACHINE = DT ]]; then
-  Sconf="${Sconf}dt"
-  Dconf=''
+  sconf="${sconf}dt"
+  dconf=''
 else
-  Sconf="${Sconf}lt"
-  Dconf='-conf $HOME/.config/dunst/dunstrc.lt' 
+  sconf="${sconf}lt"
+  dconf='-conf $HOME/.config/dunst/dunstrc.lt' 
   alias netstart='rfkill unblock wifi; doas systemctl start NetworkManager'
   alias netstop='nmcli d disconnect wlan0; doas systemctl stop NetworkManager; rfkill block wifi'
 fi
-alias dcr="pkill dunst; dunst $Dconf &; disown dunst"
-alias scr="pkill sxhkd; sxhkd $Sconf &; disown sxhkd"
-unset {D,S}conf
+alias dcr="pkill dunst; dunst $dconf &; disown dunst"
+alias scr="pkill sxhkd; sxhkd $sconf &; disown sxhkd"
+unset {d,s}conf
 
 [[ -f $HOME/.aliases_novcs ]] && . $HOME/.aliases_novcs
