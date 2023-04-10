@@ -24,7 +24,6 @@ v.o('shortmess', 'asWFS')
 
 v.o('wrap', false)
 v.o('textwidth',  80)
-v.o('numberwidth', 3)
 v.o('signcolumn', 'yes')
 v.o('number',         true)
 v.o('relativenumber', true)
