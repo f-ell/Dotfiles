@@ -159,11 +159,12 @@ M.lsp.request = function(clients, method, params, bufnr, cb)
     local client  = clients[i]
     local dict    = client.request_sync(method, params, 500, bufnr)
 
-    if M.tbl.is_empty(dict) or M.tbl.is_empty(dict.result) then goto continue end
     if cb ~= nil then
       if type(cb) == 'function' then cb(dict) end
     else
-      if dict.err then goto continue end
+      if M.tbl.is_empty(dict) or M.tbl.is_empty(dict.result) or dict.err then
+        goto continue
+      end
     end
 
     if type(dict.result[1]) == 'table' then
