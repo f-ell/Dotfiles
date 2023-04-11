@@ -14,7 +14,7 @@ set -o autocd -o extendedglob -o histexpiredupsfirst -o histignoredups\
   -o rematchpcre\
   +o automenu +o autoremoveslash
 
-SAVEHIST=5000; HISTSIZE=$(($SAVEHIST + 100)); HISTFILE=$HOME'/.zsh_history'
+SAVEHIST=5000; HISTSIZE=$(($SAVEHIST + 100)); HISTFILE="$HOME/.zsh_history"
 
 [[ -f $HOME/.prompt ]] && PSM=`< $HOME/.prompt`
 export PSM=${PSM:-0}
@@ -22,38 +22,27 @@ export PSM=${PSM:-0}
 if [[ -o login ]]; then
   [[ -f $HOME/.machine ]] && MACHINE=`< $HOME/.machine`
   export MACHINE=${MACHINE:-DT}
-  export VISUAL='nvim'
+  export VISUAL=nvim
   export EDITOR=$VISUAL
 
-  Bin='/usr/bin:/usr/local/bin:/usr/local/sbin:'$HOME'/.local/bin'
-  Perl='/usr/bin/core_perl:/usr/bin/site_perl:/usr/bin/vendor_perl'
-  Misc='/opt:'$CARGO_HOME'/bin:'$HOME'/Scripts'
-  export PATH=$Bin':'$Perl':'$Misc
-  unset Bin Perl Misc
+  [[ -f $HOME/.env_setup ]] && . "$HOME/.env_setup"
 
-  [[ -f $HOME'/.env_setup' ]] && . $HOME'/.env_setup'
+  Bin="/usr/bin:/usr/local/bin:$HOME/.local/bin"
+  Perl='/usr/bin/core_perl:/usr/bin/site_perl:/usr/bin/vendor_perl'
+  Misc="$CARGO_HOME/bin"
+  export PATH="$Bin:$Perl:$Misc"
+  unset Bin Perl Misc
 fi
 ### END LOGIN ONLY ###
 
-. $HOME'/.aliases'
+. "$HOME/.aliases"
 ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=20
 ZSH_AUTOSUGGEST_MANUAL_REBIND=True
-. $XDG_CONFIG_HOME'/zsh/zsh-autosuggestions/zsh-autosuggestions.zsh'
-. $XDG_CONFIG_HOME'/zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh'
+. "$XDG_CONFIG_HOME/zsh/zsh-autosuggestions/zsh-autosuggestions.zsh"
+. "$XDG_CONFIG_HOME/zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 
 
 # KEYBINDS
-### WIP ###
-# Switch Caps and Escape:
-# xmodmap -e 'remove Lock = Caps_Lock'
-# xmodmap -e 'keycode 66  = Escape'
-# xmodmap -e 'keycode 9   = Caps_Lock'
-# Switch R_Shift and BackSpace:
-# xmodmap -e 'keycode 62  = BackSpace'
-# xmodmap -e 'remove Shift = BackSpace'
-# xset r 62
-# xmodmap -e 'keycode 22  = Shift_R'
-
 autoload edit-command-line; zle -N edit-command-line
 bindkey '^Xe' edit-command-line
 
@@ -74,7 +63,7 @@ bindkey '^ ' autosuggest-accept
 
 # PROMPT
 if [[ `xset q 2>/dev/null` ]]; then
-  CE='#e67e80'; CF='#d3c6aa'; CG='#fca326'; CC='#a0a0a0'
+  CE=#e67e80; CF=#d3c6aa; CG=#fca326; CC=#a0a0a0
   Prompt() {
     unset {,R}PS1
     # prompt modes:
@@ -91,7 +80,7 @@ if [[ `xset q 2>/dev/null` ]]; then
 
     # Git HEAD
     B=`git rev-parse --is-inside-work-tree 2>/dev/null`
-    if (( $? == 0 )) && [[ $B == 'true' ]]; then
+    if (( $? == 0 )) && [[ $B == true ]]; then
       declare -i m b
       declare -A Refs
       git -C . show-ref --head --heads --tags --abbrev -d | while read; do
@@ -107,7 +96,7 @@ if [[ `xset q 2>/dev/null` ]]; then
 
         if [[ $HeadId == $Id ]]; then
           let m++
-          [[ $Ref =~ 'refs/heads/' ]] && let b++
+          [[ $Ref =~ refs/heads/ ]] && let b++
           HeadRef=${Ref##*/}
           HeadId=$Id
         fi
@@ -182,19 +171,19 @@ if [[ `xset q 2>/dev/null` ]]; then
       # |5.     |4.     |3|2.     |1.
       R=${(j:/:)${(r:1:)${${(s:/:)${PWD/$HOME/\~}}[@]##.}}}
       # Add leading slash and ellipsize
-      local Len; [[ ${R:0:1} == '~' ]] && Len=8 || { R='/'$R; Len=9; }
+      local Len; [[ ${R:0:1} == '~' ]] && Len=8 || { R=/$R; Len=9; }
       (( $#R > $Len )) && R=${R:0:$Len}'..'
       [[ $R != '~' ]] && RPS1=$'  %F{$CF}%B%S$R%s%b%f'
       RPS1+=$' •'
     fi
   }
   precmd() {
-    LAST_EXIT=$?; Prompt $LAST_EXIT '' # ›
+    LAST_EXIT=$?; Prompt $LAST_EXIT  # ›
   }
 
   zle-keymap-select() {
-    [[ $KEYMAP == 'main' ]]   && Prompt $LAST_EXIT ''
-    [[ $KEYMAP == 'vicmd' ]]  && Prompt $LAST_EXIT ':'
+    [[ $KEYMAP == main ]]   && Prompt $LAST_EXIT 
+    [[ $KEYMAP == vicmd ]]  && Prompt $LAST_EXIT :
     zle reset-prompt
   }; zle -N zle-keymap-select
 else
@@ -287,7 +276,7 @@ zstyle ':completion:*' keep-prefix true
 zstyle ':completion:*' verbose false
 
 autoload -Uz compinit
-compinit -d $XDG_CONFIG_HOME'/zsh/zcomp'
+compinit -d "$XDG_CONFIG_HOME/zsh/zcomp"
 
 
 # FETCH
