@@ -167,6 +167,7 @@ M.lsp.request = function(clients, method, params, bufnr, cb)
       end
     end
 
+    if M.tbl.is_empty(dict) then goto continue end
     if type(dict.result[1]) == 'table' then
       for j=1, #dict.result do
         table.insert(responses, { id = client.id, name = client.name, result = dict.result[j] })
@@ -211,7 +212,7 @@ end
 ---@param tbl table|nil
 ---@returns boolean
 M.tbl.is_empty = function(tbl)
-  return (tbl == nil or next(tbl) == nil) and true or false
+  return (tbl == nil or next(tbl) == nil)
 end
 
 ---------------------------------------------------------------------------- vim
@@ -319,7 +320,6 @@ end
 ---@return boolean
 M.win.is_cur_valid = function(winnr)
   return (va.nvim_get_current_win() == winnr and va.nvim_win_is_valid(winnr))
-    and true or false
 end
 
 

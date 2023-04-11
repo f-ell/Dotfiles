@@ -76,10 +76,10 @@ local register_float_actions = function(data)
       local client = vim.lsp.get_client_by_id(act.id)
 
       local prov = client.server_capabilities.executeCommandProvider
-      if not prov or not (type(prov) == 'table'
-        and vim.tbl_contains(prov.commands, cmd.command)) then
-        v.notify('Client doesn\'t support requested command: \''..cmd.command
-          ..'\'', 4) return
+      if not prov or (type(prov) == 'table' and (L.tbl.is_empty(prov)
+        or not vim.tbl_contains(prov.commands, cmd.command))) then
+        v.notify('Client doesn\'t support command: \''..cmd.command..'\'', 3)
+        return
       end
 
       L.lsp.request({ client }, 'workspace/executeCommand', {
