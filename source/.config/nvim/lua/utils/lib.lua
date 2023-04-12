@@ -212,7 +212,7 @@ end
 ---@param tbl table|nil
 ---@returns boolean
 M.tbl.is_empty = function(tbl)
-  return (tbl == nil or next(tbl) == nil)
+  return (type(tbl) == 'table' and (tbl == nil or next(tbl) == nil))
 end
 
 ---------------------------------------------------------------------------- vim
