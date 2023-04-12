@@ -5,7 +5,9 @@ local v   = vim
 
 local servers = {
   'clangd',
+  'cssls',
   'gopls',
+  'html',
   'jdtls',
   'lua_ls',
   'perlpls',
@@ -30,6 +32,7 @@ local on_attach = function()
     require('telescope.builtin').diagnostics({ bufnr = 0 })
   end)
 end
+
 local capabilities = require('cmp_nvim_lsp')
   .default_capabilities(v.lsp.protocol.make_client_capabilities())
 
