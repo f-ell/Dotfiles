@@ -7,10 +7,10 @@ return {
   config = function()
     local v = vim
     local signs = {
-      { 'DiagnosticSignError',  'E' }, -- 
-      { 'DiagnosticSignWarn',   'W' }, -- 
-      { 'DiagnosticSignHint',   'H' }, -- 
-      { 'DiagnosticSignInfo',   'I' }, -- 
+      { 'DiagnosticSignError',  '◆' },
+      { 'DiagnosticSignWarn',   '▲' },
+      { 'DiagnosticSignInfo',   '●' },
+      { 'DiagnosticSignHint',   '▪' }
     }
     for _, sign in pairs(signs) do
       v.fn.sign_define(sign[1], { texthl = sign[1], text = sign[2] })

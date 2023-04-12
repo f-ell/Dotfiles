@@ -53,6 +53,10 @@ local set_hl_groups = function()
     { 0, 'WarningText', { sp = yel1, underline = true }},
     { 0, 'InfoText',    { sp = gre1, underline = true }},
     { 0, 'HintText',    { sp = blu1, underline = true }},
+    { 0, 'DiagnosticSignError', { fg = red1 }},
+    { 0, 'DiagnosticSignWarn',  { fg = yel1 }},
+    { 0, 'DiagnosticSignInfo',  { fg = gre1 }},
+    { 0, 'DiagnosticSignHint',  { fg = blu1 }},
 
     -- Float
     { 0, 'NormalFloat', { fg = _,    bg = _ }},
@@ -102,7 +106,7 @@ local set_hl_groups = function()
     -- Dap
     { 0, 'DapStopped',             { fg = gre1 } },
     { 0, 'DapLogPoint',            { fg = yel1 } },
-    { 0, 'DapBreakpoint',          { fg = pur1 } },
+    { 0, 'DapBreakpoint',          { fg = red1 } },
     { 0, 'DapBreakpointCondition', { fg = pur2 } },
     { 0, 'DapBreakpointRejected',  { fg = red2 } },
 

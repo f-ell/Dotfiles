@@ -19,10 +19,10 @@ return {
 
     local signs = {
       { 'DapStopped',             '' },
-      { 'DapLogPoint',            'L' },
-      { 'DapBreakpoint',          'B' },
-      { 'DapBreakpointCondition', 'C' },
-      { 'DapBreakpointRejected',  'R' }
+      { 'DapLogPoint',            '○' },
+      { 'DapBreakpoint',          '■' },
+      { 'DapBreakpointCondition', '▣' },
+      { 'DapBreakpointRejected',  '□' }
     }
     for _, sign in pairs(signs) do
       vim.fn.sign_define(sign[1], { texthl = sign[1], text = sign[2] })
@@ -57,7 +57,7 @@ return {
     dap.adapters.java = function(callback, _)
       L.lsp.request(clients, 'workspace/executeCommand',
         { command = 'vscode.java.startDebugSession' }, 0, function(tbl)
-          assert(not tbl.err, vim.pretty_print(tbl.err))
+          assert(not tbl.err, vim.print(tbl.err))
           callback({ type = 'server', host = '127.0.0.1', port = tbl.result })
         end)
     end
