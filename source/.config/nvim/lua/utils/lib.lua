@@ -212,7 +212,7 @@ end
 ---@param tbl table|nil
 ---@returns boolean
 M.tbl.is_empty = function(tbl)
-  return (type(tbl) == 'table' and (tbl == nil or next(tbl) == nil))
+  return tbl == nil or (type(tbl) == 'table' and next(tbl) == nil)
 end
 
 ---------------------------------------------------------------------------- vim
@@ -364,7 +364,7 @@ M.win.open = function(bl, modifiable, enter, config)
 
   v.bo[data.nbuf].bufhidden = 'wipe'
   v.bo[data.nbuf].modifiable = modifiable
-  -- TODO: change / conditionally set this?
+  -- FIX: change / conditionally set this?
   if type(bl) == 'table' then
     v.wo[data.nwin].wrap = true
     v.bo[data.nbuf].wrapmargin = 0
