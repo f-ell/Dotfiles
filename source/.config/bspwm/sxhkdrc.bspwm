@@ -48,5 +48,5 @@ super + i; s
   bspc node -n last.\!automatic.local
 
 # scratchpads
-alt + {1,2}
-  ~/.config/bspwm/scripts/scratch {1,2}
+alt + {1,2,3}
+  ~/.config/bspwm/scripts/scratch {1,2,3}
