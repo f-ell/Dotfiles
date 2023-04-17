@@ -132,21 +132,21 @@ local set_hl_groups = function()
     { 0, 'NvimTreeSymlink',     { fg = blu1, bg = _ }},
 
     -- Telescope
-    { 0, 'TelescopeBorder',         { fg = fg4, bg = fg5 }},
-    { 0, 'TelescopeMatching',       { fg = fg5, bg = red1 }},
-    { 0, 'TelescopeSelection',      { fg = fg1, bg = fg4 }},
+    { 0, 'TelescopeBorder',         { fg = fg3,   bg = _ }},
+    { 0, 'TelescopeMatching',       { fg = red1,  bg = _ }},
+    { 0, 'TelescopeSelection',      { fg = fg1,   bg = fg4 }},
 
-    { 0, 'TelescopeTitle',          { fg = fg5, bg = red1 }},
-    { 0, 'TelescopeNormal',         { fg = fg1, bg = fg5 }},
+    { 0, 'TelescopeTitle',          { fg = red1,  bg = _ }},
+    { 0, 'TelescopeNormal',         { fg = fg1,   bg = _ }},
 
-    { 0, 'TelescopePreviewTitle',   { fg = fg5, bg = blu1 }},
-    { 0, 'TelescopePreviewNormal',  { fg = fg1, bg = fg5 }},
+    { 0, 'TelescopePreviewTitle',   { fg = blu1,  bg = _ }},
+    { 0, 'TelescopePreviewNormal',  { fg = fg1,   bg = _ }},
 
-    { 0, 'TelescopePromptBorder',   { fg = fg4,  bg = fg4 }},
-    { 0, 'TelescopePromptCounter',  { fg = fg1,  bg = _ }},
-    { 0, 'TelescopePromptNormal',   { fg = fg1,  bg = fg4 }},
-    { 0, 'TelescopePromptPrefix',   { fg = gre1, bg = _ }},
-    { 0, 'TelescopePromptTitle',    { fg = fg5,  bg = gre1 }},
+    { 0, 'TelescopePromptBorder',   { fg = fg3,   bg = _ }},
+    { 0, 'TelescopePromptCounter',  { fg = gre1,   bg = _ }},
+    { 0, 'TelescopePromptNormal',   { fg = fg1,   bg = _ }},
+    { 0, 'TelescopePromptPrefix',   { fg = gre1,  bg = _ }},
+    { 0, 'TelescopePromptTitle',    { fg = gre1,  bg = _ }},
 
     -- Treesitter
     { 0, 'TreesitterContext',           { fg = _,    bg = fg4 }},
