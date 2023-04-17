@@ -16,7 +16,7 @@ super + {_, shift +} m
   {-s -f -l style=dash\,width=2\,opacity=100, -a 0\,0\,1920\,1080}
 
 super + o; {b,c,d,g,s}
-  ~/Scripts/lof {qutebrowser,code,discord,gimp,steamwrap}
+  ~/Git/Scripts/source/shell/lof {qutebrowser,code,discord,gimp,steamwrap}
 
 # notifications
 alt + i
