@@ -2,6 +2,7 @@ return {
   'nvim-telescope/telescope.nvim',
   lazy = true,
   keys = {
+    { '<leader>b',  '<CMD>Telescope buffers<CR>' },
     { '<leader>u',  '<CMD>Telescope undo<CR>' },
     { '<leader>ff', '<CMD>Telescope find_files<CR>' },
     { '<leader>fg', '<CMD>silent! Telescope git_files<CR>' },
@@ -102,6 +103,12 @@ return {
       pickers = {
         cwd     = tslu.buffer_dir(),
         hidden  = true,
+
+        buffers = {
+          initial_mode  = 'insert',
+          results_title = false,
+          ignore_current_buffer = true
+        },
 
         find_files = {
           initial_mode  = 'insert',
