@@ -17,7 +17,7 @@ return {
   config = function()
     require('nvim-tree').setup({
       live_filter = { always_show_folders = false },
-      view = { side = 'left', width = 32, preserve_window_proportions = true },
+      view = { side = 'left', width = 28, preserve_window_proportions = true },
 
       auto_reload_on_write  = true,
       sync_root_with_cwd    = true,
