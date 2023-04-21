@@ -125,8 +125,8 @@ local open = function(raw)
   -- do floaty stuff
   local data = L.win.open_cursor(content, false, false, { focusable = false })
   set_highlights(data.nbuf, proc)
-  L.cmd.event({ 'CursorMoved', 'InsertEnter', 'WinNew' }, data.obuf, function()
-    L.win.close(data.nwin) end)
+  L.cmd.event({ 'BufLeave', 'CursorMoved', 'InsertEnter', 'WinNew' }, data.obuf,
+    function() L.win.close(data.nwin) end)
 end
 
 
