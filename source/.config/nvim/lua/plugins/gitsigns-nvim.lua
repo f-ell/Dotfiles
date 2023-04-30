@@ -8,7 +8,7 @@ return {
     { 'gsk', '<CMD>silent Gitsigns prev_hunk<CR>' },
     { 'gsl', '<CMD>Gitsigns toggle_deleted<CR>' },
     { 'gsc', '<CMD>Gitsigns toggle_linehl<CR>' },
-    { 'gs<', '<CMD>diffget gitsigns://*:0|2:<CR>' },
+    { 'gs<', '<CMD>diffget gitsigns://*:0\\\\|2:<CR>' },
     { 'gs>', '<CMD>diffget gitsigns://*:3:<CR>' },
   },
   config = function()
