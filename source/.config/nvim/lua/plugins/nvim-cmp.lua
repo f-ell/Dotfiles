@@ -19,7 +19,7 @@ return {
       Constant    = '', Struct   = '', Operator      = '', Value     = '',
       Variable    = ''
     }
-    local opts = {
+    local window_opts = {
       border = 'single',
       winhighlight = 'FloatBorder:FloatBorder',
       side_padding = 1,
@@ -33,6 +33,14 @@ return {
         return not context.in_treesitter_capture('comment')
           and not context.in_syntax_group('Comment')
       end,
+
+      matching = {
+        disallow_partial_matching = true,
+        disallow_prefix_unmatching = true,
+        disallow_fuzzy_matching = false,
+        disallow_full_fuzzy_matching = true,
+        disallow_partial_fuzzy_matching = false
+      },
 
       snippet = {
         expand = function(arg) require('luasnip').lsp_expand(arg.body) end
@@ -61,7 +69,7 @@ return {
         }
       },
 
-      window = { completion = opts, documentation = opts },
+      window = { completion = window_opts, documentation = window_opts },
       view = { entries = { name = 'custom', selection_order = 'near_cursor' } },
 
       formatting = {
