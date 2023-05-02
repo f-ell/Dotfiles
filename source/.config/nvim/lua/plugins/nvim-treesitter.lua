@@ -4,6 +4,7 @@ return {
   event = { 'BufNewFile', 'BufReadPost' },
   dependencies = {
     'nvim-treesitter/nvim-treesitter-textobjects',
+    'JoosepAlviste/nvim-ts-context-commentstring',
     {
       'nvim-treesitter/nvim-treesitter-context',
       opts = {
@@ -39,7 +40,9 @@ return {
             ['iC'] = '@class.inner'
           }
         }
-      }
+      },
+
+      context_commentstring = { enable = true, enable_autocmd = false }
     })
   end
 }
