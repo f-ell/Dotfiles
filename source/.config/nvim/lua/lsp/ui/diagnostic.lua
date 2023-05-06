@@ -123,7 +123,7 @@ local open = function(raw)
   table.insert(content, 2, L.win.separator(content))
 
   -- do floaty stuff
-  local data = L.win.open_cursor(content, false, false, { focusable = false })
+  local data = L.win.open_cursor(content, false, false, { focusable = false, zindex = 99 })
   set_highlights(data.nbuf, proc)
   L.cmd.event({ 'BufLeave', 'CursorMoved', 'InsertEnter', 'WinNew' }, data.obuf,
     function() L.win.close(data.nwin) end)

@@ -57,7 +57,7 @@ local open = function(raw)
   if len > max_w then w = max_w end
 
   va.nvim_win_set_cursor(0, { raw.pos[1] + 1, raw.pos[2] })
-  local data = L.win.open_cursor({ raw.cword }, true, true, { width = w, col = -1 })
+  local data = L.win.open_cursor({ raw.cword }, true, true, { width = w, col = -1, zindex = 99 })
   data.ns_id = va.nvim_create_namespace('LspUi')
   data.pos   = va.nvim_win_get_cursor(data.owin)
   data.old   = raw.cword
