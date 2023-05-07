@@ -12,14 +12,14 @@ return {
       update_events = 'TextChanged,TextChangedI',
       delete_check_events = 'InsertLeave',
       ext_opts = {
-        [types.insertNode] = { active = { hl_group = 'modeI' } },
+        [types.insertNode] = { active = { hl_group = 'Incsearch' } },
         [types.choiceNode] = { active = {
-            hl_group = 'modeI', virt_text = { '<- choice', '<- error' } } }
+            hl_group = 'Search', virt_text = { '<- choice', '<- error' } } }
       }
     })
 
     require('luasnip.loaders.from_lua')
-      .lazy_load({paths = {'~/.config/nvim/lua/snippets'}})
+      .lazy_load({ paths = { vim.fn.stdpath('config')..'/lua/snippets' }})
 
     local jump_backward = function() if ls.jumpable(-1) then ls.jump(-1) end end
     local expand_or_jump = function()
