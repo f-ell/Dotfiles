@@ -1,7 +1,6 @@
 err() { printf '%s: %s\n' "$1" "$2" 1>&2 }
 
 j() {
-  # WARN: uses zsh features
   local fn=j
   [[ -z $1 ]] && { err $fn 'no pattern given!'; return 1; }
   declare -a files=(`fd -d${2:-8} -td -HL | rg -i "$1/?$"`)
