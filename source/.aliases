@@ -1,7 +1,14 @@
 err() { printf '%s: %s\n' "$1" "$2" 1>&2 }
 
-ping() {
-  /usr/bin/ping -c1 ${1:-archlinux.org}
+j() {
+  # WARN: uses zsh features
+  local fn=j
+  [[ -z $1 ]] && { err $fn 'no pattern given!'; return 1; }
+  declare -a files=(`fd -d${2:-8} -td -HL | rg -i "$1/?$"`)
+  (( ${#files[@]} == 0 )) && { err $fn 'no results found.'; return 1; }
+  (( ${#files[@]} == 1 ))\
+    && cd ${files[@]}\
+    || cd `printf '%s\n' ${files[@]} | zf`
 }
 
 owns() {
@@ -10,14 +17,6 @@ owns() {
   [[ -z $program ]] \
     && { err $fn "$1 not found!"; return 1; } \
     || pacman -Qo $program
-}
-
-ud2() {
-  local fn=ud2 dev=/dev/$1 un
-  [[ -b $dev ]] || { err $fn "${1:--} is not a valid blockdev."; return 1; }
-  [[ -n `udisksctl info -b $dev | grep -oP '^\s*MountPoints:\s+\K.*$'` ]] \
-    && un=un
-  udisksctl ${un}mount -b $dev
 }
 
 pac() {
@@ -29,6 +28,18 @@ pac() {
   fi
   [[ $1 =~ '[cC]' ]] && { pacman -Q | wc -l; return 0; }
   $root pacman -$1 ${@:2}
+}
+
+ping() {
+  /usr/bin/ping -c1 ${1:-archlinux.org}
+}
+
+ud2() {
+  local fn=ud2 dev=/dev/$1 un
+  [[ -b $dev ]] || { err $fn "${1:--} is not a valid blockdev."; return 1; }
+  [[ -n `udisksctl info -b $dev | grep -oP '^\s*MountPoints:\s+\K.*$'` ]] \
+    && un=un
+  udisksctl ${un}mount -b $dev
 }
 
 wnvm() {
