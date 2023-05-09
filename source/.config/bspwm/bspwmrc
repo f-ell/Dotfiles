@@ -34,10 +34,10 @@ bspc config left_padding    0
 Piconf=$XDG_CONFIG_HOME/picom/picom.conf
 Theme='forest'
 if [ $Theme = 'forest' ]; then
-  bspc config focused_border_color  '#e67e80'
+  bspc config focused_border_color  '#a7c080'
   bspc config active_border_color   '#323d43'
   bspc config normal_border_color   '#323d43'
-  bspc config presel_feedback_color '#e67e80'
+  bspc config presel_feedback_color '#a7c080'
   Wallpaper=$HOME/Media/Pictures/Wallpapers/everforest_blank.png
   Piconf=$Piconf.min
 elif [ $Theme = 'sakura' ]; then
@@ -74,8 +74,8 @@ if [ $MACHINE = 'DT' ]; then
   pgrep sxhkd || \
     sxhkd $XDG_CONFIG_HOME/sxhkd/sxhkdrc.dt $XDG_CONFIG_HOME/bspwm/sxhkdrc.bspwm &
   pgrep polybar || polybar DT -r &
-  pgrep conky   || { conky -c $XDG_CONFIG_HOME/conky/conky.conf; \
-      conky -c $XDG_CONFIG_HOME/conky/clock.conf; bspc monitor -f primary; } &
+  pgrep conky   || { conky -c $XDG_CONFIG_HOME/conky/system.conf; \
+      conky -c $XDG_CONFIG_HOME/conky/time.conf; bspc monitor -f primary; } &
   pgrep ssm || ssm -t 60 -e b -c 75 -g 75 &
 else
   dunst -conf $XDG_CONFIG_HOME/dunst/dunstrc.lt &

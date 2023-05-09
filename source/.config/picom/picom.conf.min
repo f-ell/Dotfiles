@@ -25,15 +25,20 @@ active-opacity    = 0.98
 inactive-opacity  = 0.98
 inactive-dim      = 0.12
 opacity-rule = [
-  "100:class_g = 'conky'",
+  "100:class_g = 'conky_system'",
+  "100:class_g = 'conky_time'",
   "100:class_g = 'firefox'",
   "100:class_g = 'Rofi'",
   "100:class_g = 'discord'",
   "100:class_g = 'Spotify'"
 ]
 focus-exclude = [ 
-  "class_g = 'conky'",
+  "class_g = 'conky_system'",
+  "class_g = 'conky_time'"
 ];
+shadow-exclude = [
+  "class_g = 'conky_time'"
+]
 
 corner-radius = 4
 
