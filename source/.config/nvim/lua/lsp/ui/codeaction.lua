@@ -127,7 +127,7 @@ local open = function(raw)
   table.insert(content, 1, ' Code Actions')
   table.insert(content, 2, L.win.separator(content))
 
-  local data = L.win.open_cursor(content, false, true, { zindex = 99 })
+  local data = L.win.open_cursor(content, false, true, { zindex = 2 })
   data.proc = proc
   data.res = raw
   data.pos = va.nvim_win_get_cursor(data.owin)

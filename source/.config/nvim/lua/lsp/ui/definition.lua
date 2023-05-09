@@ -78,7 +78,7 @@ local open = function(raw)
     return
   end
 
-  local data = L.win.open_center(bufnr, true, true)
+  local data = L.win.open_center(bufnr, true, true, { zindex = 1 })
   set_highlights(data.nbuf, proc)
   register_float_actions(data.nbuf, data.nwin)
   va.nvim_win_set_cursor(data.nwin, proc.start)
