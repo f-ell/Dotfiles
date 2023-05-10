@@ -141,8 +141,13 @@ return {
           file = {
             enable            = true,
             highlight_results = true,
-            match_filename    = true,
+            match_filename    = true
           },
+          generic = {
+            enable            = true,
+            highlight_results = true,
+            match_filename    = true
+          }
         },
 
         undo = {}
