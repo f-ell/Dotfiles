@@ -1,9 +1,21 @@
+local toggle_diff = function()
+  if not vim.wo.diff then return require('gitsigns').diffthis() end
+
+  local buf = vim.fn.bufname()
+  for _, win in pairs(vim.api.nvim_list_wins()) do
+    local cur = vim.fn.bufname(vim.fn.winbufnr(win))
+    if cur:match('^gitsigns://.*'..buf..'$') then
+      vim.api.nvim_win_close(win, true)
+    end
+  end
+end
+
 return {
   'lewis6991/gitsigns.nvim',
   lazy = true,
   event = 'BufReadPre',
   keys = {
-    { 'gsh', '<CMD>Gitsigns diffthis<CR>' },
+    { 'gsh', toggle_diff },
     { 'gsj', '<CMD>silent Gitsigns next_hunk<CR>' },
     { 'gsk', '<CMD>silent Gitsigns prev_hunk<CR>' },
     { 'gsl', '<CMD>Gitsigns toggle_deleted<CR>' },
