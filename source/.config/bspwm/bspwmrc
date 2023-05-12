@@ -74,8 +74,8 @@ if [ $MACHINE = 'DT' ]; then
   pgrep sxhkd || \
     sxhkd $XDG_CONFIG_HOME/sxhkd/sxhkdrc.dt $XDG_CONFIG_HOME/bspwm/sxhkdrc.bspwm &
   pgrep polybar || polybar DT -r &
-  pgrep conky   || { conky -c $XDG_CONFIG_HOME/conky/system.conf; \
-      conky -c $XDG_CONFIG_HOME/conky/time.conf; bspc monitor -f primary; } &
+  pgrep conky   || { conky -c $XDG_CONFIG_HOME/conky/system.lua; \
+      conky -c $XDG_CONFIG_HOME/conky/time.lua; bspc monitor -f primary; } &
   pgrep ssm || ssm -t 60 -e b -c 75 -g 75 &
 else
   dunst -conf $XDG_CONFIG_HOME/dunst/dunstrc.lt &
