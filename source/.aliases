@@ -7,7 +7,10 @@ j() {
   (( ${#files[@]} == 0 )) && { err $fn 'no results found.'; return 1; }
   (( ${#files[@]} == 1 ))\
     && cd ${files[@]}\
-    || cd `printf '%s\n' ${files[@]} | zf`
+    || {
+      local file=`printf '%s\n' ${files[@]} | zf`;
+      [[ -z $file ]] && { err $fn 'interrupt.'; return 1; } || cd $file;
+    }
 }
 
 owns() {
