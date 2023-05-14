@@ -1,10 +1,9 @@
 local toggle_diff = function()
   if not vim.wo.diff then return require('gitsigns').diffthis() end
 
-  local buf = vim.fn.bufname()
-  for _, win in pairs(vim.api.nvim_list_wins()) do
-    local cur = vim.fn.bufname(vim.fn.winbufnr(win))
-    if cur:match('^gitsigns://.*'..buf..'$') then
+  -- WARN: will break with simultaneous diffs
+  for _, win in pairs(vim.api.nvim_tabpage_list_wins(0)) do
+    if vim.fn.bufname(vim.fn.winbufnr(win)):match('^gitsigns://.-') then
       vim.api.nvim_win_close(win, true)
     end
   end
