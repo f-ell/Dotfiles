@@ -1,71 +1,42 @@
 local L     = require('utils.lib')
-local v     = vim
-local va    = v.api
-local vf    = v.fn
 local strf  = string.format
 local hl_no = '%#SlNormal#'
-local git_info = {}
+
+local git = {
+  diff = '',
+  dir = {
+    git = '',
+    repo = ''
+  },
+  head = '',
+  is_tracked = false,
+  vcs = false
+}
 
 
 -- auxiliary
--- INFO: this may match an incorrect location with nested links
+-- WARN: this may match an incorrect location with nested links
 local readlink = function()
-  local buf = vf.expand('%:p:h')..'/'..vf.expand('%:t')
-  local src
+  local buf = vim.fn.expand('%:p:h')..'/'..vim.fn.expand('%:t')
 
   -- file itself is a link
-  src = v.loop.fs_readlink(buf)
+  local src = vim.loop.fs_readlink(buf)
   if src then return src end
 
   -- link in directory structure
   local dir = ''
   for subdir in buf:sub(2):gmatch('(.-)/') do
     dir = dir..'/'..subdir
-    src = v.loop.fs_readlink(dir)
-    if src then break end
+    src = vim.loop.fs_readlink(dir)
+    if src then return src..buf:gsub(dir, '') end
   end
-  if src then return src..buf:gsub(dir, '') end
 
   -- no link in directory structure
   return buf
 end
 
 local readlink_dir = function()
-  return v.fs.dirname(readlink())
-end
-
-
-local is_tracked = function()
-  local fh = L.io.popen({
-    'git', '-C', v.fs.dirname(git_info.dir),
-    'ls-files', '--error-unmatch', readlink() }, true, '')
-  return L.io.read(fh) ~= '' and true or false
-end
-
-local is_vcs = function()
-  local fh = L.io.popen({
-    'git', '-C', readlink_dir(),
-    'rev-parse', '--is-inside-work-tree' }, true, false)
-  return L.io.read(fh) == 'true' and true or false
-end
-
-local git_dir = function()
-  local dir = nil
-  local cwd = readlink_dir()
-
-  while cwd do
-    local current = cwd..'/.git'
-    local stat    = v.loop.fs_stat(current)
-    if not stat then goto continue end
-
-    -- INFO: potentially inefficient; loop doesn't break on .git *files*
-    if stat.type == 'directory' then dir = current; break end
-
-    ::continue::
-    cwd = cwd:match('^(.+)/.-$')
-  end
-
-  return dir
+  return vim.fs.dirname(readlink())
 end
 
 
@@ -73,7 +44,7 @@ end
 
 -- misc components
 local mode = function()
-  local m = va.nvim_get_mode().mode
+  local m = vim.api.nvim_get_mode().mode
 
   if      m == 'V'   then m = 'VL'
   elseif  m == ''  then m = 'VB' end
@@ -83,7 +54,7 @@ end
 
 
 local mode_colour = function()
-  local m = va.nvim_get_mode().mode
+  local m = vim.api.nvim_get_mode().mode
 
   if      m == 'V' or m == '' then m = 'v'
   elseif  m == 'nt'             then m = 'n' end
@@ -95,7 +66,7 @@ end
 
 
 local modified = function()
-  return va.nvim_buf_get_option(0, 'modified') and ' ' or ''
+  return vim.api.nvim_buf_get_option(0, 'modified') and ' ' or ''
 end
 
 
@@ -103,12 +74,12 @@ local bufname = function()
   local hl_ro   = '%#SlRo#'
   local hl_rox  = '%#SlRoX#'
 
-  local buf = vf.bufname()
+  local buf = vim.fn.bufname()
   if buf == '' then buf = '[null]'
   else              buf = string.gsub(buf, '.*/', '') end
 
   local str
-  if va.nvim_buf_get_option(0, 'readonly') then
+  if vim.api.nvim_buf_get_option(0, 'readonly') then
     str = strf('%s%s%s%s', hl_rox, hl_ro, buf, hl_rox)
   else
     str = buf
@@ -118,14 +89,14 @@ end
 
 
 local bytecount = function()
-  local count = vf.line2byte('$') + vf.len(vf.getline('$'))
+  local count = vim.fn.line2byte('$') + vim.fn.len(vim.fn.getline('$'))
   if count == -1 then count = 0 end
   return count..'B'
 end
 
 
 local searchcount = function()
-  local s   = vf.searchcount({ maxcount = 0 })
+  local s   = vim.fn.searchcount({ maxcount = 0 })
   local cur = s.current; local tot = s.total; local cmp = s.incomplete
 
   if s.exact_match == 0 then cur = 0 end
@@ -138,28 +109,53 @@ end
 
 
 -- git components
-local git_head = function()
-  local fh = io.open(git_info.dir..'/HEAD', 'r')
-  if fh == nil then return '' end
+local is_tracked = function()
+  local dir = git.dir.git:gsub('%.git$', '')
+  local fh = L.io.popen({
+    'git', '-C', dir,
+    'ls-files', '--error-unmatch', readlink():gsub('^'..dir, '') }, true, '')
+  return L.io.read(fh) ~= ''
+end
 
-  local content = L.io.read(fh)
-  local head = content:match('^ref: refs/heads/(.+)$')
 
-  if not head then
-    fh = L.io.popen({
-      'git', '-C', readlink_dir(),
-      'describe', '--tags', '--exact-match', '@' }, true, '')
-    local tag = L.io.read(fh)
-    head = tag ~= '' and 't:'..tag or content:sub(1, 8)
+local is_vcs = function()
+  local fh = L.io.popen({
+    'git', '-C', readlink_dir(),
+    'rev-parse', '--is-inside-work-tree' }, true, false)
+  return L.io.read(fh) == 'true'
+end
+
+
+local git_dir = function()
+  local git_dir, root_dir = '', ''
+  local cwd = readlink_dir()
+
+  while cwd do
+    local path = cwd..'/.git'
+    local stat = vim.loop.fs_stat(path)
+
+    if stat then
+      git_dir = path
+      root_dir = path
+
+      if stat.type == 'file' then
+        local fh = io.open(path, 'r')
+        if fh ~= nil then root_dir = L.io.read(fh):match('^gitdir: (.*)$') end
+      end
+
+      break
+    end
+
+    cwd = cwd:match('^(.+)/.-$')
   end
 
-  return strf(' %s %s%s', '%#Git#', head, hl_no)
+  return git_dir, root_dir
 end
 
 
 local git_diff = function()
   local file = readlink()
-  if not git_info.tracked or file:match('/$') then
+  if not git.is_tracked or file:match('/$') then
     return ' %#neutral#untracked'
   end
 
@@ -170,8 +166,8 @@ local git_diff = function()
 
   local add, cha, del = 0, 0, 0
   for ln in L.io.read(fh):gmatch('(.-)\r?\n') do
-    if not v.startswith(ln, '@@') then goto continue end
-    if v.startswith(ln, '@@@')    then return ' %#GitDel#unmerged' end
+    if not vim.startswith(ln, '@@') then goto continue end
+    if vim.startswith(ln, '@@@')    then return ' %#GitDel#unmerged' end
 
     local caps = { ln:match('^@@ %-%d+,?(%d*) %+%d+,?(%d*) @@') }
     local old, new = caps[1], caps[2]
@@ -196,29 +192,50 @@ local git_diff = function()
 end
 
 
--- register autocommands
-va.nvim_create_autocmd({ 'BufEnter', 'BufFilePost', 'FileChangedShellPost',
-  'FocusGained', 'WinClosed' }, { callback = function()
-    git_info.vcs = is_vcs()
-    if not git_info.vcs then return end
+local git_head = function()
+  local fh = io.open(git.dir.repo..'/HEAD', 'r')
+  if fh == nil then return '' end
 
-    git_info.dir  = git_dir()
-    git_info.tracked = is_tracked()
-    git_info.head = git_head()
-    git_info.diff = git_diff()
+  local content = L.io.read(fh)
+  local head = content:match('^ref: refs/heads/(.+)$')
+
+  if not head then
+    fh = L.io.popen({
+      'git', '-C', readlink_dir(),
+      'describe', '--tags', '--exact-match', '@' }, true, '')
+    local tag = L.io.read(fh)
+    head = tag ~= '' and 't:'..tag or content:sub(1, 8)
+  end
+
+  return strf(' %s %s%s', '%#Git#', head, hl_no)
+end
+
+
+
+
+-- register autocommands
+vim.api.nvim_create_autocmd({ 'BufEnter', 'BufFilePost', 'FileChangedShellPost',
+  'FocusGained', 'WinClosed' }, { callback = function()
+    git.vcs = is_vcs()
+    if not git.vcs then return end
+
+    git.dir.git, git.dir.repo = git_dir()
+    git.is_tracked = is_tracked()
+    git.head = git_head()
+    git.diff = git_diff()
   end
 })
 
-va.nvim_create_autocmd('BufWritePre', {
+vim.api.nvim_create_autocmd('BufWritePre', {
   nested = true,
   callback = function()
-    if not git_info.vcs then return end
-    git_info.head = git_head()
-    if not v.bo.modified then return end
+    if not git.vcs then return end
+    git.head = git_head()
+    if not vim.bo.modified then return end
 
-    va.nvim_create_autocmd('BufWritePost', {
+    vim.api.nvim_create_autocmd('BufWritePost', {
       once = true,
-      callback = function() git_info.diff = git_diff() end
+      callback = function() git.diff = git_diff() end
     })
   end
 })
@@ -231,7 +248,7 @@ local statusline = function()
   local main, aux = mode_colour()
   local mode  = strf('%s%s%s%s%s', aux, main, mode(), aux, hl_no)
   local bufnr = strf('%s(%s)', hl_no, '%n')
-  local git   = git_info.vcs and git_info.head..git_info.diff or ''
+  local git   = git.vcs and git.head..git.diff or ''
 
   return table.concat({
     hl_no, ' ', mode, git, hl_no,
