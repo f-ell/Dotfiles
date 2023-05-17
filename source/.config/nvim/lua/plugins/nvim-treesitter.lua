@@ -22,7 +22,7 @@ return {
       ensure_installed  = {},
 
       highlight = {
-        enable  = true,
+        enable = true,
         additional_vim_regex_highlighting = false
       },
 
@@ -32,6 +32,8 @@ return {
           lookahead = true,
           include_surrounding_whitespace = true,
           keymaps = { -- queries located in textobjects.scm
+            ['aa'] = '@parameter.outer',
+            ['ia'] = '@parameter.inner',
             ['af'] = '@function.outer',
             ['if'] = '@function.inner',
             ['ac'] = '@conditional.outer',
