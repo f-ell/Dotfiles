@@ -96,9 +96,18 @@ local try_definition = function(switch)
   open({ cword = v.fn.expand('<cword>'), res = res, sw = switch })
 end
 
+local try_type_defintion = function()
+  local res = L.lsp.request(L.lsp.clients_by_cap('typeDefinition'),
+    'textDocument/typeDefinition', vl.util.make_position_params(), 0)
+  if L.tbl.is_empty(res) then return end
+
+  open({ cword = v.fn.expand('<cword>'), res = res })
+end
+
 
 
 
 M.peek = function() try_definition(false) end
 M.open = function() try_definition(true) end
+M.type = function() try_type_defintion() end
 return M
