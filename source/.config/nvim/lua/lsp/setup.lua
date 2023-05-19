@@ -5,7 +5,7 @@ local v   = vim
 
 local on_attach = function()
   key.nnmap('gd',         ui.def.peek,          { buffer = 0 })
-  key.nnmap('gt',         ui.def.type,          { buffer = 0 })
+  key.nnmap('<leader>gt', ui.def.type,          { buffer = 0 })
   key.nnmap('<leader>gd', ui.def.open,          { buffer = 0 })
   key.nnmap('K',          v.lsp.buf.hover,      { buffer = 0 })
   key.nnmap('<leader>ca', ui.cda.codeaction,    { buffer = 0 })
