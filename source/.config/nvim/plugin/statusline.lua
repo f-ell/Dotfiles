@@ -71,8 +71,7 @@ end
 
 
 local bufname = function()
-  local hl_ro   = '%#SlRo#'
-  local hl_rox  = '%#SlRoX#'
+  local hl, hl_inv = '%#SlRo#', '%#SlRoInv#'
 
   local buf = vim.fn.bufname()
   if buf == '' then buf = '[null]'
@@ -80,7 +79,7 @@ local bufname = function()
 
   local str
   if vim.api.nvim_buf_get_option(0, 'readonly') then
-    str = strf('%s%s%s%s', hl_rox, hl_ro, buf, hl_rox)
+    str = strf('%s%s%s%s', hl_inv, hl, buf, hl_inv)
   else
     str = buf
   end
@@ -91,7 +90,7 @@ end
 local bytecount = function()
   local count = vim.fn.line2byte('$') + vim.fn.len(vim.fn.getline('$'))
   if count == -1 then count = 0 end
-  return count..'B'
+  return '%#SlByteInv#%#SlByte# %#SlBg# '..count..'B '
 end
 
 
@@ -102,7 +101,11 @@ local searchcount = function()
   if s.exact_match == 0 then cur = 0 end
   if cmp == 1           then return cur..'/?' end
 
-  return cur..'/'..tot
+  return '%#SlSearchInv#%#SlSearch# %#SlBg# '..cur..'/'..tot..' '
+end
+
+local position = function()
+  return '%#SlLocInv#%#SlLoc# %#SlBg# %l:%v '
 end
 
 
@@ -156,7 +159,7 @@ end
 local git_diff = function()
   local file = readlink()
   if not git.is_tracked or file:match('/$') then
-    return ' %#neutral#untracked'
+    return '%#GitZero# untracked'
   end
 
   -- TODO: diff tmpfile to update without writing (e.g. InsertLeave)
@@ -185,9 +188,9 @@ local git_diff = function()
     ::continue::
   end
 
-  local hl_a = add == 0 and '%#neutral#' or '%#GitAdd#'
-  local hl_c = cha == 0 and '%#neutral#' or '%#GitCha#'
-  local hl_d = del == 0 and '%#neutral#' or '%#GitDel#'
+  local hl_a = add == 0 and '%#GitZero#' or '%#GitAdd#'
+  local hl_c = cha == 0 and '%#GitZero#' or '%#GitCha#'
+  local hl_d = del == 0 and '%#GitZero#' or '%#GitDel#'
   return hl_a..' +'..add..hl_c..' ~'..cha..hl_d..' -'..del
 end
 
@@ -207,7 +210,7 @@ local git_head = function()
     head = tag ~= '' and 't:'..tag or content:sub(1, 8)
   end
 
-  return strf(' %s %s%s', '%#Git#', head, hl_no)
+  return strf(' %s%s%s', '%#Git#', head, hl_no)
 end
 
 
@@ -246,16 +249,20 @@ vim.api.nvim_create_autocmd('BufWritePre', {
 -- statusline definition
 local statusline = function()
   local main, aux = mode_colour()
-  local mode  = strf('%s%s%s%s%s', aux, main, mode(), aux, hl_no)
+  local mode  = strf('%s %s%s%s', main, mode(), aux, hl_no)
   local bufnr = strf('%s(%s)', hl_no, '%n')
-  local git   = git.vcs and git.head..git.diff or ''
+  local git   = git.vcs
+    and '%#SlBg#'..git.head..git.diff..' %#SlGit# %#SlGitInv#'
+    or ''
 
   return table.concat({
-    hl_no, ' ', mode, git, hl_no,
+    mode, git, hl_no,
     '%=',
     '    ', modified(), bufname(), bufnr, '    ', '%<',
     '%=',
-    bytecount(), '  ', searchcount(), '  ', '%l:%v', ' '
+    bytecount(),
+    searchcount(),
+    position()
   })
 end
 
