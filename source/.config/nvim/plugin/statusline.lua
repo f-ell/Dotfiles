@@ -101,11 +101,11 @@ local searchcount = function()
   if s.exact_match == 0 then cur = 0 end
   if cmp == 1           then return cur..'/?' end
 
-  return '%#SlSearchInv#%#SlSearch# %#SlBg# '..cur..'/'..tot..' '
+  return '%#SlSearchInv#%#SlSearch# %#SlBg# '..cur..'/'..tot..' '
 end
 
 local position = function()
-  return '%#SlLocInv#%#SlLoc# %#SlBg# %l:%v '
+  return '%#SlLocInv#%#SlLoc# %#SlBg# %l:%v '
 end
 
 
