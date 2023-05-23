@@ -78,12 +78,13 @@ local open = function(raw)
     return
   end
 
-  local data = L.win.open_center(bufnr, true, true, { zindex = 1 })
+  local data = L.win.open_center(bufnr, true, true, {
+    zindex = 1, title = ' '..v.fn.fnamemodify(v.fn.bufname(bufnr), ':t')..' '
+  })
   set_highlights(data.nbuf, proc)
   register_float_actions(data.nbuf, data.nwin)
   va.nvim_win_set_cursor(data.nwin, proc.start)
   v.cmd('norm! zt')
-  v.wo.winbar = '%#TlActive# '..v.fn.expand('%')..' %#blank#'
 end
 
 

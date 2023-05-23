@@ -61,6 +61,7 @@ local set_hl_groups = function()
 
     -- Float
     { 0, 'NormalFloat', { fg = _,    bg = _ }},
+    { 0, 'FloatTitle',  { fg = fg2,  bg = _ }},
     { 0, 'FloatBorder', { fg = fg3,  bg = _ }},
 
     { 0, 'NeutralFloat',    { fg = fg3,  bg = _ }},
