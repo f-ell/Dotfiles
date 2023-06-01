@@ -114,7 +114,15 @@ if [[ `xset q 2>/dev/null` ]]; then
     fi
 
     # Git stash
-    [[ -n $B && -f `git rev-parse --show-toplevel`/.git/refs/stash ]] && B+=\~
+    if [[ -n $B ]]; then
+      local TL=`git rev-parse --show-toplevel`
+      [[ -f $TL/.git ]] && {
+        TL=`< $TL/.git`
+        TL=${TL#gitdir: }
+        [[ -f $TL/commondir ]] && TL+=/`< $TL/commondir`
+      }
+      [[ -f $TL/refs/stash || -f $TL/.git/refs/stash ]] && B+=\~
+    fi
 
     if (( $PSM == 0 )); then
       [[ $PWD == / ]] && P=/ || P=${PWD##*/}
