@@ -45,7 +45,6 @@ return {
       sources = {
         cda.eslint_d.with(eslint_d_conf),
         dgn.eslint_d.with(eslint_d_conf),
-        fmt.eslint_d.with(eslint_d_conf),
         fmt.prettierd.with(prettierd_conf)
       }
     })
