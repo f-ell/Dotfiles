@@ -8,7 +8,6 @@
 #  |__| \____| | Author: Nico Pareigis
 #           |__| bspwm
 # SETUP
-bspc monitor any -r
 bspc desktop any -r
 bspc rule -r *
 
