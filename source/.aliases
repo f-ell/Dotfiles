@@ -23,12 +23,12 @@ owns() {
 
 pac() {
   local root
-  if [[ $1 =~ '[rR]' ]]; then
+  if [[ $1 =~ '^[rR]$' ]]; then
     root=/usr/bin/doas
     [[ ! -f $root ]] && root=${root%/*}/sudo
     shift
   fi
-  [[ $1 =~ '[cC]' ]] && { pacman -Q | wc -l; return 0; }
+  [[ $1 =~ '^[cC]$' ]] && { pacman -Q | wc -l; return 0; }
   $root pacman -$1 ${@:2}
 }
 
