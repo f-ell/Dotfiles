@@ -8,8 +8,8 @@
 #  |__| \____| | Author: Nico Pareigis
 #           |__| bspwm
 # SETUP
-bspc monitor -r any
-bspc desktop -r any
+bspc monitor any -r
+bspc desktop any -r
 bspc rule -r *
 
 
@@ -49,7 +49,7 @@ elif [ $Theme = 'sakura' ]; then
 fi
 
 bspc config single_monocle          true
-bspc config pointer_modifier        super
+bspc config pointer_modifier        mod4
 bspc config pointer_action1         move
 bspc config pointer_action2         none
 bspc config pointer_action3         resize_corner
@@ -62,7 +62,7 @@ bspc config pointer_follows_monitor false
 # RULES
 bspc rule -a discord  desktop='^5' follow=off state=floating
 bspc rule -a Spotify  desktop='^5' follow=off state=floating
-bspc rule -a steam    desktop='^4' follow=off state=floating
+bspc rule -a Steam    desktop='^4' follow=off state=floating
 bspc rule -a ftb-app  desktop='^4' follow=off state=floating
 bspc rule -a Gimp                             state=floating
 bspc rule -a *:*:Picture-in-Picture           state=floating
