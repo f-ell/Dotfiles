@@ -97,7 +97,7 @@ if [[ `xset q 2>/dev/null` ]]; then
         if [[ $HeadId == $Id ]]; then
           let m++
           [[ $Ref =~ refs/heads/ ]] && let b++
-          HeadRef=${Ref##*/}
+          HeadRef=${Ref#refs/*/}
           HeadId=$Id
         fi
       done
@@ -105,7 +105,9 @@ if [[ `xset q 2>/dev/null` ]]; then
       if (( m == 0 )); then
         HeadRef=$HeadId
       elif (( b > 1 )) || (( m > b && b > 0 )); then
-        HeadRef=`git -C . branch --show-current`
+        # NOTE: detached head at branch head prefers tag-name over commit
+        local branch=`git -C . branch --show-current`
+        [[ -n $branch ]] && HeadRef=$branch
       fi
 
       B=$HeadRef
