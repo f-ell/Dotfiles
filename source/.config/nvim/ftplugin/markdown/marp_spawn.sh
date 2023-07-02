@@ -45,11 +45,13 @@ if [ ! `docker inspect --type=image $image 1>/dev/null 2>&1` ]; then
   docker pull -q $image 2>/dev/null || err 1 'docker pull fatal.'
 fi
 
+# TODO: pass config file as argument
 # start container
 docker run --rm --name marp-watch-pdf-$SUFFIX\
   -e MARP_USER=$uid:$gid\
   -v "$PWD":/home/marp/app -v "$DATA":/home/marp/data\
-  $image --theme /home/marp/data/"$THEME" $WATCH --pdf "$FILE" 1>/dev/null 2>&1
+  $image --config-file /home/marp/data/marp.config.js\
+  --theme /home/marp/data/"$THEME" $WATCH --pdf "$FILE" 1>/dev/null 2>&1
 
 [ $? -ne 0 ] && err 1 'docker run fatal'
 
