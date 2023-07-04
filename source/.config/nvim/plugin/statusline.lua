@@ -95,13 +95,13 @@ end
 
 
 local searchcount = function()
-  local s   = vim.fn.searchcount({ maxcount = 0 })
-  local cur = s.current; local tot = s.total; local cmp = s.incomplete
+  local search = vim.fn.searchcount()
+  local cur = search.current;
 
-  if s.exact_match == 0 then cur = 0 end
-  if cmp == 1           then return cur..'/?' end
+  if search.exact_match == 0 then cur = 0 end
+  if search.incomplete == 1 then return cur..'/?' end
 
-  return '%#SlSearchInv#%#SlSearch# %#SlBg# '..cur..'/'..tot..' '
+  return '%#SlSearchInv#%#SlSearch# %#SlBg# '..cur..'/'..search.total..' '
 end
 
 local position = function()
