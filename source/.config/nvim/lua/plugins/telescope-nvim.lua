@@ -3,7 +3,6 @@ return {
   lazy = true,
   keys = {
     { '<leader>b',  '<CMD>Telescope buffers<CR>' },
-    { '<leader>u',  '<CMD>Telescope undo<CR>' },
     { '<leader>ff', '<CMD>Telescope find_files<CR>' },
     { '<leader>fg', '<CMD>silent! Telescope git_files<CR>' },
     { '<leader>fp', function() require('telescope.builtin').find_files({ cwd = '..' }) end },
@@ -11,7 +10,6 @@ return {
     { '<leader>zf', '<CMD>Telescope current_buffer_fuzzy_find<CR>' }
   },
   dependencies = {
-    'debugloop/telescope-undo.nvim',
     'natecraddock/telescope-zf-native.nvim',
     'nvim-lua/plenary.nvim',
     'nvim-tree/nvim-web-devicons'
@@ -148,13 +146,10 @@ return {
             highlight_results = true,
             match_filename    = true
           }
-        },
-
-        undo = {}
+        }
       }
     })
 
     tls.load_extension('zf-native')
-    tls.load_extension('undo')
   end
 }

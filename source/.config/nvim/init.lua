@@ -10,12 +10,11 @@
 local L = require('utils.lib')
 
 -- bootstrap
-local v = vim
-local std = v.fn.stdpath
+local std = vim.fn.stdpath
 local path = std('data')..'/lazy/lazy.nvim'
 
-if not v.loop.fs_stat(path) then
-  v.fn.system({
+if not vim.loop.fs_stat(path) then
+  vim.fn.system({
     'git', 'clone',
     '--filter=blob:none', '--single-branch',
     'https://github.com/folke/lazy.nvim.git', path
@@ -24,14 +23,14 @@ end
 
 -- init
 L.vim.g('mapleader', ' ')
-v.opt.runtimepath:prepend(path)
+vim.opt.runtimepath:prepend(path)
 
 require('lazy').setup('plugins', {
-  root      = std('data') .. '/lazy',
-  lockfile  = std('data') .. '/lazy/lazy-lock.json',
-  install   = { missing = true, colorscheme = { 'everforest' } },
-  checker   = { enabled = false, frequency  = 86400 },
-  ui        = { border = 'single' },
+  root = std('data') .. '/lazy',
+  lockfile = std('data') .. '/lazy/lazy-lock.json',
+  install = { missing = true },
+  checker = { enabled = false },
+  ui = { border = 'single' },
   performance = {
     cache = {
       enabled = true,
@@ -45,4 +44,3 @@ L.vim.o('termguicolors', true)
 L.vim.c('colorscheme everforest')
 
 require('utils')
-L.fs.mktmpdir()
