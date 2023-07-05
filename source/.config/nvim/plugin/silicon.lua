@@ -1,10 +1,6 @@
-local L   = require('utils.lib')
-local v   = vim
-local vf  = v.fn
+local L = require('utils.lib')
 
-
-if vf.executable('silicon') ~= 1 then return end
-
+if vim.fn.executable('silicon') ~= 1 then return end
 
 local dir = os.getenv('HOME')..'/Media/Pictures/Screenshots/Code/'
 local colours = { 'e67e80', 'a7c080', 'dbbc7f', '7fbbb3', 'd699b6', '83c092' }
@@ -26,10 +22,10 @@ L.key.vnmap('<leader>p', function()
   }
 
   -- get selection contents
-  local start_ln, end_ln  = vf.getpos('v')[2], vf.getpos('.')[2]
+  local start_ln, end_ln  = vim.fn.getpos('v')[2], vim.fn.getpos('.')[2]
   local sel = start_ln < end_ln
-    and vf.getline(start_ln, end_ln)
-    or  vf.getline(end_ln, start_ln)
+    and vim.fn.getline(start_ln, end_ln)
+    or  vim.fn.getline(end_ln, start_ln)
 
   -- escape substrings
   for i, s in pairs(sel) do
@@ -46,6 +42,6 @@ L.key.vnmap('<leader>p', function()
     'printf \'%s\' "'..table.concat(sel, '\n')..'" | silicon '..table.concat(args, ' ')
   )
 
-  if ret == 0 then  v.notify('silicon: saved as '..file, 2)
-  else              v.notify('silicon: couldn\'t create file', 4) end
+  if ret == 0 then  vim.notify('silicon: saved as '..file, 2)
+  else              vim.notify('silicon: couldn\'t create file', 4) end
 end)

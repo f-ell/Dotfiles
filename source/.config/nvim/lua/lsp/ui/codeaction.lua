@@ -1,13 +1,6 @@
 -- inspired by glepnir's Lspsaga: https://github.com/glepnir/lspsaga.nvim
 local L   = require('utils.lib')
-local v   = vim
-local va  = v.api
-local vf  = v.fn
-local vl  = v.lsp
-
 local M = {}
-
-
 
 
 local preprocess = function(raw)
@@ -17,7 +10,7 @@ local preprocess = function(raw)
   for idx, res in pairs(raw) do
     -- filter duplicate code actions (jdt is such a fantastic ls...)
     for _, proc in pairs(ret) do
-      if v.deep_equal(res.result, raw[proc.idx].result) then goto continue end
+      if vim.deep_equal(res.result, raw[proc.idx].result) then goto continue end
     end
 
     local ind = (#raw > 9 and v_idx < 10) and true or false
@@ -50,12 +43,12 @@ local set_highlights = function(bufnr, proc)
     local len = 2 + string.len(proc[i].vis)
 
     -- header
-    va.nvim_buf_add_highlight(bufnr, -1, 'InfoFloatSp', 0, 0, -1)
-    va.nvim_buf_add_highlight(bufnr, -1, 'NeutralFloat', 1, 0, -1)
+    vim.api.nvim_buf_add_highlight(bufnr, -1, 'InfoFloatSp', 0, 0, -1)
+    vim.api.nvim_buf_add_highlight(bufnr, -1, 'NeutralFloat', 1, 0, -1)
     -- prefix
-    va.nvim_buf_add_highlight(bufnr, -1, hlgr[hlidx], i+1, 0, len)
+    vim.api.nvim_buf_add_highlight(bufnr, -1, hlgr[hlidx], i+1, 0, len)
     -- message
-    va.nvim_buf_add_highlight(bufnr, -1, 'NeutralFloatSp', i+1, len+#proc[i].msg+1, -1)
+    vim.api.nvim_buf_add_highlight(bufnr, -1, 'NeutralFloatSp', i+1, len+#proc[i].msg+1, -1)
   end
 end
 
@@ -78,7 +71,7 @@ local register_float_actions = function(data)
       local prov = client.server_capabilities.executeCommandProvider
       if not prov or (type(prov) == 'table' and (L.tbl.is_empty(prov)
         or not vim.tbl_contains(prov.commands, cmd.command))) then
-        v.notify('Client doesn\'t support command: \''..cmd.command..'\'', 3)
+        vim.notify('Client doesn\'t support command: \''..cmd.command..'\'', 3)
         return
       end
 
@@ -87,11 +80,11 @@ local register_float_actions = function(data)
         workDoneToken = cmd.workDoneToken
       }, 0)
     else
-      local client = vl.get_client_by_id(act.id)
+      local client = vim.lsp.get_client_by_id(act.id)
       local resolved = L.lsp.request({ client }, 'codeAction/resolve', res, 0)[1]
 
       if resolved then  L.lsp.apply_edit(resolved)
-      else              v.notify('Failed to resolve code-action.', 4) end
+      else              vim.notify('Failed to resolve code-action.', 4) end
     end
   end
 
@@ -99,7 +92,7 @@ local register_float_actions = function(data)
   L.key.nnmap('<C-c>', function()
     L.win.close(data.nwin, data.owin, data.pos) end, { buffer = true })
   L.key.nnmap('<CR>', function()
-    local num = vf.line('.') - 2
+    local num = vim.fn.line('.') - 2
     if num < 1 then return end
     do_action(num)
   end, { buffer = true })
@@ -130,18 +123,18 @@ local open = function(raw)
   local data = L.win.open_cursor(content, false, true, { zindex = 2 })
   data.proc = proc
   data.res = raw
-  data.pos = va.nvim_win_get_cursor(data.owin)
+  data.pos = vim.api.nvim_win_get_cursor(data.owin)
   data.len = #content - 2
 
   set_highlights(data.nbuf, proc)
-  va.nvim_win_set_cursor(data.nwin, { 3, 0 })
+  vim.api.nvim_win_set_cursor(data.nwin, { 3, 0 })
   register_float_actions(data)
 end
 
 
 local try_action = function()
-  local params    = vl.util.make_range_params()
-  params.context  = { diagnostics = vl.diagnostic.get_line_diagnostics(0) }
+  local params    = vim.lsp.util.make_range_params()
+  params.context  = { diagnostics = vim.lsp.diagnostic.get_line_diagnostics(0) }
 
   local res = L.lsp.request(L.lsp.clients_by_cap('codeAction'),
     'textDocument/codeAction', params, 0)
@@ -149,8 +142,6 @@ local try_action = function()
 
   open(res)
 end
-
-
 
 
 M.codeaction = function() try_action() end

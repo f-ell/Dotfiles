@@ -1,6 +1,6 @@
-local v = require('utils.lib').vim
+local vim = require('utils.lib').vim
 
-v.o('expandtab',  true)
-v.o('tabstop',       2)
-v.o('softtabstop',   2)
-v.o('shiftwidth',    2)
+vim.o('expandtab',  true)
+vim.o('tabstop',       2)
+vim.o('softtabstop',   2)
+vim.o('shiftwidth',    2)

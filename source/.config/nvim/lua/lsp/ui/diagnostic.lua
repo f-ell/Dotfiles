@@ -1,15 +1,8 @@
 -- inspired by glepnir's Lspsaga: https://github.com/glepnir/lspsaga.nvim
 local L   = require('utils.lib')
-local v   = vim
-local va  = v.api
-local vd  = v.diagnostic
-local vf  = v.fn
 local strlen = string.len
 local strsub = string.gsub
-
 local M = {}
-
-
 
 
 local preprocess = function(raw)
@@ -84,27 +77,27 @@ local set_highlights = function(bufnr, proc)
   len = strlen(proc.hdr)
   if proc.type == 'dir' then
     hl = hl_hdr[data[1].sev]
-    va.nvim_buf_add_highlight(bufnr, -1, hl,      0,  0, len)
-    va.nvim_buf_add_highlight(bufnr, -1, hl_ntl,  0, len+1, -1)
+    vim.api.nvim_buf_add_highlight(bufnr, -1, hl,      0,  0, len)
+    vim.api.nvim_buf_add_highlight(bufnr, -1, hl_ntl,  0, len+1, -1)
   else
     hl = 'InfoFloatSp'
-    va.nvim_buf_add_highlight(bufnr, -1, hl,      0, 0, len)
-    va.nvim_buf_add_highlight(bufnr, -1, hl_ntl,  0, len+1, -1)
+    vim.api.nvim_buf_add_highlight(bufnr, -1, hl,      0, 0, len)
+    vim.api.nvim_buf_add_highlight(bufnr, -1, hl_ntl,  0, len+1, -1)
   end
 
   -- separator
-  va.nvim_buf_add_highlight(bufnr, -1, hl_ntl, 1, 0, -1)
+  vim.api.nvim_buf_add_highlight(bufnr, -1, hl_ntl, 1, 0, -1)
 
   -- body
   for i = 1, #data do
     hl  = hl_msg[data[i].sev]
     len = strlen(data[i].msg)
     if proc.type == 'dir' then
-      va.nvim_buf_add_highlight(bufnr, -1, hl,        i+1, 0, len)
-      va.nvim_buf_add_highlight(bufnr, -1, hl_ntl_sp, i+1, len+1, -1)
+      vim.api.nvim_buf_add_highlight(bufnr, -1, hl,        i+1, 0, len)
+      vim.api.nvim_buf_add_highlight(bufnr, -1, hl_ntl_sp, i+1, len+1, -1)
     else
-      va.nvim_buf_add_highlight(bufnr, -1, hl,        i+1, 0, len)
-      va.nvim_buf_add_highlight(bufnr, -1, hl_ntl_sp, i+1, len+1, -1)
+      vim.api.nvim_buf_add_highlight(bufnr, -1, hl,        i+1, 0, len)
+      vim.api.nvim_buf_add_highlight(bufnr, -1, hl_ntl_sp, i+1, len+1, -1)
     end
   end
 end
@@ -115,7 +108,7 @@ local open = function(raw)
   local content = format(proc)
 
   -- move cursor to diagnostic
-  if proc.type == 'dir' then vf.cursor(proc.data[1].ln, proc.data[1].col) end
+  if proc.type == 'dir' then vim.fn.cursor(proc.data[1].ln, proc.data[1].col) end
 
   -- insert header and separator
   generate_header(proc)
@@ -131,16 +124,14 @@ end
 
 
 local try_diagnostic = function(type, diag)
-  if diag[1] == nil then return v.notify('No diagnostics found.', 2) end
+  if diag[1] == nil then return vim.notify('No diagnostics found.', 2) end
   open({ type = type, diag = diag })
 end
 
 
-
-
-M.goto_next = function() try_diagnostic('dir', { vd.get_next() }) end
-M.goto_prev = function() try_diagnostic('dir', { vd.get_prev() }) end
+M.goto_next = function() try_diagnostic('dir', { vim.diagnostic.get_next() }) end
+M.goto_prev = function() try_diagnostic('dir', { vim.diagnostic.get_prev() }) end
 M.get_line = function()
-  try_diagnostic('line', vd.get(0, { lnum = vf.line('.') - 1 }))
+  try_diagnostic('line', vim.diagnostic.get(0, { lnum = vim.fn.line('.') - 1 }))
 end
 return M

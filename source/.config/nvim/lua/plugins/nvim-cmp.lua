@@ -59,9 +59,9 @@ return {
           keyword_length = 4,
           option = {
             get_bufnrs = function()
-              local va = vim.api
-              local buf = va.nvim_get_current_buf()
-              local byte_size = va.nvim_buf_get_offset(buf, va.nvim_buf_line_count(buf))
+              local buf = vim.api.nvim_get_current_buf()
+              local byte_size =
+                vim.api.nvim_buf_get_offset(buf, vim.api.nvim_buf_line_count(buf))
               if byte_size > 1024 * 1024 then return {} end -- 1 MiB max
               return { buf }
             end

@@ -1,7 +1,3 @@
-local v   = vim
-local va  = v.api
-local vf  = v.fn
-local vl  = v.lsp
 local EW, CW = 0.7, 0.8 -- window width when 'relative' is editor/cursor
 
 local M = {
@@ -23,7 +19,7 @@ local M = {
 ---@param bufnr number
 ---@param cb string|function
 M.cmd.event = function(events, bufnr, cb)
-  v.defer_fn(function() va.nvim_create_autocmd(events, {
+  vim.defer_fn(function() vim.api.nvim_create_autocmd(events, {
     buffer = bufnr, once = true, nested = true,
     callback = type(cb) == 'string' and cb or function(tbl) cb(tbl) end
   }) end, 0)
@@ -33,10 +29,10 @@ end
 ---Create directory for temporary user files.
 ---
 M.fs.mktmpdir = function()
-  local dir = vf.stdpath('run')..'/nvim.user'
-  if v.loop.fs_stat(dir) then return end
-  if not v.loop.fs_mkdir(dir, 448) then
-    return v.notify('Couldn\'t create temporary directory \''..dir..'\'', 4)
+  local dir = vim.fn.stdpath('run')..'/nvim.user'
+  if vim.loop.fs_stat(dir) then return end
+  if not vim.loop.fs_mkdir(dir, 448) then
+    return vim.notify('Couldn\'t create temporary directory \''..dir..'\'', 4)
   end
 end
 
@@ -92,7 +88,7 @@ end
 ---@param content table
 M.io.write = function(file, content)
   local fh = io.open(file, 'w+')
-  if fh == nil then return v.notify('Write to \''..file..'\' failed.') end
+  if fh == nil then return vim.notify('Write to \''..file..'\' failed.') end
   fh:write(table.concat(content, '\n')..'\n'); fh:flush(); fh:close()
 end
 
@@ -103,9 +99,9 @@ end
 ---@param response table
 M.lsp.apply_edit = function(response)
   local edit = response.result
-  local oenc = vl.get_client_by_id(response.id).offset_encoding
+  local oenc = vim.lsp.get_client_by_id(response.id).offset_encoding
 
-  if edit.edit then vl.util.apply_workspace_edit(edit.edit, oenc) end
+  if edit.edit then vim.lsp.util.apply_workspace_edit(edit.edit, oenc) end
   if edit.action and type(edit.action) == 'function' then edit.action() end
 end
 
@@ -120,7 +116,9 @@ end
 ---@return table
 M.lsp.clients_by_cap = function(cap, cb)
   local capable   = {}
-  local available = vl.get_active_clients({ buffer = va.nvim_get_current_buf() })
+  local available = vim.lsp.get_active_clients({
+    buffer = vim.api.nvim_get_current_buf()
+  })
 
   for i = 1, #available do
     if available[i].server_capabilities[cap..'Provider'] then
@@ -131,7 +129,7 @@ M.lsp.clients_by_cap = function(cap, cb)
     end
   end
 
-  if #capable == 0 then v.notify('No suitable client found.', 3) end
+  if #capable == 0 then vim.notify('No suitable client found.', 3) end
   return capable
 end
 
@@ -150,7 +148,7 @@ end
 ---@return table
 M.lsp.request = function(clients, method, params, bufnr, cb)
   if type(clients) ~= 'table' or M.tbl.is_empty(clients) then
-    v.notify('Invalid clients.', 3)
+    vim.notify('Invalid clients.', 3)
     return {}
   end
   local responses = {}
@@ -170,15 +168,23 @@ M.lsp.request = function(clients, method, params, bufnr, cb)
     if M.tbl.is_empty(dict) then goto continue end
     if type(dict.result[1]) == 'table' then
       for j=1, #dict.result do
-        table.insert(responses, { id = client.id, name = client.name, result = dict.result[j] })
+        table.insert(responses, {
+          id = client.id,
+          name = client.name,
+          result = dict.result[j]
+        })
       end
     else
-      table.insert(responses, { id = client.id, name = client.name, result = dict.result })
+      table.insert(responses, {
+        id = client.id,
+        name = client.name,
+        result = dict.result
+      })
     end
     ::continue::
   end
 
-  if M.tbl.is_empty(responses) then v.notify('No results found.', 3) end
+  if M.tbl.is_empty(responses) then vim.notify('No results found.', 3) end
   return responses
 end
 
@@ -199,7 +205,7 @@ end
 M.tbl.longest_line = function(tbl)
   local max = 0
   for i = 1, #tbl do
-    local len = vf.strdisplaywidth(tbl[i])
+    local len = vim.fn.strdisplaywidth(tbl[i])
     if len > max then max = len end
   end
   max = tonumber(max)
@@ -219,7 +225,7 @@ end
 ---Wraps vim.api.nvim_command(cmd).
 ---
 ---@param cmd string
-M.vim.c = function(cmd) va.nvim_command(cmd) end
+M.vim.c = function(cmd) vim.api.nvim_command(cmd) end
 
 
 ---Wraps v.g[name] = value when value is passed.
@@ -229,9 +235,9 @@ M.vim.c = function(cmd) va.nvim_command(cmd) end
 ---@param value any?
 M.vim.g = function(name, value)
   if value == nil then
-    return v.g[name]
+    return vim.g[name]
   else
-    v.g[name] = value
+    vim.g[name] = value
   end
 end
 
@@ -243,23 +249,23 @@ end
 ---@param value any?
 M.vim.o = function(name, value)
   if value == nil then
-    return v.o[name]
+    return vim.o[name]
   else
-    v.o[name] = value
+    vim.o[name] = value
   end
 end
 
 ---------------------------------------------------------------------------- win
 M.win._height = function(content)
-  if type(content) == 'number' then return math.floor(v.o.lines * EW) end
+  if type(content) == 'number' then return math.floor(vim.o.lines * EW) end
 
   local _mw = M.win._max_width()
   if M.tbl.longest_line(content) < _mw then return #content end
 
-  local h, sb = 0, vf.strdisplaywidth(v.o.showbreak)
+  local h, sb = 0, vim.fn.strdisplaywidth(vim.o.showbreak)
   for _, line in pairs(content) do
     h = h + 1
-    local ln = vf.strdisplaywidth(line)
+    local ln = vim.fn.strdisplaywidth(line)
 
     -- first wrap
     if ln > _mw then ln = ln - _mw; h = h + 1 end
@@ -272,19 +278,19 @@ M.win._height = function(content)
   return h
 end
 
-M.win._max_width = function() return math.floor(v.o.columns * CW) - 2 end
+M.win._max_width = function() return math.floor(vim.o.columns * CW) - 2 end
 
 M.win._width = function(content)
-  return type(content) == 'number' and math.floor(v.o.columns * EW)
+  return type(content) == 'number' and math.floor(vim.o.columns * EW)
     or math.min(M.tbl.longest_line(content), M.win._max_width())
 end
 
 M.win._voffset = function()
-  local o = math.floor(-v.o.cmdheight / 2)
-  local s = v.o.laststatus
-  local t = v.o.showtabline
-  if s > 1 or s == 1 and #va.nvim_tabpage_list_wins() > 1 then o = o - 1 end
-  if t > 1 or t == 1 and #va.nvim_list_tabpages()     > 1 then o = o + 1 end
+  local o = math.floor(-vim.o.cmdheight / 2)
+  local s = vim.o.laststatus
+  local t = vim.o.showtabline
+  if s > 1 or s == 1 and #vim.api.nvim_tabpage_list_wins() > 1 then o = o - 1 end
+  if t > 1 or t == 1 and #vim.api.nvim_list_tabpages()     > 1 then o = o + 1 end
   return o
 end
 
@@ -294,7 +300,7 @@ end
 ---
 ---@return string,number
 M.win.anchor_offset = function()
-    local anchor = vf.winline() - (vf.winheight(0) / 2) > 0 and 'SW' or 'NW'
+    local anchor = vim.fn.winline() - (vim.fn.winheight(0) / 2) > 0 and 'SW' or 'NW'
     local offset = anchor == 'NW' and 1 or 0
     return anchor, offset
 end
@@ -307,9 +313,9 @@ end
 ---@param owin number?
 ---@pos table?
 M.win.close = function(nwin, owin, pos)
-  if not va.nvim_win_is_valid(nwin) then return end
-  va.nvim_win_close(nwin, true)
-  if owin and pos then va.nvim_win_set_cursor(owin, pos) end
+  if not vim.api.nvim_win_is_valid(nwin) then return end
+  vim.api.nvim_win_close(nwin, true)
+  if owin and pos then vim.api.nvim_win_set_cursor(owin, pos) end
 end
 
 
@@ -319,7 +325,7 @@ end
 ---@param winnr number
 ---@return boolean
 M.win.is_cur_valid = function(winnr)
-  return (va.nvim_get_current_win() == winnr and va.nvim_win_is_valid(winnr))
+  return (vim.api.nvim_get_current_win() == winnr and vim.api.nvim_win_is_valid(winnr))
 end
 
 
@@ -336,21 +342,21 @@ end
 ---@return table
 M.win.open = function(bl, modifiable, enter, config)
   local data = {
-    obuf = va.nvim_get_current_buf(),
-    owin = va.nvim_get_current_win(),
+    obuf = vim.api.nvim_get_current_buf(),
+    owin = vim.api.nvim_get_current_win(),
     nbuf = -1,
     nwin = -1,
     height  = M.win._height(bl),
     width   = M.win._width(bl)
   }
-  if type(bl) == 'table' then data.nbuf = va.nvim_create_buf(false, true)
+  if type(bl) == 'table' then data.nbuf = vim.api.nvim_create_buf(false, true)
   else                        data.nbuf = bl end
 
-  local conf = v.tbl_extend('keep', config or {}, {
+  local conf = vim.tbl_extend('keep', config or {}, {
     relative = type(bl) == 'table' and 'cursor' or 'editor',
     anchor = 'NW',
     row = 1,
-    col = type(bl) == 'table' and -1 or math.floor((v.o.columns * (1 - EW)) / 2),
+    col = type(bl) == 'table' and -1 or math.floor((vim.o.columns * (1 - EW)) / 2),
 
     width   = data.width,
     height  = data.height,
@@ -358,16 +364,19 @@ M.win.open = function(bl, modifiable, enter, config)
     border  = 'single'
   })
 
-  data.nwin = va.nvim_open_win(data.nbuf, enter, conf)
-  if type(bl) == 'table' then va.nvim_buf_set_lines(data.nbuf, 0, -1, true, bl)
-  else                        va.nvim_win_set_buf(data.nwin, data.nbuf) end
+  data.nwin = vim.api.nvim_open_win(data.nbuf, enter, conf)
+  if type(bl) == 'table' then
+    vim.api.nvim_buf_set_lines(data.nbuf, 0, -1, true, bl)
+  else
+    vim.api.nvim_win_set_buf(data.nwin, data.nbuf)
+  end
 
-  v.bo[data.nbuf].bufhidden = 'wipe'
-  v.bo[data.nbuf].modifiable = modifiable
+  vim.bo[data.nbuf].bufhidden = 'wipe'
+  vim.bo[data.nbuf].modifiable = modifiable
   -- FIX: change / conditionally set this?
   if type(bl) == 'table' then
-    v.wo[data.nwin].wrap = true
-    v.bo[data.nbuf].wrapmargin = 0
+    vim.wo[data.nwin].wrap = true
+    vim.bo[data.nbuf].wrapmargin = 0
   end
 
   return data
@@ -382,10 +391,10 @@ end
 ---@param config table?
 ---@return table
 M.win.open_center = function(bl, modifiable, enter, config)
-  local conf = v.tbl_extend('keep', config or {}, {
+  local conf = vim.tbl_extend('keep', config or {}, {
     relative = 'editor', anchor = 'NW',
-    row = math.floor((v.o.lines * (1 - EW)) / 2) + M.win._voffset(),
-    col = math.floor((v.o.columns * (1 - EW)) / 2)
+    row = math.floor((vim.o.lines * (1 - EW)) / 2) + M.win._voffset(),
+    col = math.floor((vim.o.columns * (1 - EW)) / 2)
   })
   return M.win.open(bl, modifiable, enter, conf)
 end
@@ -401,7 +410,7 @@ end
 M.win.open_cursor = function(bl, modifiable, enter, config)
   local anchor, row = M.win.anchor_offset()
 
-  local conf = v.tbl_extend('keep', config or {}, {
+  local conf = vim.tbl_extend('keep', config or {}, {
     relative = 'cursor', anchor = anchor,
     row = row, col = -1
   })
@@ -429,8 +438,8 @@ M.key._map = function(mode, map_opts)
     ---@param rhs string | function
     ---@param opts table?
     return function(lhs, rhs, opts)
-        opts = v.tbl_extend('force', map_opts, opts or {})
-        v.keymap.set(mode, lhs, rhs, opts)
+        opts = vim.tbl_extend('force', map_opts, opts or {})
+        vim.keymap.set(mode, lhs, rhs, opts)
     end
 end
 
@@ -449,9 +458,9 @@ M.key.tnmap = M.key._map('t')
 ---@param rhs string|function
 ---@params opts table?
 M.key.modemap = function(modes, lhs, rhs, opts)
-  opts = v.tbl_extend('force', { noremap = true }, opts)
+  opts = vim.tbl_extend('force', { noremap = true }, opts)
   if type(modes) == 'string' then modes = { modes } end
-  for _, mode in pairs(modes) do v.keymap.set(mode, lhs, rhs, opts) end
+  for _, mode in pairs(modes) do vim.keymap.set(mode, lhs, rhs, opts) end
 end
 
 
@@ -462,7 +471,7 @@ end
 ---@param opts table?
 M.key.unmap = function(modes, lhs, opts)
   if type(modes) == 'string' then modes = { modes } end
-  for _, mode in pairs(modes) do v.keymap.del(mode, lhs, opts or {}) end
+  for _, mode in pairs(modes) do vim.keymap.del(mode, lhs, opts or {}) end
 end
 
 
