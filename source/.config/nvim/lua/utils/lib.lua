@@ -459,8 +459,7 @@ M.key.tnmap = M.key._map('t')
 ---@params opts table?
 M.key.modemap = function(modes, lhs, rhs, opts)
   opts = vim.tbl_extend('force', { noremap = true }, opts)
-  if type(modes) == 'string' then modes = { modes } end
-  for _, mode in pairs(modes) do vim.keymap.set(mode, lhs, rhs, opts) end
+  vim.keymap.set(modes, lhs, rhs, opts)
 end
 
 
@@ -470,8 +469,7 @@ end
 ---@param lhs string
 ---@param opts table?
 M.key.unmap = function(modes, lhs, opts)
-  if type(modes) == 'string' then modes = { modes } end
-  for _, mode in pairs(modes) do vim.keymap.del(mode, lhs, opts or {}) end
+  vim.keymap.del(modes, lhs, opts or {})
 end
 
 
