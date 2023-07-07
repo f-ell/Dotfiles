@@ -1,5 +1,5 @@
 local snippets = {
-  -- hashbang
+  -- print
   s('_p',
     fmt('print!("{}\\n"{});', {
       i(1),

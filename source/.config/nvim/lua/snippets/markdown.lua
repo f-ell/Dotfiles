@@ -1,11 +1,11 @@
 local snippets = {
-  -- single backticks / inline code
-  s('_ibt',
+  -- inline code
+  s('_i',
     fmt('`{}`', { i(1) })
   ),
 
-  -- triple backticks / block code
-  s('_bbt',
+  -- block code
+  s('_b',
     fmt('```{}\n{}\n```', { i(1), i(2) })
   )
 }
