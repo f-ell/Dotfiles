@@ -1,7 +1,6 @@
 #!/usr/bin/perl
 use warnings; use strict; $\ = "\n";
 
-my %meminfo = ();
 open FH, '-|', 'df' or die $!;
   while (<FH>) {
     next unless /\/$/;

@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 use warnings; use strict; $\ = "\n";
 
-my %meminfo = ();
+my %meminfo;
 open FH, '<', '/proc/meminfo' or die $!;
   while (<FH>) {
     @ARGV = split /:\s+/;
