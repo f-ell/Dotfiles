@@ -35,12 +35,12 @@ local set_hl_groups = function()
     { 0, 'neutral', { fg = fg3, bg = _ }},
 
     -- Modes
-    { 0, 'modeC', { fg = fg6, bg = cmd }}, { 0, 'modeCx', { fg = cmd, bg = fg4 }},
-    { 0, 'modeI', { fg = fg6, bg = ins }}, { 0, 'modeIx', { fg = ins, bg = fg4 }},
-    { 0, 'modeN', { fg = fg6, bg = nor }}, { 0, 'modeNx', { fg = nor, bg = fg4 }},
-    { 0, 'modeR', { fg = fg6, bg = rep }}, { 0, 'modeRx', { fg = rep, bg = fg4 }},
-    { 0, 'modeT', { fg = fg6, bg = ter }}, { 0, 'modeTx', { fg = ter, bg = fg4 }},
-    { 0, 'modeV', { fg = fg6, bg = vis }}, { 0, 'modeVx', { fg = vis, bg = fg4 }},
+    { 0, 'modeC', { fg = fg6, bg = cmd }}, { 0, 'modeCx', { fg = cmd, bg = fg4 }}, { 0, 'modeCxx', { fg = cmd, bg = _ }},
+    { 0, 'modeI', { fg = fg6, bg = ins }}, { 0, 'modeIx', { fg = ins, bg = fg4 }}, { 0, 'modeIxx', { fg = ins, bg = _ }},
+    { 0, 'modeN', { fg = fg6, bg = nor }}, { 0, 'modeNx', { fg = nor, bg = fg4 }}, { 0, 'modeNxx', { fg = nor, bg = _ }},
+    { 0, 'modeR', { fg = fg6, bg = rep }}, { 0, 'modeRx', { fg = rep, bg = fg4 }}, { 0, 'modeRxx', { fg = rep, bg = _ }},
+    { 0, 'modeT', { fg = fg6, bg = ter }}, { 0, 'modeTx', { fg = ter, bg = fg4 }}, { 0, 'modeTxx', { fg = ter, bg = _ }},
+    { 0, 'modeV', { fg = fg6, bg = vis }}, { 0, 'modeVx', { fg = vis, bg = fg4 }}, { 0, 'modeVxx', { fg = vis, bg = _ }},
 
     -- Search
     { 0, 'Search',     { fg = fg6, bg = aqu1 }},

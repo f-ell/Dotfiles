@@ -2,7 +2,7 @@ local L     = require('utils.lib')
 local strf  = string.format
 local hl_no = '%#SlNormal#'
 
-local git = {
+local git_info = {
   diff = '',
   dir = {
     git = '',
@@ -43,7 +43,7 @@ end
 
 
 -- misc components
-local mode = function()
+local get_mode = function()
   local m = vim.api.nvim_get_mode().mode
 
   if      m == 'V'   then m = 'VL'
@@ -59,9 +59,10 @@ local mode_colour = function()
   if      m == 'V' or m == '' then m = 'v'
   elseif  m == 'nt'             then m = 'n' end
 
-  local main  = strf('%s%s#', '%#mode', m:upper())
-  local aux   = strf('%s%sx#', '%#mode', m:upper())
-  return main, aux
+  return {
+    main = strf('%s%s#', '%#mode', m:upper()),
+    aux = strf('%s%sx%s#', '%#mode', m:upper(), git_info.vcs and '' or 'x')
+  }
 end
 
 
@@ -113,7 +114,7 @@ end
 
 -- git components
 local is_tracked = function()
-  local dir = git.dir.git:gsub('%.git$', '')
+  local dir = git_info.dir.git:gsub('%.git$', '')
   local fh = L.io.popen({
     'git', '-C', dir,
     'ls-files', '--error-unmatch', readlink():gsub('^'..dir, '') }, true, '')
@@ -158,7 +159,7 @@ end
 
 local git_diff = function()
   local file = readlink()
-  if not git.is_tracked or file:match('/$') then
+  if not git_info.is_tracked or file:match('/$') then
     return '%#GitZero# untracked'
   end
 
@@ -196,7 +197,7 @@ end
 
 
 local git_head = function()
-  local fh = io.open(git.dir.repo..'/HEAD', 'r')
+  local fh = io.open(git_info.dir.repo..'/HEAD', 'r')
   if fh == nil then return '' end
 
   local content = L.io.read(fh)
@@ -219,26 +220,26 @@ end
 -- register autocommands
 vim.api.nvim_create_autocmd({ 'BufEnter', 'BufFilePost', 'FileChangedShellPost',
   'FocusGained', 'WinClosed' }, { callback = function()
-    git.vcs = is_vcs()
-    if not git.vcs then return end
+    git_info.vcs = is_vcs()
+    if not git_info.vcs then return end
 
-    git.dir.git, git.dir.repo = git_dir()
-    git.is_tracked = is_tracked()
-    git.head = git_head()
-    git.diff = git_diff()
+    git_info.dir.git, git_info.dir.repo = git_dir()
+    git_info.is_tracked = is_tracked()
+    git_info.head = git_head()
+    git_info.diff = git_diff()
   end
 })
 
 vim.api.nvim_create_autocmd('BufWritePre', {
   nested = true,
   callback = function()
-    if not git.vcs then return end
-    git.head = git_head()
+    if not git_info.vcs then return end
+    git_info.head = git_head()
     if not vim.bo.modified then return end
 
     vim.api.nvim_create_autocmd('BufWritePost', {
       once = true,
-      callback = function() git.diff = git_diff() end
+      callback = function() git_info.diff = git_diff() end
     })
   end
 })
@@ -248,12 +249,13 @@ vim.api.nvim_create_autocmd('BufWritePre', {
 
 -- statusline definition
 local statusline = function()
-  local main, aux = mode_colour()
-  local mode  = strf('%s %s%s%s', main, mode(), aux, hl_no)
-  local bufnr = strf('%s(%s)', hl_no, '%n')
-  local git   = git.vcs
-    and '%#SlBg#'..git.head..git.diff..' %#SlGit# %#SlGitInv#'
+  local git = git_info.vcs
+    and '%#SlBg#'..git_info.head..git_info.diff..' %#SlGit# %#SlGitInv#'
     or ''
+
+  local colour = mode_colour()
+  local mode  = strf('%s %s%s%s', colour.main, get_mode(), colour.aux, hl_no)
+  local bufnr = strf('%s(%s)', hl_no, '%n')
 
   return table.concat({
     mode, git, hl_no,
