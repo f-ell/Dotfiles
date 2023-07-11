@@ -10,4 +10,4 @@ open FH, '-|', 'df' or die $!;
 close FH or die $!;
 
 my %dskinfo = ( fs => shift, size => shift, used => shift );
-printf "%.1f GiB / %.f GiB %s\n", $dskinfo{used}/(1024**2), $dskinfo{size}/(1024**2);
+printf "%.1f GiB / %.f GiB\n", $dskinfo{used}/(1024**2), $dskinfo{size}/(1024**2);
