@@ -2,8 +2,8 @@ local EW, CW = 0.7, 0.8 -- window width when 'relative' is editor/cursor
 
 local M = {
   cmd = {},
-  fs  = {},
-  io  = {},
+  fs = {},
+  io = {},
   key = {},
   lsp = {},
   str = {},
@@ -115,7 +115,7 @@ end
 ---@param cb function?
 ---@return table
 M.lsp.clients_by_cap = function(cap, cb)
-  local capable   = {}
+  local capable = {}
   local available = vim.lsp.get_active_clients({
     buffer = vim.api.nvim_get_current_buf()
   })
@@ -140,9 +140,10 @@ end
 ---If 'cb' is present, it will be called on the raw response data of each client.
 ---In case an error is returned, the function is responsible for handling it.
 ---
+---@alias TextDocumentPositionParams TextDocumentPositionParams
 ---@param clients table
 ---@param method string
----@param params TextDocumentPositionParams|string
+---@param params TextDocumentPositionParams
 ---@param bufnr number
 ---@param cb function?
 ---@return table
@@ -154,8 +155,8 @@ M.lsp.request = function(clients, method, params, bufnr, cb)
   local responses = {}
 
   for i = 1, #clients do
-    local client  = clients[i]
-    local dict    = client.request_sync(method, params, 500, bufnr)
+    local client = clients[i]
+    local dict = client.request_sync(method, params, 500, bufnr)
 
     if cb ~= nil then
       if type(cb) == 'function' then cb(dict) end
@@ -290,7 +291,7 @@ M.win._voffset = function()
   local s = vim.o.laststatus
   local t = vim.o.showtabline
   if s > 1 or s == 1 and #vim.api.nvim_tabpage_list_wins() > 1 then o = o - 1 end
-  if t > 1 or t == 1 and #vim.api.nvim_list_tabpages()     > 1 then o = o + 1 end
+  if t > 1 or t == 1 and #vim.api.nvim_list_tabpages() > 1 then o = o + 1 end
   return o
 end
 
@@ -346,11 +347,14 @@ M.win.open = function(bl, modifiable, enter, config)
     owin = vim.api.nvim_get_current_win(),
     nbuf = -1,
     nwin = -1,
-    height  = M.win._height(bl),
-    width   = M.win._width(bl)
+    height = M.win._height(bl),
+    width = M.win._width(bl)
   }
-  if type(bl) == 'table' then data.nbuf = vim.api.nvim_create_buf(false, true)
-  else                        data.nbuf = bl end
+  if type(bl) == 'table' then
+    data.nbuf = vim.api.nvim_create_buf(false, true)
+  else
+    data.nbuf = bl
+  end
 
   local conf = vim.tbl_extend('keep', config or {}, {
     relative = type(bl) == 'table' and 'cursor' or 'editor',
@@ -358,10 +362,10 @@ M.win.open = function(bl, modifiable, enter, config)
     row = 1,
     col = type(bl) == 'table' and -1 or math.floor((vim.o.columns * (1 - EW)) / 2),
 
-    width   = data.width,
-    height  = data.height,
-    style   = 'minimal',
-    border  = 'single'
+    width = data.width,
+    height = data.height,
+    style = 'minimal',
+    border = 'single'
   })
 
   data.nwin = vim.api.nvim_open_win(data.nbuf, enter, conf)
@@ -444,7 +448,6 @@ M.key._map = function(mode, map_opts)
 end
 
 M.key.inmap = M.key._map('i')
-M.key.nmap  = M.key._map('n', { noremap = false })
 M.key.nnmap = M.key._map('n')
 M.key.vnmap = M.key._map('v')
 M.key.cnmap = M.key._map('c')

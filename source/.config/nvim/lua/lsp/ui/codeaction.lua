@@ -1,5 +1,5 @@
 -- inspired by glepnir's Lspsaga: https://github.com/glepnir/lspsaga.nvim
-local L   = require('utils.lib')
+local L = require('utils.lib')
 local M = {}
 
 
@@ -83,8 +83,11 @@ local register_float_actions = function(data)
       local client = vim.lsp.get_client_by_id(act.id)
       local resolved = L.lsp.request({ client }, 'codeAction/resolve', res, 0)[1]
 
-      if resolved then  L.lsp.apply_edit(resolved)
-      else              vim.notify('Failed to resolve code-action.', 4) end
+      if resolved then
+        L.lsp.apply_edit(resolved)
+      else
+        vim.notify('Failed to resolve code-action.', 4)
+      end
     end
   end
 
@@ -133,8 +136,8 @@ end
 
 
 local try_action = function()
-  local params    = vim.lsp.util.make_range_params()
-  params.context  = { diagnostics = vim.lsp.diagnostic.get_line_diagnostics(0) }
+  local params = vim.lsp.util.make_range_params()
+  params.context = { diagnostics = vim.lsp.diagnostic.get_line_diagnostics(0) }
 
   local res = L.lsp.request(L.lsp.clients_by_cap('codeAction'),
     'textDocument/codeAction', params, 0)

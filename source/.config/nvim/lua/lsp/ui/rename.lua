@@ -52,9 +52,9 @@ local open = function(raw)
   vim.api.nvim_win_set_cursor(0, { raw.pos[1] + 1, raw.pos[2] })
   local data = L.win.open_cursor({ raw.cword }, true, true, { width = w, col = -1, zindex = 2 })
   data.ns_id = vim.api.nvim_create_namespace('LspUi')
-  data.pos   = vim.api.nvim_win_get_cursor(data.owin)
-  data.old   = raw.cword
-  data.refs  = raw.refs
+  data.pos = vim.api.nvim_win_get_cursor(data.owin)
+  data.old = raw.cword
+  data.refs = raw.refs
 
   highlight_refs(data)
   register_float_actions(data)
@@ -84,7 +84,7 @@ local try_rename = function()
     vim.notify('Could not get declaration for symbol under cursor.', 4)
     return
   end
-  local s, e  = declaration.result.range.start, declaration.result.range['end']
+  local s, e = declaration.result.range.start, declaration.result.range['end']
   local cword = declaration
     and vim.api.nvim_buf_get_text(0, s.line, s.character, e.line, e.character, {})[1]
     or ''

@@ -1,5 +1,5 @@
 -- inspired by glepnir's Lspsaga: https://github.com/glepnir/lspsaga.nvim
-local L   = require('utils.lib')
+local L = require('utils.lib')
 local M = {}
 
 
@@ -12,7 +12,7 @@ local preprocess = function(raw)
 
   local range = res.result.range or res.result.targetSelectionRange
   ret.start = { range.start.line + 1, range.start.character }
-  ret._end  = { range['end'].line + 1, range['end'].character }
+  ret._end = { range['end'].line + 1, range['end'].character }
 
   return ret
 end
@@ -28,7 +28,7 @@ local set_highlights = function(bufnr, proc)
     -- TODO: revise this for multi-line highlights
   if proc._end[1] > proc.start[1] then
     local current = proc.start[1]
-    local last    = proc._end[1]
+    local last = proc._end[1]
 
     while current < last do
       vim.api.nvim_buf_add_highlight(bufnr, ns_id, 'Search', current, 0, -1)
@@ -62,7 +62,7 @@ end
 
 
 local open = function(raw)
-  local proc  = preprocess(raw)
+  local proc = preprocess(raw)
   local bufnr = vim.uri_to_bufnr(proc.uri)
 
   if proc.switch or bufnr == vim.api.nvim_get_current_buf() then
