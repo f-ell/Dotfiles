@@ -6,8 +6,7 @@ return {
   dependencies = {
     'hrsh7th/cmp-buffer',
     'L3MON4D3/LuaSnip',
-    { 'hrsh7th/cmp-cmdline', event = 'CmdlineEnter' },
-    { 'hrsh7th/cmp-nvim-lua', ft = 'lua' }
+    { 'hrsh7th/cmp-cmdline', event = 'CmdlineEnter' }
   },
   config = function()
     local icons = {
@@ -50,8 +49,6 @@ return {
         { name = 'luasnip',
           max_item_count = 4,
           keyword_length = 1 },
-        { name = 'nvim_lua',
-          keyword_length = 1 },
         { name = 'nvim_lsp',
           keyword_length = 1 },
         { name = 'buffer',
@@ -79,7 +76,6 @@ return {
           item.kind = string.format('%s', icons[item.kind])
           item.menu = ({
             luasnip   = '-Snp-',
-            nvim_lua  = '-Lua-',
             nvim_lsp  = '-Lsp-',
             buffer    = '-Buf-'
           })[entry.source.name]

@@ -2,7 +2,7 @@ return {
   'williamboman/mason.nvim',
   lazy = true,
   cmd = 'Mason',
-  event = { 'BufNewFile', 'BufReadPost' },
+  event = 'FileType',
   dependencies = { 'hrsh7th/cmp-nvim-lsp', 'neovim/nvim-lspconfig' },
   config = function()
     local signs = {
@@ -60,6 +60,5 @@ return {
       if req then opts = vim.tbl_deep_extend('force', opts, tbl) end
       require('lspconfig')[server].setup(opts)
     end
-
   end
 }
