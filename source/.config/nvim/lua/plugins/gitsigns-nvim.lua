@@ -42,7 +42,7 @@ return {
       watch_gitdir = {
         interval      = 500,
         follow_files  = true
-      },
+      }
     })
   end
 }

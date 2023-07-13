@@ -6,9 +6,9 @@ return {
   dependencies = { 'hrsh7th/cmp-nvim-lsp', 'neovim/nvim-lspconfig' },
   config = function()
     local signs = {
-      { 'DiagnosticSignError',  '◆' },
-      { 'DiagnosticSignWarn',   '▲' },
-      { 'DiagnosticSignInfo',   '●' },
+      { 'DiagnosticSignError',  '🞙' },
+      { 'DiagnosticSignWarn',   '▴' },
+      { 'DiagnosticSignInfo',   '🞄' },
       { 'DiagnosticSignHint',   '▪' }
     }
     for _, sign in pairs(signs) do
