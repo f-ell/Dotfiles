@@ -6,7 +6,8 @@ return {
       diagnostics = {
         globals = { 'cmp', 'vim', 'use' }
       },
-      telemetry = { enable = false }
+      telemetry = { enable = false },
+      workspace = { checkThirdParty = false }
     }
   }
 }

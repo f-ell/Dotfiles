@@ -8,11 +8,11 @@ return {
         enabled = true,
         runtime = true,
         types = true,
-        plugins = false,
+        plugins = false
       },
       setup_jsonls = true,
       lspconfig = false,
-      pathStrict = true,
+      pathStrict = true
     })
   end
 }
