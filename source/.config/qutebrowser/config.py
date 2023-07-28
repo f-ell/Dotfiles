@@ -23,8 +23,8 @@ c.colors.webpage.bg                     = '#374247'
 
 c.window.title_format = 'qutebrowser'
 c.window.transparent  = True
-c.url.start_pages     = f"{os.environ.get('XDG_CONFIG_HOME', os.environ['HOME'] + '/.config')})/browser/index.html"
-c.url.default_page    = f"{os.environ.get('XDG_CONFIG_HOME', os.environ['HOME'] + '/.config')})/browser/index.html"
+c.url.start_pages     = f"{os.environ.get('XDG_CONFIG_HOME', os.environ['HOME'] + '/.config')}/browser/index.html"
+c.url.default_page    = f"{os.environ.get('XDG_CONFIG_HOME', os.environ['HOME'] + '/.config')}/browser/index.html"
 c.zoom.levels = [
     '25%', '50%', '75%', '100%', '125%', '150%', '175%', '200%', '300%'
 ]
