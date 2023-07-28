@@ -1,3 +1,7 @@
+local L = require('utils.lib')
+
+L.vim.o('spell', true);
+
 vim.api.nvim_create_autocmd('BufWritePre', {
   buffer = vim.api.nvim_get_current_buf(),
   callback = function()
