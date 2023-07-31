@@ -1,0 +1,8 @@
+# python
+**/__pycache__
+**/__init__.py
+
+# qutebrowser
+autoconfig.yml
+bookmarks/
+quickmarks
