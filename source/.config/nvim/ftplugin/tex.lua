@@ -1,3 +1,5 @@
+if vim.fn.expand('%:e') == 'sty' then return end
+
 local L = require('utils.lib')
 
 L.vim.o('spell', true);
