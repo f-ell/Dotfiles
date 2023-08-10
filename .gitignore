@@ -3,6 +3,7 @@
 **/__init__.py
 
 # qutebrowser
-autoconfig.yml
-bookmarks/
-quickmarks
+**/qutebrowser/autoconfig.yml
+**/qutebrowser/bookmarks/
+**/qutebrowser/qsettings
+**/qutebrowser/quickmarks
