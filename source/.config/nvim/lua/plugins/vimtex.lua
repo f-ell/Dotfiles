@@ -3,7 +3,6 @@ return {
   lazy = true,
   ft = { 'latex', 'plaintex', 'tex' },
   keys = {
-    { '<leader>vl', '<CMD>VimtexClean<CR>' },
     { '<leader>vc', '<CMD>VimtexCompileSS<CR>' },
     { '<leader>vs', '<CMD>VimtexStatus!<CR>' },
     { '<leader>vt', '<CMD>VimtexTocToggle<CR>' },
