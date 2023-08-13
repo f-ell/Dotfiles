@@ -1,6 +1,4 @@
-local L     = require('utils.lib')
-local strf  = string.format
-local hl_no = '%#SlNormal#'
+local L = require('utils.lib')
 
 local git_info = {
   diff = '',
@@ -39,80 +37,6 @@ local readlink_dir = function()
   return vim.fs.dirname(readlink())
 end
 
-
-
-
--- misc components
-local get_mode = function()
-  local m = vim.api.nvim_get_mode().mode
-
-  if      m == 'V'   then m = 'VL'
-  elseif  m == ''  then m = 'VB' end
-
-  return m:upper()
-end
-
-
-local mode_colour = function()
-  local m = vim.api.nvim_get_mode().mode
-
-  if      m == 'V' or m == '' then m = 'v'
-  elseif  m == 'nt'             then m = 'n' end
-
-  return {
-    main = strf('%s%s#', '%#mode', m:upper()),
-    aux = strf('%s%sx%s#', '%#mode', m:upper(), git_info.vcs and '' or 'x')
-  }
-end
-
-
-local modified = function()
-  return vim.api.nvim_buf_get_option(0, 'modified') and ' ' or ''
-end
-
-
-local bufname = function()
-  local hl, hl_inv = '%#SlRo#', '%#SlRoInv#'
-
-  local buf = vim.fn.bufname()
-  if buf == '' then buf = '[null]'
-  else              buf = string.gsub(buf, '.*/', '') end
-
-  local str
-  if vim.api.nvim_buf_get_option(0, 'readonly') then
-    str = strf('%s%s%s%s', hl_inv, hl, buf, hl_inv)
-  else
-    str = buf
-  end
-  return str..' '
-end
-
-
-local bytecount = function()
-  local count = vim.fn.line2byte('$') + vim.fn.len(vim.fn.getline('$'))
-  if count == -1 then count = 0 end
-  return '%#SlByteInv#%#SlByte# %#SlBg# '..count..'B '
-end
-
-
-local searchcount = function()
-  local search = vim.fn.searchcount()
-  local cur = search.current;
-
-  if search.exact_match == 0 then cur = 0 end
-  if search.incomplete == 1 then return cur..'/?' end
-
-  return '%#SlSearchInv#%#SlSearch# %#SlBg# '..cur..'/'..search.total..' '
-end
-
-local position = function()
-  return '%#SlLocInv#%#SlLoc# %#SlBg# %l:%v '
-end
-
-
-
-
--- git components
 local is_tracked = function()
   local dir = git_info.dir.git:gsub('%.git$', '')
   local fh = L.io.popen({
@@ -121,14 +45,12 @@ local is_tracked = function()
   return L.io.read(fh) ~= ''
 end
 
-
 local is_vcs = function()
   local fh = L.io.popen({
     'git', '-C', readlink_dir(),
     'rev-parse', '--is-inside-work-tree' }, true, false)
   return L.io.read(fh) == 'true'
 end
-
 
 local git_dir = function()
   local git_dir, root_dir = '', ''
@@ -155,7 +77,6 @@ local git_dir = function()
 
   return git_dir, root_dir
 end
-
 
 local git_diff = function()
   local file = readlink()
@@ -195,7 +116,6 @@ local git_diff = function()
   return hl_a..' +'..add..hl_c..' ~'..cha..hl_d..' -'..del
 end
 
-
 local git_head = function()
   local fh = io.open(git_info.dir.repo..'/HEAD', 'r')
   if fh == nil then return '' end
@@ -211,15 +131,70 @@ local git_head = function()
     head = tag ~= '' and 't:'..tag or content:sub(1, 8)
   end
 
-  return strf(' %s%s%s', '%#Git#', head, hl_no)
+  return string.format(' %s%s%s', '%#Git#', head, '%#SlNormal#')
 end
 
 
+-- components
+local mode = function()
+  local m = vim.api.nvim_get_mode().mode
+  if m == '' then m = 'v' end
+  m = m:sub(0, 1):upper()
+
+  local colours = {
+    '%#mode'..m..'#',
+    '%#mode'..m..'x#'
+  }
+
+  return string.format('%s %s%s', colours[1], m, colours[2])
+end
+
+local buffer = function()
+  local name = vim.fn.bufname()
+  name = name == '' and '[null]' or string.gsub(name, '.*/', '')
+  local ro = vim.bo.readonly
+
+  return string.format(
+    '%%#SlBg# %s (%s) %s %s%s',
+    name, '%n',
+    '%#SlBuf'..(ro and 'Ro' or '')..'#',
+    vim.bo.modified and '✱' or '',
+    '%#SlBuf'..(ro and 'Ro' or '')..'Inv'..(git_info.vcs and '' or 'x')..'#'
+  )
+end
+
+local git = function()
+  return git_info.vcs
+    and '%#SlBg#'..git_info.head..git_info.diff..' %#SlGit# %#SlGitInv#'
+    or ''
+end
+
+local bytecount = function()
+  local count = vim.fn.line2byte(vim.fn.line('$'))
+    + vim.fn.len(vim.fn.getline('$'))
+  if count == -1 then count = 0 end
+  return '%#SlByteInv#%#SlByte#﬘ %#SlBg# '..count..'B '
+end
+
+local searchcount = function()
+  local search = vim.fn.searchcount()
+  local cur = search.current;
+
+  if search.exact_match == 0 then cur = 0 end
+  if search.incomplete == 1 then return cur..'/?' end
+
+  return '%#SlSearchInv#%#SlSearch# %#SlBg# '..cur..'/'..search.total..' '
+end
+
+local position = function()
+  return '%#SlLocInv#%#SlLoc# %#SlBg# %l:%v '
+end
 
 
 -- register autocommands
-vim.api.nvim_create_autocmd({ 'BufEnter', 'BufFilePost', 'FileChangedShellPost',
-  'FocusGained', 'WinClosed' }, { callback = function()
+vim.api.nvim_create_autocmd({
+  'BufEnter', 'BufFilePost', 'FileChangedShellPost', 'FocusGained', 'WinClosed'
+  }, { callback = function()
     git_info.vcs = is_vcs()
     if not git_info.vcs then return end
 
@@ -245,23 +220,13 @@ vim.api.nvim_create_autocmd('BufWritePre', {
 })
 
 
-
-
 -- statusline definition
 local statusline = function()
-  local git = git_info.vcs
-    and '%#SlBg#'..git_info.head..git_info.diff..' %#SlGit# %#SlGitInv#'
-    or ''
-
-  local colour = mode_colour()
-  local mode  = strf('%s %s%s%s', colour.main, get_mode(), colour.aux, hl_no)
-  local bufnr = strf('%s(%s)', hl_no, '%n')
-
   return table.concat({
-    mode, git, hl_no,
-    '%=',
-    '    ', modified(), bufname(), bufnr, '    ', '%<',
-    '%=',
+    mode(),
+    buffer(), '%#SlNormal#',
+    git(),
+    '%#SlNormal#%=%<',
     bytecount(),
     searchcount(),
     position()

@@ -21,13 +21,6 @@ local set_hl_groups = function()
   local yel1 = '#dbbc7f'
   local yel2 = '#dfa000'
 
-  local cmd = pur1
-  local ins = blu1
-  local nor = gre1
-  local rep = yel1
-  local ter = fg3
-  local vis = red1
-
   local git = '#fca326'
 
   local hls = {
@@ -35,12 +28,12 @@ local set_hl_groups = function()
     { 0, 'neutral', { fg = fg3, bg = _ }},
 
     -- Modes
-    { 0, 'modeC', { fg = fg6, bg = cmd }}, { 0, 'modeCx', { fg = cmd, bg = fg4 }}, { 0, 'modeCxx', { fg = cmd, bg = _ }},
-    { 0, 'modeI', { fg = fg6, bg = ins }}, { 0, 'modeIx', { fg = ins, bg = fg4 }}, { 0, 'modeIxx', { fg = ins, bg = _ }},
-    { 0, 'modeN', { fg = fg6, bg = nor }}, { 0, 'modeNx', { fg = nor, bg = fg4 }}, { 0, 'modeNxx', { fg = nor, bg = _ }},
-    { 0, 'modeR', { fg = fg6, bg = rep }}, { 0, 'modeRx', { fg = rep, bg = fg4 }}, { 0, 'modeRxx', { fg = rep, bg = _ }},
-    { 0, 'modeT', { fg = fg6, bg = ter }}, { 0, 'modeTx', { fg = ter, bg = fg4 }}, { 0, 'modeTxx', { fg = ter, bg = _ }},
-    { 0, 'modeV', { fg = fg6, bg = vis }}, { 0, 'modeVx', { fg = vis, bg = fg4 }}, { 0, 'modeVxx', { fg = vis, bg = _ }},
+    { 0, 'modeC', { fg = fg6, bg = pur1 }}, { 0, 'modeCx', { fg = pur1, bg = fg4 }},
+    { 0, 'modeI', { fg = fg6, bg = blu1 }}, { 0, 'modeIx', { fg = blu1, bg = fg4 }},
+    { 0, 'modeN', { fg = fg6, bg = gre1 }}, { 0, 'modeNx', { fg = gre1, bg = fg4 }},
+    { 0, 'modeR', { fg = fg6, bg = yel1 }}, { 0, 'modeRx', { fg = yel1, bg = fg4 }},
+    { 0, 'modeT', { fg = fg6, bg = fg3 }},  { 0, 'modeTx', { fg = fg3,  bg = fg4 }},
+    { 0, 'modeV', { fg = fg6, bg = red1 }}, { 0, 'modeVx', { fg = red1, bg = fg4 }},
 
     -- Search
     { 0, 'Search',     { fg = fg6, bg = aqu1 }},
@@ -82,14 +75,18 @@ local set_hl_groups = function()
 
     -- Statusline
     { 0, 'SlNormal',    { fg = fg2,  bg = _ }},
-    { 0, 'SlItalic',    { fg = fg2,  bg = _,    italic = true }},
-    { 0, 'SlRo',        { fg = fg6,  bg = red2, bold   = true }},
-    { 0, 'SlRoInv',     { fg = red2, bg = _,    bold   = true }},
+    { 0, 'SlItalic',    { fg = fg2,  bg = _, italic = true }},
     { 0, 'SlBg',        { fg = _,    bg = fg4 }},
+    { 0, 'SlBuf',       { fg = fg6,  bg = pur1 }},
+    { 0, 'SlBufInv',    { fg = pur1, bg = fg4 }},
+    { 0, 'SlBufInvx',   { fg = pur1, bg = _ }},
+    { 0, 'SlBufRo',     { fg = fg6,  bg = red1, bold = true }},
+    { 0, 'SlBufRoInv',  { fg = red1, bg = fg4,  bold = true }},
+    { 0, 'SlBufRoInvx', { fg = red1, bg = _,    bold = true }},
     { 0, 'SlGit',       { fg = fg6,  bg = git }},
     { 0, 'SlGitInv',    { fg = git,  bg = _ }},
-    { 0, 'SlByte',      { fg = fg6,  bg = pur1 }},
-    { 0, 'SlByteInv',   { fg = pur1, bg = _ }},
+    { 0, 'SlByte',      { fg = fg6,  bg = yel1 }},
+    { 0, 'SlByteInv',   { fg = yel1, bg = _ }},
     { 0, 'SlSearch',    { fg = fg6,  bg = blu1 }},
     { 0, 'SlSearchInv', { fg = blu1, bg = fg4 }},
     { 0, 'SlLoc',       { fg = fg6,  bg = aqu1 }},
