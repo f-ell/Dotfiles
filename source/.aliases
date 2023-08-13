@@ -1,17 +1,6 @@
 err() { printf '%s: %s\n' "$1" "$2" 1>&2 }
 
-j() {
-  local fn=j
-  [[ -z $1 ]] && { err $fn 'no pattern given!'; return 1; }
-  declare -a files=(`fd -d${2:-8} -td -HL | rg -i "\w*?$1\w*?/?$"`)
-  (( ${#files[@]} == 0 )) && { err $fn 'no results found.'; return 1; }
-  (( ${#files[@]} == 1 ))\
-    && cd ${files[@]}\
-    || {
-      local file=`printf '%s\n' ${files[@]} | zf`;
-      [[ -z $file ]] && { err $fn 'interrupt.'; return 1; } || cd $file;
-    }
-}
+j() { eval `jump $@` }
 
 owns() {
   local fn=owns program=`command -v $1`
