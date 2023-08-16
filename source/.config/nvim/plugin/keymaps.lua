@@ -69,14 +69,12 @@ local terminal = function()
 end
 
 
-
-
 -- misc
 key.nnmap('<F12>', '<CMD>syntax sync fromstart<CR>')
 key.nnmap('--', '<CMD>w<CR>')
 key.nnmap('-d', '<CMD>bd<CR>')
-key.nnmap('-w',           function() wipe_buf() end)
-key.nnmap('<leader>tab',  function() tab_bufs() end)
+key.nnmap('-w', function() wipe_buf() end)
+key.nnmap('<leader>tab', function() tab_bufs() end)
 
 key.nnmap('<leader>~', 'viw~')
 key.nnmap('<leader>w', '<CMD>w !doas tee %<CR>')
@@ -86,7 +84,6 @@ key.nnmap('<leader>%', '<CMD>so %<CR>')
 key.tnmap('<C-d>', '<C-\\><C-n>')
 key.nnmap('<leader><CR>', function() terminal() end)
 
--- credits primeagen
 key.nnmap('n', 'nzz')
 key.nnmap('N', 'Nzz')
 key.nnmap('<C-u>', '<C-u>zz')
@@ -96,7 +93,7 @@ key.vnmap('<leader>y', '"+y')
 key.nnmap('<leader>d', '"_d')
 key.vnmap('<leader>d', '"_d')
 
-  -- tabs
+-- tabs
 key.nnmap('<leader>g0', '<CMD>tabfirst<CR>')
 key.nnmap('<leader>g$', '<CMD>tablast<CR>')
 key.nnmap('<leader>gh', '<CMD>silent! tabmove-<CR>')
@@ -104,13 +101,13 @@ key.nnmap('<leader>gj', '<CMD>tabmove0<CR>')
 key.nnmap('<leader>gl', '<CMD>silent! tabmove+<CR>')
 key.nnmap('<leader>gk', '<CMD>tabmove$<CR>')
 
--- ex-mode navigation
+-- ex navigation
 key.cnmap('<C-h>', '<Left>')
 key.cnmap('<C-k>', '<Up>')
 key.cnmap('<C-j>', '<Down>')
 key.cnmap('<C-l>', '<Right>')
 
-  -- windows
+-- window navigation
 key.nnmap('<A-h>', '<C-w>h')
 key.nnmap('<A-j>', '<C-w>j')
 key.nnmap('<A-k>', '<C-w>k')
