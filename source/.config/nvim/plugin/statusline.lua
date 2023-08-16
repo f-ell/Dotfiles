@@ -152,14 +152,24 @@ end
 local buffer = function()
   local name = vim.fn.bufname()
   name = name == '' and '[null]' or string.gsub(name, '.*/', '')
-  local ro = vim.bo.readonly
+
+  if name:len() > 24 then
+    local ext = vim.fn.expand('%:e')
+    local offset = 4 + ext:len() + 1
+
+    local prefix = name:sub(0, 24 - (offset + 3))
+    local suffix = name:sub(-offset, -ext:len() - 2)
+    name = prefix..'...'..suffix..'.'..ext
+  end
+
+  local hl = '%#SlBuf'
+  if vim.bo.readonly then hl = hl..'Ro' end
 
   return string.format(
-    '%%#SlBg# %s (%s) %s %s%s',
-    name, '%n',
-    '%#SlBuf'..(ro and 'Ro' or '')..'#',
-    vim.bo.modified and '✱' or '',
-    '%#SlBuf'..(ro and 'Ro' or '')..'Inv'..(git_info.vcs and '' or 'x')..'#'
+    '%%#SlBg#%s%s (%s) %s %s%s',
+    vim.bo.modified and '*' or ' ', name, '%n',
+    hl..'#', '',
+    hl..'Inv'..(git_info.vcs and '' or 'x')..'#'
   )
 end
 
