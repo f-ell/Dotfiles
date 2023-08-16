@@ -1,7 +1,7 @@
 # [MODIFIER + ]*[@|!]KEYSYM
 #   COMMAND
 
-control + Escape
+super + Escape
   slock
 
 super + Return
