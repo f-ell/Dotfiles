@@ -13,7 +13,7 @@ return {
 
     vim.g('vimtex_compiler_method', 'tectonic')
     vim.g('vimtex_compiler_tectonic', {
-      options = { '--keep-intermediates', '--synctex' }
+      options = { '--keep-intermediates', '--keep-logs', '--synctex' }
     })
 
     vim.g('vimtex_toc_show_preable', 0)
