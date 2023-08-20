@@ -155,11 +155,11 @@ local buffer = function()
 
   if name:len() > 24 then
     local ext = vim.fn.expand('%:e')
-    local offset = 4 + ext:len() + 1
+    local offset = 4 + (ext:len() > 0 and ext:len() + 1 or 0)
 
     local prefix = name:sub(0, 24 - (offset + 3))
-    local suffix = name:sub(-offset, -ext:len() - 2)
-    name = prefix..'...'..suffix..'.'..ext
+    local suffix = name:sub(-offset)
+    name = prefix..'...'..suffix
   end
 
   local hl = '%#SlBuf'
