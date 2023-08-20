@@ -153,13 +153,16 @@ local buffer = function()
   local name = vim.fn.bufname()
   name = name == '' and '[null]' or string.gsub(name, '.*/', '')
 
-  if name:len() > 24 then
-    local ext = vim.fn.expand('%:e')
-    local offset = 4 + (ext:len() > 0 and ext:len() + 1 or 0)
+  local maxlen = 24
+  if name:len() > maxlen then
+    local fillchars = '...'
 
-    local prefix = name:sub(0, 24 - (offset + 3))
-    local suffix = name:sub(-offset)
-    name = prefix..'...'..suffix
+    local i = name:find('%.')
+    local ext = i and name:sub(i) or ''
+    local offset = ext:len() > 0 and 2 + ext:len() or 4
+    name = name:sub(0, maxlen - (offset + fillchars:len()))
+      ..fillchars
+      ..name:sub(-offset)
   end
 
   local hl = '%#SlBuf'
