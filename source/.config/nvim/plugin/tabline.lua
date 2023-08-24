@@ -1,29 +1,26 @@
 local L = require('utils.lib')
 
 local tabline = function()
-  local t = ''
+  local tabs = {}
 
   for i = 1, vim.fn.tabpagenr('$') do
-    local winnr = vim.fn.tabpagewinnr(i)
-    local bufnr = vim.fn.tabpagebuflist(i)[winnr]
+    local bufnr = vim.fn.tabpagebuflist(i)[vim.fn.tabpagewinnr(i)]
+    local name = vim.fn.bufname(bufnr) == ''
+      and '[null]'
+      or vim.fn.bufname(bufnr):gsub('.*/', '')
 
-    local bufname = vim.fn.bufname(bufnr)
-    if bufname == '' then bufname = '[null]'
-    else                  bufname = string.gsub(bufname, '.*/', '') end
+    local tab = {
+      string.format('%%%sT', i),
+      '%#Tl'..(i == vim.fn.tabpagenr() and 'Active' or 'Inactive')..'#',
+      '▎',
+      vim.api.nvim_buf_get_option(bufnr, 'modified') and ' * ' or ' ',
+      name..'  '
+    }
 
-    -- set highlight groups
-    local hl_type = i == vim.fn.tabpagenr() and 'Active' or 'Inactive'
-    local mod = vim.api.nvim_buf_get_option(bufnr, 'modified') and 'Mod' or ''
-
-    local hl_mod = string.format('%%#Tl%s%s#', mod, hl_type)
-    local hl_item = string.format('%%#Tl%s#', hl_type)
-
-    -- build tabline
-    local items = { hl_mod, '▎ ', hl_item, bufname, '  ' }
-    t = string.format('%s%%%sT%s', t, i, table.concat(items))
+    table.insert(tabs, table.concat(tab))
   end
 
-  return string.format('%s%%#TlInactive# ', t)
+  return table.concat(tabs)..'%#TlInactive#'
 end
 
 _G.tabline = tabline
