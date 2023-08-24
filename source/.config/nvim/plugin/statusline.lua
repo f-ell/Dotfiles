@@ -169,8 +169,8 @@ local buffer = function()
   if vim.bo.readonly then hl = hl..'Ro' end
 
   return string.format(
-    '%%#SlBg#%s%s (%s) %s %s%s',
-    vim.bo.modified and '*' or ' ', name, '%n',
+    '%%#SlBg# %s%s%%#SlBg# (%s) %s %s%s',
+    vim.bo.modified and '* ' or '', name, '%n',
     hl..'#', '',
     hl..'Inv'..(git_info.vcs and '' or 'x')..'#'
   )
