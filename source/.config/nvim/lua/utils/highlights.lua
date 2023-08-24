@@ -93,10 +93,8 @@ local set_hl_groups = function()
     { 0, 'SlLocInv',    { fg = aqu1, bg = fg4 }},
 
     -- Tabline
-    { 0, 'TlModActive',   { fg = gre1, bg = fg5 }},
-    { 0, 'TlModInactive', { fg = gre2, bg = fg6 }},
-    { 0, 'TlActive',      { fg = fg2, bg = fg5, bold = true }},
-    { 0, 'TlInactive',    { fg = fg3, bg = fg6 }},
+    { 0, 'TlActive',    { fg = fg2, bg = fg5, bold = true }},
+    { 0, 'TlInactive',  { fg = fg3, bg = fg6 }},
 
     -- Misc
     { 0, 'SpellBad',  { sp = red1, undercurl = true }},
