@@ -5,8 +5,13 @@ return {
     { '<leader>b',  '<CMD>Telescope buffers<CR>' },
     { '<leader>ff', '<CMD>Telescope find_files<CR>' },
     { '<leader>fg', '<CMD>silent! Telescope git_files<CR>' },
-    { '<leader>fp', function() require('telescope.builtin').find_files({ cwd = '..' }) end },
     { '<leader>rg', '<CMD>Telescope live_grep<CR>' },
+    {
+      '<leader>ro',
+      function()
+        require('telescope.builtin').live_grep({ grep_open_files = true })
+      end
+    },
     { '<leader>zf', '<CMD>Telescope current_buffer_fuzzy_find<CR>' }
   },
   dependencies = {
