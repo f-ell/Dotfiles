@@ -1,7 +1,7 @@
 local L = require('utils.lib')
 
 local git_info = {
-  diff = '',
+  diff = nil,
   dir = {
     git = '',
     repo = ''
@@ -11,13 +11,11 @@ local git_info = {
   vcs = false
 }
 
-
--- auxiliary
--- WARN: this may match an incorrect location with nested links
+---- auxiliary ----
+-- WARN: may match an incorrect path with nested links
 local readlink = function()
   local buf = vim.fn.expand('%:p:h')..'/'..vim.fn.expand('%:t')
 
-  -- file itself is a link
   local src = vim.loop.fs_readlink(buf)
   if src then return src end
 
@@ -29,12 +27,15 @@ local readlink = function()
     if src then return src..buf:gsub(dir, '') end
   end
 
-  -- no link in directory structure
   return buf
 end
 
 local readlink_dir = function()
   return vim.fs.dirname(readlink())
+end
+
+local round = function(number, quotient)
+  return vim.fn.round((number * 10)/ quotient) / 10
 end
 
 local is_tracked = function()
@@ -81,7 +82,7 @@ end
 local git_diff = function()
   local file = readlink()
   if not git_info.is_tracked or file:match('/$') then
-    return '%#GitZero# untracked'
+    return nil
   end
 
   -- TODO: diff tmpfile to update without writing (e.g. InsertLeave)
@@ -110,10 +111,7 @@ local git_diff = function()
     ::continue::
   end
 
-  local hl_a = add == 0 and '%#GitZero#' or '%#GitAdd#'
-  local hl_c = cha == 0 and '%#GitZero#' or '%#GitCha#'
-  local hl_d = del == 0 and '%#GitZero#' or '%#GitDel#'
-  return hl_a..' +'..add..hl_c..' ~'..cha..hl_d..' -'..del
+  return { add = add, cha = cha, del = del }
 end
 
 local git_head = function()
@@ -131,22 +129,18 @@ local git_head = function()
     head = tag ~= '' and 't:'..tag or content:sub(1, 8)
   end
 
-  return string.format(' %s%s%s', '%#Git#', head, '%#SlNormal#')
+  return head
 end
 
-
--- components
+---- components ----
 local mode = function()
   local m = vim.api.nvim_get_mode().mode
   if m == '' then m = 'v' end
   m = m:sub(0, 1):upper()
 
-  local colours = {
-    '%#mode'..m..'#',
-    '%#mode'..m..'x#'
-  }
-
-  return string.format('%s %s%s', colours[1], m, colours[2])
+  return table.concat({
+    '%#mode'..m..'#', m, '%#Statusline#'
+  })
 end
 
 local buffer = function()
@@ -165,46 +159,86 @@ local buffer = function()
       ..name:sub(-offset)
   end
 
-  local hl = '%#SlBuf'
-  if vim.bo.readonly then hl = hl..'Ro' end
-
-  return string.format(
-    '%%#SlBg# %s%s%%#SlBg# (%s) %s %s%s',
-    vim.bo.modified and '* ' or '', name, '%n',
-    hl..'#', '',
-    hl..'Inv'..(git_info.vcs and '' or 'x')..'#'
-  )
+  return table.concat({
+    '%#Statusline#',
+    vim.bo.modified and '* ' or '',
+    name,
+    ' ',
+    vim.bo.readonly and '%#StatuslineReadonly#' or '',
+    '(%n)',
+    '%#Statusline#'
+  })
 end
 
 local git = function()
-  return git_info.vcs
-    and '%#SlBg#'..git_info.head..git_info.diff..' %#SlGit# %#SlGitInv#'
-    or ''
+  if not git_info.vcs then return '' end
+
+  local diff = ''
+  if not git_info.is_tracked or git_info.diff == nil then
+    diff = '%#GitZero#untracked'
+  else
+    local hl_a = '%#Git'..(git_info.diff.add == 0 and 'Zero' or 'Add')..'#'
+    local hl_c = '%#Git'..(git_info.diff.cha == 0 and 'Zero' or 'Cha')..'#'
+    local hl_d = '%#Git'..(git_info.diff.del == 0 and 'Zero' or 'Del')..'#'
+    diff = table.concat({
+      hl_a..'+'..git_info.diff.add,
+      hl_c..'~'..git_info.diff.cha,
+      hl_d..'-'..git_info.diff.del
+    }, ' ')
+  end
+
+  return table.concat({
+    '%#Git# '..git_info.head,
+    ' ',
+    diff,
+    '%#Statusline#'
+  })
 end
 
 local bytecount = function()
+  local unit = 'B'
   local count = vim.fn.line2byte(vim.fn.line('$'))
-    + vim.fn.len(vim.fn.getline('$'))
+    + vim.fn.getline('$'):len()
   if count == -1 then count = 0 end
-  return '%#SlByteInv#%#SlByte#﬘ %#SlBg# '..count..'B '
+
+  if count >= 1048576 then
+    unit = 'MiB'
+    count  = round(count, 1048576)
+  elseif count >= 10240 then
+    unit = 'KiB'
+    count = round(count, 1024)
+  end
+
+  return table.concat({
+    '%#StatuslineBytecount#﬘%#Statusline#',
+    ' ',
+    count..unit
+  })
 end
 
 local searchcount = function()
-  local search = vim.fn.searchcount()
+  local search = vim.fn.searchcount({ maxcount = 98 })
   local cur = search.current;
 
   if search.exact_match == 0 then cur = 0 end
-  if search.incomplete == 1 then return cur..'/?' end
+  if search.incomplete == 1 then search.total = '?' end
 
-  return '%#SlSearchInv#%#SlSearch# %#SlBg# '..cur..'/'..search.total..' '
+  return table.concat({
+    '%#StatuslineSearch#%#Statusline#',
+    ' ',
+    cur..'/'..search.total
+  })
 end
 
-local position = function()
-  return '%#SlLocInv#%#SlLoc# %#SlBg# %l:%v '
+local location = function()
+  return table.concat({
+    '%#StatuslineLocation#%#Statusline#',
+    ' ',
+    '%l:%v'
+  })
 end
 
-
--- register autocommands
+---- definition ----
 vim.api.nvim_create_autocmd({
   'BufEnter', 'BufFilePost', 'FileChangedShellPost', 'FocusGained', 'WinClosed'
   }, { callback = function()
@@ -218,13 +252,14 @@ vim.api.nvim_create_autocmd({
   end
 })
 
+-- avoid unnecessary git calls
 vim.api.nvim_create_autocmd('BufWritePre', {
   nested = true,
   callback = function()
     if not git_info.vcs then return end
     git_info.head = git_head()
-    if not vim.bo.modified then return end
 
+    if not vim.bo.modified then return end
     vim.api.nvim_create_autocmd('BufWritePost', {
       once = true,
       callback = function() git_info.diff = git_diff() end
@@ -232,20 +267,17 @@ vim.api.nvim_create_autocmd('BufWritePre', {
   end
 })
 
-
--- statusline definition
 local statusline = function()
-  return table.concat({
+  return ' '..table.concat({
     mode(),
-    buffer(), '%#SlNormal#',
+    buffer(),
     git(),
-    '%#SlNormal#%=%<',
+    '%=',
     bytecount(),
     searchcount(),
-    position()
-  })
+    location()
+  }, ' ')..'%< '
 end
-
 
 _G.statusline = statusline
 L.vim.o('laststatus', 3)
