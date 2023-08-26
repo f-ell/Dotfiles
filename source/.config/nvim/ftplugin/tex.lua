@@ -22,3 +22,5 @@ vim.api.nvim_create_autocmd('BufWritePre', {
     })
   end
 })
+
+vim.api.nvim_create_user_command('AlignTable', 'norm vie<leader>as&<CR>', {})
