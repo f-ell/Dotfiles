@@ -65,6 +65,7 @@ local set_hl_groups = function()
     -- Statusline
     { 0, 'Statusline',          { fg = fg2,  bg = _ }},
     { 0, 'StatuslineReadonly',  { fg = red1, bg = _, bold = true }},
+    { 0, 'StatuslineLspinfo',   { fg = fg3,  bg = _ }},
     { 0, 'StatuslineBytecount', { fg = yel1, bg = _ }},
     { 0, 'StatuslineSearch',    { fg = blu1, bg = _ }},
     { 0, 'StatuslineLocation',  { fg = aqu1, bg = _ }},

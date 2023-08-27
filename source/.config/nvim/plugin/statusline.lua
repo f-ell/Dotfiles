@@ -11,6 +11,8 @@ local git_info = {
   vcs = false
 }
 
+local lsp_severities = { 'Error', 'Warn', 'Info', 'Hint' }
+
 ---- auxiliary ----
 -- WARN: may match an incorrect path with nested links
 local readlink = function()
@@ -195,10 +197,50 @@ local git = function()
   })
 end
 
+local lsp = function()
+  local lsp_signs = vim.fn.filter(vim.fn.sign_getdefined(), function(_, s)
+    return vim.startswith(s.name, 'DiagnosticSign')
+  end)
+
+  local clients = vim.lsp.get_active_clients({ bufnr = 0 })
+  if #clients == 0 then return '' end
+
+  for i=1, #clients do
+    clients[i] = clients[i].name
+  end
+
+  local diagnostics = vim.diagnostic.get(0)
+  local counts = { 0, 0, 0, 0 }
+  for i=1, #diagnostics do
+    counts[diagnostics[i].severity] = counts[diagnostics[i].severity] + 1
+  end
+
+  local parts = {}
+  if #diagnostics == 0 then goto skip_diagnostic end
+
+  for i=1, #counts do
+    if counts[i] == 0 then goto continue end
+
+    local sign = vim.fn.filter(lsp_signs, function(_, s)
+      return s.name == 'DiagnosticSign'..lsp_severities[i]
+    end)[1]
+
+    parts[#parts+1] = '%#'..sign.texthl..'#'..sign.text..counts[i]
+    ::continue::
+  end
+
+  ::skip_diagnostic::
+  return table.concat({
+    '%#StatuslineLspinfo#',
+    table.concat(clients, ', '),
+    #diagnostics > 0 and ' '..table.concat(parts, ' ') or '',
+    '%#Statusline#'
+  })
+end
+
 local bytecount = function()
   local unit = 'B'
-  local count = vim.fn.line2byte(vim.fn.line('$'))
-    + vim.fn.getline('$'):len()
+  local count = vim.fn.line2byte(vim.fn.line('$')) + vim.fn.getline('$'):len()
   if count == -1 then count = 0 end
 
   if count >= 1048576 then
@@ -273,6 +315,7 @@ local statusline = function()
     buffer(),
     git(),
     '%=',
+    lsp(),
     bytecount(),
     searchcount(),
     location()
