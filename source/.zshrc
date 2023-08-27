@@ -14,7 +14,7 @@ set -o autocd -o extendedglob -o histexpiredupsfirst -o histignoredups\
   -o rematchpcre\
   +o automenu +o autoremoveslash
 
-SAVEHIST=5000; HISTSIZE=$(($SAVEHIST + 100)); HISTFILE="$HOME/.zsh_history"
+SAVEHIST=10000; HISTSIZE=$(($SAVEHIST + 100)); HISTFILE="$HOME/.zsh_history"
 
 [[ -f $HOME/.prompt ]] && PSM=`< $HOME/.prompt`
 export PSM=${PSM:-0}
