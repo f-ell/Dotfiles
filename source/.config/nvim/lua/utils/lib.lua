@@ -461,7 +461,7 @@ M.key.tnmap = M.key._map('t')
 ---@param rhs string|function
 ---@params opts table?
 M.key.modemap = function(modes, lhs, rhs, opts)
-  opts = vim.tbl_extend('force', { noremap = true }, opts)
+  opts = vim.tbl_extend('force', { noremap = true }, opts or {})
   vim.keymap.set(modes, lhs, rhs, opts)
 end
 
