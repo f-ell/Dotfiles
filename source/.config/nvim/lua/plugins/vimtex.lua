@@ -1,13 +1,7 @@
 return {
   'lervag/vimtex',
   lazy = true,
-  ft = { 'latex', 'plaintex', 'tex' },
-  keys = {
-    { '<leader>vc', '<CMD>VimtexCompileSS<CR>' },
-    { '<leader>vs', '<CMD>VimtexStatus!<CR>' },
-    { '<leader>vt', '<CMD>VimtexTocToggle<CR>' },
-    { '<leader>vv', '<CMD>VimtexView<CR>' }
-  },
+  ft = { 'plaintex', 'tex' },
   config = function()
     local vim = require('utils.lib').vim
 
