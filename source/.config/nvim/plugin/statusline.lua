@@ -165,7 +165,7 @@ local buffer = function()
 
   return table.concat({
     '%#Statusline#',
-    vim.bo.modified and '* ' or '',
+    vim.bo.modified and '+ ' or '- ',
     name,
     ' ',
     vim.bo.readonly and '%#StatuslineReadonly#' or '',

@@ -13,7 +13,7 @@ local tabline = function()
       string.format('%%%sT', i),
       '%#Tl'..(i == vim.fn.tabpagenr() and 'Active' or 'Inactive')..'#',
       '▎',
-      vim.api.nvim_buf_get_option(bufnr, 'modified') and ' * ' or ' ',
+      vim.api.nvim_buf_get_option(bufnr, 'modified') and ' + ' or '  ',
       name..'  '
     }
 
