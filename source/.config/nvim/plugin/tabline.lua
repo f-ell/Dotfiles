@@ -5,9 +5,10 @@ local tabline = function()
 
   for i = 1, vim.fn.tabpagenr('$') do
     local bufnr = vim.fn.tabpagebuflist(i)[vim.fn.tabpagewinnr(i)]
-    local name = vim.fn.bufname(bufnr) == ''
+    local name = vim.fn.bufname(bufnr)
+    name = name == ''
       and '[null]'
-      or vim.fn.bufname(bufnr):gsub('.*/', '')
+      or (name:match('([^/]-/?)$') or '_ERR')
 
     local tab = {
       string.format('%%%sT', i),

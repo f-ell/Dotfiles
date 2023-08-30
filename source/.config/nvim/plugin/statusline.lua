@@ -149,7 +149,7 @@ local buffer = function()
   local name = vim.fn.bufname()
   name = name == ''
     and '[null]'
-    or (name:match('([^/]-/?)$') or '-err-')
+    or (name:match('([^/]-/?)$') or '_ERR')
 
   local maxlen = 24
   if name:len() > maxlen then
