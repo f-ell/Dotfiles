@@ -5,6 +5,7 @@ return {
   config = function()
     local vim = require('utils.lib').vim
 
+    vim.g('vimtex_syntax_enabled', 0)
     vim.g('vimtex_compiler_method', 'tectonic')
     vim.g('vimtex_compiler_tectonic', {
       options = { '--keep-intermediates', '--keep-logs', '--synctex' }
