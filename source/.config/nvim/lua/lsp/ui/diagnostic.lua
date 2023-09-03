@@ -2,11 +2,21 @@
 local L = require('utils.lib')
 local M = {}
 
+local sev_sign = vim.fn.filter(vim.fn.sign_getdefined(), function(_, s)
+  return vim.startswith(s.name, 'DiagnosticSign')
+end)
+
+local sev_str = { 'Error', 'Warn', 'Info', 'Hint' }
+
+local hl_ntl = 'NeutralFloat'
+local hl_ntl_sp = 'NeutralFloatSp'
+local hl_hdr = { 'ErrorFloatSp', 'WarningFloatSp', 'InfoFloatSp', 'HintFloatSp' }
+local hl_msg = { 'ErrorFloat', 'WarningFloat', 'InfoFloat', 'HintFloat' }
+
 
 local preprocess = function(raw)
   local diag = raw.diag
   local tbl = { hdr = '', type = raw.type, data = {} }
-  local severity = { 'Error', 'Warn', 'Info', 'Hint' }
 
   for i = 1, #diag do
     local msg = diag[i].message
@@ -26,7 +36,7 @@ local preprocess = function(raw)
       msg = msg,
       src = diag[i].source,
       sev = diag[i].severity,
-      sev_str = severity[diag[i].severity],
+      sev_str = sev_str[diag[i].severity],
 
       ln = diag[i].lnum+1,
       col = diag[i].col+1,
@@ -66,27 +76,19 @@ end
 
 
 local generate_header = function(diag)
-  local icon = { '', '', '', '' }
   local data = diag.data[#diag.data]
 
-  local hdr, loc
   if diag.type == 'dir' then
-    hdr = icon[data.sev]..' '..data.sev_str
-    loc = ' at <'..data.ln..':'..data.col..'>'
+    diag.hdr = sev_sign[data.sev].text..data.sev_str
+    diag.loc = 'at <'..data.ln..':'..data.col..'>'
   else
-    hdr = ' Diagnostics in line'
-    loc = ' <'..data.ln..'>'
+    diag.hdr = sev_sign[3].text..'Diagnostics'
+    diag.loc = 'in <'..data.ln..'>'
   end
-  diag.hdr = hdr
-  diag.loc = loc
 end
 
 
 local set_highlights = function(bufnr, proc)
-  local hl_ntl = 'NeutralFloat'
-  local hl_ntl_sp = 'NeutralFloatSp'
-  local hl_hdr = { 'ErrorFloatSp', 'WarningFloatSp', 'InfoFloatSp', 'HintFloatSp' }
-  local hl_msg = { 'ErrorFloat', 'WarningFloat', 'InfoFloat', 'HintFloat' }
   local hl, len
   local data = proc.data
 
@@ -131,11 +133,13 @@ local open = function(raw)
   local content = format(proc)
 
   -- move cursor to diagnostic
-  if proc.type == 'dir' then vim.fn.cursor(proc.data[#proc.data].ln, proc.data[#proc.data].col) end
+  if proc.type == 'dir' then
+    vim.fn.cursor(proc.data[#proc.data].ln, proc.data[#proc.data].col)
+  end
 
   -- insert header and separator
   generate_header(proc)
-  table.insert(content, 1, proc.hdr..proc.loc)
+  table.insert(content, 1, proc.hdr..' '..proc.loc)
   table.insert(content, 2, L.win.separator(content))
 
   -- do floaty stuff
