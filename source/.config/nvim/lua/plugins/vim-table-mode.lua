@@ -4,6 +4,7 @@ return {
   cmd = 'TableModeEnable',
   config = function()
     local vim = require('utils.lib').vim
+    vim.g('table_mode_corner', '|')
     vim.g('table_mode_relign_map',                '<leader>tr')
     vim.g('table_mode_tableize_map',              '<leader>tt')
     vim.g('table_mode_delete_row_map',            '<leader>tdr')
