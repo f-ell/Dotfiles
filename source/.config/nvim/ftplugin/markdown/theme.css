@@ -1,5 +1,15 @@
-/* @theme slides */
+/*
+ * @theme slides
+ * @auto-scaling true
+ */
 @import 'default';
+
+* {
+  font-family: "Ellograph CF";
+  font-weight: 300;
+  letter-spacing: 1px;
+  line-height: 1.2;
+}
 
 section {
   width: 960px;
