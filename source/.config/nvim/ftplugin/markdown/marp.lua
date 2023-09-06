@@ -25,13 +25,22 @@ local get_data_and_theme = function(tbl)
   return data, theme
 end
 
-vim.api.nvim_buf_create_user_command(0, 'MarpOnce', function(tbl)
+local marp_once = function(tbl)
   if cmd_id then return vim.notify('marp: marp already running.', 2) end
   local data, theme = get_data_and_theme(tbl)
   spawn(std..'/marp_spawn.sh', { 0, suffix, data, theme, vim.fn.bufname() })
-end, { nargs = '?', complete = 'file', desc = 'Markdown to PDF once.' })
+end
 
-vim.api.nvim_buf_create_user_command(0, 'MarpStart', function(tbl)
+local marp_stop = function()
+  if not cmd_id then return vim.notify('marp: no process running.', 2) end
+  spawn(std..'/marp_kill.sh', { suffix })
+
+  vim.api.nvim_del_autocmd(cmd_id)
+  vim.api.nvim_buf_del_user_command(0, 'MarpStop')
+  cmd_id = nil
+end
+
+local marp_start = function(tbl)
   if cmd_id then return vim.notify('marp: marp already running.', 2) end
   local data, theme = get_data_and_theme(tbl)
   spawn(std..'/marp_spawn.sh', { 1, suffix, data, theme, vim.fn.bufname() })
@@ -42,11 +51,12 @@ vim.api.nvim_buf_create_user_command(0, 'MarpStart', function(tbl)
     callback = function() spawn(std..'/marp_kill.sh', { suffix }) end
   })
 
-  vim.api.nvim_buf_create_user_command(0, 'MarpStop', function()
-    if not cmd_id then return vim.notify('marp: no process running.', 2) end
-    spawn(std..'/marp_kill.sh', { suffix })
+  vim.api.nvim_buf_create_user_command(0, 'MarpStop', marp_stop,
+    { desc = 'Delete MarpStart autocommand.' })
+end
 
-    vim.api.nvim_del_autocmd(cmd_id)
-    cmd_id = nil
-  end, { desc = 'Delete MarpStart autocommand.' })
-end, { nargs = '?', complete = 'file', desc = 'Markdown to PDF continuous.' })
+vim.api.nvim_buf_create_user_command(0, 'MarpOnce', marp_once,
+  { nargs = '?', complete = 'file', desc = 'Markdown to PDF once.' })
+
+vim.api.nvim_buf_create_user_command(0, 'MarpStart', marp_start,
+  { nargs = '?', complete = 'file', desc = 'Markdown to PDF continuous.' })

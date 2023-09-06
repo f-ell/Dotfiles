@@ -15,3 +15,8 @@ section {
   width: 960px;
   height: 720px;
 }
+
+samp {
+  font-family: "Ellograph CF";
+  font-weight: 600;
+}
