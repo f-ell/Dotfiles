@@ -44,9 +44,7 @@ wnvm() {
 }
 
 
-alias -- -='cd -'
 alias code='code --extensions-dir '$XDG_DATA_HOME'/vscode'
-alias dots='cd $HOME/Git/Dotfiles/'
 alias e='exa'
 alias e1='exa -1'
 alias ed='exa -ld'
@@ -55,9 +53,7 @@ alias ex='exec $SHELL'
 alias feh='feh --no-fehbg'
 alias gl='glow -p'
 alias hist='tail -10 <(history)'
-alias scripts='cd $HOME/Git/Scripts/'
 alias v=$EDITOR
-alias va=$EDITOR' $HOME/.aliases && . $HOME/.aliases'
 alias yeet='doas pacman -Qtdq | doas pacman -Rns -'
 alias xo='xdg-open'
 alias zt='zathura --fork'
