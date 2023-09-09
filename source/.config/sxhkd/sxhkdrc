@@ -16,12 +16,11 @@ super + {_, shift +} m
   {-s -f -l style=dash\,width=2\,opacity=100, -a 0\,0\,1920\,1080}
 
 super + o; {b,c,d,g,s}
-  ~/Git/Scripts/source/shell/lof {qutebrowser,code,discord,gimp,steamwrap}
+  lof {qutebrowser,code,discord,gimp,steamwrap}
 
 # notifications
 alt + i
-  dunstify -u low -h string:x-dunst-stack-tag:inet \
-  "`~/Git/Scripts/source/perl/status_fetch`"
+  dunstify -u low -h string:x-dunst-stack-tag:inet "`status_fetch`"
 
 alt + d
   dunstctl close
@@ -31,7 +30,5 @@ alt + t
   "`date +%a.\ %d.%m.%Y\ %I:%M\ %p`"
 
 alt + u
-  dunstify -u low -h string:x-dunst-stack-tag:load \
-  "Calculating..." && \
-  dunstify -u low -h string:x-dunst-stack-tag:load \
-  "`~/Git/Scripts/source/perl/system_monitors/sysload`"
+  dunstify -u low -h string:x-dunst-stack-tag:load "Calculating..." \
+  && dunstify -u low -h string:x-dunst-stack-tag:load "`sysload`"

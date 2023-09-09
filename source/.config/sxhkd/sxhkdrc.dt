@@ -2,9 +2,7 @@
 #   COMMAND
 
 alt + b
-  dunstify -u low -h string:x-dunst-stack-tag:bat \
-  "`~/Git/Scripts/source/python/mouse_battery.py`"
+  dunstify -u low -h string:x-dunst-stack-tag:bat "`mouse_battery.py`"
 
 alt + c
-  dunstify -u low -h string:x-dunst-stack-tag:temp \
-  "`~/Git/Scripts/source/shell/system_monitors/temp.dt`"
+  dunstify -u low -h string:x-dunst-stack-tag:temp "`temp.dt`"
