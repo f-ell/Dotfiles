@@ -8,8 +8,8 @@ super + Return
   /usr/bin/kitty -d $HOME
   # /usr/bin/alacritty --working-directory $HOME
 
-super + {_,shift +} + r
-  `rofi -monitor -4 {-dmenu -input ~/.config/rofi/items -i,-show window}`
+super + r
+  rofi -monitor -4 -show dmenu -modes 'dmenu:rofi-custom,drun,window'
 
 super + {_, shift +} m
   scrot -i -q 100 -F ~/Media/Pictures/Screenshots/scrot_$(date +%Y%m%d-%H%M%S).png \
