@@ -1,6 +1,12 @@
 err() { printf '%s: %s\n' "$1" "$2" 1>&2; }
 
-j() { eval `jump $@`; }
+j() {
+  local j exit
+  j=`jump $@`
+  exit=$?
+  (( $exit == 0 )) && eval $j
+  return $exit
+}
 
 owns() {
   local fn=owns program=`command -v $1`
