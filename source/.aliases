@@ -44,7 +44,7 @@ wnvm() {
 }
 
 
-alias - -='cd -'
+alias -- -='cd -'
 alias code='code --extensions-dir '$XDG_DATA_HOME'/vscode'
 alias e='eza'
 alias e1='eza -1'
