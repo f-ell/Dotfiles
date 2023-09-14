@@ -10,7 +10,8 @@
 configuration {
   modi: "drun,window";
   show-icons: false;
-  display-window: "win ";
+  display-window: "  win";
+  display-drun: " drun";
   drun-display-format: "{name}";
   window-format: "{w}. {c}";
 
