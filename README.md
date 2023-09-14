@@ -41,8 +41,8 @@ Screenshots:   scrot  (https://github.com/resurrecting-open-source-projects/scro
     * last command's exit code when not zero
     * prompt-character denoting `viins` and `vicmd` modes
   * colours
-    * custom `ls` and [`exa`](https://the.exa.website/) colours
-      * note: colours require [`clsc`](https://gitlab.com/fell_/clsc)
+    * custom `ls` and [`eza`](https://github.com/eza-community/) colours
+      * note: colours require [`clsc`](https://gitlab.com/fell_/clsc/)
     * custom [`zsh-syntax-highlighting`](https://github.com/zsh-users/zsh-syntax-highlighting/)
     colours
 
