@@ -3,9 +3,11 @@ err() { printf '%s: %s\n' "$1" "$2" 1>&2; }
 j() {
   local j exit
   j=`jump $@`
+
   exit=$?
-  (( $exit == 0 )) && eval $j
-  return $exit
+  (( $exit != 0 )) && return $exit
+
+  [[ $j =~ ^cd ]] && eval $j || printf '%s\n' "$j"
 }
 
 owns() {
