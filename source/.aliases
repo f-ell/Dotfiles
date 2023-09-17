@@ -53,15 +53,13 @@ wnvm() {
 
 
 alias -- -='cd -'
-alias code='code --extensions-dir '$XDG_DATA_HOME'/vscode'
+alias code='code --extensions-dir "$XDG_DATA_HOME/vscode"'
 alias e='eza'
 alias e1='eza -1'
 alias ed='eza -ld'
 alias el='eza -la'
 alias ex='exec $SHELL'
-alias feh='feh --no-fehbg'
 alias gl='glow -p'
-alias hist='tail -10 <(history)'
 alias v=$EDITOR
 alias yeet='doas pacman -Qtdq | doas pacman -Rns -'
 alias xo='xdg-open'
