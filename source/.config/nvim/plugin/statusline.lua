@@ -2,7 +2,7 @@ local L = require('utils.lib')
 
 local git_info = {
   diff = nil,
-  dir = {
+  root = {
     git = '',
     repo = ''
   },
@@ -41,7 +41,7 @@ local round = function(number, quotient)
 end
 
 local is_tracked = function()
-  local dir = git_info.dir.git:gsub('%.git$', '')
+  local dir = git_info.root.git:gsub('%.git$', '')
   local fh = L.io.popen({
     'git', '-C', dir,
     'ls-files', '--error-unmatch', readlink():gsub('^'..dir, '') }, true, '')
@@ -56,7 +56,7 @@ local is_vcs = function()
 end
 
 local git_dir = function()
-  local git_dir, root_dir = '', ''
+  local git, repo = '', ''
   local cwd = readlink_dir()
 
   while cwd do
@@ -64,12 +64,12 @@ local git_dir = function()
     local stat = vim.loop.fs_stat(path)
 
     if stat then
-      git_dir = path
-      root_dir = path
+      git = path
+      repo = path
 
       if stat.type == 'file' then
         local fh = io.open(path, 'r')
-        if fh ~= nil then root_dir = L.io.read(fh):match('^gitdir: (.*)$') end
+        if fh ~= nil then repo = L.io.read(fh):match('^gitdir: (.*)$') end
       end
 
       break
@@ -78,7 +78,10 @@ local git_dir = function()
     cwd = cwd:match('^(.+)/.-$')
   end
 
-  return git_dir, root_dir
+  return {
+    git = git,
+    repo = repo
+  }
 end
 
 local git_diff = function()
@@ -87,10 +90,12 @@ local git_diff = function()
     return nil
   end
 
-  -- TODO: diff tmpfile to update without writing (e.g. InsertLeave)
+  -- TODO:
+  -- on BufWrite -> generate tmpfile from current buffer state
+  -- on InsertLeave (or similar) -> diff tmpfile
   local fh = L.io.popen({
     'git', '-C', readlink_dir(),
-    'diff', '-U0', '--no-color', file }, true, '')
+    'diff', '-U0', '--no-color', file:match('/([^/]+)$') }, true, '')
 
   local add, cha, del = 0, 0, 0
   for ln in L.io.read(fh):gmatch('(.-)\r?\n') do
@@ -117,7 +122,7 @@ local git_diff = function()
 end
 
 local git_head = function()
-  local fh = io.open(git_info.dir.repo..'/HEAD', 'r')
+  local fh = io.open(git_info.root.repo..'/HEAD', 'r')
   if fh == nil then return '' end
 
   local content = L.io.read(fh)
@@ -289,7 +294,7 @@ vim.api.nvim_create_autocmd({
     git_info.vcs = is_vcs()
     if not git_info.vcs then return end
 
-    git_info.dir.git, git_info.dir.repo = git_dir()
+    git_info.root = git_dir()
     git_info.is_tracked = is_tracked()
     git_info.head = git_head()
     git_info.diff = git_diff()
