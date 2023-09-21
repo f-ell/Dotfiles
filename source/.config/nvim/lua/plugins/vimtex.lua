@@ -18,7 +18,9 @@ return {
       layer_status = { include = 0, label = 0 },
       show_help = 0,
       split_pos = 'vert rightbelow',
-      split_width = 38
+      split_width = 38,
+      tocdepth = 1,
+      todo_sorted = 0
     })
 
     L.vim.g('vimtex_quickfix_autoclose_after_keystrokes', 1)
