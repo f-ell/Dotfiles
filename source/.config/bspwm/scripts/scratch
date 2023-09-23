@@ -1,95 +1,135 @@
-#!/bin/bash
-# TODO: separate version utilizing wmutils
-# lsw to query visible scratchpads / windows; pipe to atomx WM_NAME to match names
-# -> unmapping floating windows shouldn't mess with placement
+#!/usr/bin/bash
 
 # SYNOPSIS
 #   /path/to/script INDEX
 #
 # DESCRIPTION
-#   Scratchpads are read from '$HOME/.config/bspwm/scratchpads' (respects
-#   $XDG_CONFIG_HOME), where each scratchpad is specified on its own line.
-#   The individual lines should conform to the syntax outlined below.
+#   Scratchpads are read to consecutive indices from
+#   '$HOME/.config/bspwm/scratchpads' (respects XDG_CONFIG_HOE)
 #
-#   INDEX is required and should be a positive, non-zero integer. It's
-#   interpreted as the one-indexed line number of the scratchpad to run.
+#   Scratchpads are read line by line to consecutive indices from
+#   '$HOME/.config/bspwm/scratchpads' (respects XDG_CONFIG_HOME when set).
+#   Empty lines, lines containing only whitespace, and lines with '#' as the
+#   first non-whitespace character are ignored. Each line should conform to the
+#   syntax outlined below (see SYNTAX).
 #
-#     SCRATCHPAD := NAME : COMMAND [: RULE_OPTIONS]
+#   INDEX should be a positive integer and refers to the index of the scratchpad
+#   to launch / toggle.
 #
-#   Each SCRATCHPAD has a NAME and COMMAND associated with it, as well as
-#   optional rule modifiers. The latter will be passed verbatim to a oneshot
-#   rule when spawning the scratchpad (see bspc(1) 451ff.) and can be used to
-#   override the default options.
+# SYNTAX
+#   SCRATCHPAD := NAME : COMMAND [: RULE_OPTS]
 #
-#   NAME will be set as the window title; the command will be passed directlry
-#   to a shell for execution (supports parameter expansion, but relies on `eval`
-#   to do so; beware!).
+#   Each scratchpad has a name with an associated command and optional window
+#   rules.
 #
-#   This syntax comes with the serious limitation of not being able to use a
-#   literal ':' in any of the SCRATCHPAD fields (i.e. no `while :; do`-loops or
-#   similar).
+#   Scratchpads are launched with a window class name of 'scratch' and an
+#   instance name of 'scratch-NAME'.
 #
-# KNOWN BUGS
+#   After being expanded using `eval`, COMMAND is passed to a shell for
+#   execution. This allows PARAMETER EXPANSION inside of the COMMAND string, but
+#   may have catastrophic results with incorrectly set variables.
+#
+#   RULE_OPTS specifies the window rules for a scratchpad. When present, they
+#   are passed verbatim to a oneshot rule when spawning the scratchpad (see
+#   bspc(1) 451ff.).
+#
+# KNOWN BUGS / LIMITATIONS
 #   Scratchpad names, commands, or rule modifiers may not contain a literal ':'.
-#   Scratchpads MUST currently be floating in order to query / toggle them.
+#   Scratchpad names may not contain spaces.
 #
 # DEPENDENCIES
 #   bspc
 #   kitty
 #   wmctrl
 
-err() {
+SCRATCH_FILE=${XDG_CONFIG_HOME:-$HOME/.config}/bspwm/scratchpads
+OPTS='sticky=on locked=on state=floating'
+
+function err {
   printf 'scratch: %s\n' "$2" 1>&2
   (( $1 > 0 )) && exit $1
 }
-toggle() { bspc node $1 -g hidden -f; }
 
-SCRATCH_FILE=${XDG_CONFIG_HOME:-$HOME/.config}/bspwm/scratchpads
-OPTSTR='sticky=on locked=on state=floating rectangle=960x720+480+180'
+function toggle { bspc node $1 -g hidden -f; }
 
-[[ -f $SCRATCH_FILE && -r $SCRATCH_FILE ]]\
-  || err 1 "'$SCRATCH_FILE' doesn't exist or isn't readable"
-[[ $1 =~ [1-9][0-9]* ]] || err 1 'expected index greater than zero'
+function init {
+  [[ -f $SCRATCH_FILE && -r $SCRATCH_FILE ]]\
+    || err 1 "'$SCRATCH_FILE' doesn't exist or isn't readable"
+  [[ $1 =~ [1-9][0-9]* ]] || err 1 'expected index greater than zero'
 
+  while read -r; do
+    [[ -z $REPLY || $REPLY =~ (^[[:space:]]+$)|(^[[:space:]]*# ) ]] && continue
+    scratchpads+=("$REPLY")
+  done < $SCRATCH_FILE
 
-# get scratchpad name and command
-declare -i lnum=0 index=$1
-while read -r; do
-  (( ++lnum < index )) && { unset REPLY; continue; } || break
-done < $SCRATCH_FILE
+  declare idx=$(( $1 - 1 ))
+  (( $1 > ${#scratchpads[@]} )) && err 1 "index $1 out of bounds"
 
-[[ -z $REPLY ]] && err 1 'index out of bounds'
-declare name=${REPLY%% :*} cmd=${REPLY#*: }
-# WARN: potentially unsafe, used as crutch to allow parameter expansion:
-cmd=$(eval echo `echo ${cmd% :*}`)
+  scratchpad=(${scratchpads[$idx]})
+}
 
-# TODO: make more robust
-# -> split optstring on '=' (req. logic to handle keys without values)
-# -> index into assoc. array
-# -> override keys with user opts
-declare override="${REPLY/*:*:}"
-(( ${#override} < ${#REPLY} )) && OPTSTR+="$override"
+function parse_pad {
+  local line="${scratchpad[@]}"
+  scratchpad=()
+  local IFS=:
+  for REPLY in $line; do
+    REPLY="${REPLY#"${REPLY%%[![:space:]]*}"}"
+    REPLY="${REPLY%"${REPLY##*[![:space:]]}"}"
+    scratchpad+=("$REPLY")
+  done
 
+  # WARN: potentially unsafe; crutch to allow parameter expansion
+  scratchpad[1]=`eval "printf \"${scratchpad[1]}\""`
 
-# get scratchpad window id and visible scratchpad (if any)
-declare wid vis
-# NOTE: WILL behave unexpectedly when mutliple windows with the same title exist
-while read; do
-  [[ $REPLY =~ $name$ ]] && { wid="${REPLY%% *}"; break; }
-done < <(wmctrl -l)
+  (( ${#scratchpad[@]} == 2 )) && scratchpad[2]="$OPTS"
+  scratchpad[2]="rectangle=960x720+480+180 ${scratchpad[2]}"
+}
 
-# FIX: read all scratchpads to array -> check if any exist (makes flags obsolete)
-vis=`bspc query -N -n .\!hidden.sticky.floating`
-vis=${vis,,}
+function toggle_visible {
+  while read -a REPLY; do
+    [[ ${REPLY[2]#scratch-*.} != scratch ]] && continue
 
+    if [[ ${REPLY[2]%.scratch} == "scratch-${scratchpad[0]}" ]]; then
+      exists=1
+      toggle ${REPLY[0]}
+      err 0 "toggle target (${REPLY[0]})"
+    else
+      bspc query -N -n ${REPLY[0]}.hidden >/dev/null && continue
 
-# toggle / spawn scratchpads as necessary
-[[ -n $vis && $vis != $wid ]] && toggle $vis
-if [[ -z $wid ]]; then
-  bspc rule -a *:*:$name -o $OPTSTR
-  # FIX: allow using different terminal emulators / graphical applications
-  # (-> separate spawn function with additional logic?)
-  kitty -T $name $cmd &
-else
-  toggle $wid
-fi
+      for sp in "${scratchpads[@]}"; do
+        sp="${sp%% *}"
+        [[ scratch-${sp#* } == "${REPLY[2]%.scratch}" ]] && {
+          toggle ${REPLY[0]}
+          err 0 "toggle other (${REPLY[0]})"
+          break
+        }
+      done
+    fi
+  done < <(wmctrl -lx)
+}
+
+declare -a scratchpads scratchpad
+init $1
+parse_pad
+
+declare -i exists=0
+toggle_visible
+
+(( $exists == 0 )) && {
+  # FIX: allow applications other than kitty
+  bspc rule -a scratch:scratch-${scratchpad[0]}:* -o ${scratchpad[2]}\
+  && kitty --class scratch --name scratch-${scratchpad[0]} ${scratchpad[1]} &
+
+  sleep .2
+  declare nodeid
+  while read -a REPLY; do
+    [[ ${REPLY[2]%.scratch} == "scratch-${scratchpad[0]}" ]] && {
+      nodeid=${REPLY[0]}
+      break
+    }
+  done < <(wmctrl -lx)
+
+  err 0 "spawn scratch-${scratchpad[0]} ($nodeid)"
+}
+
+exit 0
