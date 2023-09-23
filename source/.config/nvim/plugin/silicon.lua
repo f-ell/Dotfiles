@@ -5,7 +5,7 @@ if vim.fn.executable('silicon') ~= 1 then return end
 local dir = os.getenv('HOME')..'/Media/Pictures/Screenshots/Code/'
 local colours = { 'e67e80', 'a7c080', 'dbbc7f', '7fbbb3', 'd699b6', '83c092' }
 
-L.key.vnmap('<leader>p', function()
+L.key.vnmap('<leader>*', function()
   local ft    = L.vim.o('filetype')
   local file  = 'silicon_'..os.date('%Y%m%d-%H%M%S')..'.png'
   local args  = {
