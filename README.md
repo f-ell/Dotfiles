@@ -22,10 +22,7 @@ Screenshots:   scrot  (https://github.com/resurrecting-open-source-projects/scro
     * hide all but the focused window (currently ignores floating windows) to
       remove annoying backdrop with transparency
 * Neovim
-  * full lua configuration
-  * custom status- and tabline written from scratch
-  * toggleable terminal in separate split
-  * custom LSP 'UI' for code-actions, definition, diagnostics, and rename
+  * configuration can be found [here](https://gitlab.com/fell_/nvim)
 * sxhkd
   * device-specific bindings that act differently depending on the machine
     that's used
@@ -50,9 +47,6 @@ Screenshots:   scrot  (https://github.com/resurrecting-open-source-projects/scro
 Zsh prompt:  
 ![](Pictures/prompt.png)  
 
-Neovim:  
-![](Pictures/neovim.png)
-
 ## Keybindings
 Keybindings needed to get up and running. Not exhaustive and subject to change.  
 See [`sxhkd/`](source/.config/sxhkd/) for general keybindings. WM-specific
@@ -61,10 +55,8 @@ Semicolons in keybindings, just like in sxhkd, indicate key-chords.
 
 ```
   Super   + Enter:          spawn terminal
-  Super   + r:              spawn Rofi with custom run script
-  Super   + Shift + r:      spawn Rofi in window/drun mode
-  Control + Tab:            cycle window | drun mode
-  Super   + o ; b:          spawn browser
+  Super   + r:              spawn Rofi in combi-mode
+  Super   + o; b:           spawn browser
 
   Super + Shift   + w:      kill node
   Super + Control + r:      reload window manager
@@ -86,10 +78,10 @@ Semicolons in keybindings, just like in sxhkd, indicate key-chords.
   Control + Alt + [0-9]:    change preselect ratio
   Control + Alt + Escape:   cancel preselect
 
-  Super + i ; [ims]:        insert / move to / switch with receptacle
+  Super + i; [ims]:         insert / move to / switch with receptacle
 
   Super + (Shift +) m:      take (full desktop) screenshot
 
-  Alt + [1-2]:    launch scratchpad with file manager / calculator
+  Alt + [1-x]:    launch scratchpad with index [1-x]
   Alt + [bcdtu]:  dunst notifications for system information
 ```
