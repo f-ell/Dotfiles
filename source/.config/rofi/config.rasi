@@ -13,7 +13,7 @@ configuration {
   display-window: "  win";
   display-drun: " drun";
   drun-display-format: "{name}";
-  window-format: "{w}. {c}";
+  window-format: "{w}. {c} {n}";
 
   location: 0;
   sort: true;
