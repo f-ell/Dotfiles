@@ -47,7 +47,7 @@ configuration {
 }
 
 * {
-  font: "Ellograph CF Bold 14";
+  font: "Ellograph CF Bold 13";
 
   fg-nor: #d3c6aa;
   fg-alt: #b3a68a;
