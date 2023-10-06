@@ -25,7 +25,7 @@ if [[ -o login ]]; then
   export VISUAL=nvim
   export EDITOR=$VISUAL
 
-  [[ -f $HOME/.env_setup ]] && . "$HOME/.env_setup"
+  [[ -f $HOME/.env ]] && . "$HOME/.env"
 
   Bin="/usr/bin:/usr/local/bin:$HOME/.local/bin"
   Perl='/usr/bin/core_perl:/usr/bin/site_perl:/usr/bin/vendor_perl'
