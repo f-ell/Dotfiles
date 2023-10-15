@@ -19,8 +19,6 @@ HISTSIZE=$(($SAVEHIST + 100))
 HISTFILE="$HOME/.zsh_history"
 LESSHISTFILE=-
 
-[[ -f $HOME/.prompt ]] && PSM=`< $HOME/.prompt`
-export PSM=${PSM:-0}
 ### LOGIN ONLY ###
 if [[ -o login ]]; then
   [[ -f $HOME/.machine ]] && MACHINE=`< $HOME/.machine`
