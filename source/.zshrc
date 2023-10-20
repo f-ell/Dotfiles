@@ -181,41 +181,40 @@ if [[ -o login ]]; then
     export LESS_TERMCAP_ue=$'\e[0m'
     export LESS_TERMCAP_us=$'\e[0;38;5;2m'
   }
-
-  function set_highlights {
-    ZSH_HIGHLIGHT_STYLES[alias]="fg=04"
-    ZSH_HIGHLIGHT_STYLES[assign]="fg=04"
-    ZSH_HIGHLIGHT_STYLES[autodirectory]="fg=03"
-    ZSH_HIGHLIGHT_STYLES[back-quoted-argument]="fg=08"
-    ZSH_HIGHLIGHT_STYLES[builtin]="fg=04"
-    ZSH_HIGHLIGHT_STYLES[command]="fg=02"
-    ZSH_HIGHLIGHT_STYLES[commandseparator]="fg=07"
-    ZSH_HIGHLIGHT_STYLES[command-substitution]="fg=07"
-    ZSH_HIGHLIGHT_STYLES[dollar-quoted-argument]="fg=02"
-    ZSH_HIGHLIGHT_STYLES[double-hyphen-option]="fg=07"
-    ZSH_HIGHLIGHT_STYLES[double-quoted-argument]="fg=10"
-    ZSH_HIGHLIGHT_STYLES[function]="fg=04"
-    ZSH_HIGHLIGHT_STYLES[globbing]="fg=05"
-    ZSH_HIGHLIGHT_STYLES[history-expansion]="fg=05"
-    ZSH_HIGHLIGHT_STYLES[path]="fg=07"
-    ZSH_HIGHLIGHT_STYLES[precommand]="fg=07"
-    ZSH_HIGHLIGHT_STYLES[process-substitution]="fg=07"
-    ZSH_HIGHLIGHT_STYLES[redirection]="fg=05"
-    ZSH_HIGHLIGHT_STYLES[reserved-word]="fg=01"
-    ZSH_HIGHLIGHT_STYLES[single-hyphen-option]="fg=07"
-    ZSH_HIGHLIGHT_STYLES[single-quoted-argument]="fg=02"
-    ZSH_HIGHLIGHT_STYLES[unknown-token]="fg=01"
-    ZSH_HIGHLIGHT_STYLES[default]="fg=07"
-    ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=08"
-    ZSH_HIGHLIGHT_REGEXP+=('\$(\w+|\{.+?\})' "fg=05")
-    ZSH_HIGHLIGHT_REGEXP+=('^\s*(doas|sudo)(\s|$)' "fg=05")
-  }
-
-  declare -a ZSH_HIGHLIGHT_HIGHLIGHTERS=(main regexp)
-  declare -A ZSH_HIGHLIGHT_STYLES ZSH_HIGHLIGHT_REGEXP
   set_colours
-  set_highlights
 fi
+
+# FIX: can't export from within function
+function set_highlights {
+  ZSH_HIGHLIGHT_STYLES[alias]="fg=04"
+  ZSH_HIGHLIGHT_STYLES[assign]="fg=04"
+  ZSH_HIGHLIGHT_STYLES[autodirectory]="fg=03"
+  ZSH_HIGHLIGHT_STYLES[back-quoted-argument]="fg=08"
+  ZSH_HIGHLIGHT_STYLES[builtin]="fg=04"
+  ZSH_HIGHLIGHT_STYLES[command]="fg=02"
+  ZSH_HIGHLIGHT_STYLES[commandseparator]="fg=07"
+  ZSH_HIGHLIGHT_STYLES[command-substitution]="fg=07"
+  ZSH_HIGHLIGHT_STYLES[dollar-quoted-argument]="fg=02"
+  ZSH_HIGHLIGHT_STYLES[double-hyphen-option]="fg=07"
+  ZSH_HIGHLIGHT_STYLES[double-quoted-argument]="fg=10"
+  ZSH_HIGHLIGHT_STYLES[function]="fg=04"
+  ZSH_HIGHLIGHT_STYLES[globbing]="fg=05"
+  ZSH_HIGHLIGHT_STYLES[history-expansion]="fg=05"
+  ZSH_HIGHLIGHT_STYLES[path]="fg=07"
+  ZSH_HIGHLIGHT_STYLES[precommand]="fg=07"
+  ZSH_HIGHLIGHT_STYLES[process-substitution]="fg=07"
+  ZSH_HIGHLIGHT_STYLES[redirection]="fg=05"
+  ZSH_HIGHLIGHT_STYLES[reserved-word]="fg=01"
+  ZSH_HIGHLIGHT_STYLES[single-hyphen-option]="fg=07"
+  ZSH_HIGHLIGHT_STYLES[single-quoted-argument]="fg=02"
+  ZSH_HIGHLIGHT_STYLES[unknown-token]="fg=01"
+  ZSH_HIGHLIGHT_STYLES[default]="fg=07"
+  ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=08"
+  ZSH_HIGHLIGHT_REGEXP+=('\$(\w+|\{.+?\})' "fg=05")
+  ZSH_HIGHLIGHT_REGEXP+=('^\s*(doas|sudo)(\s|$)' "fg=05")
+}
+ZSH_HIGHLIGHT_HIGHLIGHTERS=(main regexp)
+set_highlights
 
 # COMPLETION
 zstyle ':completion:*' completer _expand _complete _ignored _match
