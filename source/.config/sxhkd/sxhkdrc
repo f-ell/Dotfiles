@@ -22,7 +22,7 @@ super + o; {b,c,d,g,s}
 alt + i
   dunstify -u low -h string:x-dunst-stack-tag:inet "`status_fetch`"
 
-alt + d
+alt + Escape
   dunstctl close
 
 alt + t
