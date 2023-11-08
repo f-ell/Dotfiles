@@ -9,7 +9,7 @@ conky.config = {
     draw_shades   = false,
     font          = 'Ellograph CF Heavy:size=90',
     gap_x         = 120,
-    gap_y         = 100,
+    gap_y         = 0,
     out_to_x      = true,
     own_window    = true,
     own_window_class        = 'conky_time',
@@ -23,5 +23,5 @@ conky.config = {
 
 conky.text = [[
 ${time %I:%M}${font Ellograph CF Heavy:size=24}${time %p}
-${offset 8}${font Ellograph CF Heavy:size=22}${time %a. %d %B %Y}
+${offset 8}${font Ellograph CF Heavy:size=22}${time %a. %d %B %Y}$font
 ]]
