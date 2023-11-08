@@ -30,7 +30,7 @@ if [[ -o login ]]; then
 
   Bin="/usr/bin:/usr/local/bin:$HOME/.local/bin"
   Perl='/usr/bin/core_perl:/usr/bin/site_perl:/usr/bin/vendor_perl'
-  Misc="$CARGO_HOME/bin"
+  Misc="$CARGO_HOME/bin:$JAVA_HOME/bin"
   export PATH="$Bin:$Perl:$Misc"
   unset Bin Perl Misc
 fi
