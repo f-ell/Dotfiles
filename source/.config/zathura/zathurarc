@@ -55,7 +55,7 @@ set recolor-lightcolor      '#323c41'
 set recolor-darkcolor       '#d3c6aa'
 
 set highlight-fg            '#323c41'
-set highlight-color         '#dbbc7f'
-set highlight-active-color  '#dfa000'
+set highlight-color         '#a7c080'
+set highlight-active-color  '#e67e80'
 
 map <C-l> nohlsearch
