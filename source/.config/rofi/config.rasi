@@ -54,6 +54,7 @@ configuration {
   bg-alt: #4a555b;
   bg-nor: #3a454b;
   bg-win: #3a454bd0;
+  green: #a7c080;
 
   text-color: @fg-nor;
   border-color: @fg-nor;
@@ -80,7 +81,7 @@ inputbar {
   children: [ "prompt", "textbox-prompt", "entry" ];
 }
 prompt {
-  text-color: inherit;
+  text-color: @green;
 }
 textbox-prompt {
   expand: false;
@@ -112,9 +113,9 @@ scrollbar {
 element       { cursor: pointer; border: 0px; }
 element-text  { vertical-align: 0.5; horizontal-align: 0; }
 
-element normal.normal     { text-color: @fg-alt; background-color: inherit; }
-element normal.active     { text-color: @fg-alt; background-color: inherit; }
-element selected.normal   { text-color: @bg-nor; background-color: @fg-nor; }
-element selected.active   { text-color: @bg-nor; background-color: @fg-nor; }
-element alternate.normal  { text-color: @fg-alt; background-color: inherit; }
-element alternate.active  { text-color: @fg-alt; background-color: inherit; }
+element normal.normal     { text-color: @fg-nor; background-color: inherit; }
+element normal.active     { text-color: @fg-nor; background-color: inherit; }
+element selected.normal   { text-color: @bg-nor; background-color: @green; }
+element selected.active   { text-color: @bg-nor; background-color: @green; }
+element alternate.normal  { text-color: @fg-nor; background-color: inherit; }
+element alternate.active  { text-color: @fg-nor; background-color: inherit; }
