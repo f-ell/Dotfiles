@@ -1,5 +1,16 @@
 err() { printf '%s: %s\n' "$1" "$2" 1>&2; }
 
+ct() {
+  local bin
+
+  if [[ $1 == -b ]]; then
+    bin=--bin
+    shift
+  fi
+
+  cargo test $bin $@ -- ${CPT+--nocapture}
+}
+
 j() {
   local j exit
   j=`jump $@`
@@ -51,11 +62,9 @@ wnvm() {
   popd &>/dev/null
 }
 
-
 alias -- -='cd -'
 alias code='code --extensions-dir "$XDG_DATA_HOME/vscode"'
 alias cb='cargo run --bin $@'
-alias ct='cargo test $@ -- --nocapture'
 alias e='eza'
 alias e1='eza -1'
 alias ed='eza -ld'
