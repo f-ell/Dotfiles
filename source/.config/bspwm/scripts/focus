@@ -1,0 +1,28 @@
+#!/bin/bash
+
+# SYNOPSIS
+#   /path/to/script [TYPE] [DIR]
+#
+#   CYCLE_DIR defaults to 'next'.
+#
+# DEFINITIONS
+#   TYPE := f (focus) | s (swap)
+#   DIR := north | east | south | west
+#
+# DEPENDENCIES
+#   bspc
+
+typeset type="${1:-f}" dir="${2:-north}"
+
+[[ `bspc query --tree --desktop` =~ '"layout":"'(monocle|tiled)'"' ]]
+
+if [[ ${BASH_REMATCH[1]} == tiled ]]; then
+  bspc node -$type $dir
+else
+  case $dir in
+    north) dir=prev;;
+    south) dir=next;;
+  esac
+
+  ~/.config/bspwm/scripts/cycle $dir
+fi

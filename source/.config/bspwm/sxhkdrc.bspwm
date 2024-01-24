@@ -1,7 +1,7 @@
 # [MODIFIER + ]*[@|!]KEYSYM
 #   COMMAND
 
-# kill window / restart bspwm + quit X
+# kill / restart
 super + shift + w
   bspc node focused -c
 
@@ -9,13 +9,13 @@ super + control + {r,q}
   bspc {wm -r,quit}
 
 # focus / layout / float
-super + {_, shift +} {1-6}
-  bspc {desktop -f, node focused -d} {1-6}
+super + {_, shift +} {1-5}
+  bspc {desktop -f, node focused -d} {1-5}
 super + {_, shift +} {h,j,k,l}
-  bspc node -{f,s} {west,south,north,east}
+  ~/.config/bspwm/scripts/focus {f,s} {west,south,north,east}
 
 super + Tab
-  ~/.config/bspwm/scripts/hide
+  bspc desktop -l next
 
 super + f
   bspc node -f -t \~floating
@@ -34,10 +34,6 @@ control + alt + {h,j,k,l,Escape}
   bspc node -p {west,south,north,east,cancel}
 control + alt + {1-9}
   bspc node -o 0.{1-9}
-# super + mode_switch + {h,j,k,l,Escape}
-#   bspc node -p {west,south,north,east,cancel}
-# super + mode_switch + {1-9}
-#   bspc node -o 0.{1-9}
 
 # receptacles
 super + i; i

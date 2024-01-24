@@ -1,0 +1,34 @@
+#!/bin/bash
+
+# SYNOPSIS
+#   /path/to/script [CYCLE_DIR]
+#
+#   CYCLE_DIR defaults to 'next'.
+#
+# DEFINITIONS
+#   CYCLE_DIR := next | prev
+#
+# DEPENDENCIES
+#   bspc
+
+function max {
+  (( $1 > $2 )) && printf '%s\n' $1 || printf '%s\n' $2
+}
+
+typeset node=`bspc query --nodes --node`
+typeset -a stack=()
+typeset -i i=0
+
+while read; do
+  [[ $REPLY == $node ]] && typeset -r i || ((++i)) 2>/dev/null
+  stack+=($REPLY)
+done < <(bspc query --nodes --node .\!hidden.leaf.local)
+
+typeset -i j=1
+case ${1:-next} in
+  prev) j=-1;;
+  next) j=1;;
+  *) { printf '%s: invalid direction - %s\n' "${0##*/}" "$1" 1>&2; exit 1; };;
+esac
+
+bspc node -f ${stack[$(( ($i + $j) % ${#stack[@]} ))]}
