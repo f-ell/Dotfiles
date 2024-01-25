@@ -84,7 +84,7 @@ else
   pgrep ssm || ssm -t 60 -e g -b 30 -c 70 &
 fi
 # picom --config $pconf &
-feh --no-fehbg --bg-fill $Wallpaper &
+feh --no-fehbg --bg-fill $wallpaper &
 
 
 # FLOAT windows on desktop '^4' and force Steam games to desktop '^4'
