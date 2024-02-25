@@ -53,7 +53,7 @@ configuration {
   fg-alt: #b3a68a;
   bg-alt: #4a555b;
   bg-nor: #3a454b;
-  bg-win: #3a454bd0;
+  bg-win: #3a454bf8;
   green: #a7c080;
 
   text-color: @fg-nor;
