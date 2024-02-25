@@ -28,7 +28,7 @@ typeset -i j=1
 case ${1:-next} in
   prev) j=-1;;
   next) j=1;;
-  *) { printf '%s: invalid direction - %s\n' "${0##*/}" "$1" 1>&2; exit 1; };;
+  *) { bspc node -f ${1:-next}; exit 1; };;
 esac
 
 bspc node -f ${stack[$(( ($i + $j) % ${#stack[@]} ))]}
