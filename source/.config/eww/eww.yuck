@@ -1,0 +1,35 @@
+(include 'dt.yuck')
+(include 'lt.yuck')
+
+(defwidget separator []
+    (label
+        :class 'separator'
+        :text '|'
+    )
+)
+
+(deflisten desktops :initial '[]' './desktops.sh')
+(defwidget desktops []
+    (box :class 'desktop'
+        (for d in desktops
+            (button
+                :onclick {d.command}
+                :class {d.state}
+                {d.icon}
+            )
+        )
+    )
+)
+
+(deflisten layout :initial '[]' 'layout.bspwm')
+(defwidget layout []
+    (label
+        :text layout
+    )
+)
+
+(defwidget time []
+    (label
+        :text '${formattime(EWW_TIME, '%A %I:%M %p')}'
+    )
+)

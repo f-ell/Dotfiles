@@ -1,0 +1,66 @@
+$fg1: #e8e0cc;
+$fg2: #859289;
+$bg1: #2a353b;
+$bg2: #323c41;
+$red1: #e67e80;
+$red2: #f85552;
+$gre1: #a7c080;
+$gre2: #8da101;
+$yel1: #dbbc7f;
+$yel2: #dfa000;
+$blu1: #7fbbb3;
+$blu2: #3a94c5;
+$pur1: #d699b6;
+$pur2: #df69ba;
+$aqu1: #83c092;
+$aqu2: #35a77c;
+
+* {
+  all: unset;
+  font-family: Ellograph CF;
+  font-weight: 600;
+}
+
+button {
+  font-size: .9em;
+  padding: .4em .8em;
+}
+
+.bar {
+  color: $fg1;
+  background-color: $bg2;
+}
+
+.section {
+  $margin-outer: 1em;
+  $margin-inner: .8em;
+  &.start {
+    margin-left: $margin-outer;
+    & > * {
+      margin-right: $margin-inner;
+    }
+  }
+  &.end {
+    margin-right: $margin-outer;
+    & > * {
+      margin-left: $margin-inner;
+    }
+  }
+}
+
+.desktop {
+  & .focused {
+    color: $gre1;
+  }
+  & .occupied {
+    color: $fg2;
+  }
+  & .empty {
+    color: $fg2;
+  }
+}
+
+.separator {
+  color: $fg2;
+  font-weight: 700;
+}

@@ -1,0 +1,43 @@
+(defwindow bar-dt
+    :monitor 0
+    :geometry (geometry
+        :x '0'
+        :y '0'
+        :width '100%'
+        :height 32
+        :anchor 'top center'
+    )
+    :wm-ingore false
+    :reserve (struts :distance 32 :side 'top')
+    (centerbox
+        :orientation 'h'
+        :class 'bar'
+        (box
+            :space-evenly false
+            :halign 'start'
+            :class 'section start'
+            (desktops)
+            (separator)
+            (layout)
+        )
+        (box
+            :space-evenly false
+            :halign 'center'
+            :class 'section center'
+            (time)
+        )
+        (box
+            :space-evenly false
+            :halign 'end'
+            :class 'section end'
+            (tempdt)
+        )
+    )
+)
+
+(defpoll tempdt :interval '2s' :initial 'CPU: 0°C GPU: 0°C' `temp.dt`)
+(defwidget tempdt []
+    (label
+        :text tempdt
+    )
+)
