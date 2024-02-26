@@ -1,8 +1,0 @@
-# [MODIFIER + ]*[@|!]KEYSYM
-#   COMMAND
-
-super + w
-  wormc close-active-client
-
-super + n
-  wormc maximize-active-client
