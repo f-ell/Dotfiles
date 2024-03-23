@@ -8,6 +8,7 @@
         :anchor 'top center'
     )
     :wm-ingore false
+    :stacking 'bg'
     :reserve (struts :distance 32 :side 'top')
     (centerbox
         :orientation 'h'
