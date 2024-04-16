@@ -227,6 +227,4 @@ autoload -Uz compinit
 compinit -d "$XDG_CONFIG_HOME/zsh/zcomp"
 
 # FETCH
-xset q &>/dev/null \
-  && printf '%s\n' "'Whose is the dying flame?' asked the Witcher." "    'Yours,' Death replied."
-  # && printf '%s\n' 'In his strong hand the man held a Rose.' '    And his aura burned bright.'
+xset q &>/dev/null && [[ -f $HOME/.fetch ]] && printf '%s\n' "`< $HOME/.fetch`"
