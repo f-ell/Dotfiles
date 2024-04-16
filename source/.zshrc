@@ -19,20 +19,24 @@ HISTSIZE=$(($SAVEHIST + 100))
 HISTFILE="$HOME/.zsh_history"
 LESSHISTFILE=-
 
-if [[ -o login ]]; then
-  [[ -f $HOME/.machine ]] && MACHINE=`< $HOME/.machine`
-  export MACHINE=${MACHINE:-DT}
-  export VISUAL=nvim
-  export EDITOR=$VISUAL
+[[ -f $HOME/.machine ]] && MACHINE=`< $HOME/.machine` || MACHINE=DT
+export MACHINE
+export VISUAL=nvim
+export EDITOR=$VISUAL
 
-  [[ -f $HOME/.env ]] && . "$HOME/.env"
+[[ -f $HOME/.env ]] && . "$HOME/.env"
+bin="/usr/bin:/usr/local/bin:$HOME/.local/bin"
+perl='/usr/bin/core_perl:/usr/bin/site_perl:/usr/bin/vendor_perl'
 
-  Bin="/usr/bin:/usr/local/bin:$HOME/.local/bin"
-  Perl='/usr/bin/core_perl:/usr/bin/site_perl:/usr/bin/vendor_perl'
-  Misc="$CARGO_HOME/bin:$JAVA_HOME/bin"
-  export PATH="$Bin:$Perl:$Misc"
-  unset Bin Perl Misc
-fi
+typeset ifs="$IFS"
+typeset -a misc=()
+[[ -n $CARGO_HOME ]] && misc+=("$CARGO_HOME/bin")
+[[ -n $JAVA_HOME ]] && misc+=("$JAVA_HOME/bin")
+
+IFS=':'
+export PATH="$bin:$perl:${misc[*]}"
+IFS="$ifs"
+unset ifs bin perl misc
 
 [[ -f $HOME/.aliases ]] && . "$HOME/.aliases"
 ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=20
@@ -45,26 +49,27 @@ autoload edit-command-line; zle -N edit-command-line
 bindkey -v '^K' kill-line
 bindkey -v '^U' backward-kill-line
 bindkey -v '^Y' yank
-bindkey -v '^?' backward-delete-char # delete without overwriting yank
+bindkey -v '^?' backward-delete-char # don't delete to killring
 
 bindkey '^Xe' edit-command-line
 bindkey '^R' vi-history-search-backward
 bindkey '^ ' autosuggest-accept
 
 # PS1
+PS1=$'%1~ $ '
 if xset q &>/dev/null; then
   function get_git {
     # head
-    declare head=`git rev-parse --is-inside-work-tree 2>/dev/null`
+    typeset head=`git rev-parse --is-inside-work-tree 2>/dev/null`
     if (( $? == 0 )) && [[ $head == true ]]; then
-      declare -A refs
+      typeset -A refs
       while read; do
         refs+=([${${REPLY#* }%\^\{\}}]="${REPLY% *}")
       done < <(git -C . show-ref --head --heads --tags --abbrev -d)
 
-      declare href=HEAD hid=${refs[HEAD]}
-      declare ref id
-      declare -i m b
+      typeset href=HEAD hid=${refs[HEAD]}
+      typeset ref id
+      typeset -i m b
       for ref id in ${(@kv)refs}; do
         [[ $ref == HEAD ]] && continue
 
@@ -80,7 +85,7 @@ if xset q &>/dev/null; then
         href=$hid
       elif (( b > 1 )) || (( m > b && b > 0 )); then
         # NOTE: detached head at branch head prefers tag-name over commit
-        declare branch=`git -C . branch --show-current`
+        typeset branch=`git -C . branch --show-current`
         [[ -n $branch ]] && href="$branch"
       fi
 
@@ -91,7 +96,7 @@ if xset q &>/dev/null; then
 
     # stash
     if [[ -n $head ]]; then
-      declare tl=`git rev-parse --show-toplevel`
+      typeset tl=`git rev-parse --show-toplevel`
       [[ -f $tl/.git ]] && {
         tl=`< $tl/.git`
         tl=${tl#gitdir: }
@@ -115,14 +120,14 @@ if xset q &>/dev/null; then
 
   function set_prompt {
     unset PS1
-    declare cl_chr=$'\e[38;2;160;160;160m'
-    declare cl_err=$'\e[38;2;230;126;128m'
-    declare cl_git=$'\e[38;2;252;163;38m'
-    declare cl_txt=$'\e[38;2;211;198;170m'
-    declare bold=$'\e[1m'
-    declare none=$'\e[0m'
+    typeset cl_chr=$'\e[38;2;160;160;160m'
+    typeset cl_err=$'\e[38;2;230;126;128m'
+    typeset cl_git=$'\e[38;2;252;163;38m'
+    typeset cl_txt=$'\e[38;2;211;198;170m'
+    typeset bold=$'\e[1m'
+    typeset none=$'\e[0m'
 
-    declare ex git pwd
+    typeset ex git pwd
     (( $1 == 0 )) && ex= || ex=$1
     git=`get_git`
 
@@ -144,29 +149,27 @@ if xset q &>/dev/null; then
     [[ $KEYMAP == vicmd ]] && set_prompt $EXIT :
     zle reset-prompt
   }; zle -N zle-keymap-select
-else
-  PS1=$'%1~ $ '
 fi
 
 
 # colours and highlights
 if [[ -o login ]]; then
   function set_colours {
-    typeset F='38;5;'
+    typeset f='38;5;'
 
-    typeset LSC="bd=${F}03:cd=${F}11:di=${F}03:ex=${F}07;4:fi=${F}07:ln=${F}04;4:or=${F}08;4"
-    typeset BLD=`clsc -s \*Brewfile:\*bsconfig.json:\*BUILD:\*BUILD.bazel:\*build.gradle:\*build.sbt:\*build.xml:\*Cargo.toml:\*CMakeLists.txt:\*composer.json:\*configure:\*Containerfile:\*Dockerfile:\*Earthfile:\*flake.nix:\*Gemfile:\*GNUmakefile:\*Gruntfile.coffee:\*Gruntfile.js:\*jsconfig.json:\*Justfile:\*justfile:\*Makefile:\*makefile:\*meson.build:\*mix.exs:\*package.json:\*Pipfile:\*PKGBUILD:\*Podfile:\*pom.xml:\*Procfile:\*pyproject.toml:\*Rakefile:\*RoboFile.php:\*SConstruct:\*tsconfig.json:\*Vagrantfile:\*webpack.config.cjs:\*webpack.config.js:\*WORKSPACE $F'05;4' :`
-    typeset ARC=`clsc 7z:ar:br:bz:bz2:bz3:cpio:deb:dmg:gz:iso:jar:lz:lz4:lzh:lzma:lzo:phar:qcow:qcow2:rar:rpm:tar:taz:tbz:tbz2:tc:tgz:tlz:txz:tz:xz:vdi:vhd:vmdk:z:zip:zst $F'11' :`
-    typeset IMG=`clsc arw:avif:bmp:cbr:cbz:cr2:dvi:eps:gif:heic:heif:ico:j2c:j2k:jfi:jfif:jif:jp2:jpe:jpeg:jpf:jpg:jpx:jxl:nef:orf:pbm:pgm:png:pnm:ppm:ps:psd:pxm:raw:stl:svg:tif:tiff:webp:xcf:xpm $F'02' :`
-    typeset AUD=`clsc aac:alac:ape:flac:m4a:mka:mp2:mp3:ogg:opus:wav:wma $F'05' :`
-    typeset TMP=`clsc bak:bk:bkp:swn:swo:swp:tmp $F'08' :`
-    typeset VID=`clsc avi:flv:heics:m2ts:m2v:m4v:mkv:mov:mp4:mpeg:mpg:ogm:ogv:video:vob:webm:wmv $F'03' :`
+    typeset LSC="bd=${f}03:cd=${f}11:di=${f}03:ex=${f}07;4:fi=${f}07:ln=${f}04;4:or=${f}08;4"
+    typeset BLD=`clsc -s \*Brewfile:\*bsconfig.json:\*BUILD:\*BUILD.bazel:\*build.gradle:\*build.sbt:\*build.xml:\*Cargo.toml:\*CMakeLists.txt:\*composer.json:\*configure:\*Containerfile:\*Dockerfile:\*Earthfile:\*flake.nix:\*Gemfile:\*GNUmakefile:\*Gruntfile.coffee:\*Gruntfile.js:\*jsconfig.json:\*Justfile:\*justfile:\*Makefile:\*makefile:\*meson.build:\*mix.exs:\*package.json:\*Pipfile:\*PKGBUILD:\*Podfile:\*pom.xml:\*Procfile:\*pyproject.toml:\*Rakefile:\*RoboFile.php:\*SConstruct:\*tsconfig.json:\*Vagrantfile:\*webpack.config.cjs:\*webpack.config.js:\*WORKSPACE $f'05;4' :`
+    typeset ARC=`clsc 7z:ar:br:bz:bz2:bz3:cpio:deb:dmg:gz:iso:jar:lz:lz4:lzh:lzma:lzo:phar:qcow:qcow2:rar:rpm:tar:taz:tbz:tbz2:tc:tgz:tlz:txz:tz:xz:vdi:vhd:vmdk:z:zip:zst $f'11' :`
+    typeset IMG=`clsc arw:avif:bmp:cbr:cbz:cr2:dvi:eps:gif:heic:heif:ico:j2c:j2k:jfi:jfif:jif:jp2:jpe:jpeg:jpf:jpg:jpx:jxl:nef:orf:pbm:pgm:png:pnm:ppm:ps:psd:pxm:raw:stl:svg:tif:tiff:webp:xcf:xpm $f'02' :`
+    typeset AUD=`clsc aac:alac:ape:flac:m4a:mka:mp2:mp3:ogg:opus:wav:wma $f'05' :`
+    typeset TMP=`clsc bak:bk:bkp:swn:swo:swp:tmp $f'08' :`
+    typeset VID=`clsc avi:flv:heics:m2ts:m2v:m4v:mkv:mov:mp4:mpeg:mpg:ogm:ogv:video:vob:webm:wmv $f'03' :`
 
-    typeset PERM=`clsc -s ur:gr:tr:uw:gw:tw:ux:gx:tx:ue $F'02' :`
-    typeset SIZE=`clsc -s sn:sb:df:ds $F'05' :`
-    typeset USER=`clsc -s uu:gu $F'03' :`
-    typeset TIME=`clsc -s da $F'04' :`
-    typeset STCK=`clsc -s su:sf $F'01' :`
+    typeset PERM=`clsc -s ur:gr:tr:uw:gw:tw:ux:gx:tx:ue $f'02' :`
+    typeset SIZE=`clsc -s sn:sb:df:ds $f'05' :`
+    typeset USER=`clsc -s uu:gu $f'03' :`
+    typeset TIME=`clsc -s da $f'04' :`
+    typeset STCK=`clsc -s su:sf $f'01' :`
 
     export LS_COLORS="$LSC:$BLD:$ARC:$IMG:$AUD:$TMP:$VID"
     export EZA_COLORS="reset:$PERM:$SIZE:$USER:$TIME:$STCK"
