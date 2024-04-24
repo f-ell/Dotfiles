@@ -18,7 +18,7 @@ c.fonts.web.family.sans_serif = 'Ellograph CF'
 c.messages.timeout            = 4000
 c.editor.command              = ['nvim', '{file}']
 c.colors.webpage.darkmode.enabled       = False
-c.colors.webpage.preferred_color_scheme = 'dark'
+c.colors.webpage.preferred_color_scheme = 'light'
 c.colors.webpage.darkmode.policy.images = 'never'
 c.colors.webpage.bg                     = '#fffbef'
 
