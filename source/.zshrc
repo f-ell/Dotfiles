@@ -14,6 +14,7 @@ set -o autocd -o extendedglob -o histexpiredupsfirst -o histignoredups\
   -o rematchpcre
 set +o automenu +o autoremoveslash
 
+KEYTIMEOUT=1
 SAVEHIST=10000
 HISTSIZE=$(($SAVEHIST + 100))
 HISTFILE="$HOME/.zsh_history"
@@ -43,6 +44,14 @@ ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=20
 ZSH_AUTOSUGGEST_MANUAL_REBIND=True
 . "$XDG_CONFIG_HOME/zsh/zsh-autosuggestions/zsh-autosuggestions.zsh"
 . "$XDG_CONFIG_HOME/zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+
+function preexec {
+  [[ $3 =~ 'rm -r'[f]? && $3 =~ [:space:][\'\"]*$HOME[\'\"]*[:space:]* ]] && {
+    printf 'WARNING: trying to remove $HOME '
+    sleep 60
+    return 1
+  }
+}
 
 # binds
 autoload edit-command-line; zle -N edit-command-line
