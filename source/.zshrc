@@ -54,14 +54,24 @@ function preexec {
 }
 
 # binds
-autoload edit-command-line; zle -N edit-command-line
+autoload edit-command-line
+zle -N edit-command-line
+
+function user-reverse-i-search() {
+  declare hist=(`history 1 | zf --height 16 -p`)
+  zle reset-prompt
+  BUFFER=${hist[2,$#hist]}
+  CURSOR=$#BUFFER
+}
+zle -N user-reverse-i-search
+
 bindkey -v '^K' kill-line
 bindkey -v '^U' backward-kill-line
 bindkey -v '^Y' yank
 bindkey -v '^?' backward-delete-char # don't delete to killring
 
 bindkey '^Xe' edit-command-line
-bindkey '^R' vi-history-search-backward
+bindkey '^R' user-reverse-i-search
 bindkey '^ ' autosuggest-accept
 
 # PS1
