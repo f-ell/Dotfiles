@@ -60,7 +60,7 @@ zle -N edit-command-line
 function user-reverse-i-search() {
   declare hist=(`history 1 | zf --height 16 -p`)
   zle reset-prompt
-  BUFFER=${hist[2,$#hist]}
+  BUFFER=${hist[2,$#hist]:-$BUFFER}
   CURSOR=$#BUFFER
 }
 zle -N user-reverse-i-search
