@@ -46,8 +46,10 @@ ZSH_AUTOSUGGEST_MANUAL_REBIND=True
 . "$XDG_CONFIG_HOME/zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 
 function preexec {
-  [[ $3 =~ 'rm -r'[f]? && $3 =~ [:space:][\'\"]*$HOME[\'\"]*[:space:]* ]] && {
-    printf 'WARNING: trying to remove $HOME '
+  # does not detect obfuscated commands
+  # aliases / indirection / symlinks, newlines / whitespace
+  [[ $3 =~ 'rm'([ \t])+'-r' && $3 =~ ('\$HOME'|$HOME) ]] && {
+    printf 'WARNING: potentially trying to remove $HOME '
     sleep 60
     return 1
   }
