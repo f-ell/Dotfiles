@@ -151,13 +151,15 @@ if xset q &>/dev/null; then
     typeset ex git pwd
     (( $1 == 0 )) && ex= || ex=$1
     git=`get_git`
+    typeset job='%j'
 
-    PS1="%{$cl_txt%}"
+    PS1="%{$cl_txt%}"
     [[ $PWD == / ]] && pwd=/ || pwd=${PWD##*/}
-    [[ $PWD != $HOME ]] && PS1+=" $pwd"
-    [[ -n $git ]]       && PS1+=" %{$cl_git%} $git"
-    [[ -n $ex ]]        && PS1+=" %{$cl_err$bold%}$ex%{$none%}"
-    PS1+=" %{$cl_chr%}${2:-$CHR} "
+    [[ $PWD != $HOME ]] && PS1+="$pwd "
+    [[ -n $git ]]       && PS1+="%{$cl_git%} $git "
+    (( ${(%)job} > 0 )) && PS1+="%{$cl_chr%}%% "
+    [[ -n $ex ]]        && PS1+="%{$cl_err$bold%}$ex%{$none%} "
+    PS1+="%{$cl_chr%}${2:-$CHR} "
   }
 
   function precmd {
