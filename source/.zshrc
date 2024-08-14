@@ -49,7 +49,7 @@ function preexec {
   # does not detect obfuscated commands
   # aliases / indirection / symlinks, newlines / whitespace
   [[ $3 =~ 'rm'([ \t])+'-r' && $3 =~ ('\$HOME'|$HOME) ]] && {
-    printf 'WARNING: potentially trying to remove $HOME '
+    printf 'WARNING: trying to remove $HOME? '
     sleep 60
     return 1
   }
@@ -60,7 +60,7 @@ autoload edit-command-line
 zle -N edit-command-line
 
 function user-reverse-i-search() {
-  declare hist=(`history 1 | zf --height 16 -p`)
+  declare hist=(`history 1 | tac | zf --height 16 -p`)
   zle reset-prompt
   BUFFER=${hist[2,$#hist]:-$BUFFER}
   CURSOR=$#BUFFER
