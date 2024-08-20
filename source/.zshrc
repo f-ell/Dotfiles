@@ -31,6 +31,7 @@ perl='/usr/bin/core_perl:/usr/bin/site_perl:/usr/bin/vendor_perl'
 
 typeset ifs="$IFS"
 typeset -a misc=()
+[[ -n $GOPATH ]] && misc+=("$GOPATH/bin")
 [[ -n $CARGO_HOME ]] && misc+=("$CARGO_HOME/bin")
 [[ -n $JAVA_HOME ]] && misc+=("$JAVA_HOME/bin")
 
