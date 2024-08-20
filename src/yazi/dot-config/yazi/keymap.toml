@@ -1,0 +1,48 @@
+[manager]
+keymap = [
+  # { on = "", run = "", desc = "" },
+
+  { on = "h",       run = "leave",    desc = "Go to parent" },
+  { on = "j",       run = "arrow 1",  desc = "Scroll down" },
+  { on = "k",       run = "arrow -1", desc = "Scroll up" },
+  { on = "l",       run = "enter",    desc = "Enter directory" },
+  { on = "<C-d>",   run = "arrow 8",  desc = "Scroll 8 down" },
+  { on = "<C-u>",   run = "arrow -8", desc = "Scroll 8 up" },
+  { on = ["g","g"], run = "seek -8",  desc = "Go to top" },
+  { on = "G",       run = "arrow 100%",  desc = "Go to bottom" },
+  { on = "<A-j>",   run = "seek 8",   desc = "Scroll preview down" },
+  { on = "<A-k>",   run = "seek -8",  desc = "Scroll preview up" },
+
+  { on = "q",       run = "quit",                        desc = "Quit" },
+  { on = "<Esc>",   run = "escape",                      desc = "Escape" },
+  { on = ["g","h"], run = "help",                        desc = "Show help" },
+  { on = "t",       run = "tasks_show",                  desc = "Show tasks" },
+  { on = ".",       run = "hidden",                      desc = "Toggle hidden" },
+  { on = "!",       run = "shell --block --interactive", desc = "Interactive shell" },
+  { on = "c",       run = "cd --interactive",            desc = "Interactive cd" },
+
+  { on = "<Space>",     run = "select",                   desc = "Select item" },
+  { on = "v",           run = "visual_mode",              desc = "Select mode" },
+  { on = "V",           run = "visual_mode --unset",      desc = "Unselect mode" },
+  { on = ["<C-v>","a"], run = "select_all --state=true",  desc = "Select all" },
+  { on = ["<C-v>","t"], run = "select_all",               desc = "Toggle select all" },
+  { on = ["<C-v>","u"], run = "select_all --state=false", desc = "Unselect all" },
+
+  { on = "/", run = "find --smart",            desc = "Search" },
+  { on = "?", run = "find --smart --previous", desc = "Search reverse" },
+  { on = "n", run = "find_arrow",              desc = "Next result" },
+  { on = "N", run = "find_arrow --previous",   desc = "Previous result" },
+
+  { on = "o",       run = "open",               desc = "Open selected" },
+  { on = ["O","h"], run = "open --hovered",     desc = "Open hovered" },
+  { on = ["O","i"], run = "open --interactive", desc = "Open interactively" },
+
+  { on = "y",       run = "yank",              desc = "Yank" },
+  { on = "Y",       run = "unyank",            desc = "Unyank" },
+  { on = ["d","d"], run = "yank --cut",        desc = "Cut" },
+  { on = ["d","D"], run = "remove",            desc = "Remove" },
+  { on = ["p","p"], run = "paste",             desc = "Paste" },
+  { on = ["p","l"], run = "link",              desc = "Symlink" },
+  { on = ["p","r"], run = "link --relative",   desc = "Relative symlink" },
+  { on = ["p","h"], run = "hardlink --follow", desc = "Hardlink" },
+]

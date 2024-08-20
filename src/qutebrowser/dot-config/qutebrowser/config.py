@@ -150,10 +150,10 @@ c.content.media.video_capture             = False
 c.downloads.position                = 'bottom'
 c.downloads.location.prompt         = True
 c.downloads.location.directory      = f"{os.environ['HOME']}/Downloads"
-c.downloads.open_dispatcher         = '/usr/bin/ranger'
-c.fileselect.folder.command         = ['alacritty', '-e', 'ranger']
-c.fileselect.single_file.command    = ['alacritty', '-e', 'ranger']
-c.fileselect.multiple_files.command = ['alacritty', '-e', 'ranger']
+c.downloads.open_dispatcher         = '/usr/bin/yazi'
+c.fileselect.folder.command         = ['kitty', 'yazi']
+c.fileselect.single_file.command    = ['kitty', 'yazi']
+c.fileselect.multiple_files.command = ['kitty', 'yazi']
 
 config.bind('g', 'scroll-to-perc 0', 'normal')
 config.bind('j', 'scroll-px 0 80', 'normal')
