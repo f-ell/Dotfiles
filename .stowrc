@@ -1,2 +1,3 @@
---dir=source
+--dir=src
 --target=$HOME
+--dotfiles
