@@ -17,7 +17,7 @@ keymap = [
   { on = "<Esc>",   run = "escape",                      desc = "Escape" },
   { on = ["g","h"], run = "help",                        desc = "Show help" },
   { on = "t",       run = "tasks_show",                  desc = "Show tasks" },
-  { on = ".",       run = "hidden",                      desc = "Toggle hidden" },
+  { on = ["g","."], run = "hidden",                      desc = "Toggle hidden" },
   { on = "!",       run = "shell --block --interactive", desc = "Interactive shell" },
   { on = "c",       run = "cd --interactive",            desc = "Interactive cd" },
 
