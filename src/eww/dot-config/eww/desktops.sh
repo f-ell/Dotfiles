@@ -5,7 +5,7 @@ declare icons='●○'
 function desktops {
   declare -a desktops
 
-  for d in `bspc query -D -m .focused`; do
+  for d in `bspc query -D`; do
     declare state
     declare occupied
 

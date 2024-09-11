@@ -1,0 +1,15 @@
+[manager]
+ratio = [1, 3, 3]
+scrolloff = 1
+
+sort_by = "natural"
+sort_sensitive = true
+sort_dir_first = true
+
+show_hidden = false
+show_symlink = true
+
+[preview]
+tab_size = 2
+image_filter = "nearest"
+image_quality = 50

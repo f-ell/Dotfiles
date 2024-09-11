@@ -1,7 +1,7 @@
 [global]
 title           = Dunst
 class           = Dunst
-font            = Ellograph CF Italic Demi-Bold 14
+font            = Ellograph CF Demi-Bold 14
 history_length  = 0
 sticky_history  = no
 show_indicators = false
@@ -32,8 +32,8 @@ background  = "#323c41"
 frame_color = "#323c41"
 
 [urgency_normal]
-timeout     = 3s
-foreground  = "#d699b6"
+timeout     = 6s
+foreground  = "#d3c6aa"
 background  = "#323c41"
 frame_color = "#323c41"
 
@@ -43,20 +43,16 @@ foreground  = "#e67e80"
 background  = "#323c41"
 frame_color = "#323c41"
 
-[spotify]
-appname     = "Spotify"
-skip_display= true
-
 [hightemp]
 appname     = "highTemp"
-timeout     = 8s
+timeout     = 4s
 foreground  = "#e67e80"
 background  = "#323c41"
 frame_color = "#323c41"
 
 [crittemp]
 appname     = "critTemp"
-timeout     = 14s
+timeout     = 8s
 foreground  = "#e67e80"
 background  = "#323c41"
 frame_color = "#323c41"
