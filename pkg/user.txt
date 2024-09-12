@@ -1,0 +1,66 @@
+# packages for a fully-fledged, graphical environment
+## display server / window manager
+bspwm
+kitty
+sxhkd
+xorg-server
+xorg-xev
+xorg-xinit
+xorg-xinput
+xorg-xset
+
+## cli tooling
+btop
+eza
+fd
+jq
+neovim
+ntfs-3g
+openconnect
+pacman-contrib
+pass
+plocate
+ripgrep
+stow
+udisks2
+wmctrl
+zsh
+
+## languages / toolchains
+docker
+go
+gradle|maven
+jdk-openjdk
+lua
+ninja
+npm
+perl
+perl-par-packer
+python
+python-pip
+qmk
+rustup
+
+## other
+adobe-source-code-pro-fonts
+bc
+dunst
+feh
+ffmpeg
+gimp
+gnu-free-fonts
+imagemagick
+isync
+lm_sensors
+pdfjs
+pulseaudio
+pulsemixer
+qutebrowser
+rofi
+scrot
+silicon
+ueberzug
+xclip
+yazi
+zathura
+zathura-pdf-poppler

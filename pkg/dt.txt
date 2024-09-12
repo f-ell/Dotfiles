@@ -1,0 +1,2 @@
+# packages for desktop-installations
+steam

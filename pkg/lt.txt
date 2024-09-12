@@ -1,0 +1,8 @@
+# packages for laptop-installations
+bluez
+bluez-tools
+bluez-utils
+brightnessctl
+openconnect
+tlp
+wpa_supplicant

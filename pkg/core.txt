@@ -1,0 +1,58 @@
+# packages for a working install
+## system core
+amd-ucode|intel-ucode
+efibootmgr
+linux
+linux-firmware
+
+## selected packages from `base`
+archlinux-keyring
+bash
+bzip2
+coreutils
+file
+filesystem
+findutils
+gawk
+gcc-libs
+gettext
+glibc
+grep
+gzip
+iproute2
+iputils
+licenses
+pacman
+pciutils
+procps-ng
+psmisc
+sed
+shadow
+tar
+util-linux
+xz
+
+## selected packages from `base-devel`
+autoconf
+automake
+binutils
+bison
+debugedit
+fakeroot
+flex
+gcc
+groff
+libtool
+m4
+make
+patch
+pkgconf
+texinfo
+
+## other
+curl
+git
+man-db
+networkmanager
+opendoas
+vim
