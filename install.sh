@@ -1,14 +1,26 @@
 #!/bin/bash
 trap "clean 130" HUP INT QUIT KILL TERM
 
-typeset -A CFG=( [base]=pkg [ifs]="$IFS" [logpref]=:: [aur]=0 )
-typeset PS3='==>'
+typeset -A CFG=(
+  [base]=pkg
+  [ifs]="$IFS"
+  [logps]=::
+  [aur]=0
+)
+typeset -A C=(
+  [r]=';38;5;1m'
+  [g]=';38;5;2m'
+  [y]=';38;5;3m'
+  [b]=';38;5;4m'
+  [a]=';38;5;6m'
+)
+PS3='==>'
 
 # TODO: documentation
 # TODO: coloured + bolded output where applicable
 
 function err {
-  printf '%s: %s\n' "${0##*/}" "$2" >&2
+  printf '%s: %b\n' "${0##*/}" "$2" >&2
   (( $1 > 0 )) && clean $1
 }
 function clean {
@@ -36,19 +48,32 @@ function dep {
   (( ${#missing[@]} > 0 )) && err 5 "missing dependencies: ${missing[*]}"
 }
 
+function stripTermColor {
+  for name in "$@"; do
+    typeset -n str=$name
+    printf -v str '%b' "$str"
+    str="${str//[^[:print:]]/}"
+    str="${str//\[[[:digit:]];[[:digit:]][[:digit:]];[[:digit:]];[[:digit:]]m/}"
+    str="${str//\[[[:digit:]]m/}"
+  done
+}
+
 function log {
-  printf '%s %s\n' "${CFG[logpref]}" "$1" >&2
+  printf '\e[1%s%s\e[0m %b\n' "${C[${1:-a}]}" "${CFG[logps]}" "$2" >&2
 }
 function logInfo {
-  printf '  %s\n' "$1" >&2
+  printf '   %b\n' "$1" >&2
 }
 function logWait {
-  typeset -i logLen=$(( ${#CFG[logpref]} + ${#1} + 1 ))
-  # FIX: produces an additional line, since \n is appended by default
-  log "$1"
-  printf "\e[A\e[${logLen}C\e[?25l"
+  typeset msg="$2"
+  stripTermColor msg
 
-  while eval "$2" &>/dev/null; do
+  typeset -i lnLen=$(( ${#CFG[logps]} + ${#msg} + 1 ))
+  # FIX: produces an additional line, since \n is appended by default
+  log $1 "$2"
+  printf "\e[A\e[${lnLen}C\e[?25l"
+
+  while eval "$3" &>/dev/null; do
     printf '\e[K'
     for _ in {0..2}; do
       sleep 0.2
@@ -60,30 +85,31 @@ function logWait {
 
   printf '...\n\e[?25h'
   # determine job success
-  eval "$3"
+  eval "$4"
   typeset x=$?
   if (( $x > 0 )); then
-    printf "\e[A\e[$(( ${logLen} + 3 ))C Failed\n"
+    printf "\e[A\e[$(( ${lnLen} + 3 ))C \e[1${C[r]}Failed\e[0m\n"
     return $x
   fi
 
-  printf "\e[A\e[$(( ${logLen} + 3 ))C Done\n"
+  printf "\e[A\e[$(( ${lnLen} + 3 ))C \e[1${C[g]}Done\e[0m\n"
 }
 
 function _prompt {
-  printf "$PROMPT" >&2
-  read
+  read -p "$1"
   typeset -i x=$?
   (( $x > 0 )) && exit $x || return 0
 }
 
 function prompt {
-  typeset pSel=${1:-n} pStr='y/N'
+  typeset pSel=$2 pStr='y/N'
   [[ $pSel == y ]] && pStr='Y/n'
-  printf -v PROMPT '%s %s [%s] ' "${CFG[logpref]}" "$PROMPT" "$pStr"
 
-  while PROMPT="$PROMPT" _prompt; do
-    [[ -z $REPLY ]] && printf '\e[A%s%s\n' "$PROMPT" "$pSel"
+  typeset prompt
+  printf -v prompt '\e[1%s%s\e[0m %b [%s] ' "${C[$1]}" "${CFG[logps]}" "$3" "$pStr"
+
+  while _prompt "$prompt"; do
+    [[ -z $REPLY ]] && printf '\e[A%s%s\n' "$prompt" "$pSel"
 
     : ${REPLY:=$pSel}
     case ${REPLY,,} in
@@ -162,8 +188,9 @@ function _inplaceSelect {
   for (( i=0; i<${#items[@]}; i++ )); do
     (( ${state[$i]} == 0 )) \
       && printf '%d) %s\n' $(( $i+1 )) "${items[$i]}" \
-      || printf '%d) %s%s\n' $(( $i+1 )) "${PREFIX:-* }" "${items[$i]}"
+      || printf '%d) \e[1%s%s\e[0m%s\n' $(( $i+1 )) "${C[b]}" "${PREFIX:-* }" "${items[$i]}"
   done
+  printf -v PS3 '%b' "$PS3"
   read -p "${PS3% } "
 
   if (( $? == 1 )); then
@@ -199,7 +226,7 @@ function inplaceSelect {
 
   log
   while :; do
-    _inplaceSelect $1 $2 || break
+    PS3="$PS3" _inplaceSelect $1 $2 || break
     printf "\b\e[${h}A\e[J"
   done
 }
@@ -212,7 +239,7 @@ function inplaceSelectOne {
 
   log
   while :; do
-    SELECTONE=y _inplaceSelect $1 $2 || break
+    SELECTONE=y PS3="$PS3" _inplaceSelect $1 $2 || break
     (( $SELECTION >= 0 )) && arrSet state 0 && state[$SELECTION]=1
     printf "\b\e[${h}A\e[J"
   done
@@ -233,7 +260,7 @@ function getPkgLists {
   local IFS=$'\n'
   pkgList=(`sort <<<"${pkgList[*]}"`)
   local IFS=,
-  log "Found ${#pkgList[@]} package lists: ${pkgList[*]}"
+  log a "Found \e[1m${#pkgList[@]}\e[0m package lists: ${pkgList[*]}"
 
   index pkgList core
   pkgState[$INDEX]=1
@@ -256,19 +283,19 @@ function parsePkgList {
           altList+=("$pkg")
           altState+=(0)
         done
-        PS3="$PS3 Mutually exclusive packages - select one (^D to confirm):" inplaceSelectOne altList altState
+        PS3="\e[1${C[y]}$PS3\e[0m Mutually exclusive packages - select one (^D to confirm):" inplaceSelectOne altList altState
         index altState 1
         REPLY=${altList[$INDEX]}
-        log "1 of ${#altList[@]} packages selected: $REPLY"
+        log a "\e[1m1\e[0m of \e[1m${#altList[@]}\e[0m packages selected: $REPLY"
       fi
 
       pkgInstall+=("${REPLY%%#*}")
     done 3<"${CFG[base]}/$p.txt"
 
-    logWait "Parsing list \`$p\`" 'false'
+    logWait a "Parsing list \`\e[1m$p\e[0m\`" 'false'
   done
 
-  log "Found ${#pkgInstall[@]} packages in ${#@} list(s)"
+  log a "Found \e[1m${#pkgInstall[@]}\e[0m packages in \e[1m${#@}\e[0m list(s)"
   (( ${#pkgInstall[@]} > 0 ))
 }
 
@@ -277,9 +304,9 @@ function ensureYay {
     return 0
   fi
 
-  log '`yay` not found. Trying to install...'
+  log y '`\e[1myay\e[0m` not found. Trying to install...'
   if ! command -v git &>/dev/null; then
-    logInfo '`git` not found - aborting'
+    logInfo "\`\e[1mgit\e[0m\` not found - \e[1${C[r]}aborting\e[0m"
     return 1
   fi
 
@@ -290,7 +317,7 @@ function ensureYay {
   (git clone --depth=1 https://github.com/Jguer/yay "${CFG[yay]}" \
     && cd "${CFG[yay]}" \
     && makepkg -si)&
-  logWait "Installing yay" 'kill -0 $!' 'wait $!'
+  logWait a "Installing yay" 'kill -0 $!' 'wait $!'
   cd "$_PWD"
 }
 
@@ -304,34 +331,34 @@ function installWith {
   done < <($1 --needed -Sp --print-format='%n' "${pkg[@]}")
 
   if (( $i == 0 )); then
-    log 'All packages already installed, nothing to do'
+    log a 'All packages already installed, nothing to do'
     return 0
   fi
   (( $i < ${#pkg[@]} )) \
-    && logInfo "$(( ${#pkg[@]} - $i )) of ${#pkg[@]} packages already installed"
+    && logInfo "\e[1m$(( ${#pkg[@]} - $i ))\e[0m of \e[1m${#pkg[@]}\e[0m packages already installed"
 
-  # FIX: handle privilege escalation for 
+  # FIX: handle privilege escalation
   $1 --noconfirm --needed -S "${pkg[@]}" &>"${CFG[logfile]}" &
-  logWait "Installing $i packages" 'kill -0 $!' 'wait $!' \
-    || err 4 "$1 fatal: `<${CFG[logfile]}`"
+  logWait a "Installing \e[1m$i\e[0m package(s)" 'kill -0 $!' 'wait $!' \
+    || err 4 "$1 fatal: \e[0${C[r]}`<${CFG[logfile]}`\e[0m"
 }
 
 # ------------------------------------------------------------------------------
 
 if (( $UID == 0 )); then
-  PROMPT='WARNING: script is not desinged to be run as root - continue?' prompt \
-    || err 7 'aborting'
+  prompt y n '\e[1mWARNING:\e[0m script is not desinged to be run as root - continue?' \
+    || err 7 "\e[1${C[r]}aborting\e[0m"
 fi
 
 dep pacman sort mktemp
 CFG[logfile]=`mktemp -p "${TMPDIR:-/tmp}" "${0##*/}".log.XXXXXXXXXX`
-log "Logfile created at ${CFG[logfile]:-}"
+log a "Logfile created at ${CFG[logfile]:-}"
 
 # ------------------------------------------------------------ package selection
 
 getPkgLists
 
-if PROMPT="Install machine specific packages?" prompt y; then
+if prompt a y 'Install machine specific packages?'; then
   case $MACHINE in
     dt|DT|desktop)
       index pkgList dt
@@ -349,8 +376,8 @@ if PROMPT="Install machine specific packages?" prompt y; then
   esac
 fi
 
-PS3="$PS3 Lists to install (^D to confirm): " inplaceSelect pkgList pkgState
-[[ ${pkgState[@]} =~ 1 ]] || err 4 'no lists selected - aborting'
+PS3="\e[1${C[g]}$PS3\e[0m Lists to install (^D to confirm): " inplaceSelect pkgList pkgState
+[[ ${pkgState[@]} =~ 1 ]] || err 4 "no lists selected - \e[1${C[r]}aborting\e[0m"
 
 typeset -a pkgSelect=()
 for (( i=0; i<${#pkgList[@]}; i++ )); do
@@ -359,7 +386,7 @@ for (( i=0; i<${#pkgList[@]}; i++ )); do
 done
 
 IFS=,
-log "${#pkgSelect[@]} of ${#pkgList[@]} list(s) selected: ${pkgSelect[*]}"
+log a "${#pkgSelect[@]} of ${#pkgList[@]} list(s) selected: ${pkgSelect[*]}"
 IFS="$_IFS"
 
 # --------------------------------------------------------- package installation
@@ -372,12 +399,12 @@ fi
 
 if (( ${#pkgSelect[@]} > 0 )); then
   (( ${CFG[aur]} == 1 )) \
-    && log 'AUR packages will be installed after all other packages'
+    && log y 'AUR packages will be installed after all other packages'
 
   # FIX: handle privilege escalation
   pacman -Syy &>"${CFG[logfile]}" &
-  logWait 'Updating mirrors' 'kill -0 $!' 'wait $!' \
-    || err 4 "pacman fatal: `<${CFG[logfile]}`"
+  logWait a 'Updating mirrors' 'kill -0 $!' 'wait $!' \
+    || err 4 "pacman fatal: \e[0${C[r]}`<${CFG[logfile]}`\e[0m"
 
   parsePkgList "${pkgSelect[@]}" && installWith pacman pkgInstall
 fi
@@ -385,16 +412,17 @@ fi
 # TODO: need to sync AUR?
 if (( ${CFG[aur]} == 1 )); then
   (( $UID == 0 )) \
-    && PROMPT='WARNING: AUR packages should not be installed as root - skip?' prompt y
+    && prompt y n '\e[1mWARNING:\e[0m AUR packages should not be installed as root - continue?'
 
-  if (( $? != 0 )); then
-    log 'Installing AUR packages...'
+  if (( ($UID != 0 && $? == 1) || ($UID == 0 && $? == 0) )); then
+    log a 'Installing AUR packages...'
     ensureYay && parsePkgList aur && installWith yay pkgInstall
   fi
 fi
 
 # ------------------------------------------------------ post-installation hooks
 
+log a 'All done - cleaning up'
 clean
 
 # TODO: hooks
