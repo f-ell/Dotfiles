@@ -1,6 +1,9 @@
 #!/bin/bash
 trap "clean 130" HUP INT QUIT KILL TERM
 
+typeset -A CFG=( [base]=pkg [ifs]="$IFS" [logpref]=:: [aur]=0 )
+typeset PS3='==>'
+
 # TODO: documentation
 # TODO: coloured + bolded output where applicable
 
@@ -10,10 +13,13 @@ function err {
 }
 function clean {
   printf '\e[?25h' # re-enable cursor in case of `logWait`-interrupt
-  rm -f "$LOGFILE" || err 0 "failed to remove logfile: $LOGFILE"
-  [[ -e $YAYDIR ]] && {
-    rm -rf "$YAYDIR" || err 0 "failed to remove yay install directory: $YAYDIR";
-  }
+  rm -f "${CFG[logfile]}" || err 0 "failed to remove logfile: ${CFG[logfile]}"
+
+  if [[ -e ${CFG[yay]} ]]; then
+    rm -rf "${CFG[yay]}" \
+      || err 0 "failed to remove yay install directory: ${CFG[yay]}"
+  fi
+
   exit ${1:-0}
 }
 
@@ -30,17 +36,14 @@ function dep {
   (( ${#missing[@]} > 0 )) && err 5 "missing dependencies: ${missing[*]}"
 }
 
-typeset -r PKG=pkg _IFS="$IFS" PSL=::
-typeset PS3='==>'
-
 function log {
-  printf '%s %s\n' "$PSL" "$1" >&2
+  printf '%s %s\n' "${CFG[logpref]}" "$1" >&2
 }
 function logInfo {
   printf '  %s\n' "$1" >&2
 }
 function logWait {
-  typeset -i logLen=$(( ${#PSL} + ${#1} + 1 ))
+  typeset -i logLen=$(( ${#CFG[logpref]} + ${#1} + 1 ))
   # FIX: produces an additional line, since \n is appended by default
   log "$1"
   printf "\e[A\e[${logLen}C\e[?25l"
@@ -77,7 +80,7 @@ function _prompt {
 function prompt {
   typeset pSel=${1:-n} pStr='y/N'
   [[ $pSel == y ]] && pStr='Y/n'
-  printf -v PROMPT '%s %s [%s] ' "${PSL% }" "$PROMPT" "$pStr"
+  printf -v PROMPT '%s %s [%s] ' "${CFG[logpref]}" "$PROMPT" "$pStr"
 
   while PROMPT="$PROMPT" _prompt; do
     [[ -z $REPLY ]] && printf '\e[A%s%s\n' "$PROMPT" "$pSel"
@@ -116,7 +119,7 @@ function handleSelect {
   typeset -n state=$1 index=$2
   typeset input="$3"
 
-  # prevent assignment error in case $REPLY is non-decimal number
+  # prevent assignment error in case REPLY is non-decimal number
   printf '%d' "$input" &>/dev/null && index=$input
   if (( $index <= 0 || $index > ${#state[@]} )); then
     index=-1
@@ -163,10 +166,10 @@ function _inplaceSelect {
   done
   read -p "${PS3% } "
 
-  (( $? == 1 )) && {
-    printf '^D\n';
+  if (( $? == 1 )); then
+    printf '^D\n'
     return 1
-  }
+  fi
 
   typeset -ig SELECTION=0
   if [[ -n $SELECTONE ]]; then
@@ -220,8 +223,8 @@ function inplaceSelectOne {
 function getPkgLists {
   typeset -ag pkgList=() pkgState=()
 
-  for l in $PKG/*; do
-    l="${l#$PKG/}"
+  for l in ${CFG[base]}/*; do
+    l="${l#${CFG[base]}/}"
     l="${l%.txt}"
     pkgList+=("$l")
     pkgState+=(0)
@@ -260,7 +263,7 @@ function parsePkgList {
       fi
 
       pkgInstall+=("${REPLY%%#*}")
-    done 3<"$PKG/$p.txt"
+    done 3<"${CFG[base]}/$p.txt"
 
     logWait "Parsing list \`$p\`" 'false'
   done
@@ -280,12 +283,12 @@ function ensureYay {
     return 1
   fi
 
-  typeset -g YAYDIR=`mktemp -d -p "${TMPDIR:-/tmp}" yay.XXXXXXXXXX`
+  CFG[yay]=`mktemp -d -p "${TMPDIR:-/tmp}" yay.XXXXXXXXXX`
   typeset _PWD="$PWD"
 
   # TODO: doing this with pushd / popd would arguably be nicer
-  (git clone --depth=1 https://github.com/Jguer/yay "$YAYDIR" \
-    && cd "$YAYDIR" \
+  (git clone --depth=1 https://github.com/Jguer/yay "${CFG[yay]}" \
+    && cd "${CFG[yay]}" \
     && makepkg -si)&
   logWait "Installing yay" 'kill -0 $!' 'wait $!'
   cd "$_PWD"
@@ -300,17 +303,17 @@ function installWith {
     let i++
   done < <($1 --needed -Sp --print-format='%n' "${pkg[@]}")
 
-  (( $i == 0 )) && {
-    log 'All packages already installed, nothing to do';
-    return 0;
-  }
+  if (( $i == 0 )); then
+    log 'All packages already installed, nothing to do'
+    return 0
+  fi
   (( $i < ${#pkg[@]} )) \
     && logInfo "$(( ${#pkg[@]} - $i )) of ${#pkg[@]} packages already installed"
 
   # FIX: handle privilege escalation for 
-  $1 --noconfirm --needed -S "${pkg[@]}" &>"$LOGFILE" &
+  $1 --noconfirm --needed -S "${pkg[@]}" &>"${CFG[logfile]}" &
   logWait "Installing $i packages" 'kill -0 $!' 'wait $!' \
-    || err 4 "$1 fatal: `<$LOGFILE`"
+    || err 4 "$1 fatal: `<${CFG[logfile]}`"
 }
 
 # ------------------------------------------------------------------------------
@@ -321,8 +324,8 @@ if (( $UID == 0 )); then
 fi
 
 dep pacman sort mktemp
-typeset LOGFILE=`mktemp -p "${TMPDIR:-/tmp}" "${0##*/}".log.XXXXXXXXXX`
-log "Logfile created at ${LOGFILE:-}"
+CFG[logfile]=`mktemp -p "${TMPDIR:-/tmp}" "${0##*/}".log.XXXXXXXXXX`
+log "Logfile created at ${CFG[logfile]:-}"
 
 # ------------------------------------------------------------ package selection
 
@@ -361,30 +364,33 @@ IFS="$_IFS"
 
 # --------------------------------------------------------- package installation
 
-# FIX: execution when selecting ONLY aur
-typeset -i AUR=0
-[[ ${pkgSelect[@]} =~ aur ]] && {
-  log 'AUR packages will be installed after all other packages'
-  AUR=1;
+if [[ ${pkgSelect[@]} =~ aur ]]; then
+  CFG[aur]=1
   index pkgSelect aur
   unset pkgSelect[$INDEX]
-}
+fi
 
-# FIX: handle privilege escalation
-pacman -Syy &>"$LOGFILE" &
-logWait 'Updating mirrors' 'kill -0 $!' 'wait $!' \
-  || err 4 "pacman fatal: `<$LOGFILE`"
+if (( ${#pkgSelect[@]} > 0 )); then
+  (( ${CFG[aur]} == 1 )) \
+    && log 'AUR packages will be installed after all other packages'
 
-parsePkgList "${pkgSelect[@]}" && installWith pacman pkgInstall
+  # FIX: handle privilege escalation
+  pacman -Syy &>"${CFG[logfile]}" &
+  logWait 'Updating mirrors' 'kill -0 $!' 'wait $!' \
+    || err 4 "pacman fatal: `<${CFG[logfile]}`"
 
-if (( $AUR > 0 )); then
+  parsePkgList "${pkgSelect[@]}" && installWith pacman pkgInstall
+fi
+
+# TODO: need to sync AUR?
+if (( ${CFG[aur]} == 1 )); then
   (( $UID == 0 )) \
     && PROMPT='WARNING: AUR packages should not be installed as root - skip?' prompt y
 
-  (( $? != 0 )) && {
-    log 'Installing AUR packages...';
-    ensureYay && parsePkgList aur && installWith yay pkgInstall;
-  }
+  if (( $? != 0 )); then
+    log 'Installing AUR packages...'
+    ensureYay && parsePkgList aur && installWith yay pkgInstall
+  fi
 fi
 
 # ------------------------------------------------------ post-installation hooks
