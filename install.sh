@@ -56,8 +56,14 @@ function logWait {
   done
 
   printf '...\n\e[?25h'
-  # possible return in case operation failed and is not 'Done'
-  [[ -n $3 ]] && eval "$3"
+  # determine job success
+  eval "$3"
+  typeset x=$?
+  if (( $x > 0 )); then
+    printf "\e[A\e[$(( ${logLen} + 3 ))C Failed\n"
+    return $x
+  fi
+
   printf "\e[A\e[$(( ${logLen} + 3 ))C Done\n"
 }
 
@@ -208,7 +214,7 @@ function inplaceSelectOne {
     printf "\b\e[${h}A\e[J"
   done
 
-  (( $SELECTION >= 0 )) && arrSet state 0 && state[$SELECTION]=1
+  (( ${SELECTION:--1} >= 0 )) && arrSet state 0 && state[$SELECTION]=1
 }
 
 function getPkgLists {
@@ -281,7 +287,7 @@ function ensureYay {
   (git clone --depth=1 https://github.com/Jguer/yay "$YAYDIR" \
     && cd "$YAYDIR" \
     && makepkg -si)&
-  logWait "Installing yay" 'kill -0 $!' 'wait $! || return $?'
+  logWait "Installing yay" 'kill -0 $!' 'wait $!'
   cd "$_PWD"
 }
 
@@ -303,7 +309,7 @@ function installWith {
 
   # FIX: handle privilege escalation for 
   $1 --noconfirm --needed -S "${pkg[@]}" &>"$LOGFILE" &
-  logWait "Installing $i packages" 'kill -0 $!' 'wait $! || return $?' \
+  logWait "Installing $i packages" 'kill -0 $!' 'wait $!' \
     || err 4 "$1 fatal: `<$LOGFILE`"
 }
 
@@ -359,14 +365,14 @@ IFS="$_IFS"
 typeset -i AUR=0
 [[ ${pkgSelect[@]} =~ aur ]] && {
   log 'AUR packages will be installed after all other packages'
-  let AUR++;
-  # WARN: breaks with names containing spaces
-  pkgSelect=(${pkgSelect[@]/aur/});
+  AUR=1;
+  index pkgSelect aur
+  unset pkgSelect[$INDEX]
 }
 
 # FIX: handle privilege escalation
 pacman -Syy &>"$LOGFILE" &
-logWait 'Updating mirrors' 'kill -0 $!' 'wait $! || return $?' \
+logWait 'Updating mirrors' 'kill -0 $!' 'wait $!' \
   || err 4 "pacman fatal: `<$LOGFILE`"
 
 parsePkgList "${pkgSelect[@]}" && installWith pacman pkgInstall
