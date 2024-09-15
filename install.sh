@@ -2,6 +2,7 @@
 trap "clean 130" HUP INT QUIT KILL TERM
 
 # TODO: documentation
+# TODO: coloured + bolded output where applicable
 
 function err {
   printf '%s: %s\n' "${0##*/}" "$2" >&2
@@ -98,6 +99,53 @@ function index {
   return -1
 }
 
+function arrSet {
+  typeset -n arr=$1
+  for (( i=0; i<${#arr[@]}; i++ )); do
+    arr[$i]="$2"
+  done
+}
+
+function handleSelect {
+  typeset -n state=$1 index=$2
+  typeset input="$3"
+
+  # prevent assignment error in case $REPLY is non-decimal number
+  printf '%d' "$input" &>/dev/null && index=$input
+  if (( $index <= 0 || $index > ${#state[@]} )); then
+    index=-1
+    return 0
+  fi
+
+  let index--
+  (( ${state[$index]} == 0 )) && state[$index]=1 || state[$index]=0
+}
+
+function rangeSelect {
+  typeset -n state=$1
+  typeset range="$2"
+  typeset -a bounds=("${range%-*}" "${range#*-}")
+
+  # needs C-style loop since members may be empty
+  for (( i=0; i<${#bounds[@]}; i++ )); do
+    if [[ -z ${bounds[$i]} ]] \
+      || ! printf '%d' "${bounds[$i]}" &>/dev/null \
+      || (( ${bounds[$i]} <= 0 || ${bounds[$i]} > ${#state[@]} )); then
+      return 0
+    fi
+  done
+
+  for (( i=${bounds[0]}; i<=${bounds[1]}; i++ )); do
+    state[$(( $i-1 ))]=1
+  done
+}
+
+# Accepts input in the form
+#   INPUT := TOKEN[,TOKEN]...
+#   TOKEN := INDEX[-INDEX]
+# where INDEX > 0 and INDEX <= number of items.
+# Special cases to select or deselect all items are also supported:
+#   INPUT := *|-
 function _inplaceSelect {
   typeset -n items=$1 state=$2
   typeset -i i=1
@@ -115,18 +163,25 @@ function _inplaceSelect {
   }
 
   typeset -ig SELECTION=0
-  # prevent assignment error in case $REPLY is non-decimal number
-  printf '%d' "$REPLY" &>/dev/null && printf -v SELECTION '%d' $REPLY
-  if (( $SELECTION > 0 && $SELECTION <= ${#items[@]} )); then
-    let SELECTION--
-
-    (( ${state[$SELECTION]} == 0 )) \
-      && state[$SELECTION]=1 \
-      || state[$SELECTION]=0
-
+  if [[ -n $SELECTONE ]]; then
+    handleSelect $2 SELECTION $REPLY
     return 0
   fi
-  SELECTION=-1
+
+  if [[ $REPLY == \* ]]; then
+    arrSet state 1
+    return 0
+  elif [[ $REPLY == - ]]; then
+    arrSet state 0
+    return 0
+  fi
+
+  local IFS=,
+  for field in $REPLY; do
+    [[ $field =~ - ]] \
+      && rangeSelect $2 "$field"  \
+      || handleSelect $2 SELECTION "$field"
+  done
 }
 
 function inplaceSelect {
@@ -141,26 +196,19 @@ function inplaceSelect {
 }
 
 function inplaceSelectOne {
-  function zeroArray {
-    typeset -n arr=$1
-    for (( i=0; i<${#arr[@]}; i++ )); do
-      arr[$i]=0
-    done
-  }
-
   typeset -n items=$1 state=$2
   typeset -i h=$(( ${#items[@]} + 1 ))
-  zeroArray state
+  arrSet state 0
   state[0]=1
 
   log
   while :; do
-    _inplaceSelect $1 $2 || break
-    (( $SELECTION >= 0 )) && zeroArray state && state[$SELECTION]=1
+    SELECTONE=y _inplaceSelect $1 $2 || break
+    (( $SELECTION >= 0 )) && arrSet state 0 && state[$SELECTION]=1
     printf "\b\e[${h}A\e[J"
   done
 
-  (( $SELECTION >= 0 )) && zeroArray state && state[$SELECTION]=1
+  (( $SELECTION >= 0 )) && arrSet state 0 && state[$SELECTION]=1
 }
 
 function getPkgLists {
