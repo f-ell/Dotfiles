@@ -70,7 +70,6 @@ alias e1='eza -1'
 alias ed='eza -ld'
 alias el='eza -la'
 alias ex='exec $SHELL'
-alias gl='glow -p'
 alias v=$EDITOR
 alias yeet='doas pacman -Qtdq | doas pacman -Rns -'
 alias xo='xdg-open'
