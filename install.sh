@@ -17,7 +17,6 @@ typeset -A C=(
 PS3='==>'
 
 # TODO: documentation
-# TODO: coloured + bolded output where applicable
 
 function err {
   printf '%s: %b\n' "${0##*/}" "$2" >&2
@@ -25,11 +24,11 @@ function err {
 }
 function clean {
   printf '\e[?25h' # re-enable cursor in case of `logWait`-interrupt
-  rm -f "${CFG[logfile]}" || err 0 "failed to remove logfile: ${CFG[logfile]}"
+  rm -f "${CFG[logfile]}" || err 0 "failed to remove logfile: \e[1m${CFG[logfile]}\e[0m"
 
   if [[ -e ${CFG[yay]} ]]; then
     rm -rf "${CFG[yay]}" \
-      || err 0 "failed to remove yay install directory: ${CFG[yay]}"
+      || err 0 "failed to remove yay install directory: \e[1m${CFG[yay]}\e[0m"
   fi
 
   exit ${1:-0}
@@ -59,7 +58,7 @@ function stripTermColor {
 }
 
 function log {
-  printf '\e[1%s%s\e[0m %b\n' "${C[${1:-a}]}" "${CFG[logps]}" "$2" >&2
+  printf '\e[1%s%s\e[0m %b%s' "${C[${1:-a}]}" "${CFG[logps]}" "$2" "${N-$'\n'}" >&2
 }
 function logInfo {
   printf '   %b\n' "$1" >&2
@@ -69,9 +68,8 @@ function logWait {
   stripTermColor msg
 
   typeset -i lnLen=$(( ${#CFG[logps]} + ${#msg} + 1 ))
-  # FIX: produces an additional line, since \n is appended by default
-  log $1 "$2"
-  printf "\e[A\e[${lnLen}C\e[?25l"
+  N= log $1 "$2"
+  printf "\e[?25l"
 
   while eval "$3" &>/dev/null; do
     printf '\e[K'
@@ -311,14 +309,11 @@ function ensureYay {
   fi
 
   CFG[yay]=`mktemp -d -p "${TMPDIR:-/tmp}" yay.XXXXXXXXXX`
-  typeset _PWD="$PWD"
 
-  # TODO: doing this with pushd / popd would arguably be nicer
-  (git clone --depth=1 https://github.com/Jguer/yay "${CFG[yay]}" \
-    && cd "${CFG[yay]}" \
-    && makepkg -si)&
-  logWait a "Installing yay" 'kill -0 $!' 'wait $!'
-  cd "$_PWD"
+  (git clone --depth=1 https://github.com/Jguer/yay "${CFG[yay]}" &>"${CFG[logfile]}" \
+    && makepkg --dir="${CFG[yay]}" -si &>"${CFG[logfile]}")&
+  logWait a "Installing yay" 'kill -0 $!' 'wait $!' \
+    || err 4 "fatal: \e[0${C[r]}`<${CFG[logfile]}`\e[0m"
 }
 
 function installWith {
@@ -352,7 +347,7 @@ fi
 
 dep pacman sort mktemp
 CFG[logfile]=`mktemp -p "${TMPDIR:-/tmp}" "${0##*/}".log.XXXXXXXXXX`
-log a "Logfile created at ${CFG[logfile]:-}"
+log a "Logfile created at \e[1m${CFG[logfile]:-}\e[0m"
 
 # ------------------------------------------------------------ package selection
 
@@ -386,7 +381,7 @@ for (( i=0; i<${#pkgList[@]}; i++ )); do
 done
 
 IFS=,
-log a "${#pkgSelect[@]} of ${#pkgList[@]} list(s) selected: ${pkgSelect[*]}"
+log a "\e[1m${#pkgSelect[@]}\e[0m of \e[1m${#pkgList[@]}\e[0m list(s) selected: ${pkgSelect[*]}"
 IFS="$_IFS"
 
 # --------------------------------------------------------- package installation
