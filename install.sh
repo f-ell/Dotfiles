@@ -1,5 +1,5 @@
 #!/bin/bash
-trap "clean 130" HUP INT QUIT KILL TERM
+trap 'clean 130' HUP INT QUIT KILL TERM
 
 typeset -A CFG=(
   [base]=pkg
@@ -69,22 +69,22 @@ function logWait {
 
   typeset -i lnLen=$(( ${#CFG[logps]} + ${#msg} + 1 ))
   N= log $1 "$2"
-  printf "\e[?25l"
+  printf '\e[?25l'
 
   while eval "$3" &>/dev/null; do
     printf '\e[K'
     for _ in {0..2}; do
-      sleep 0.2
+      read -t 0.2
       printf '.'
     done
-    sleep 0.4
+    read -t 0.4
     printf '\b\b\b'
   done
 
   printf '...\n\e[?25h'
   # determine job success
   eval "$4"
-  typeset x=$?
+  typeset -i x=$?
   if (( $x > 0 )); then
     printf "\e[A\e[$(( ${lnLen} + 3 ))C \e[1${C[r]}Failed\e[0m\n"
     return $x
@@ -189,7 +189,8 @@ function _inplaceSelect {
       || printf '%d) \e[1%s%s\e[0m%s\n' $(( $i+1 )) "${C[b]}" "${PREFIX:-* }" "${items[$i]}"
   done
   printf -v PS3 '%b' "$PS3"
-  read -p "${PS3% } "
+  # FIX: return produces additional screen line
+  read -p "${PS3% } " </dev/tty # executed in nested loop - requires explicit fd
 
   if (( $? == 1 )); then
     printf '^D\n'
@@ -268,8 +269,7 @@ function parsePkgList {
   typeset -ag pkgInstall=()
 
   for p in "$@"; do
-    # nested read requires that this reads from a fd other than 1
-    while read -u3 ; do
+    while read; do
       [[ -z $REPLY || $REPLY =~ ^\s+$ || $REPLY =~ ^\s*# ]] && continue
 
       # user selection between mutually exclusive packages
@@ -288,7 +288,7 @@ function parsePkgList {
       fi
 
       pkgInstall+=("${REPLY%%#*}")
-    done 3<"${CFG[base]}/$p.txt"
+    done <"${CFG[base]}/$p.txt"
 
     logWait a "Parsing list \`\e[1m$p\e[0m\`" 'false'
   done
@@ -312,7 +312,7 @@ function ensureYay {
 
   (git clone --depth=1 https://github.com/Jguer/yay "${CFG[yay]}" &>"${CFG[logfile]}" \
     && makepkg --dir="${CFG[yay]}" -si &>"${CFG[logfile]}")&
-  logWait a "Installing yay" 'kill -0 $!' 'wait $!' \
+  logWait a 'Installing yay' 'kill -0 $!' 'wait $!' \
     || err 4 "fatal: \e[0${C[r]}`<${CFG[logfile]}`\e[0m"
 }
 
@@ -364,7 +364,7 @@ if prompt a y 'Install machine specific packages?'; then
       pkgState[$INDEX]=1
       ;;
     *)
-      logInfo "could not determine host type from \$MACHINE - using desktop"
+      logInfo 'could not determine host type from $MACHINE - using desktop'
       index pkgList dt
       pkgState[$INDEX]=1
       ;;
@@ -382,7 +382,7 @@ done
 
 IFS=,
 log a "\e[1m${#pkgSelect[@]}\e[0m of \e[1m${#pkgList[@]}\e[0m list(s) selected: ${pkgSelect[*]}"
-IFS="$_IFS"
+IFS="${CFG[ifs]}"
 
 # --------------------------------------------------------- package installation
 
@@ -397,7 +397,10 @@ if (( ${#pkgSelect[@]} > 0 )); then
     && log y 'AUR packages will be installed after all other packages'
 
   # FIX: handle privilege escalation
-  pacman -Syy &>"${CFG[logfile]}" &
+  # pacman -Syy &>"${CFG[logfile]}" &
+  #
+  #
+  sleep 1&
   logWait a 'Updating mirrors' 'kill -0 $!' 'wait $!' \
     || err 4 "pacman fatal: \e[0${C[r]}`<${CFG[logfile]}`\e[0m"
 
