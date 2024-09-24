@@ -58,6 +58,7 @@ bspc rule -a *:*:Picture-in-Picture           state=floating
 # AUTOSTART
 pgrep eww || eww daemon &
 eww open bar-${MACHINE,,} &
+
 if [[ $MACHINE == DT ]]; then
   pgrep dunst || dunst &
   pgrep sxhkd || \
@@ -71,22 +72,24 @@ else
     sxhkd $XDG_CONFIG_HOME/sxhkd/sxhkdrc.lt $XDG_CONFIG_HOME/bspwm/sxhkdrc.bspwm &
   pgrep ssm || ssm -t 60 -e g -b 30 -c 70 &
 fi
+
 feh --no-fehbg --bg-fill $HOME/Media/Pictures/Wallpapers/astronaut.png &
+./scripts/gulp &
 
 
 # float desktop '^4'; force steam to desktop '^4'
-target_id=`bspc query -D -d '^4'`
+typeset target_id=`bspc query -D -d '^4'`
 while read -a REPLY; do
-  desk_id=${REPLY[2]}
-  node_id=${REPLY[-1]}
+  typeset node_id=${REPLY[-1]} desk_id=${REPLY[-3]}
 
-  `xprop -id $node_id | grep 'STEAM_GAME(CARDINAL)'` && bspc node $node_id -d '^4'
+  `xprop -id $node_id | grep 'STEAM_GAME(CARDINAL)' 2>/dev/null` && bspc node $node_id -d '^4'
   [[ $target_id == $desk_id ]] && bspc node $node_id -t floating
 done < <(bspc subscribe node_add) &
 
-# hide eww bar on fullscreen apps
+# hide bar on fullscreen apps
 while read -a REPLY; do
   [[ ${REPLY[-2]} != fullscreen ]] && continue
+
   if [[ ${REPLY[-1]} == on ]]; then
     eww close bar-${MACHINE,,}
   else
