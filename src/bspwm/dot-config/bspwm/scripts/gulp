@@ -1,0 +1,106 @@
+#!/bin/bash
+
+# inspired by gustavosbarreto/bsp-swallow and JopStro/bspswallow
+
+function err {
+  printf '%s: %s\n' "${0##*/}" "$2" 1>&2
+  (( $1 > 0 )) && exit $1
+}
+
+function dep {
+  typeset -a missing=()
+
+  for d in "$@"; do
+    if ! command -v $d &>/dev/null; then
+      missing+=("$d")
+    fi
+  done
+
+  local IFS=','
+  (( ${#missing[@]} > 0 )) && err 4 "unmet dependencies: ${missing[*]}"
+}
+
+function get_pid {
+  while (( $# > 1 )); do
+    typeset -n pRef=$1
+    typeset nodeId=${2,,}
+
+    # TODO: could replace `wmctrl`, but returns garbled value?
+    # pRef=`atomx _NET_WM_PID $nodeId`
+
+    while read -a REPLY; do
+      [[ ${REPLY[0]} != $nodeId ]] && continue
+
+      pRef=${REPLY[2]}
+      break
+    done < <(wmctrl -lp)
+
+    shift 2
+  done
+}
+
+function get_ppid {
+  while (( $# > 1 )); do
+    typeset -n pRef=$1
+    pRef=`ps -o ppid= -p $2`
+    shift 2
+  done
+}
+
+function try_gulp {
+  typeset nodeNew=$1 nodeOld=$2
+
+  typeset -i pidNew= pidOld= ppidNew= pidShell=
+  get_pid  pidNew   $nodeNew pidOld $nodeOld
+  get_ppid pidShell $pidNew
+  get_ppid ppidNew  $pidShell
+
+  [[ $ppidNew == $pidOld \
+    && `ps -o stat= -p $pidNew` =~ [^+]$ \
+    && `atomx WM_CLASS $nodeOld` =~ ${GULP[@]} \
+    && ! `atomx WM_CLASS $nodeNew` =~ ${GULP[@]} ]] || return
+
+  atomx bspwm-gulped-for=$nodeNew $nodeOld >/dev/null
+  err 0 "set gulp id $nodeNew on $nodeOld"
+  err 0 "gulping $nodeOld"
+  bspc node $nodeOld -g hidden=on
+}
+
+function try_barf {
+  typeset nodeId=$1 deskId=$2 barfId=
+
+  while read; do
+    typeset gulp=`atomx bspwm-gulped-for $REPLY`
+    [[ $gulp != $nodeId ]] && continue
+
+    barfId=$REPLY
+    break
+  done < <(bspc query -N -n .leaf.hidden)
+
+  [[ -z $barfId ]] && return
+
+  err 0 "found gulp id $nodeId on $barfId"
+  err 0 "barfing $barfId"
+  # FIX: move barfId to where nodeId *was*
+  bspc node $barfId -d $2 -g hidden=off
+}
+
+# ------------------------------------------------------------------------------
+
+dep atomx ps wmctrl
+
+typeset GULPFILE="${XDG_CONFIG_HOME:-$HOME/.config}/bspwm/gulpable"
+typeset -a GULP=()
+[[ -f $GULPFILE ]] && GULP=(`< "$GULPFILE"`)
+
+# TODO: use file to deprecate atomx?
+# : ${TMPDIR:=/tmp}
+# typeset LOG="${TMPDIR%/}"/bspwm-gulp.log
+# [[ -f $LOG ]] || printf '' >"$LOG"
+
+while read -a REPLY; do
+  case ${REPLY[0]} in
+  node_add)    try_gulp ${REPLY[-1]} `bspc query -N -n last` ;;
+  node_remove) try_barf ${REPLY[-1]} ${REPLY[-2]} ;;
+  esac
+done < <(bspc subscribe node_add node_remove)
