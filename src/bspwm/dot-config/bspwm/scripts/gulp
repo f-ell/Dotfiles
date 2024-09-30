@@ -56,7 +56,7 @@ function try_gulp {
   get_ppid ppidNew  $pidShell
 
   [[ $ppidNew == $pidOld \
-    && `ps -o stat= -p $pidNew` =~ [^+]$ \
+    && `ps -o stat= -p $pidNew` =~ '+'$ \
     && `atomx WM_CLASS $nodeOld` =~ ${GULP[@]} \
     && ! `atomx WM_CLASS $nodeNew` =~ ${GULP[@]} ]] || return
 
@@ -83,6 +83,7 @@ function try_barf {
   err 0 "barfing $barfId"
   # FIX: move barfId to where nodeId *was*
   bspc node $barfId -d $2 -g hidden=off
+  bspc node -f $barfId
 }
 
 # ------------------------------------------------------------------------------
