@@ -62,6 +62,15 @@ function Status:permissions()
 	return ui.Line(spans)
 end
 
+function Status:owner()
+	local h = self._tab.current.hovered
+	local o, g = ya.user_name(h.cha.uid), ya.group_name(h.cha.gid)
+
+	return ui.Line({
+		ui.Span((" %s:%s "):format(o, g)):fg(THEME.status.separator_style.fg):bg(THEME.status.separator_style.bg),
+	})
+end
+
 function Status:size()
 	local h = self._tab.current.hovered
 	if not h then
@@ -69,7 +78,7 @@ function Status:size()
 	end
 
 	return ui.Line({
-		ui.Span(" " .. ya.readable_size(h:size() or h.cha.length) .. " ")
+		ui.Span((" %6s "):format(ya.readable_size(h:size() or h.cha.length)))
 			:fg(self:style().bg)
 			:bg(THEME.status.separator_style.bg),
 	})
@@ -80,7 +89,7 @@ function Status:position()
 	local length = #self._tab.current.files
 
 	return ui.Line({
-		ui.Span(string.format(" %2d/%-2d ", cursor + 1, length)):style(self:style()),
+		ui.Span((" %2d/%-2d "):format(cursor + 1, length)):style(self:style()),
 	})
 end
 
@@ -89,7 +98,8 @@ Status._left = {
 	{ "name", id = nil, order = 2 },
 }
 Status._right = {
-	{ "permissions", id = nil, order = 1 },
-	{ "size", id = nil, order = 2 },
-	{ "position", id = nil, order = 3 },
+	{ "permissions", id = nil },
+	{ "owner", id = nil },
+	{ "size", id = nil },
+	{ "position", id = nil },
 }
