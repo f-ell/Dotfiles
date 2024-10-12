@@ -14,11 +14,11 @@ set -o autocd -o extendedglob -o histexpiredupsfirst -o histignoredups\
   -o rematchpcre
 set +o automenu +o autoremoveslash
 
-KEYTIMEOUT=1
-SAVEHIST=10000
-HISTSIZE=$(($SAVEHIST + 100))
-HISTFILE="$HOME/.zsh_history"
-LESSHISTFILE=-
+export KEYTIMEOUT=1
+export SAVEHIST=10000
+export HISTSIZE=$(($SAVEHIST + 100))
+export HISTFILE="$HOME/.zsh_history"
+export LESSHISTFILE=-
 
 [[ -f $HOME/.machine ]] && MACHINE=`< $HOME/.machine` || MACHINE=DT
 export MACHINE
@@ -26,25 +26,24 @@ export VISUAL=nvim
 export EDITOR=$VISUAL
 
 [[ -f $HOME/.env ]] && . "$HOME/.env"
-bin="/usr/bin:/usr/local/bin:$HOME/.local/bin"
-perl='/usr/bin/core_perl:/usr/bin/site_perl:/usr/bin/vendor_perl'
 
-typeset ifs="$IFS"
-typeset -a misc=()
-[[ -n $GOPATH ]] && misc+=("$GOPATH/bin")
-[[ -n $CARGO_HOME ]] && misc+=("$CARGO_HOME/bin")
-[[ -n $JAVA_HOME ]] && misc+=("$JAVA_HOME/bin")
+# ------------------------------------------------------------------------------
 
-IFS=':'
-export PATH="$bin:$perl:${misc[*]}"
-IFS="$ifs"
-unset ifs bin perl misc
+function _rc_path {
+  typeset bin="/usr/bin:/usr/local/bin:$HOME/.local/bin"\
+    perl='/usr/bin/core_perl:/usr/bin/site_perl:/usr/bin/vendor_perl'
+  typeset -a misc=()
+
+  [[ -n $GOPATH ]] && misc+=("$GOPATH/bin")
+  [[ -n $CARGO_HOME ]] && misc+=("$CARGO_HOME/bin")
+  [[ -n $JAVA_HOME ]] && misc+=("$JAVA_HOME/bin")
+
+  local IFS=':'
+  printf "$bin:$perl:${misc[*]}"
+}
+export PATH=`_rc_path`
 
 [[ -f $HOME/.aliases ]] && . "$HOME/.aliases"
-ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=20
-ZSH_AUTOSUGGEST_MANUAL_REBIND=True
-. "$XDG_CONFIG_HOME/zsh/zsh-autosuggestions/zsh-autosuggestions.zsh"
-. "$XDG_CONFIG_HOME/zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 
 function preexec {
   # does not detect obfuscated commands
@@ -56,17 +55,18 @@ function preexec {
   }
 }
 
-# binds
-autoload edit-command-line
-zle -N edit-command-line
+# ------------------------------------------------------------------------------
 
-function user-reverse-i-search() {
-  declare hist=(`history 1 | tac | zf --height 16 -p`)
+autoload edit-command-line
+function _rc_reverse_i_search {
+  typeset -a hist=(`history 1 | tac | zf --height 16 -p`)
   zle reset-prompt
   BUFFER=${hist[2,$#hist]:-$BUFFER}
   CURSOR=$#BUFFER
 }
-zle -N user-reverse-i-search
+
+zle -N edit-command-line
+zle -N _rc_reverse_i_search
 
 bindkey -v '^K' kill-line
 bindkey -v '^U' backward-kill-line
@@ -74,109 +74,120 @@ bindkey -v '^Y' yank
 bindkey -v '^?' backward-delete-char # don't delete to killring
 
 bindkey '^Xe' edit-command-line
-bindkey '^R' user-reverse-i-search
-bindkey '^ ' autosuggest-accept
+bindkey '^R' _rc_reverse_i_search
+bindkey '^I' complete-word
+bindkey '^ ' expand-word
 
-# PS1
-PS1=$'%1~ $ '
-if xset q &>/dev/null; then
-  function get_git {
-    # head
-    typeset head=`git rev-parse --is-inside-work-tree 2>/dev/null`
-    if (( $? == 0 )) && [[ $head == true ]]; then
-      typeset -A refs
-      while read; do
-        refs+=([${${REPLY#* }%\^\{\}}]="${REPLY% *}")
-      done < <(git -C . show-ref --head --heads --tags --abbrev -d)
+# ------------------------------------------------------------------------------
 
-      typeset href=HEAD hid=${refs[HEAD]}
-      typeset ref id
-      typeset -i m b
-      for ref id in ${(@kv)refs}; do
-        [[ $ref == HEAD ]] && continue
+function _rc_ps1_get_git_head {
+  typeset head=`git rev-parse --is-inside-work-tree 2>/dev/null`
 
-        if [[ $hid == $id ]]; then
-          let m++
-          [[ $ref =~ refs/heads/ ]] && let b++
-          href=${ref#refs/*/}
-          hid=$id
-        fi
-      done
-
-      if (( m == 0 )); then
-        href=$hid
-      elif (( b > 1 )) || (( m > b && b > 0 )); then
-        # NOTE: detached head at branch head prefers tag-name over commit
-        typeset branch=`git -C . branch --show-current`
-        [[ -n $branch ]] && href="$branch"
-      fi
-
-      head="$href"
-    else
-      unset head
-    fi
-
-    # stash
-    if [[ -n $head ]]; then
-      typeset tl=`git rev-parse --show-toplevel`
-      [[ -f $tl/.git ]] && {
-        tl=`< $tl/.git`
-        tl=${tl#gitdir: }
-        [[ -f $tl/commondir ]] && tl+=/`< $tl/commondir`
-      }
-      [[ -f $tl/refs/stash || -f $tl/.git/refs/stash ]] && head+=\~
-    fi
-
-    printf "$head"
-  }
-
-  [[ -f $HOME/.prompt_char ]] && {
-    # read first non-empty line
+  if (( $? == 0 )) && [[ $head == true ]]; then
+    typeset -A refs
     while read; do
-      [[ -z $REPLY ]] && continue
-      CHR=$REPLY
-      break
-    done < $HOME/.prompt_char
-  }
-  CHR=${CHR:-\$}
+      refs+=([${${REPLY#* }%\^\{\}}]="${REPLY% *}")
+    done < <(git -C . show-ref --head --heads --tags --abbrev -d)
 
-  function set_prompt {
-    unset PS1
-    typeset cl_chr=$'\e[38;2;160;160;160m'
-    typeset cl_err=$'\e[38;2;230;126;128m'
-    typeset cl_git=$'\e[38;2;252;163;38m'
-    typeset cl_txt=$'\e[38;2;211;198;170m'
-    typeset bold=$'\e[1m'
-    typeset none=$'\e[0m'
+    typeset href=HEAD hid=${refs[HEAD]}
+    typeset -i m b
+    for ref id in ${(@kv)refs}; do
+      [[ $ref == HEAD ]] && continue
 
-    typeset ex git pwd
-    (( $1 == 0 )) && ex= || ex=$1
-    git=`get_git`
-    typeset job='%j'
+      if [[ $hid == $id ]]; then
+        let m++
+        [[ $ref =~ refs/heads/ ]] && let b++
+        href=${ref#refs/*/}
+        hid=$id
+      fi
+    done
 
-    PS1="%{$cl_txt%}"
-    [[ $PWD == / ]] && pwd=/ || pwd=${PWD##*/}
-    [[ $PWD != $HOME ]] && PS1+="$pwd "
-    [[ -n $git ]]       && PS1+="%{$cl_git%} $git "
-    (( ${(%)job} > 0 )) && PS1+="%{$cl_chr%}%% "
-    [[ -n $ex ]]        && PS1+="%{$cl_err$bold%}$ex%{$none%} "
-    PS1+="%{$cl_chr%}${2:-$CHR} "
-  }
+    if (( m == 0 )); then
+      href=$hid
+    elif (( b > 1 )) || (( m > b && b > 0 )); then
+      # NOTE: detached head at branch head prefers tag-name over commit
+      typeset branch=`git -C . branch --show-current`
+      [[ -n $branch ]] && href="$branch"
+    fi
 
+    head="$href"
+  fi
+
+  printf "$head"
+}
+function _rc_ps1_get_git_stash {
+  typeset head=$1
+
+  if [[ -n $head ]]; then
+    typeset tl=`git rev-parse --show-toplevel`
+
+    [[ -f $tl/.git ]] && {
+      tl=`< $tl/.git`
+      tl=${tl#gitdir: }
+      [[ -f $tl/commondir ]] && tl+=/`< $tl/commondir`
+    }
+
+    [[ -f $tl/refs/stash || -f $tl/.git/refs/stash ]] && printf '~'
+  fi
+}
+function _rc_ps1_get_git {
+  typeset head=`_rc_ps1_get_git_head`
+  typeset stash=`_rc_ps1_get_git_stash $head`
+  printf "$head$stash"
+}
+
+xset q &>/dev/null && [[ -f $HOME/.prompt_char ]] && {
+  while read; do
+    [[ -z $REPLY ]] && continue
+    _rc_ps1_chr=$REPLY
+    break
+  done < $HOME/.prompt_char
+}
+_rc_ps1_chr=${_rc_ps1_chr:-\$}
+
+typeset -A _rc_ps1_cl=(
+  [bld]=$'\e[1m'
+  [clr]=$'\e[0m'
+  [chr]=$'\e[38;2;160;160;160m'
+  [git]=$'\e[38;2;252;163;38m'
+  [err]=$'\e[38;2;230;126;128m'
+  [txt]=$'\e[38;2;211;198;170m'
+)
+
+function _rc_ps1_set {
+  unset PS1
+  typeset ex cwd
+  (( $1 == 0 )) && ex= || ex=$1
+
+  typeset git=`_rc_ps1_get_git`
+  typeset job='%j'
+
+  PS1="%{${_rc_ps1_cl[txt]}%}"
+  [[ $PWD == / ]] && cwd=/ || cwd=${PWD##*/}
+  [[ $PWD != $HOME ]] && PS1+="$cwd "
+  [[ -n $git ]]       && PS1+="%{${_rc_ps1_cl[git]}%} $git "
+  (( ${(%)job} > 0 )) && PS1+="%{${_rc_ps1_cl[chr]}%}%% "
+  [[ -n $ex ]]        && PS1+="%{${_rc_ps1_cl[err]}${_rc_ps1_cl[bld]}%}$ex%{${_rc_ps1_cl[clr]}%} "
+  PS1+="%{${_rc_ps1_cl[chr]}%}$_rc_ps1_chr%{${_rc_ps1_cl[clr]}%} "
+}
+
+if xset q &>/dev/null; then
   function precmd {
     EXIT=$?
-    set_prompt $EXIT
+    _rc_ps1_set $EXIT
   }
-
   function zle-keymap-select {
-    [[ $KEYMAP == main ]] && set_prompt $EXIT
-    [[ $KEYMAP == vicmd ]] && set_prompt $EXIT :
+    [[ $KEYMAP == main ]] && _rc_ps1_set $EXIT
+    [[ $KEYMAP == vicmd ]] && _rc_ps1_chr=: _rc_ps1_set $EXIT
     zle reset-prompt
-  }; zle -N zle-keymap-select
+  }
+  zle -N zle-keymap-select
+else
+  PS1=$'%1~ $ '
 fi
 
+# ------------------------------------------------------------------------------
 
-# colours and highlights
 if [[ -o login ]]; then
   function set_colours {
     typeset f='38;5;'
@@ -209,7 +220,6 @@ if [[ -o login ]]; then
   set_colours
 fi
 
-# FIX: can't export from within function
 function set_highlights {
   ZSH_HIGHLIGHT_STYLES[alias]="fg=07"
   ZSH_HIGHLIGHT_STYLES[assign]="fg=04"
@@ -234,15 +244,16 @@ function set_highlights {
   ZSH_HIGHLIGHT_STYLES[single-quoted-argument]="fg=02"
   ZSH_HIGHLIGHT_STYLES[unknown-token]="fg=01"
   ZSH_HIGHLIGHT_STYLES[default]="fg=07"
-  ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=08"
   ZSH_HIGHLIGHT_REGEXP+=('\$(\w+|\{.+?\})' "fg=05")
   ZSH_HIGHLIGHT_REGEXP+=('^\s*(doas|sudo)(\s|$)' "fg=05")
 }
+. "$XDG_CONFIG_HOME/zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 ZSH_HIGHLIGHT_HIGHLIGHTERS=(main regexp)
 set_highlights
 
-# completion
-zstyle ':completion:*' completer _expand _complete _ignored _match
+# ------------------------------------------------------------------------------
+
+zstyle ':completion:*' completer _complete _ignored
 zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 zstyle ':completion:*' matcher-list 'm:{[:lower:]}={[:upper:]}' 'l:|=*'
 zstyle ':completion:*' keep-prefix true
@@ -251,5 +262,6 @@ zstyle ':completion:*' verbose false
 autoload -Uz compinit
 compinit -d "$XDG_CONFIG_HOME/zsh/zcomp"
 
-# fetch
-xset q &>/dev/null && [[ -f $HOME/.fetch ]] && printf '%s\n' "`< $HOME/.fetch`"
+# ------------------------------------------------------------------------------
+
+xset q &>/dev/null && [[ -f $HOME/.fetch ]] && < $HOME/.fetch || :
