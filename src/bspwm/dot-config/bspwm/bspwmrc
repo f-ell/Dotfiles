@@ -61,20 +61,21 @@ eww open bar-${MACHINE,,} &
 
 if [[ $MACHINE == DT ]]; then
   pgrep dunst || dunst &
-  pgrep sxhkd || \
-    sxhkd $XDG_CONFIG_HOME/sxhkd/sxhkdrc.dt $XDG_CONFIG_HOME/bspwm/sxhkdrc.bspwm &
-  pgrep conky || { conky -c $XDG_CONFIG_HOME/conky/system.lua; \
-      conky -c $XDG_CONFIG_HOME/conky/time.lua; bspc monitor -f primary; } &
+  pgrep sxhkd || sxhkd "$XDG_CONFIG_HOME"/sxhkd/sxhkdrc.dt "$XDG_CONFIG_HOME"/bspwm/sxhkdrc.bspwm &
+  pgrep conky || { \
+    conky -c "$XDG_CONFIG_HOME"/conky/system.lua; \
+    conky -c "$XDG_CONFIG_HOME"/conky/time.lua; \
+    bspc monitor -f primary; \
+  } &
   pgrep ssm || ssm -t 60 -e b -c 80 -g 80 &
 else
-  pgrep dunst || dunst -conf $XDG_CONFIG_HOME/dunst/dunstrc.lt &
-  pgrep sxhkd || \
-    sxhkd $XDG_CONFIG_HOME/sxhkd/sxhkdrc.lt $XDG_CONFIG_HOME/bspwm/sxhkdrc.bspwm &
+  pgrep dunst || dunst -conf "$XDG_CONFIG_HOME"/dunst/dunstrc.lt &
+  pgrep sxhkd || sxhkd "$XDG_CONFIG_HOME"/sxhkd/sxhkdrc.lt "$XDG_CONFIG_HOME"/bspwm/sxhkdrc.bspwm &
   pgrep ssm || ssm -t 60 -e g -b 30 -c 70 &
 fi
 
-feh --no-fehbg --bg-fill $HOME/Media/Pictures/Wallpapers/astronaut.png &
-./scripts/gulp &
+feh --no-fehbg --bg-fill $HOME/Media/Pictures/Wallpapers/grid_everforest_dark_green.png &
+"$XDG_CONFIG_HOME"/bspwm/scripts/gulp &
 
 
 # float desktop '^4'; force steam to desktop '^4'
