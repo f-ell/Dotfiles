@@ -74,7 +74,7 @@ else
   pgrep ssm || ssm -t 60 -e g -b 30 -c 70 &
 fi
 
-feh --no-fehbg --bg-fill $HOME/Media/Pictures/Wallpapers/grid_everforest_dark_green.png &
+[[ -f $WALLPAPER ]] && feh --no-fehbg --bg-fill "$WALLPAPER"
 "$XDG_CONFIG_HOME"/bspwm/scripts/gulp &
 
 
