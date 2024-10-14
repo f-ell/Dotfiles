@@ -4,7 +4,7 @@
 conky.config = {
     alignment     = 'bl',
     background    = false,
-    default_color = 'a7c080',
+    default_color = '#a7c080',
     double_buffer = true,
     draw_shades   = false,
     font          = 'Ellograph CF Heavy:size=90',
