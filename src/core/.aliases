@@ -44,14 +44,6 @@ ping() {
   /usr/bin/ping -c1 ${1:-archlinux.org}
 }
 
-ud2() {
-  local fn=ud2 dev=/dev/$1 un
-  [[ -b $dev ]] || { err $fn "${1:--} is not a valid blockdev."; return 1; }
-  [[ -n `udisksctl info -b $dev | grep -oP '^\s*MountPoints:\s+\K.*$'` ]] \
-    && un=un
-  udisksctl ${un}mount -b $dev
-}
-
 wnvm() {
   local fn=wnvm root=pom.xml mvnw=./mvnw
   pushd $PWD &>/dev/null
@@ -62,8 +54,6 @@ wnvm() {
   popd &>/dev/null
 }
 
-alias -- -='cd -'
-alias code='code --extensions-dir "$XDG_DATA_HOME/vscode"'
 alias cb='cargo run --bin $@'
 alias e='eza'
 alias e1='eza -1'
