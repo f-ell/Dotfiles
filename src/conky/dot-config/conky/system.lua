@@ -17,14 +17,9 @@ conky.config = {
 	own_window_transparent = true,
 	own_window_type = "desktop",
 	top_name_width = 11,
-	update_interval = 2.0,
+	update_interval = 4.0,
 	use_xft = true,
 	xinerama_head = 1,
 }
 
-conky.text = [[
-CPU ${cpu}%
-RAM ${exec /home/nico/.config/conky/mem.pl}
-DSK ${exec /home/nico/.config/conky/dsk.pl}
-TMP ${exec /home/nico/.config/conky/tmp.pl}
-]]
+conky.text = "${exec /home/nico/.config/conky/sys.pl}"
