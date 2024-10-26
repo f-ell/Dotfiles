@@ -21,7 +21,7 @@ my sub ram() {
   }
   close(FH) || die($!);
 
-  return sprintf( "%4d MiB", $meminfo{memtotal} - $meminfo{memavailable} );
+  return sprintf( "%5d MiB", $meminfo{memtotal} - $meminfo{memavailable} );
 }
 
 my sub gpu() {
@@ -31,7 +31,7 @@ my sub gpu() {
 
 my sub vram() {
   ( grep( /Used/, `nvidia-smi -q -d MEMORY` ) )[0] =~ /(\d+) MiB$/;
-  return sprintf( '%4d MiB', $1 );
+  return sprintf( '%5d MiB', $1 );
 }
 
 my sub temperature() {
@@ -57,5 +57,5 @@ print <<~EOF
     GPU ${\gpu()} | ${\vram()}
     TMP ${\temperature()}
     DSK ${\disk()}
-EOF
+    EOF
   ;
