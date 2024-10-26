@@ -5,7 +5,8 @@ if [ $MACHINE = 'DT' ]; then
   xrdb -merge ~/.Xresources &
 
   noisetorch -u && noisetorch -i -t 80 -s alsa_input.usb-Generic_Blue_Microphones_201701110001-00.analog-stereo &
-  polychromatic-cli -n "Razer Viper Ultimate (Wireless)" --dpi 1000 -o poll_rate -p 1000 -z logo -o none &
+  ( polychromatic-cli -n "Razer Viper Ultimate (Wireless)" --dpi 1000 -o poll_rate -p 1000 \
+    && polychromatic-cli -n "Razer Viper Ultimate (Wireless)" -z logo -o none )&
 else
   xinput set-prop "DLL07D1:01 044E:120B" "libinput Tapping Enabled" 1 &
 fi
