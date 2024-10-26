@@ -10,7 +10,7 @@
 
 bspc desktop any -r
 bspc rule -r *
-
+ps -o pid= -C 'bspc subscribe' | xargs kill
 
 # CONFIG
 if [[ $MACHINE == DT ]]; then
@@ -45,15 +45,12 @@ bspc config active_border_color   '#323d43'
 bspc config normal_border_color   '#323d43'
 bspc config presel_feedback_color '#a7c080'
 
-
 # RULES
 bspc rule -a discord  desktop='^5' follow=off state=floating
 bspc rule -a Spotify  desktop='^5' follow=off state=floating
 bspc rule -a steam    desktop='^4' follow=off state=floating
-bspc rule -a ftb-app  desktop='^4' follow=off state=floating
 bspc rule -a Gimp                             state=floating
 bspc rule -a *:*:Picture-in-Picture           state=floating
-
 
 # AUTOSTART
 pgrep eww || eww daemon &
@@ -75,25 +72,23 @@ else
 fi
 
 [[ -f $WALLPAPER ]] && feh --no-fehbg --bg-fill "$WALLPAPER"
+
 "$XDG_CONFIG_HOME"/bspwm/scripts/gulp &
+"$XDG_CONFIG_HOME"/bspwm/scripts/floatdesk `bspc query -D -d '^4'` &
 
-
-# float desktop '^4'; force steam to desktop '^4'
-typeset target_id=`bspc query -D -d '^4'`
+# force steam to desktop ^4
 while read -a REPLY; do
-  typeset node_id=${REPLY[-1]} desk_id=${REPLY[-3]}
-
-  `xprop -id $node_id | grep 'STEAM_GAME(CARDINAL)' 2>/dev/null` && bspc node $node_id -d '^4'
-  [[ $target_id == $desk_id ]] && bspc node $node_id -t floating
+  `xprop -id ${REPLY[-1]} | grep 'STEAM_GAME(CARDINAL)' 2>/dev/null` \
+    && bspc node ${REPLY[-1]} -d '^4'
 done < <(bspc subscribe node_add) &
 
-# hide bar on fullscreen apps
+# dynamic eww toggle
+typeset -a MONITORS=(`bspc query -M`)
 while read -a REPLY; do
-  [[ ${REPLY[-2]} != fullscreen ]] && continue
-
+  [[ ${REPLY[-2]} != fullscreen || ${REPLY[1]} != ${MONITORS[0]} ]] && continue
   if [[ ${REPLY[-1]} == on ]]; then
-    eww close bar-${MACHINE,,}
+    eww --no-daemonize close bar-${MACHINE,,}
   else
-    eww open bar-${MACHINE,,}
+    eww --no-daemonize open bar-${MACHINE,,}
   fi
 done < <(bspc subscribe node_state) &

@@ -1,0 +1,8 @@
+#!/bin/bash
+
+typeset -a floating_desktops=("$@")
+
+while read -a REPLY; do
+  typeset node=${REPLY[-1]} desktop=${REPLY[-3]}
+  [[ ${floating_desktops[@]} =~ $desktop ]] && bspc node $node -t floating
+done < <(bspc subscribe node_add) &
