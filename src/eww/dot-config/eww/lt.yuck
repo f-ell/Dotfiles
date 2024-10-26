@@ -17,8 +17,8 @@
             :space-evenly false
             :halign 'start'
             :class 'section start'
-            (desktops)
-            (separator)
+            (desktops-lt)
+            (separator-lt)
             (layout)
         )
         (box

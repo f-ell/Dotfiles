@@ -23,26 +23,34 @@ $aqu2: #35a77c;
 
 button {
   font-size: .9em;
-  padding: .4em .8em;
+  padding: .4em 0;
 }
 
 .bar {
   color: $fg1;
   background-color: $bg2;
+
+  &.dt {
+    padding: .5em;
+  }
 }
 
 .section {
   $margin-outer: 1em;
   $margin-inner: .8em;
+
   &.start {
     margin-left: $margin-outer;
-    & > * {
+
+    &>* {
       margin-right: $margin-inner;
     }
   }
+
   &.end {
     margin-right: $margin-outer;
-    & > * {
+
+    &>* {
       margin-left: $margin-inner;
     }
   }
@@ -52,9 +60,11 @@ button {
   & .focused {
     color: $gre1;
   }
+
   & .occupied {
     color: $fg2;
   }
+
   & .empty {
     color: $fg2;
   }
