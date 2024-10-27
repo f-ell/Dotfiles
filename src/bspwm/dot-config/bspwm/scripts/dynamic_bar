@@ -1,0 +1,66 @@
+#!/bin/bash
+
+typeset -a MONITORS=(`bspc query -M`) DESKTOPS=() NODES=()
+
+# FIX: breaks with multiple fullscreen nodes on a single desktop
+
+function bar() {
+  eww --no-daemonize $1 bar-${MACHINE,,} &>/dev/null
+}
+
+function register_monitor_listener() {
+  while read -a REPLY; do
+    case ${REPLY[0]} in
+      monitor_add)    MONITORS+=(${REPLY[1]}) ;;
+      monitor_remove) MONITORS=("${MONITORS[@]/${REPLY[1]}/}") ;;
+    esac
+  done < <(bspc subscribe monitor_add monitor_remove)
+}
+
+function handle_desktop_focus() {
+  typeset -a ev=("$@")
+  ( [[ ${ev[0]} != ${MONITORS[0]:-x} ]] || (( ${#DESKTOPS[@]} == 0 )) ) && return
+
+  if [[ ${DESKTOPS[@]} =~ ${ev[1]} ]]; then
+    # may already be closed when switching between two fullscreened desktops
+    bar close
+  else
+    [[ `eww active-windows` =~ bar-${MACHINE,,} ]] || bar open
+  fi
+}
+
+function handle_node_remove() {
+  typeset -a ev=("$@")
+  [[ ! ${NODES[@]} =~ ${ev[2]} ]] && return
+
+  DESKTOPS=("${DESKTOPS[@]/${ev[1]}/}")
+  NODES=("${NODES[@]/${ev[2]}/}")
+
+  # open only necessary when node was fullscreened on current desktop
+  [[ `bspc query -D -d` == ${ev[1]} ]] && bar open
+}
+
+function handle_node_state() {
+  typeset -a ev=("$@")
+  [[ ${ev[3]} != fullscreen || ${ev[0]} != ${MONITORS[0]:-x} ]] && return
+
+  if [[ ${ev[-1]} == on ]]; then
+    DESKTOPS+=(${ev[1]})
+    NODES+=(${ev[2]})
+    bar close
+  else
+    DESKTOPS=("${DESKTOPS[@]/${ev[1]}/}")
+    NODES=("${NODES[@]/${ev[2]}/}")
+    bar open
+  fi
+}
+
+register_monitor_listener &
+
+while read -a REPLY; do
+  case ${REPLY[0]} in
+    desktop_focus) handle_desktop_focus "${REPLY[@]:1}" ;;
+    node_remove)   handle_node_remove "${REPLY[@]:1}" ;;
+    node_state)    handle_node_state "${REPLY[@]:1}" ;;
+  esac
+done < <(bspc subscribe desktop_focus node_remove node_state)

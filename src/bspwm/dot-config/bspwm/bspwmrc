@@ -64,7 +64,6 @@ if [[ $MACHINE == DT ]]; then
     conky -c "$XDG_CONFIG_HOME"/conky/time.lua; \
     bspc monitor -f primary; \
   } &
-  pgrep ssm || ssm -t 60 -e b -c 80 -g 80 &
 else
   pgrep dunst || dunst -conf "$XDG_CONFIG_HOME"/dunst/dunstrc.lt &
   pgrep sxhkd || sxhkd "$XDG_CONFIG_HOME"/sxhkd/sxhkdrc.lt "$XDG_CONFIG_HOME"/bspwm/sxhkdrc.bspwm &
@@ -75,20 +74,10 @@ fi
 
 "$XDG_CONFIG_HOME"/bspwm/scripts/gulp &
 "$XDG_CONFIG_HOME"/bspwm/scripts/floatdesk `bspc query -D -d '^4'` &
+"$XDG_CONFIG_HOME"/bspwm/scripts/dynamic_bar &
 
 # force steam to desktop ^4
 while read -a REPLY; do
   `xprop -id ${REPLY[-1]} | grep 'STEAM_GAME(CARDINAL)' 2>/dev/null` \
     && bspc node ${REPLY[-1]} -d '^4'
 done < <(bspc subscribe node_add) &
-
-# dynamic eww toggle
-typeset -a MONITORS=(`bspc query -M`)
-while read -a REPLY; do
-  [[ ${REPLY[-2]} != fullscreen || ${REPLY[1]} != ${MONITORS[0]} ]] && continue
-  if [[ ${REPLY[-1]} == on ]]; then
-    eww --no-daemonize close bar-${MACHINE,,}
-  else
-    eww --no-daemonize open bar-${MACHINE,,}
-  fi
-done < <(bspc subscribe node_state) &
