@@ -55,14 +55,16 @@ bspc rule -a *:*:Picture-in-Picture           state=floating
 # AUTOSTART
 pgrep eww || eww daemon &
 eww open bar-${MACHINE,,} &
+playerctld daemon &
 
 if [[ $MACHINE == DT ]]; then
   pgrep dunst || dunst &
   pgrep sxhkd || sxhkd "$XDG_CONFIG_HOME"/sxhkd/sxhkdrc.dt "$XDG_CONFIG_HOME"/bspwm/sxhkdrc.bspwm &
   pgrep conky || { \
-    conky -c "$XDG_CONFIG_HOME"/conky/system.lua; \
-    conky -c "$XDG_CONFIG_HOME"/conky/time.lua; \
-    bspc monitor -f primary; \
+    conky -c "$XDG_CONFIG_HOME"/conky/system.lua \
+    && sleep 1 \
+    && conky -c "$XDG_CONFIG_HOME"/conky/time.lua \
+    && bspc monitor -f primary; \
   } &
 else
   pgrep dunst || dunst -conf "$XDG_CONFIG_HOME"/dunst/dunstrc.lt &

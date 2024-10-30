@@ -32,3 +32,10 @@ alt + t
 alt + u
   dunstify -u low -h string:x-dunst-stack-tag:load "Calculating..." \
   && dunstify -u low -h string:x-dunst-stack-tag:load "`sysload`"
+
+# mpris
+{XF86AudioPlay,XF86AudioNext,XF86AudioPrev}
+  playerctl {play-pause,next,previous}
+
+{XF86AudioRaiseVolume,XF86AudioLowerVolume}
+  playerctl volume 0.1{+,-}
