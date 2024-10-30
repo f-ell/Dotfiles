@@ -66,12 +66,12 @@ alias xo='xdg-open'
 alias zt='zathura --fork'
 
 
-sconf='$HOME/.config/bspwm/sxhkdrc.bspwm $HOME/.config/sxhkd/sxhkdrc.'
+sconf='$XDG_CONFIG_HOME/{sxhkd/sxhkdrc,bspwm/sxhkdrc.bspwm} $XDG_CONFIG_HOME/sxhkd/sxhkdrc'
 if [[ $MACHINE = DT ]]; then
-  sconf="${sconf}dt"
-  dconf=''
+  sconf="${sconf}.dt"
+  dconf=
 else
-  sconf="${sconf}lt"
+  sconf="${sconf}.lt"
   dconf='-conf $HOME/.config/dunst/dunstrc.lt' 
   alias netstart='rfkill unblock wifi; doas systemctl start NetworkManager'
   alias netstop='nmcli d disconnect wlan0; doas systemctl stop NetworkManager; rfkill block wifi'
