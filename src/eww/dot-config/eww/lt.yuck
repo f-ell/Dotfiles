@@ -12,7 +12,7 @@
     :reserve (struts :distance 32 :side 'top')
     (centerbox
         :orientation 'h'
-        :class 'bar'
+        :class 'bar lt'
         (box
             :space-evenly false
             :halign 'start'
@@ -31,9 +31,9 @@
             :halign 'end'
             :class 'section end'
             (battery)
-            (separator)
+            (separator-lt)
             (templt)
-            (separator)
+            (separator-lt)
             (time)
         )
     )

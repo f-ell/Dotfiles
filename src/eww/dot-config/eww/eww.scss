@@ -21,17 +21,21 @@ $aqu2: #35a77c;
   font-weight: 600;
 }
 
-button {
-  font-size: .9em;
-  padding: .4em 0;
-}
-
 .bar {
   color: $fg1;
   background-color: $bg2;
 
   &.dt {
     padding: .5em;
+
+    & button {
+      font-size: .9em;
+      padding: .4em 0;
+    }
+  }
+
+  &.lt button {
+    padding: .4em .8em;
   }
 }
 
