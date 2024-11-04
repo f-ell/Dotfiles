@@ -1,13 +1,12 @@
 #!/usr/bin/bash
 
-declare icons='●○'
-
 function desktops {
-  declare -a desktops
+  declare -a obj
+  declare -i n=1
 
   for d in `bspc query -D`; do
     declare state
-    declare occupied
+    declare -i occupied
 
     bspc query -D -d $d.occupied >/dev/null
     occupied=$?
@@ -16,11 +15,12 @@ function desktops {
     bspc query -D -d $d.focused >/dev/null
     (( $? == 0 )) && state='focused'
 
-    desktops+=("{\"id\":\"$d\",\"icon\":\"${icons:${occupied}:1}\",\"state\":\"$state\",\"command\":\"bspc desktop -f $d\"}")
+    obj+=("{\"id\":\"$d\",\"icon\":\"$n\",\"state\":\"$state\",\"command\":\"bspc desktop -f $d\"}")
+    let n++
   done
 
   declare IFS=,
-  printf '[%s]\n' "${desktops[*]}"
+  printf '[%s]\n' "${obj[*]}"
 }
 
 desktops

@@ -47,6 +47,7 @@
 
 (defwidget time []
     (label
+        :class 'time'
         :text '${formattime(EWW_TIME, '%A %I:%M %p')}'
     )
 )

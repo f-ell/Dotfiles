@@ -25,13 +25,9 @@ $aqu2: #35a77c;
   color: $fg1;
   background-color: $bg2;
 
-  &.dt {
-    padding: .5em;
-
-    & button {
-      font-size: .9em;
-      padding: .4em 0;
-    }
+  &.dt button {
+    font-size: .9em;
+    padding: .4em 0;
   }
 
   &.lt button {
@@ -40,33 +36,25 @@ $aqu2: #35a77c;
 }
 
 .section {
-  $margin-outer: 1em;
-  $margin-inner: .8em;
+  $margin: .8em;
 
-  &.start {
-    margin-left: $margin-outer;
-
-    &>* {
-      margin-right: $margin-inner;
-    }
+  &.start * {
+    margin-right: $margin;
   }
 
-  &.end {
-    margin-right: $margin-outer;
-
-    &>* {
-      margin-left: $margin-inner;
-    }
+  &.end * {
+    margin-left: $margin;
   }
 }
 
 .desktop {
   & .focused {
-    color: $gre1;
+    color: $bg2;
+    background-color: $gre1;
   }
 
   & .occupied {
-    color: $fg2;
+    color: $gre1;
   }
 
   & .empty {
@@ -77,4 +65,8 @@ $aqu2: #35a77c;
 .separator {
   color: $fg2;
   font-weight: 700;
+}
+
+.time {
+  margin-right: .8em;
 }

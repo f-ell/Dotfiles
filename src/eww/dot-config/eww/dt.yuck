@@ -3,12 +3,12 @@
     :geometry (geometry
         :x 0
         :y 0
-        :width 54
+        :width 42
         :height '100%'
         :anchor 'top left'
     )
     :wm-ingore false
-    :reserve (struts :distance 54 :side 'left')
+    :reserve (struts :distance 42 :side 'left')
     (box
         :space-evenly false
         :orientation 'v'
