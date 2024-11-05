@@ -1,14 +1,13 @@
 (defwindow bar-lt
     :monitor 0
     :geometry (geometry
-        :x '0'
-        :y '0'
+        :x 0
+        :y 0
         :width '100%'
         :height 32
         :anchor 'top center'
     )
     :wm-ingore false
-    :stacking 'bg'
     :reserve (struts :distance 32 :side 'top')
     (centerbox
         :orientation 'h'
@@ -16,7 +15,6 @@
         (box
             :space-evenly false
             :halign 'start'
-            :class 'section start'
             (desktops-lt)
             (separator-lt)
             (layout)
@@ -24,12 +22,10 @@
         (box
             :space-evenly false
             :halign 'center'
-            :class 'section center'
         )
         (box
             :space-evenly false
             :halign 'end'
-            :class 'section end'
             (battery)
             (separator-lt)
             (templt)

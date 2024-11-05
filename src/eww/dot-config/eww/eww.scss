@@ -30,20 +30,14 @@ $aqu2: #35a77c;
     padding: .4em 0;
   }
 
-  &.lt button {
-    padding: .4em .8em;
-  }
-}
+  &.lt {
+    button {
+      padding: 0 .8em;
+    }
 
-.section {
-  $margin: .8em;
-
-  &.start * {
-    margin-right: $margin;
-  }
-
-  &.end * {
-    margin-left: $margin;
+    .separator {
+      margin: 0 .8em;
+    }
   }
 }
 
