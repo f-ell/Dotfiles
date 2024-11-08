@@ -30,14 +30,8 @@ $aqu2: #35a77c;
     padding: .4em 0;
   }
 
-  &.lt {
-    button {
-      padding: 0 .8em;
-    }
-
-    .separator {
-      margin: 0 .8em;
-    }
+  &.lt button {
+    padding: 0 .8em;
   }
 }
 
@@ -56,11 +50,45 @@ $aqu2: #35a77c;
   }
 }
 
+.time {
+  color: $gre1;
+  background-color: $bg2;
+
+  & * {
+    font-weight: 900;
+  }
+
+  & .time-of-day {
+    font-size: 7em;
+  }
+
+  & .ampm {
+    font-size: 2.6em;
+    margin-left: .1em;
+  }
+
+  & .date {
+    font-size: 1.75em;
+    margin-top: -.25em;
+  }
+}
+
 .separator {
   color: $fg2;
   font-weight: 700;
+
+  &.hor {
+    margin-bottom: .4em;
+  }
+
+  &.ver {
+    margin: 0 .8em;
+  }
 }
 
-.time {
-  margin-right: .8em;
+.sysinfo * {
+  color: $gre1;
+  background-color: $bg2;
+  font-size: 1.25em;
+  font-weight: 900;
 }

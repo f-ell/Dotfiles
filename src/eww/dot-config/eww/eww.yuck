@@ -1,53 +1,5 @@
-(include 'dt.yuck')
-(include 'lt.yuck')
+(include 'generic-widgets.yuck')
+(include 'generic-windows.yuck')
 
-(defwidget separator-dt []
-    (label
-        :class 'separator'
-        :text '─'
-    )
-)
-(defwidget separator-lt []
-    (label
-        :class 'separator'
-        :text '|'
-    )
-)
-
-(deflisten desktops :initial '[]' './desktops.sh')
-(defwidget desktops-dt []
-    (box :orientation 'v' :class 'desktop'
-        (for d in desktops
-            (button
-                :onclick {d.command}
-                :class {d.state}
-                {d.icon}
-            )
-        )
-    )
-)
-(defwidget desktops-lt []
-    (box :class 'desktop'
-        (for d in desktops
-            (button
-                :onclick {d.command}
-                :class {d.state}
-                {d.icon}
-            )
-        )
-    )
-)
-
-(deflisten layout :initial '[]' 'layout.bspwm')
-(defwidget layout []
-    (label
-        :text layout
-    )
-)
-
-(defwidget time []
-    (label
-        :class 'time'
-        :text '${formattime(EWW_TIME, '%A %I:%M %p')}'
-    )
-)
+(include 'bspwm.yuck')
+(include 'hyprland.yuck')

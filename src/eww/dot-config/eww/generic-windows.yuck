@@ -1,0 +1,38 @@
+(defpoll time-timeofday :interval '1s' :initial '?' `date +%I:%M`)
+(defpoll time-ampm :interval '1s' :initial '?' `date +%p`)
+(defpoll time-date :interval '1s' :initial '?' `date +'%a. %d %B %Y'`)
+(defwindow time
+    :monitor 0
+    :geometry (geometry
+        :x 100
+        :y 100
+        :anchor 'bottom left'
+    )
+    :class 'window'
+    :stacking 'bottom'
+    (box
+        :orientation 'v'
+        :class 'time'
+        :space-evenly false
+        (box
+            :space-evenly false
+            (label :class 'time-of-day' :text time-timeofday)
+            (label :yalign 0.8 :class 'ampm' :text time-ampm)
+        )
+        (label :xalign 0.15 :class 'date' :text time-date)
+    )
+)
+
+;; -----------------------------------------------------------------------------
+
+(defpoll sysinfo :interval '4s' :initial '' `./scripts/sysinfo.pl`)
+(defwindow sysinfo
+    :monitor 0
+    :geometry (geometry
+        :x 100
+        :y 100
+        :anchor 'bottom right'
+    )
+    :stacking 'bottom'
+    (box :class 'sysinfo' sysinfo)
+)

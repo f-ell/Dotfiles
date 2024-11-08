@@ -5,7 +5,7 @@ typeset -a MONITORS=(`bspc query -M`) DESKTOPS=() NODES=()
 # FIX: breaks with multiple fullscreen nodes on a single desktop
 
 function bar() {
-  eww --no-daemonize $1 bar-${MACHINE,,} &>/dev/null
+  eww --no-daemonize $1 bar-bspwm-${MACHINE,,} &>/dev/null
 }
 
 function register_monitor_listener() {
@@ -25,7 +25,7 @@ function handle_desktop_focus() {
     # may already be closed when switching between two fullscreened desktops
     bar close
   else
-    [[ `eww active-windows` =~ bar-${MACHINE,,} ]] || bar open
+    [[ `eww active-windows` =~ bar-bspwm-${MACHINE,,} ]] || bar open
   fi
 }
 
