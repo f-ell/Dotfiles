@@ -9,7 +9,7 @@
 
 [[ -t 0 && $- == *i* ]] && stty -ixon
 
-set -o autocd -o extendedglob -o histexpiredupsfirst -o histignoredups\
+set -o autocd -o extendedglob -o histexpiredupsfirst -o histignorealldups\
   -o histignorespace -o incappendhistory -o kshglob -o pipefail -o promptsubst\
   -o rematchpcre
 set +o automenu +o autoremoveslash
@@ -59,7 +59,7 @@ function preexec {
 
 autoload edit-command-line
 function _rc_reverse_i_search {
-  typeset -a hist=(`history 1 | tac | zf --height 16 -p`)
+  typeset -a hist=(`history 1 | tac | zf --height 16 -kp`)
   zle reset-prompt
   BUFFER=${hist[2,$#hist]:-$BUFFER}
   CURSOR=$#BUFFER
