@@ -13,7 +13,7 @@ function hypr-workspaces() {
 EOF
 
   typeset bound=`hyprctl binds -j | jq "map(select(.dispatcher == \"workspace\") | { id: .arg | tonumber } | $templ)"`
-  hyprctl workspaces -j | jq -c "map($templ) | sort_by(.id) | . + $bound | unique_by(.id)" --argjson bound "$bound"
+  hyprctl workspaces -j | jq -c "map(select(.id > 0) | $templ) | sort_by(.id) | . + $bound | unique_by(.id)" --argjson bound "$bound"
 }
 
 hypr-workspaces
