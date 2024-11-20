@@ -35,7 +35,7 @@ $aqu2: #35a77c;
   }
 }
 
-.desktop {
+.bar .desktop {
   & .focused {
     color: $bg2;
     background-color: $gre1;
@@ -50,10 +50,29 @@ $aqu2: #35a77c;
   }
 }
 
-.time {
-  color: $gre1;
-  background-color: $bg2;
+.bar .separator {
+  color: $fg2;
+  font-weight: 700;
 
+  &.hor {
+    margin-bottom: .4em;
+  }
+
+  &.ver {
+    margin: 0 .8em;
+  }
+}
+
+// -----------------------------------------------------------------------------
+
+.window {
+  color: $gre1;
+  background-color: rgba($bg2, .9);
+  border-radius: .25em;
+  padding: .6em;
+}
+
+.window.time {
   & * {
     font-weight: 900;
   }
@@ -73,22 +92,7 @@ $aqu2: #35a77c;
   }
 }
 
-.separator {
-  color: $fg2;
-  font-weight: 700;
-
-  &.hor {
-    margin-bottom: .4em;
-  }
-
-  &.ver {
-    margin: 0 .8em;
-  }
-}
-
-.sysinfo * {
-  color: $gre1;
-  background-color: $bg2;
+.window.sysinfo * {
   font-size: 1.25em;
   font-weight: 900;
 }

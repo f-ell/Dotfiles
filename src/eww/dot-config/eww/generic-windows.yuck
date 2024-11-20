@@ -8,11 +8,10 @@
         :y 100
         :anchor 'bottom left'
     )
-    :class 'window'
     :stacking 'bottom'
     (box
         :orientation 'v'
-        :class 'time'
+        :class 'window time'
         :space-evenly false
         (box
             :space-evenly false
@@ -34,5 +33,5 @@
         :anchor 'bottom right'
     )
     :stacking 'bottom'
-    (box :class 'sysinfo' sysinfo)
+    (box :class 'window sysinfo' sysinfo)
 )
