@@ -1,5 +1,6 @@
 #!/bin/bash
 trap 'clean 130' HUP INT QUIT KILL TERM
+shopt -u extglob
 
 typeset -A CFG=(
   [base]=pkg
@@ -22,6 +23,7 @@ function err {
   printf '%s: %b\n' "${0##*/}" "$2" >&2
   (( $1 > 0 )) && clean $1
 }
+
 function clean {
   printf '\e[?25h' # re-enable cursor in case of `logWait`-interrupt
   rm -f "${CFG[logfile]}" || err 0 "failed to remove logfile: \e[1m${CFG[logfile]}\e[0m"
@@ -60,9 +62,13 @@ function stripTermColor {
 function log {
   printf '\e[1%s%s\e[0m %b%s' "${C[${1:-a}]}" "${CFG[logps]}" "$2" "${N-$'\n'}" >&2
 }
+
 function logInfo {
   printf '   %b\n' "$1" >&2
 }
+
+# Waits for job to complete. Job status and exit code are checked with `eval`;
+# the `eval`-ed values are hardcoded.
 function logWait {
   typeset msg="$2"
   stripTermColor msg
@@ -174,15 +180,22 @@ function rangeSelect {
 }
 
 # Accepts input in the form
-#   INPUT := TOKEN[,TOKEN]...
-#   TOKEN := INDEX[-INDEX]
+#   INPUT  := TOKEN[,TOKEN]... | * | -
+#   TOKEN  := SINGLE | RANGE
+#   SINGLE := INDEX
+#   RANGE  := INDEX-INDEX
 # where INDEX > 0 and INDEX <= number of items.
-# Special cases to select or deselect all items are also supported:
-#   INPUT := *|-
+#
+# RANGE performs an inclusive selection between two indices. The first index
+# should be smaller than or equal to the second index.
+#
+# The two special values "*" and "-" select / deselect all items.
+# Malformed inputs result in no-ops.
 function _inplaceSelect {
   typeset -n items=$1 state=$2
   typeset -i i=1
 
+  # print to screen
   for (( i=0; i<${#items[@]}; i++ )); do
     (( ${state[$i]} == 0 )) \
       && printf '%d) %s\n' $(( $i+1 )) "${items[$i]}" \
@@ -197,9 +210,10 @@ function _inplaceSelect {
     return 1
   fi
 
+  # handle selection
   typeset -ig SELECTION=0
-  if [[ -n $SELECTONE ]]; then
-    handleSelect $2 SELECTION $REPLY
+  if (( ${SELECTONE:-0} == 1 )); then
+    handleSelect $2 SELECTION "$REPLY"
     return 0
   fi
 
@@ -210,6 +224,11 @@ function _inplaceSelect {
     arrSet state 0
     return 0
   fi
+
+  # sanitize globbing or otherwise problematic characters characters
+  while [[ $REPLY =~ [^\\](\*|\?|\[|\'|\") ]]; do
+    REPLY="${REPLY//"${BASH_REMATCH[1]}"/\\"${BASH_REMATCH[1]}"}"
+  done
 
   local IFS=,
   for field in $REPLY; do
@@ -238,7 +257,7 @@ function inplaceSelectOne {
 
   log
   while :; do
-    SELECTONE=y PS3="$PS3" _inplaceSelect $1 $2 || break
+    SELECTONE=1 PS3="$PS3" _inplaceSelect $1 $2 || break
     (( $SELECTION >= 0 )) && arrSet state 0 && state[$SELECTION]=1
     printf "\b\e[${h}A\e[J"
   done
@@ -247,21 +266,19 @@ function inplaceSelectOne {
 }
 
 function getPkgLists {
-  typeset -ag pkgList=() pkgState=()
+  typeset -ag pkgLists=() pkgState=()
 
   for l in ${CFG[base]}/*; do
     l="${l#${CFG[base]}/}"
     l="${l%.txt}"
-    pkgList+=("$l")
+    pkgLists+=("$l")
     pkgState+=(0)
   done
 
-  local IFS=$'\n'
-  pkgList=(`sort <<<"${pkgList[*]}"`)
   local IFS=,
-  log a "Found \e[1m${#pkgList[@]}\e[0m package lists: ${pkgList[*]}"
+  log a "Found \e[1m${#pkgLists[@]}\e[0m package lists: ${pkgLists[*]}"
 
-  index pkgList core
+  index pkgLists core
   pkgState[$INDEX]=1
 }
 
@@ -270,7 +287,7 @@ function parsePkgList {
 
   for p in "$@"; do
     while read; do
-      [[ -z $REPLY || $REPLY =~ ^\s+$ || $REPLY =~ ^\s*# ]] && continue
+      [[ $REPLY =~ ^\s*$ || $REPLY =~ ^\s*# ]] && continue
 
       # user selection between mutually exclusive packages
       if [[ $REPLY =~ '|' ]]; then
@@ -308,7 +325,8 @@ function ensureYay {
     return 1
   fi
 
-  CFG[yay]=`mktemp -d -p "${TMPDIR:-/tmp}" yay.XXXXXXXXXX`
+  # TODO: uncomment
+  # CFG[yay]=`mktemp -d -p "${TMPDIR:-/tmp}" yay.XXXXXXXXXX`
 
   (git clone --depth=1 https://github.com/Jguer/yay "${CFG[yay]}" &>"${CFG[logfile]}" \
     && makepkg --dir="${CFG[yay]}" -si &>"${CFG[logfile]}")&
@@ -345,43 +363,43 @@ if (( $UID == 0 )); then
     || err 7 "\e[1${C[r]}aborting\e[0m"
 fi
 
-dep pacman sort mktemp
-CFG[logfile]=`mktemp -p "${TMPDIR:-/tmp}" "${0##*/}".log.XXXXXXXXXX`
-log a "Logfile created at \e[1m${CFG[logfile]:-}\e[0m"
+dep pacman mktemp
+# TODO: uncomment
+# CFG[logfile]=`mktemp -p "${TMPDIR:-/tmp}" "${0##*/}".log.XXXXXXXXXX`
+# log a "Logfile created at \e[1m${CFG[logfile]:-}\e[0m"
 
-# ------------------------------------------------------------ package selection
+# --------------------------------------------------------------- list selection
 
 getPkgLists
 
 if prompt a y 'Install machine specific packages?'; then
   case $MACHINE in
     dt|DT|desktop)
-      index pkgList dt
+      index pkgLists dt
       pkgState[$INDEX]=1
       ;;
     lt|LT|laptop)
-      index pkgList lt
+      index pkgLists lt
       pkgState[$INDEX]=1
       ;;
     *)
       logInfo 'could not determine host type from $MACHINE - using desktop'
-      index pkgList dt
+      index pkgLists dt
       pkgState[$INDEX]=1
       ;;
   esac
 fi
 
-PS3="\e[1${C[g]}$PS3\e[0m Lists to install (^D to confirm): " inplaceSelect pkgList pkgState
+PS3="\e[1${C[g]}$PS3\e[0m Lists to install (^D to confirm): " inplaceSelect pkgLists pkgState
 [[ ${pkgState[@]} =~ 1 ]] || err 4 "no lists selected - \e[1${C[r]}aborting\e[0m"
 
 typeset -a pkgSelect=()
-for (( i=0; i<${#pkgList[@]}; i++ )); do
-  (( ${pkgState[$i]} == 0 )) && continue
-  pkgSelect+=("${pkgList[$i]}")
+for (( i=0; i<${#pkgLists[@]}; i++ )); do
+  (( ${pkgState[$i]} == 1 )) && pkgSelect+=("${pkgLists[$i]}")
 done
 
 IFS=,
-log a "\e[1m${#pkgSelect[@]}\e[0m of \e[1m${#pkgList[@]}\e[0m list(s) selected: ${pkgSelect[*]}"
+log a "\e[1m${#pkgSelect[@]}\e[0m of \e[1m${#pkgLists[@]}\e[0m list(s) selected: ${pkgSelect[*]}"
 IFS="${CFG[ifs]}"
 
 # --------------------------------------------------------- package installation
