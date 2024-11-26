@@ -11,6 +11,22 @@ ct() {
   cargo test $bin $@ -- ${CPT+--nocapture}
 }
 
+hyprwall() {
+  case ${1:-list} in
+    list) hyprctl hyprpaper listloaded ;;
+    unload)
+      [[ -z $2 || ! -f $2 ]] && { err hyprwall 'argument error'; return 1; }
+      hyprctl hyprpaper unload "$2"
+      ;;
+    set)
+      [[ -z $2 || ! -f $2 ]] && { err hyprwall 'argument error'; return 1; }
+      hyprctl hyprpaper preload "$2" 1>/dev/null \
+        && hyprctl hyprpaper wallpaper ,"$2"
+      ;;
+    *) err hyprwall 'argument error' && return 1 ;;
+  esac
+}
+
 j() {
   local j exit
   j=`jump $@`
