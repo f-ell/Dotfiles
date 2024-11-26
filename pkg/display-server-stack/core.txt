@@ -1,0 +1,29 @@
+# core packages
+## audio stack
+noise-suppression-for-voice
+pavucontrol
+pipewire
+pipewire-audio
+pipewire-pulse
+playerctl
+wireplumber
+
+## fonts
+adobe-source-code-pro-fonts
+gnu-free-fonts
+
+## other
+dunst
+eww:AUR
+feh
+gimp
+gtk-layer-shell
+kitty
+pdfjs
+python-adblock
+qutebrowser
+silicon
+ueberzug
+zathura
+zathura-pdf-poppler
+zen-browser-bin:AUR

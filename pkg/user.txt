@@ -1,18 +1,9 @@
-# packages for a fully-fledged, graphical environment
-## display server / window manager
-bspwm
-kitty
-sxhkd
-xorg-server
-xorg-xev
-xorg-xinit
-xorg-xinput
-xorg-xset
-
-## cli tooling
+# packages for fully functional tty-environment
+## core cli tooling
 btop
 eza
 fd
+jmtpfs:AUR
 jq
 neovim
 ntfs-3g
@@ -23,44 +14,33 @@ plocate
 ripgrep
 stow
 udisks2
-wmctrl
+zf:AUR
 zsh
 
-## languages / toolchains
+## languages / toolchains / build systems
+cmake
+deno
 docker
 go
 gradle|maven
 jdk-openjdk
 lua
 ninja
+nodejs
 npm
 perl
 perl-par-packer
 python
 python-pip
+python-pyelftools
+python-setuptools
+python-west:AUR
 qmk
 rustup
 
 ## other
-adobe-source-code-pro-fonts
-bc
-dunst
-feh
 ffmpeg
-gimp
-gnu-free-fonts
 imagemagick
 isync
 lm_sensors
-pdfjs
-pulseaudio
-pulsemixer
-qutebrowser
-rofi
-scrot
-silicon
-ueberzug
-xclip
 yazi
-zathura
-zathura-pdf-poppler

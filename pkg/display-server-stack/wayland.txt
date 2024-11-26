@@ -1,0 +1,16 @@
+# wayland packages
+## display stack
+hypridle
+hyprland
+hyprlock
+hyprpaper
+hyprpolkitagent-git:AUR
+way-displays:AUR
+
+## utilities
+cliphist
+grim
+slurp
+socat
+tofi:AUR
+xdg-desktop-portal-hyprland

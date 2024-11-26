@@ -1,5 +1,0 @@
-## aur packages
-eww
-jmtpfs
-python-west
-zf

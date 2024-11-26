@@ -1,9 +1,10 @@
-# packages for a working install
+# packages for minimal install
 ## system core
 amd-ucode|intel-ucode
 efibootmgr
 linux
 linux-firmware
+linux-headers
 
 ## selected packages from `base`
 archlinux-keyring

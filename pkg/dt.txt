@@ -1,2 +1,21 @@
-# packages for desktop-installations
+# desktop install
+## drivers / peripherals
+nvidia
+openrazer-meta:AUR
+openrgb
+polychromatic:AUR
+ufw
+
+## gaming
+dwarffortress
+gamemode
+heroic-games-launcher-bin:AUR
+lib32-gamemode
+minecraft-launcher:AUR
 steam
+
+## multimedia
+spicetify-cli:AUR
+spotify:AUR
+vesktop-bin:AUR
+vlc

@@ -1,4 +1,4 @@
-# packages for laptop-installations
+# laptop install
 bluez
 bluez-tools
 bluez-utils
