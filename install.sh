@@ -2,6 +2,8 @@
 trap 'clean 130' HUP INT QUIT KILL TERM
 shopt -u extglob
 
+# FIX: parsing / selection for AUR packages -- split by core/aur
+
 typeset -A CFG=(
   [base]=pkg
   [ifs]="$IFS"
@@ -26,7 +28,8 @@ function err {
 
 function clean {
   printf '\e[?25h' # re-enable cursor in case of `logWait`-interrupt
-  rm -f "${CFG[logfile]}" || err 0 "failed to remove logfile: \e[1m${CFG[logfile]}\e[0m"
+  rm -f "${CFG[logfile]}" \
+    || err 0 "failed to remove logfile: \e[1m${CFG[logfile]}\e[0m"
 
   if [[ -e ${CFG[yay]} ]]; then
     rm -rf "${CFG[yay]}" \
@@ -145,7 +148,14 @@ function arrSet {
   done
 }
 
-function handleSelect {
+function initializeState {
+  typeset -n state=$1 src=$2
+  for (( i=0; i<${#src[@]}; i++ )); do
+    state[$i]=0
+  done
+}
+
+function indexSelect {
   typeset -n state=$1 index=$2
   typeset input="$3"
 
@@ -213,7 +223,7 @@ function _inplaceSelect {
   # handle selection
   typeset -ig SELECTION=0
   if (( ${SELECTONE:-0} == 1 )); then
-    handleSelect $2 SELECTION "$REPLY"
+    indexSelect $2 SELECTION "$REPLY"
     return 0
   fi
 
@@ -234,7 +244,7 @@ function _inplaceSelect {
   for field in $REPLY; do
     [[ $field =~ - ]] \
       && rangeSelect $2 "$field"  \
-      || handleSelect $2 SELECTION "$field"
+      || indexSelect $2 SELECTION "$field"
   done
 }
 
@@ -265,53 +275,114 @@ function inplaceSelectOne {
   (( ${SELECTION:--1} >= 0 )) && arrSet state 0 && state[$SELECTION]=1
 }
 
-function getPkgLists {
-  typeset -ag pkgLists=() pkgState=()
+function preParse() {
+  typeset -n base=$1 dir=$2
 
-  for l in ${CFG[base]}/*; do
-    l="${l#${CFG[base]}/}"
-    l="${l%.txt}"
-    pkgLists+=("$l")
-    pkgState+=(0)
+  for glob in ${CFG[base]}/*; do
+    if [[ -d $glob ]]; then
+      glob="${glob#${CFG[base]}/}"
+      dir+=("$glob")
+    else
+      glob="${glob#${CFG[base]}/}"
+      base+=("${glob%.txt}")
+    fi
   done
+}
+
+# Updates `pkgSelect` with user selection from package lists in `pkgBase`.
+function selectFromBase() {
+  typeset -n out=$1 sum=$2 pkgLists=$3 pkgState=$4
+  sum+=${#pkgLists[@]}
 
   local IFS=,
-  log a "Found \e[1m${#pkgLists[@]}\e[0m package lists: ${pkgLists[*]}"
+  log a "Found \e[1m${#pkgLists[@]}\e[0m package list(s): ${pkgLists[*]}"
 
   index pkgLists core
   pkgState[$INDEX]=1
+
+  if prompt g y 'Install machine specific packages?'; then
+    case $MACHINE in
+      dt|DT|desktop)
+        index pkgLists dt
+        pkgState[$INDEX]=1
+        ;;
+      lt|LT|laptop)
+        index pkgLists lt
+        pkgState[$INDEX]=1
+        ;;
+      *)
+        logInfo 'could not determine host type from $MACHINE - using desktop'
+        index pkgLists dt
+        pkgState[$INDEX]=1
+        ;;
+    esac
+  fi
+
+  PS3="\e[1${C[g]}$PS3\e[0m Lists to install (^D to confirm): " inplaceSelect pkgLists pkgState
+
+  for (( i=0; i<${#pkgLists[@]}; i++ )); do
+    (( ${pkgState[$i]} == 1 )) && out+=("${pkgLists[$i]}")
+  done
+}
+
+# Updates `pkgSelect` with user selection from package lists in `CFG[base]/$1`.
+function selectFromDir() {
+  typeset -n out=$1 sum=$2
+  typeset dir=$3
+  typeset -a pkgLists=() pkgState=()
+
+  for glob in ${CFG[base]}/$dir/*; do
+    glob="${glob#${CFG[base]}/$dir/}"
+    pkgLists+=("${glob%.txt}")
+  done
+  initializeState pkgState pkgLists
+  sum+=${#pkgLists[@]}
+
+  index pkgLists core
+  (( $INDEX != -1 )) && pkgState[$INDEX]=1
+
+  PS3="\e[1${C[g]}$PS3\e[0m Lists to install (^D to confirm): " inplaceSelect pkgLists pkgState
+
+  if [[ ! ${pkgState[@]} =~ 1 ]]; then
+    logInfo "No list selected - \e[1${C[y]}skipping\e[0m $dir"
+    return
+  fi
+
+  for (( i=0; i<${#pkgLists[@]}; i++ )); do
+    (( ${pkgState[$i]} == 1 )) && out+=("$dir/${pkgLists[$i]}")
+  done
 }
 
 function parsePkgList {
-  typeset -ag pkgInstall=()
+  typeset -a pkg=()
 
-  for p in "$@"; do
-    while read; do
-      [[ $REPLY =~ ^\s*$ || $REPLY =~ ^\s*# ]] && continue
+  log a "Parsing \e[1m$1\e[0m"
+  while read; do
+    [[ $REPLY =~ ^\s*$ || $REPLY =~ ^\s*# ]] && continue
 
-      # user selection between mutually exclusive packages
-      if [[ $REPLY =~ '|' ]]; then
-        typeset -a altList=() altState=()
-        local IFS='|'
+    # user selection between mutually exclusive packages
+    if [[ $REPLY =~ '|' ]]; then
+      typeset -a altList=() altState=()
+      local IFS='|'
 
-        for pkg in $REPLY; do
-          altList+=("$pkg")
-          altState+=(0)
-        done
-        PS3="\e[1${C[y]}$PS3\e[0m Mutually exclusive packages - select one (^D to confirm):" inplaceSelectOne altList altState
-        index altState 1
-        REPLY=${altList[$INDEX]}
-        log a "\e[1m1\e[0m of \e[1m${#altList[@]}\e[0m packages selected: $REPLY"
-      fi
+      for pkg in $REPLY; do
+        altList+=("$pkg")
+        altState+=(0)
+      done
+      PS3="\e[1${C[y]}$PS3\e[0m Mutually exclusive packages - select one (^D to confirm):" inplaceSelectOne altList altState
+      index altState 1
+      REPLY=${altList[$INDEX]}
+      log a "\e[1m1\e[0m of \e[1m${#altList[@]}\e[0m packages selected: $REPLY"
+    fi
 
-      pkgInstall+=("${REPLY%%#*}")
-    done <"${CFG[base]}/$p.txt"
+    pkg+=("${REPLY%%#*}")
+  done <"${CFG[base]}/$1.txt"
 
-    logWait a "Parsing list \`\e[1m$p\e[0m\`" 'false'
-  done
+  logWait a "Parsing \e[1m$1\e[0m" 'false'
+  logInfo "Found \e[1m${#pkg[@]}\e[0m packages in $1"
+  pkgInstall+=("${pkg[@]}")
 
-  log a "Found \e[1m${#pkgInstall[@]}\e[0m packages in \e[1m${#@}\e[0m list(s)"
-  (( ${#pkgInstall[@]} > 0 ))
+  (( ${#pkg[@]} > 0 ))
 }
 
 function ensureYay {
@@ -319,9 +390,9 @@ function ensureYay {
     return 0
   fi
 
-  log y '`\e[1myay\e[0m` not found. Trying to install...'
+  log y '\e[1myay\e[0m not found. Trying to install...'
   if ! command -v git &>/dev/null; then
-    logInfo "\`\e[1mgit\e[0m\` not found - \e[1${C[r]}aborting\e[0m"
+    logInfo "\e[1mgit\e[0m not found - \e[1${C[r]}aborting\e[0m"
     return 1
   fi
 
@@ -329,7 +400,7 @@ function ensureYay {
   # CFG[yay]=`mktemp -d -p "${TMPDIR:-/tmp}" yay.XXXXXXXXXX`
 
   (git clone --depth=1 https://github.com/Jguer/yay "${CFG[yay]}" &>"${CFG[logfile]}" \
-    && makepkg --dir="${CFG[yay]}" -si &>"${CFG[logfile]}")&
+    && makepkg --dir="${CFG[yay]}" -si &>"${CFG[logfile]}") &
   logWait a 'Installing yay' 'kill -0 $!' 'wait $!' \
     || err 4 "fatal: \e[0${C[r]}`<${CFG[logfile]}`\e[0m"
 }
@@ -370,37 +441,31 @@ dep pacman mktemp
 
 # --------------------------------------------------------------- list selection
 
-getPkgLists
+typeset -a pkgBase=() pkgBaseState=()
+typeset -a pkgDir=()
+typeset -a pkgSelect=() pkgInstall=()
+typeset -i listSum=0
 
-if prompt a y 'Install machine specific packages?'; then
-  case $MACHINE in
-    dt|DT|desktop)
-      index pkgLists dt
-      pkgState[$INDEX]=1
-      ;;
-    lt|LT|laptop)
-      index pkgLists lt
-      pkgState[$INDEX]=1
-      ;;
-    *)
-      logInfo 'could not determine host type from $MACHINE - using desktop'
-      index pkgLists dt
-      pkgState[$INDEX]=1
-      ;;
-  esac
-fi
+preParse        pkgBase      pkgDir
+initializeState pkgBaseState pkgBase
+selectFromBase  pkgSelect    listSum pkgBase pkgBaseState
 
-PS3="\e[1${C[g]}$PS3\e[0m Lists to install (^D to confirm): " inplaceSelect pkgLists pkgState
-[[ ${pkgState[@]} =~ 1 ]] || err 4 "no lists selected - \e[1${C[r]}aborting\e[0m"
-
-typeset -a pkgSelect=()
-for (( i=0; i<${#pkgLists[@]}; i++ )); do
-  (( ${pkgState[$i]} == 1 )) && pkgSelect+=("${pkgLists[$i]}")
+for dir in "${pkgDir[@]}"; do
+  prompt g n "Install packages for \e[1m$dir\e[0m?" || continue
+  selectFromDir pkgSelect listSum "$dir"
 done
 
+(( ${#pkgSelect[@]} == 0 )) \
+  && err 4 "no lists selected - \e[1${C[r]}aborting\e[0m"
+
 IFS=,
-log a "\e[1m${#pkgSelect[@]}\e[0m of \e[1m${#pkgLists[@]}\e[0m list(s) selected: ${pkgSelect[*]}"
+log a "\e[1m${#pkgSelect[@]}\e[0m of \e[1m$listSum\e[0m list(s) selected: ${pkgSelect[*]}"
 IFS="${CFG[ifs]}"
+
+for list in "${pkgSelect[@]}"; do
+  parsePkgList "$list"
+done
+log a "Found \e[1m${#pkgInstall[@]}\e[0m packages in \e[1m${#pkgSelect[@]}\e[0m list(s)"
 
 # --------------------------------------------------------- package installation
 
@@ -410,20 +475,17 @@ if [[ ${pkgSelect[@]} =~ aur ]]; then
   unset pkgSelect[$INDEX]
 fi
 
-if (( ${#pkgSelect[@]} > 0 )); then
-  (( ${CFG[aur]} == 1 )) \
-    && log y 'AUR packages will be installed after all other packages'
+(( ${CFG[aur]} == 1 )) \
+  && log y 'AUR packages will be installed after all other packages'
 
-  # FIX: handle privilege escalation
-  # pacman -Syy &>"${CFG[logfile]}" &
-  #
-  #
-  sleep 1&
-  logWait a 'Updating mirrors' 'kill -0 $!' 'wait $!' \
-    || err 4 "pacman fatal: \e[0${C[r]}`<${CFG[logfile]}`\e[0m"
+# FIX: handle privilege escalation
+# pacman -Syy &>"${CFG[logfile]}" &
 
-  parsePkgList "${pkgSelect[@]}" && installWith pacman pkgInstall
-fi
+sleep 1 &
+logWait a 'Updating mirrors' 'kill -0 $!' 'wait $!' \
+  || err 4 "pacman fatal: \e[0${C[r]}`<${CFG[logfile]}`\e[0m"
+
+installWith pacman pkgInstall
 
 # TODO: need to sync AUR?
 if (( ${CFG[aur]} == 1 )); then
