@@ -2,13 +2,10 @@
 trap 'clean 130' HUP INT QUIT KILL TERM
 shopt -u extglob
 
-# FIX: parsing / selection for AUR packages -- split by core/aur
-
 typeset -A CFG=(
   [base]=pkg
   [ifs]="$IFS"
   [logps]=::
-  [aur]=0
 )
 typeset -A C=(
   [r]=';38;5;1m'
@@ -275,7 +272,7 @@ function inplaceSelectOne {
   (( ${SELECTION:--1} >= 0 )) && arrSet state 0 && state[$SELECTION]=1
 }
 
-function preParse() {
+function preParse {
   typeset -n base=$1 dir=$2
 
   for glob in ${CFG[base]}/*; do
@@ -290,7 +287,7 @@ function preParse() {
 }
 
 # Updates `pkgSelect` with user selection from package lists in `pkgBase`.
-function selectFromBase() {
+function selectFromBase {
   typeset -n out=$1 sum=$2 pkgLists=$3 pkgState=$4
   sum+=${#pkgLists[@]}
 
@@ -326,7 +323,7 @@ function selectFromBase() {
 }
 
 # Updates `pkgSelect` with user selection from package lists in `CFG[base]/$1`.
-function selectFromDir() {
+function selectFromDir {
   typeset -n out=$1 sum=$2
   typeset dir=$3
   typeset -a pkgLists=() pkgState=()
@@ -345,7 +342,7 @@ function selectFromDir() {
 
   if [[ ! ${pkgState[@]} =~ 1 ]]; then
     logInfo "No list selected - \e[1${C[y]}skipping\e[0m $dir"
-    return
+    return 1
   fi
 
   for (( i=0; i<${#pkgLists[@]}; i++ )); do
@@ -354,9 +351,11 @@ function selectFromDir() {
 }
 
 function parsePkgList {
-  typeset -a pkg=()
+  typeset -n core=$1 aur=$2
+  typeset list=$3
+  typeset -i i=0
 
-  log a "Parsing \e[1m$1\e[0m"
+  log a "Parsing \e[1m$list\e[0m"
   while read; do
     [[ $REPLY =~ ^\s*$ || $REPLY =~ ^\s*# ]] && continue
 
@@ -375,14 +374,15 @@ function parsePkgList {
       log a "\e[1m1\e[0m of \e[1m${#altList[@]}\e[0m packages selected: $REPLY"
     fi
 
-    pkg+=("${REPLY%%#*}")
-  done <"${CFG[base]}/$1.txt"
+    REPLY=${REPLY%%#*}
+    [[ $REPLY =~ :AUR$ ]] && aur+=(${REPLY%:AUR}) || core+=($REPLY)
+    let i++
+  done <"${CFG[base]}/$list.txt"
 
-  logWait a "Parsing \e[1m$1\e[0m" 'false'
-  logInfo "Found \e[1m${#pkg[@]}\e[0m packages in $1"
-  pkgInstall+=("${pkg[@]}")
+  logWait a "Parsing \e[1m$list\e[0m" 'false'
+  logInfo "Found \e[1m$i\e[0m package(s) in $1"
 
-  (( ${#pkg[@]} > 0 ))
+  (( $i > 0 ))
 }
 
 function ensureYay {
@@ -435,15 +435,14 @@ if (( $UID == 0 )); then
 fi
 
 dep pacman mktemp
-# TODO: uncomment
-# CFG[logfile]=`mktemp -p "${TMPDIR:-/tmp}" "${0##*/}".log.XXXXXXXXXX`
-# log a "Logfile created at \e[1m${CFG[logfile]:-}\e[0m"
+CFG[logfile]=`mktemp -p "${TMPDIR:-/tmp}" "${0##*/}".log.XXXXXXXXXX`
+log a "Logfile created at \e[1m${CFG[logfile]:-}\e[0m"
 
 # --------------------------------------------------------------- list selection
 
 typeset -a pkgBase=() pkgBaseState=()
 typeset -a pkgDir=()
-typeset -a pkgSelect=() pkgInstall=()
+typeset -a pkgSelect=() pkgCore=() pkgAur=()
 typeset -i listSum=0
 
 preParse        pkgBase      pkgDir
@@ -463,20 +462,14 @@ log a "\e[1m${#pkgSelect[@]}\e[0m of \e[1m$listSum\e[0m list(s) selected: ${pkgS
 IFS="${CFG[ifs]}"
 
 for list in "${pkgSelect[@]}"; do
-  parsePkgList "$list"
+  parsePkgList pkgCore pkgAur "$list"
 done
-log a "Found \e[1m${#pkgInstall[@]}\e[0m packages in \e[1m${#pkgSelect[@]}\e[0m list(s)"
+log a "Found \e[1m${#pkgCore[@]}\e[0m packages in \e[1m${#pkgSelect[@]}\e[0m list(s)"
 
 # --------------------------------------------------------- package installation
 
-if [[ ${pkgSelect[@]} =~ aur ]]; then
-  CFG[aur]=1
-  index pkgSelect aur
-  unset pkgSelect[$INDEX]
-fi
-
-(( ${CFG[aur]} == 1 )) \
-  && log y 'AUR packages will be installed after all other packages'
+(( ${#pkgAur[@]} > 0 )) \
+  && log y 'AUR packages will be installed after core packages'
 
 # FIX: handle privilege escalation
 # pacman -Syy &>"${CFG[logfile]}" &
@@ -485,16 +478,16 @@ sleep 1 &
 logWait a 'Updating mirrors' 'kill -0 $!' 'wait $!' \
   || err 4 "pacman fatal: \e[0${C[r]}`<${CFG[logfile]}`\e[0m"
 
-installWith pacman pkgInstall
+installWith pacman pkgCore
 
 # TODO: need to sync AUR?
-if (( ${CFG[aur]} == 1 )); then
+if (( ${#pkgAur[@]} > 0 )); then
   (( $UID == 0 )) \
     && prompt y n '\e[1mWARNING:\e[0m AUR packages should not be installed as root - continue?'
 
   if (( ($UID != 0 && $? == 1) || ($UID == 0 && $? == 0) )); then
     log a 'Installing AUR packages...'
-    ensureYay && parsePkgList aur && installWith yay pkgInstall
+    ensureYay && installWith yay pkgAur
   fi
 fi
 
