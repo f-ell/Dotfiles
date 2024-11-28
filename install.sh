@@ -1,9 +1,11 @@
 #!/bin/bash
-trap 'clean 130' HUP INT QUIT KILL TERM
+trap 'clean'    EXIT
+trap 'exit 130' HUP INT QUIT TERM
 shopt -u extglob
 
 typeset -A CFG=(
   [base]=pkg
+  [exec]="${0##*/}"
   [ifs]="$IFS"
   [logps]=::
 )
@@ -19,21 +21,19 @@ PS3='==>'
 # TODO: documentation
 
 function err {
-  printf '%s: %b\n' "${0##*/}" "$2" >&2
-  (( $1 > 0 )) && clean $1
+  printf '%s: %b\n' "${CFG[exec]}" "$2" >&2
+  (( $1 > 0 )) && exit $1
 }
 
 function clean {
   printf '\e[?25h' # re-enable cursor in case of `logWait`-interrupt
-  rm -f "${CFG[logfile]}" \
+  rm -f ${CFG[logfile]} \
     || err 0 "failed to remove logfile: \e[1m${CFG[logfile]}\e[0m"
 
   if [[ -e ${CFG[yay]} ]]; then
     rm -rf "${CFG[yay]}" \
       || err 0 "failed to remove yay install directory: \e[1m${CFG[yay]}\e[0m"
   fi
-
-  exit ${1:-0}
 }
 
 function dep {
@@ -391,17 +391,12 @@ function ensureYay {
   fi
 
   log y '\e[1myay\e[0m not found. Trying to install...'
-  if ! command -v git &>/dev/null; then
-    logInfo "\e[1mgit\e[0m not found - \e[1${C[r]}aborting\e[0m"
-    return 1
-  fi
+  dep git makepgk
+  CFG[yay]=`mktemp -d -p "${XDG_CACHE_HOME:-$HOME/.cache}" yay.XXXXXXXXXX`
 
-  # TODO: uncomment
-  # CFG[yay]=`mktemp -d -p "${TMPDIR:-/tmp}" yay.XXXXXXXXXX`
-
-  (git clone --depth=1 https://github.com/Jguer/yay "${CFG[yay]}" &>"${CFG[logfile]}" \
-    && makepkg --dir="${CFG[yay]}" -si &>"${CFG[logfile]}") &
-  logWait a 'Installing yay' 'kill -0 $!' 'wait $!' \
+  (git clone --depth=1 https://github.com/Jguer/yay "${CFG[yay]}" &>${CFG[logfile]} \
+    && makepkg --dir="${CFG[yay]}" -si &>${CFG[logfile]}) &
+  logWait "${C[a]}" 'Installing yay' 'kill -0 $!' 'wait $!' \
     || err 4 "fatal: \e[0${C[r]}`<${CFG[logfile]}`\e[0m"
 }
 
@@ -421,8 +416,7 @@ function installWith {
   (( $i < ${#pkg[@]} )) \
     && logInfo "\e[1m$(( ${#pkg[@]} - $i ))\e[0m of \e[1m${#pkg[@]}\e[0m packages already installed"
 
-  # FIX: handle privilege escalation
-  $1 --noconfirm --needed -S "${pkg[@]}" &>"${CFG[logfile]}" &
+  su -c "$1 -S \"${pkg[@]}\" ${CFG[logfile]}" &>${CFG[logfile]}
   logWait a "Installing \e[1m$i\e[0m package(s)" 'kill -0 $!' 'wait $!' \
     || err 4 "$1 fatal: \e[0${C[r]}`<${CFG[logfile]}`\e[0m"
 }
@@ -434,9 +428,13 @@ if (( $UID == 0 )); then
     || err 7 "\e[1${C[r]}aborting\e[0m"
 fi
 
-dep pacman mktemp
-CFG[logfile]=`mktemp -p "${TMPDIR:-/tmp}" "${0##*/}".log.XXXXXXXXXX`
+dep mktemp pacman su
+# XDG_CACHE_HOME is used instead of TMPDIR to circumvent r/w-issues as root (see
+# fs.protected_regular)
+CFG[logfile]=`mktemp -p "${XDG_CACHE_HOME:-$HOME/.cache}" "${CFG[exec]}".log.XXXXXXXXXX`
 log a "Logfile created at \e[1m${CFG[logfile]:-}\e[0m"
+
+export -f err clean stripTermColor log logInfo logWait
 
 # --------------------------------------------------------------- list selection
 
@@ -471,12 +469,19 @@ log a "Found \e[1m${#pkgCore[@]}\e[0m packages in \e[1m${#pkgSelect[@]}\e[0m lis
 (( ${#pkgAur[@]} > 0 )) \
   && log y 'AUR packages will be installed after core packages'
 
-# FIX: handle privilege escalation
-# pacman -Syy &>"${CFG[logfile]}" &
+read -r -d '' <<-EOF
+  typeset -A CFG=(${CFG[@]@K})
+  typeset -A C=(${C[@]@K})
 
-sleep 1 &
-logWait a 'Updating mirrors' 'kill -0 $!' 'wait $!' \
-  || err 4 "pacman fatal: \e[0${C[r]}`<${CFG[logfile]}`\e[0m"
+  pacman -Syy &>${CFG[logfile]} &
+  logWait a 'Updating mirrors' 'kill -0 \$!' 'wait \$!' || exit 4
+EOF
+
+su -c "$REPLY" || {
+  typeset x=$?
+  (( $x == 1 )) && err 4  'failed to acquire elevated privileges'
+  (( $x > 0  )) && err $x "fatal: \e[0${C[r]}`<${CFG[logfile]}`\e[0m"
+}
 
 installWith pacman pkgCore
 
@@ -494,11 +499,10 @@ fi
 # ------------------------------------------------------ post-installation hooks
 
 log a 'All done - cleaning up'
-clean
 
 # TODO: hooks
 # * doas configuration : permit nopass :wheel
 #   * if LT : permit nopass USER cmd brightnessctl
-# * clone repositories : dotfiles, scripts, g, zsh-syntax-highlighting, zsh-autosuggestions
+# * clone repositories : dotfiles, scripts, g, zsh-syntax-highlighting
 # * stow dotfiles
 # * install fonts
