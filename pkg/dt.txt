@@ -1,7 +1,8 @@
 # desktop install
 ## drivers / peripherals
 nvidia
-openrazer-meta:AUR
+openrazer-daemon
+openrazer-driver-dkms
 openrgb
 polychromatic:AUR
 ufw

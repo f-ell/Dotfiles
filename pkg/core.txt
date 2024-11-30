@@ -34,13 +34,9 @@ util-linux
 xz
 
 ## selected packages from `base-devel`
-autoconf
-automake
 binutils
-bison
 debugedit
 fakeroot
-flex
 gcc
 groff
 libtool

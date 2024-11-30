@@ -9,6 +9,7 @@ neovim
 ntfs-3g
 openconnect
 pacman-contrib
+pacutils
 pass
 plocate
 ripgrep
