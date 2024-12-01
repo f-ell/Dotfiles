@@ -1,14 +1,30 @@
 err() { printf '%s: %s\n' "$1" "$2" 1>&2; }
 
 ct() {
-  local bin
-
+  typeset bin
   if [[ $1 == -b ]]; then
     bin=--bin
     shift
   fi
 
   cargo test $bin $@ -- ${CPT+--nocapture}
+}
+
+aoc-input() {
+  typeset BASH_REMATCH=() # prevent persistence between calls
+  typeset year= day=
+  if [[ $1 =~ ([[:digit:]]+)?/([[:digit:]]+) ]]; then
+    year=${BASH_REMATCH[1]:-`date +%Y`}
+    day=${BASH_REMATCH[2]}
+  else
+    year=`date +%Y`
+    day=`date +%d`
+    day=${day#0}
+  fi
+
+  [[ -t 1 || -p /dev/stdout ]] \
+    && printf "\e[1;38;5;6m::\e[0m fetching input for $year/$day...\n" >&2
+  curl -s -H "Cookie:${AOC_SESSION:-;}" https://adventofcode.com/$year/day/$day/input
 }
 
 hyprwall() {
@@ -28,17 +44,15 @@ hyprwall() {
 }
 
 j() {
-  local j exit
-  j=`jump $@`
-
-  exit=$?
+  typeset j=`jump $@`
+  typeset exit=$?
   (( $exit != 0 )) && return $exit
 
   [[ $j =~ ^cd ]] && eval $j || printf '%s\n' "$j"
 }
 
 owns() {
-  local fn=owns program=`command -v $1`
+  typeset fn=owns program=`command -v $1`
   [[ -z $1 ]] && { err $fn 'no command specified!'; return 1; }
   [[ -z $program ]] \
     && { err $fn "$1 not found!"; return 1; } \
@@ -46,7 +60,7 @@ owns() {
 }
 
 pac() {
-  local root
+  typeset root
   if [[ $1 =~ '^[rR]$' ]]; then
     root=/usr/bin/doas
     [[ ! -f $root ]] && root=${root%/*}/sudo
@@ -61,7 +75,7 @@ ping() {
 }
 
 wnvm() {
-  local fn=wnvm root=pom.xml mvnw=./mvnw
+  typeset fn=wnvm root=pom.xml mvnw=./mvnw
   pushd $PWD &>/dev/null
   until [[ $PWD == / || -f ./$root ]]; do cd ..; done
   [[ $PWD == / ]]\
