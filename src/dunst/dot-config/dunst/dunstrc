@@ -10,7 +10,7 @@ icon_path = /usr/share/icons/Adwaita/16x16/status/:/usr/share/icons/Adwaita/16x1
 width  = (0, 512)
 height = 128
 origin = top-right
-offset = 20x20
+offset = (20, 20)
 follow = keyboard
 
 padding            = 12

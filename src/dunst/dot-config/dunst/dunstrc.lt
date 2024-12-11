@@ -8,9 +8,9 @@ show_indicators = false
 icon_path = /usr/share/icons/Adwaita/16x16/status/:/usr/share/icons/Adwaita/16x16/devices/:/usr/share/icons/Adwaita/16x16/legacy/
 
 width  = (0, 512)
-height = 128
+height = 64
 origin = top-right
-offset = 20x50
+offset = (20, 50)
 follow = keyboard
 
 padding            = 12
