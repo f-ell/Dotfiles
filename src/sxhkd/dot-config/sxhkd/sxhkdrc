@@ -12,7 +12,7 @@ super + r
   rofi -monitor -4 -show dmenu -modes 'dmenu:rofi-custom,drun,window'
 
 super + {_, shift +} m
-  scrot -i -q 100 -F ~/Media/Pictures/Screenshots/scrot_$(date +%Y%m%d-%H%M%S).png \
+  scrot -i -q 100 -F ~/Pictures/Screenshots/scrot_$(date +%Y%m%d-%H%M%S).png \
   {-s -f -l style=dash\,width=2\,opacity=100, -a 0\,0\,1920\,1080}
 
 super + o; {b,c,d,g,s}
