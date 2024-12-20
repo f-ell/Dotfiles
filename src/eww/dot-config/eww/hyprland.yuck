@@ -8,13 +8,24 @@
         :anchor 'left center'
     )
     :exclusive true
-    (box
-        :space-evenly false
+    (centerbox
         :orientation 'v'
         :class 'bar dt'
-        (hypr-workspaces)
-        (separator-h)
-        (hypr-layout)
+        (box
+            :space-evenly false
+            :orientation 'v'
+            (hypr-workspaces)
+            (separator-h)
+            (hypr-layout)
+        )
+        (box :space-evenly false)
+        (box
+            :space-evenly false
+            :valign 'end'
+            :halign 'center'
+            :css 'box { margin-bottom: .8em; }'
+            (systray :orientation 'v')
+        )
     )
 )
 
