@@ -49,6 +49,17 @@ syntect_theme = ""
 
 # : }}}
 
+# : Mode {{{
+
+[mode]
+normal_main = { fg = "green",   bg = "reset" }
+normal_alt  = { fg = "green",   bg = "reset" }
+select_main = { fg = "red",     bg = "reset" }
+select_alt  = { fg = "green",   bg = "reset" }
+unset_main  = { fg = "magenta", bg = "reset" }
+unset_alt   = { fg = "green",   bg = "reset" }
+
+# : }}}
 
 # : Status {{{
 
@@ -57,29 +68,24 @@ separator_open  = "["
 separator_close = "]"
 separator_style = { fg = "darkgray", bg = "reset" }
 
-# Mode
-mode_normal = { fg = "green",   bg = "reset" }
-mode_select = { fg = "red",     bg = "reset" }
-mode_unset  = { fg = "magenta", bg = "reset" }
-
 # Progress
 progress_label  = { bold = true }
 progress_normal = { fg = "blue", bg = "black" }
 progress_error  = { fg = "red",  bg = "black" }
 
 # Permissions
-permissions_t = { fg = "yellow" }
-permissions_r = { fg = "green" }
-permissions_w = { fg = "green" }
-permissions_x = { fg = "green" }
-permissions_s = { fg = "darkgray" }
+perm_type  = { fg = "yellow" }
+perm_read  = { fg = "green" }
+perm_write = { fg = "green" }
+perm_exec  = { fg = "green" }
+perm_sep   = { fg = "darkgray" }
 
 # : }}}
 
 
-# : Select {{{
+# : Pick {{{
 
-[select]
+[pick]
 border   = { fg = "darkgray" }
 active   = { fg = "green" }
 inactive = {}
@@ -166,7 +172,6 @@ icon_error = "•"
 # : File-specific styles {{{
 
 [filetype]
-
 rules = [
 	{ name = "*",  is = "orphan", fg = "red" },
 	{ name = "*",  is = "exec",   fg = "green" },
@@ -177,7 +182,6 @@ rules = [
 ]
 
 [icon]
-
 globs = []
 dirs  = []
 files = [
