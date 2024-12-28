@@ -1,8 +1,0 @@
-# [MODIFIER + ]*[@|!]KEYSYM
-#   COMMAND
-
-alt + b
-  dunstify -u low -h string:x-dunst-stack-tag:bat "`mouse_battery.py`"
-
-alt + c
-  dunstify -u low -h string:x-dunst-stack-tag:temp "`temp.dt`"

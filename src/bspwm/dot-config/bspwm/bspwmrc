@@ -69,7 +69,7 @@ if [[ $MACHINE == DT ]]; then
 else
   pgrep dunst || dunst -conf "$XDG_CONFIG_HOME"/dunst/dunstrc.lt &
   pgrep sxhkd || sxhkd "$XDG_CONFIG_HOME"/sxhkd/sxhkdrc.lt "$XDG_CONFIG_HOME"/bspwm/sxhkdrc.bspwm &
-  pgrep ssm || ssm -t 60 -e g -b 30 -c 70 &
+  pgrep ssm || ssm -t 60 -e c,g -b 30 &
 fi
 
 [[ -f $WALLPAPER ]] && feh --no-fehbg --bg-fill "$WALLPAPER"
