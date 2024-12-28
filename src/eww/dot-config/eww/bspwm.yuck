@@ -1,0 +1,76 @@
+(defwindow bar-bspwm-dt
+    :monitor 0
+    :geometry (geometry
+        :x 0
+        :y 0
+        :width 42
+        :height '100%'
+        :anchor 'top left'
+    )
+    :wm-ingore false
+    :reserve (struts :distance 42 :side 'left')
+    (box
+        :space-evenly false
+        :orientation 'v'
+        :class 'bar dt'
+        (bspwm-desktops-dt)
+        (separator-h)
+        (bspwm-layout)
+    )
+)
+
+(defwindow bar-bspwm-lt
+    :monitor 0
+    :geometry (geometry
+        :x 0
+        :y 0
+        :width '100%'
+        :height 32
+        :anchor 'top center'
+    )
+    :wm-ingore false
+    :reserve (struts :distance 32 :side 'top')
+    (centerbox
+        :orientation 'h'
+        :class 'bar lt'
+        (box
+            :space-evenly false
+            :halign 'start'
+            (bspwm-desktops-lt)
+            (separator-v)
+            (bspwm-layout)
+        )
+        (box :space-evenly false :halign 'center')
+        (box
+            :space-evenly false
+            :halign 'end'
+            :css 'box { margin-right: .8em; }'
+            (battery)
+            (separator-v)
+            (temp-lt)
+            (separator-v)
+            (time)
+        )
+    )
+)
+
+;; -----------------------------------------------------------------------------
+
+(deflisten bspwm-desktops :initial '[]' './scripts/bspwm-desktops.sh')
+(defwidget bspwm-desktops-dt []
+    (box :orientation 'v' :class 'desktop'
+        (for d in bspwm-desktops
+            (button :onclick {d.command} :class {d.state} {d.icon})
+        )
+    )
+)
+(defwidget bspwm-desktops-lt []
+    (box :class 'desktop'
+        (for d in bspwm-desktops
+            (button :onclick {d.command} :class {d.state} {d.icon})
+        )
+    )
+)
+
+(deflisten bspwm-layout :initial '?' 'layout.bspwm')
+(defwidget bspwm-layout [] (label :text bspwm-layout))

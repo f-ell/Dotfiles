@@ -21,46 +21,78 @@ $aqu2: #35a77c;
   font-weight: 600;
 }
 
-button {
-  font-size: .9em;
-  padding: .4em .8em;
-}
-
 .bar {
   color: $fg1;
   background-color: $bg2;
-}
 
-.section {
-  $margin-outer: 1em;
-  $margin-inner: .8em;
-  &.start {
-    margin-left: $margin-outer;
-    & > * {
-      margin-right: $margin-inner;
-    }
+  &.dt button {
+    font-size: .9em;
+    padding: .4em 0;
   }
-  &.end {
-    margin-right: $margin-outer;
-    & > * {
-      margin-left: $margin-inner;
-    }
+
+  &.lt button {
+    padding: 0 .8em;
   }
 }
 
-.desktop {
+.bar .desktop {
   & .focused {
+    color: $bg2;
+    background-color: $gre1;
+  }
+
+  & .occupied {
     color: $gre1;
   }
-  & .occupied {
-    color: $fg2;
-  }
+
   & .empty {
     color: $fg2;
   }
 }
 
-.separator {
+.bar .separator {
   color: $fg2;
   font-weight: 700;
+
+  &.hor {
+    margin-bottom: .4em;
+  }
+
+  &.ver {
+    margin: 0 .8em;
+  }
+}
+
+// -----------------------------------------------------------------------------
+
+.window {
+  color: $gre1;
+  background-color: rgba($bg2, .9);
+  border-radius: .25em;
+  padding: .6em;
+}
+
+.window.time {
+  & * {
+    font-weight: 900;
+  }
+
+  & .time-of-day {
+    font-size: 7em;
+  }
+
+  & .ampm {
+    font-size: 2.6em;
+    margin-left: .1em;
+  }
+
+  & .date {
+    font-size: 1.75em;
+    margin-top: -.25em;
+  }
+}
+
+.window.sysinfo * {
+  font-size: 1.25em;
+  font-weight: 900;
 }

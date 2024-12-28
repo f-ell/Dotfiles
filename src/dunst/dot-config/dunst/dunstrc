@@ -7,41 +7,34 @@ sticky_history  = no
 show_indicators = false
 icon_path = /usr/share/icons/Adwaita/16x16/status/:/usr/share/icons/Adwaita/16x16/devices/:/usr/share/icons/Adwaita/16x16/legacy/
 
-width  = (0, 1920)
-height = 38
+width  = (0, 512)
+height = 128
 origin = top-right
-offset = 65x50
+offset = (20, 20)
 follow = keyboard
 
-padding            = 4
-horizontal_padding = 8
+padding            = 12
+horizontal_padding = 12
 frame_width        = 2
-corner_radius      = 4
-transparency       = 10
 
 ellipsize          = end
 alignment          = center
 vertical_alignment = center
 
-foreground  = "#e0e0e0"
+foreground  = "#fdf6e3"
+background  = "#323c41"
 
 [urgency_low]
-timeout     = 4s
-foreground  = "#d3c6aa"
-background  = "#323c41"
-frame_color = "#323c41"
+timeout     = 6s
+frame_color = "#7fbbb3"
 
 [urgency_normal]
 timeout     = 6s
-foreground  = "#d3c6aa"
-background  = "#323c41"
-frame_color = "#323c41"
+frame_color = "#a7c080"
 
 [urgency_critical]
-timeout     = 8s
-foreground  = "#e67e80"
-background  = "#323c41"
-frame_color = "#323c41"
+timeout     = 6s
+frame_color = "#e67e80"
 
 [discord]
 appname     = "discord"
@@ -49,21 +42,3 @@ timeout     = 6s
 foreground  = "#9d9fa2"
 background  = "#2f3136"
 frame_color = "#292b2f"
-
-[spotify]
-appname     = "Spotify"
-skip_display= true
-
-[hightemp]
-appname     = "highTemp"
-timeout     = 4s
-foreground  = "#e67e80"
-background  = "#323c41"
-frame_color = "#323c41"
-
-[crittemp]
-appname     = "critTemp"
-timeout     = 8s
-foreground  = "#e67e80"
-background  = "#323c41"
-frame_color = "#323c41"

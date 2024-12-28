@@ -1,0 +1,28 @@
+ARRANGE: ROW
+ALIGN: MIDDLE
+
+ORDER:
+  - 'DP-2'
+  - 'DP-1'
+
+SCALING: TRUE
+AUTO_SCALE: TRUE
+
+VRR_OFF:
+    - '.*'
+
+MODE:
+    - NAME_DESC: 'DELL U3219Q'
+      WIDTH: 3840
+      HEIGHT: 2160
+      HZ: 60
+    - NAME_DESC: 'Acer XB240H'
+      WIDTH: 1920
+      HEIGHT: 1080
+      HZ: 144
+
+SCALE:
+  - NAME_DESC: 'DELL U3219Q'
+    SCALE: 1.33
+
+LOG_THRESHOLD: INFO

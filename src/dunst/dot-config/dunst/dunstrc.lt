@@ -1,58 +1,37 @@
 [global]
 title           = Dunst
 class           = Dunst
-font            = Ellograph CF Demi-Bold 14
+font            = Ellograph CF Demi-Bold 12
 history_length  = 0
 sticky_history  = no
 show_indicators = false
 icon_path = /usr/share/icons/Adwaita/16x16/status/:/usr/share/icons/Adwaita/16x16/devices/:/usr/share/icons/Adwaita/16x16/legacy/
 
-width  = (0, 1920)
-height = 36
-origin = top-center
-offset = 15x50
+width  = (0, 512)
+height = 64
+origin = top-right
+offset = (20, 50)
 follow = keyboard
 
-padding            = 4
-horizontal_padding = 8
+padding            = 12
+horizontal_padding = 12
 frame_width        = 2
-corner_radius      = 4
-transparency       = 10
 
 ellipsize          = end
 alignment          = center
 vertical_alignment = center
 
-foreground  = "#e0e0e0"
+foreground  = "#fdf6e3"
+background  = "#323c41"
 
 [urgency_low]
-timeout     = 4s
-foreground  = "#d3c6aa"
-background  = "#323c41"
-frame_color = "#323c41"
+timeout     = 6s
+frame_color = "#7fbbb3"
 
 [urgency_normal]
 timeout     = 6s
-foreground  = "#d3c6aa"
-background  = "#323c41"
-frame_color = "#323c41"
+frame_color = "#a7c080"
 
 [urgency_critical]
-timeout     = 8s
-foreground  = "#e67e80"
-background  = "#323c41"
-frame_color = "#323c41"
-
-[hightemp]
-appname     = "highTemp"
-timeout     = 4s
-foreground  = "#e67e80"
-background  = "#323c41"
-frame_color = "#323c41"
-
-[crittemp]
-appname     = "critTemp"
-timeout     = 8s
-foreground  = "#e67e80"
-background  = "#323c41"
-frame_color = "#323c41"
+timeout     = 6s
+frame_color = "#e67e80"

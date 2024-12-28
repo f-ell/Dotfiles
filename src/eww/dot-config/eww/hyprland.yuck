@@ -1,0 +1,44 @@
+(defwindow bar-hypr
+    :monitor 'DP-2'
+    :geometry (geometry
+        :x 0
+        :y 0
+        :width 32
+        :height '100%'
+        :anchor 'left center'
+    )
+    :exclusive true
+    (centerbox
+        :orientation 'v'
+        :class 'bar dt'
+        (box
+            :space-evenly false
+            :orientation 'v'
+            (hypr-workspaces)
+            (separator-h)
+            (hypr-layout)
+        )
+        (box :space-evenly false)
+        (box
+            :space-evenly false
+            :valign 'end'
+            :halign 'center'
+            :css 'box { margin-bottom: .8em; }'
+            (systray :orientation 'v')
+        )
+    )
+)
+
+;; -----------------------------------------------------------------------------
+
+(deflisten hypr-workspaces :initial '[]' './scripts/hypr-workspaces.sh')
+(defwidget hypr-workspaces []
+    (box :orientation 'v' :class 'desktop'
+        (for w in hypr-workspaces
+            (button :onclick {w.command} :class {w.state} {w.icon})
+        )
+    )
+)
+
+(deflisten hypr-layout :initial '?' '~/.config/hypr/scripts/layout.sh')
+(defwidget hypr-layout [] (label :text hypr-layout))

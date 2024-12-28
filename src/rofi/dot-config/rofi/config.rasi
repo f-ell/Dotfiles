@@ -52,8 +52,7 @@ configuration {
   fg-nor: #d3c6aa;
   fg-alt: #b3a68a;
   bg-alt: #4a555b;
-  bg-nor: #3a454b;
-  bg-win: #3a454bf8;
+  bg-nor: #323c41;
   green: #a7c080;
 
   text-color: @fg-nor;
@@ -69,7 +68,7 @@ window {
   padding: 38% 35% 12% 35%;
   transparency: "real";
   border: 0px;
-  background-color: @bg-win;
+  background-color: @bg-nor;
 }
 
 mainbox {

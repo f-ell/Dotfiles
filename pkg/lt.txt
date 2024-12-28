@@ -1,0 +1,8 @@
+# laptop install
+bluez
+bluez-tools
+bluez-utils
+brightnessctl
+openconnect
+tlp
+wpa_supplicant

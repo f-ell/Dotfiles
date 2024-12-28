@@ -1,0 +1,15 @@
+(defwidget separator-h [] (label :class 'separator hor' :text '─'))
+(defwidget separator-v [] (label :class 'separator ver' :text '|'))
+
+;; -----------------------------------------------------------------------------
+
+(defwidget battery []
+    (label
+        :text '${EWW_BATTERY.BAT0.status == 'Charging' ? '+' : ''} ${round(EWW_BATTERY.total_avg, 0)}%'
+    )
+)
+
+(defpoll temp-lt :interval '2s' :initial 'CPU: ?°C' `temp.lt`)
+(defwidget temp-lt [] (label :text temp-lt))
+
+(defwidget time [] (label :text '${formattime(EWW_TIME, '%A %I:%M %p')}'))

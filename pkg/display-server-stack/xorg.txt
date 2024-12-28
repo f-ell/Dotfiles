@@ -1,0 +1,16 @@
+# X packages
+## display stack
+xorg-server
+xorg-xev
+xorg-xinit
+xorg-xinput
+xorg-xset
+
+## utilities
+bspwm
+picom
+rofi
+scrot
+sxhkd
+wmctrl
+xclip

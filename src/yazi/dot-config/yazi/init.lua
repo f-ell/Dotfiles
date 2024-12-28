@@ -1,18 +1,10 @@
 ---@diagnostic disable: undefined-global
 
--- Status:children_remove(id, Status.LEFT|Status.RIGHT)
---
--- function Status:greet()
--- 	return ui.Line({ ui.Span("hi mom"):fg("magenta") })
--- end
---
--- Status:children_add("greet", 1000, Status.RIGHT)
-
 function Status:mode()
 	local mode = tostring(self._tab.mode):sub(1, 1):upper()
 
 	return ui.Line({
-		ui.Span(" " .. mode .. " "):style(self:style()),
+		ui.Span(" " .. mode .. " "):style(self:style().main),
 	})
 end
 
@@ -43,15 +35,15 @@ function Status:permissions()
 	local spans = {}
 	for i = 1, #perm do
 		local c = perm:sub(i, i)
-		local style = THEME.status.permissions_t
+		local style = THEME.status.perm_type
 		if c == "-" or c == "?" then
-			style = THEME.status.permissions_s
+			style = THEME.status.perm_sep
 		elseif c == "r" then
-			style = THEME.status.permissions_r
+			style = THEME.status.perm_read
 		elseif c == "w" then
-			style = THEME.status.permissions_w
+			style = THEME.status.perm_write
 		elseif c == "x" or c == "s" or c == "S" or c == "t" or c == "T" then
-			style = THEME.status.permissions_x
+			style = THEME.status.perm_exec
 		end
 		spans[i] = ui.Span(c):style(style)
 	end
@@ -62,34 +54,42 @@ function Status:permissions()
 	return ui.Line(spans)
 end
 
+function Status:owner()
+	local h = self._tab.current.hovered
+	local o, g = ya.user_name(h.cha.uid), ya.group_name(h.cha.gid)
+
+	return ui.Line({
+		ui.Span((" %s:%s "):format(o, g)):style(THEME.status.separator_style),
+	})
+end
+
 function Status:size()
 	local h = self._tab.current.hovered
 	if not h then
-		return ui.Line({})
+		return ""
 	end
 
 	return ui.Line({
-		ui.Span(" " .. ya.readable_size(h:size() or h.cha.length) .. " ")
-			:fg(self:style().bg)
-			:bg(THEME.status.separator_style.bg),
+		ui.Span((" %6s "):format(ya.readable_size(h:size() or h.cha.len))):style(THEME.status.separator_style),
 	})
 end
 
 function Status:position()
-	local cursor = self._tab.current.cursor
-	local length = #self._tab.current.files
+	local cur = self._tab.current.cursor
+	local len = #self._tab.current.files
 
 	return ui.Line({
-		ui.Span(string.format(" %2d/%-2d ", cursor + 1, length)):style(self:style()),
+		ui.Span((" %2d/%-2d "):format(cur + 1, len)),
 	})
 end
 
 Status._left = {
-	{ "mode", id = nil, order = 1 },
-	{ "name", id = nil, order = 2 },
+	{ "mode", id = 1, order = 1000 },
+	{ "name", id = 2, order = 2000 },
 }
 Status._right = {
-	{ "permissions", id = nil, order = 1 },
-	{ "size", id = nil, order = 2 },
-	{ "position", id = nil, order = 3 },
+	{ "perm", id = 3, order = 1000 },
+	{ "owner", id = 4, order = 2000 },
+	{ "size", id = 5, order = 3000 },
+	{ "position", id = 6, order = 4000 },
 }

@@ -1,0 +1,47 @@
+# packages for fully functional tty-environment
+## core cli tooling
+btop
+eza
+fd
+jmtpfs:AUR
+jq
+neovim
+ntfs-3g
+openconnect
+pacman-contrib
+pacutils
+pass
+plocate
+ripgrep
+stow
+udisks2
+zf:AUR
+zsh
+
+## languages / toolchains / build systems
+cmake
+deno
+docker
+go
+gradle|maven
+jdk-openjdk
+lua
+ninja
+nodejs
+npm
+perl
+perl-par-packer
+python
+python-pip
+python-pyelftools
+python-setuptools
+python-west:AUR
+qmk
+rustup
+
+## other
+ffmpeg
+imagemagick
+isync
+lm_sensors
+yazi
