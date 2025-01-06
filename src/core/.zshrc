@@ -216,37 +216,6 @@ if [[ -o login ]]; then
   set_colours
 fi
 
-function set_highlights {
-  ZSH_HIGHLIGHT_STYLES[alias]="fg=07"
-  ZSH_HIGHLIGHT_STYLES[assign]="fg=04"
-  ZSH_HIGHLIGHT_STYLES[autodirectory]="fg=07"
-  ZSH_HIGHLIGHT_STYLES[back-quoted-argument]="fg=08"
-  ZSH_HIGHLIGHT_STYLES[builtin]="fg=07"
-  ZSH_HIGHLIGHT_STYLES[command]="fg=07"
-  ZSH_HIGHLIGHT_STYLES[commandseparator]="fg=07"
-  ZSH_HIGHLIGHT_STYLES[command-substitution]="fg=07"
-  ZSH_HIGHLIGHT_STYLES[dollar-quoted-argument]="fg=02"
-  ZSH_HIGHLIGHT_STYLES[double-hyphen-option]="fg=07"
-  ZSH_HIGHLIGHT_STYLES[double-quoted-argument]="fg=02"
-  ZSH_HIGHLIGHT_STYLES[function]="fg=07"
-  ZSH_HIGHLIGHT_STYLES[globbing]="fg=05"
-  ZSH_HIGHLIGHT_STYLES[history-expansion]="fg=05"
-  ZSH_HIGHLIGHT_STYLES[path]="fg=07"
-  ZSH_HIGHLIGHT_STYLES[precommand]="fg=07"
-  ZSH_HIGHLIGHT_STYLES[process-substitution]="fg=07"
-  ZSH_HIGHLIGHT_STYLES[redirection]="fg=05"
-  ZSH_HIGHLIGHT_STYLES[reserved-word]="fg=01"
-  ZSH_HIGHLIGHT_STYLES[single-hyphen-option]="fg=07"
-  ZSH_HIGHLIGHT_STYLES[single-quoted-argument]="fg=02"
-  ZSH_HIGHLIGHT_STYLES[unknown-token]="fg=01"
-  ZSH_HIGHLIGHT_STYLES[default]="fg=07"
-  ZSH_HIGHLIGHT_REGEXP+=('\$(\w+|\{.+?\})' "fg=05")
-  ZSH_HIGHLIGHT_REGEXP+=('^\s*(doas|sudo)(\s|$)' "fg=05")
-}
-. "$XDG_CONFIG_HOME/zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
-ZSH_HIGHLIGHT_HIGHLIGHTERS=(main regexp)
-set_highlights
-
 # ------------------------------------------------------------------------------
 
 zstyle ':completion:*' completer _complete _ignored
