@@ -82,57 +82,53 @@ bindkey '^ ' expand-word
 
 function _rc_ps1_get_git_head {
   typeset head=`git rev-parse --is-inside-work-tree 2>/dev/null`
+  ( (( $? != 0 )) || [[ $head != true ]] ) && return 1
 
-  if (( $? == 0 )) && [[ $head == true ]]; then
-    typeset -A refs
-    while read; do
-      refs+=([${${REPLY#* }%\^\{\}}]="${REPLY% *}")
-    done < <(git -C . show-ref --head --heads --tags --abbrev -d)
+  typeset -A refs
+  while read; do
+    refs+=([${${REPLY#* }%\^\{\}}]="${REPLY% *}")
+  done < <(git -C . show-ref --head --heads --tags --abbrev -d)
 
-    typeset href=HEAD hid=${refs[HEAD]}
-    typeset -i m b
-    for ref id in "${(kv)refs[@]}"; do
-      [[ $ref == HEAD ]] && continue
+  head=HEAD
+  typeset hid=${refs[HEAD]}
+  typeset -i m b
+  for ref id in "${(kv)refs[@]}"; do
+    [[ $ref == HEAD ]] && continue
 
-      if [[ $hid == $id ]]; then
-        let m++
-        [[ $ref =~ refs/heads/ ]] && let b++
-        href=${ref#refs/*/}
-        hid=$id
-      fi
-    done
-
-    if (( m == 0 )); then
-      href=$hid
-    elif (( b > 1 )) || (( m > b && b > 0 )); then
-      # NOTE: detached head at branch head prefers tag-name over commit
-      typeset branch=`git -C . branch --show-current`
-      [[ -n $branch ]] && href="$branch"
+    if [[ $hid == $id ]]; then
+      let m++
+      [[ $ref =~ refs/heads/ ]] && let b++
+      head=${ref#refs/*/}
+      hid=$id
     fi
+  done
 
-    head="$href"
+  if (( m == 0 )); then
+    head=$hid
+  elif (( b > 1 )) || (( m > b && b > 0 )); then
+    # NOTE: detached head at branch head prefers tag-name over commit
+    typeset branch=`git -C . branch --show-current`
+    [[ -n $branch ]] && head="$branch"
   fi
 
   printf "$head"
 }
 function _rc_ps1_get_git_stash {
   typeset head=$1
+  [[ -z $head ]] && return 1
 
-  if [[ -n $head ]]; then
-    typeset tl=`git rev-parse --show-toplevel`
+  typeset tl=`git rev-parse --show-toplevel`
+  [[ -f $tl/.git ]] && {
+    tl=`< $tl/.git`
+    tl=${tl#gitdir: }
+    [[ -f $tl/commondir ]] && tl+=/`< $tl/commondir`
+  }
 
-    [[ -f $tl/.git ]] && {
-      tl=`< $tl/.git`
-      tl=${tl#gitdir: }
-      [[ -f $tl/commondir ]] && tl+=/`< $tl/commondir`
-    }
-
-    [[ -f $tl/refs/stash || -f $tl/.git/refs/stash ]] && printf '~'
-  fi
+  [[ -f $tl/refs/stash || -f $tl/.git/refs/stash ]] && printf '~'
 }
 function _rc_ps1_get_git {
-  typeset head=`_rc_ps1_get_git_head`
-  typeset stash=`_rc_ps1_get_git_stash $head`
+  typeset head=`_rc_ps1_get_git_head` stash=
+  [[ -n $head ]] && stash=`_rc_ps1_get_git_stash $head`
   printf "$head$stash"
 }
 
