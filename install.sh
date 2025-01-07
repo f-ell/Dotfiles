@@ -4,6 +4,7 @@ trap 'exit 130' HUP INT QUIT TERM
 shopt -u extglob
 
 typeset -A CFG=(
+  [aurroot]=/home/aur
   [base]=pkg
   [exec]="${0##*/}"
   [ifs]="$IFS"
@@ -30,9 +31,9 @@ function clean {
   rm -f ${CFG[logfile]} \
     || err 0 "failed to remove logfile: \e[1m${CFG[logfile]}\e[0m"
 
-  if [[ -e ${CFG[yay]} ]]; then
-    rm -rf "${CFG[yay]}" \
-      || err 0 "failed to remove yay install directory: \e[1m${CFG[yay]}\e[0m"
+  if [[ -e ${CFG[aur]} ]]; then
+    rm -rf ${CFG[aur]} \
+      || err 0 "failed to remove aurutils install directory: \e[1m${CFG[aur]}\e[0m"
   fi
 }
 
@@ -385,29 +386,75 @@ function parsePkgList {
   (( $i > 0 ))
 }
 
-function ensureYay {
-  if command -v yay &>/dev/null; then
+function suExec {
+  su -c "$1" || {
+    typeset -i x=$?
+    (( $x == 1 )) && err 4  'failed to acquire elevated privileges'
+    (( $x > 0  )) && err $x "fatal: \e[0${C[r]}`<${CFG[logfile]}`\e[0m"
+  }
+}
+
+function aurutilsInstall {
+  if command -v aur &>/dev/null; then
     return 0
   fi
 
-  log y '\e[1myay\e[0m not found. Trying to install...'
-  dep git makepgk
-  CFG[yay]=`mktemp -d -p "${XDG_CACHE_HOME:-$HOME/.cache}" yay.XXXXXXXXXX`
+  log y "\e[1maurutils\e[0m not found. Trying to install."
+  dep git make
+  CFG[aur]=`mktemp -d -p "${XDG_CACHE_HOME:-$HOME/.cache}" aurutils.XXXXXXXXXX`
 
-  (git clone --depth=1 https://github.com/Jguer/yay "${CFG[yay]}" &>${CFG[logfile]} \
-    && makepkg --dir="${CFG[yay]}" -si &>${CFG[logfile]}) &
-  logWait "${C[a]}" 'Installing yay' 'kill -0 $!' 'wait $!' \
-    || err 4 "fatal: \e[0${C[r]}`<${CFG[logfile]}`\e[0m"
+  read -r -d '' <<-EOF
+	  typeset -A CFG=(${CFG[@]@K})
+	  typeset -A C=(${C[@]@K})
+	
+	  (git clone --depth=1 https://github.com/aurutils/aurutils ${CFG[aur]} &>${CFG[logfile]} \
+	    && makepkg --dir=${CFG[aur]} -si &>${CFG[logfile]}) &
+	  logWait a 'Installing aurutils' 'kill -0 \$!' 'wait \$!' || exit 4
+	EOF
+  suExec "$REPLY"
 }
 
-function installWith {
-  typeset -n pkg=$2
+function aurutilsConfigure {
+  aur repo --list-repo &>/dev/null && return 0
+
+  log y 'No local package repository found'
+  log a "Configuring new repository in ${CFG[aurroot]} ..."
+  [[ -d ${CFG[aurroot]} ]] && err 4 'target directory already exists'
+
+  dep mkdir repo-add
+
+  read -r -d '' PACMAN_CONF <<-EOF
+	[aur]
+	SigLevel = Optional TrustAll
+	Server = file://${CFG[aurroot]}/db
+	EOF
+  read -r -d '' <<-EOF
+	  printf '\n%s\n' "$PACMAN_CONF" >> /etc/pacman.conf
+	  mkdir -m 777 -p ${CFG[aurroot]}/{db,build}
+	  repo-add ${CFG[aurroot]}/db/aur.db.tar.gz
+	EOF
+
+  log y 'Updating pacman.conf'
+  suExec "$REPLY"
+  log r "Remember to export \e[1mAURDEST=${CFG[aurroot]}/build\e[0m for future use"
+}
+
+function aurSync {
+  typeset -n pkg=$1
+  export AURDEST=${CFG[aurroot]}/build AUR_PACMAN_AUTH=su
+
+  logWait a "Building ${#pkg[@]} packages" 'false'
+  aur sync --noview -rnC "${pkg[@]}" \
+    || err 4 'failed to build one or more AUR packages'
+}
+
+function install {
+  typeset -n pkg=$1
   typeset -i i=0
 
-  # FIX: yay does not search AUR with `-Sp`... why are you like this??
   while read; do
     let i++
-  done < <($1 --needed -Sp --print-format='%n' "${pkg[@]}")
+  done < <(pacman --needed -Sp --print-format='%n' "${pkg[@]}")
 
   if (( $i == 0 )); then
     log a 'All packages already installed, nothing to do'
@@ -416,9 +463,16 @@ function installWith {
   (( $i < ${#pkg[@]} )) \
     && logInfo "\e[1m$(( ${#pkg[@]} - $i ))\e[0m of \e[1m${#pkg[@]}\e[0m packages already installed"
 
-  su -c "$1 -S \"${pkg[@]}\" ${CFG[logfile]}" &>${CFG[logfile]}
-  logWait a "Installing \e[1m$i\e[0m package(s)" 'kill -0 $!' 'wait $!' \
-    || err 4 "$1 fatal: \e[0${C[r]}`<${CFG[logfile]}`\e[0m"
+  read -r -d '' <<-EOF
+	  typeset -A CFG=(${CFG[@]@K})
+	  typeset -A C=(${C[@]@K})
+
+	  pacman -S --noconfirm ${pkg[@]} &>${CFG[logfile]} &
+	  logWait y 'Installing \e[1m$i\e[0m package(s)' 'kill -0 \$!' 'wait \$!' \
+	    || exit 4
+	EOF
+  log y 'Acquiring elevated privileges for package installation:'
+  suExec "$REPLY"
 }
 
 # ------------------------------------------------------------------------------
@@ -429,8 +483,7 @@ if (( $UID == 0 )); then
 fi
 
 dep mktemp pacman su
-# XDG_CACHE_HOME is used instead of TMPDIR to circumvent r/w-issues as root (see
-# fs.protected_regular)
+# using TMPDIR causes r/w-issues as root (fs.protected_regular)
 CFG[logfile]=`mktemp -p "${XDG_CACHE_HOME:-$HOME/.cache}" "${CFG[exec]}".log.XXXXXXXXXX`
 log a "Logfile created at \e[1m${CFG[logfile]:-}\e[0m"
 
@@ -467,33 +520,25 @@ log a "Found \e[1m${#pkgCore[@]}\e[0m packages in \e[1m${#pkgSelect[@]}\e[0m lis
 # --------------------------------------------------------- package installation
 
 (( ${#pkgAur[@]} > 0 )) \
-  && log y 'AUR packages will be installed after core packages'
+  && log y 'AUR packages will be built and installed after core packages'
 
 read -r -d '' <<-EOF
   typeset -A CFG=(${CFG[@]@K})
   typeset -A C=(${C[@]@K})
 
-  pacman -Syy &>${CFG[logfile]} &
-  logWait a 'Updating mirrors' 'kill -0 \$!' 'wait \$!' || exit 4
+  pacman -Sy &>${CFG[logfile]} &
+  logWait y 'Updating mirrors' 'kill -0 \$!' 'wait \$!' || exit 4
 EOF
+log y 'Acquiring elevated privileges for mirror update:'
+suExec "$REPLY"
 
-su -c "$REPLY" || {
-  typeset x=$?
-  (( $x == 1 )) && err 4  'failed to acquire elevated privileges'
-  (( $x > 0  )) && err $x "fatal: \e[0${C[r]}`<${CFG[logfile]}`\e[0m"
-}
-
-installWith pacman pkgCore
-
-# TODO: need to sync AUR?
+install pkgCore
 if (( ${#pkgAur[@]} > 0 )); then
-  (( $UID == 0 )) \
-    && prompt y n '\e[1mWARNING:\e[0m AUR packages should not be installed as root - continue?'
-
-  if (( ($UID != 0 && $? == 1) || ($UID == 0 && $? == 0) )); then
-    log a 'Installing AUR packages...'
-    ensureYay && installWith yay pkgAur
-  fi
+  log a 'Installing AUR packages...'
+  aurutilsInstall
+  aurutilsConfigure
+  aurSync pkgAur
+  install pkgAur
 fi
 
 # ------------------------------------------------------ post-installation hooks
