@@ -50,6 +50,8 @@ function dep {
   (( ${#missing[@]} > 0 )) && err 5 "missing dependencies: ${missing[*]}"
 }
 
+# -------------------------------------------------------- logging and prompting
+
 function stripTermColor {
   for name in "$@"; do
     typeset -n str=$name
@@ -126,6 +128,8 @@ function prompt {
   done
 }
 
+# -------------------------------------------------------------- generic utility
+
 function index {
   typeset -ig INDEX=0
   typeset -n arr=$1
@@ -147,11 +151,83 @@ function arrSet {
 }
 
 function initializeState {
-  typeset -n state=$1 src=$2
-  for (( i=0; i<${#src[@]}; i++ )); do
-    state[$i]=0
+  typeset -n n_state=$1 n_arr=$2
+  for (( i=0; i<${#n_arr[@]}; i++ )); do
+    n_state[$i]=0
   done
 }
+
+function suExec {
+  su -c "$1" || {
+    typeset -i x=$?
+    (( $x == 1 )) && err 4  'failed to acquire elevated privileges'
+    (( $x > 0  )) && err $x "fatal: \e[0${C[r]}`<${CFG[logfile]}`\e[0m"
+  }
+}
+
+# --------------------------------------------------------------- parsing
+
+# FIX: make more generic - use for hook-parsing as well
+function parsePkg {
+  typeset -n base=$1 dir=$2
+
+  for glob in ${CFG[base]}/*; do
+    if [[ -d $glob ]]; then
+      glob="${glob#${CFG[base]}/}"
+      dir+=("$glob")
+    else
+      glob="${glob#${CFG[base]}/}"
+      base+=("${glob%.txt}")
+    fi
+  done
+}
+
+function parsePkgList {
+  typeset -n core=$1 aur=$2
+  typeset list=$3
+  typeset -i i=0
+
+  log a "Parsing \e[1m$list\e[0m"
+  while read; do
+    [[ $REPLY =~ ^\s*$ || $REPLY =~ ^\s*# ]] && continue
+
+    # user selection between mutually exclusive packages
+    if [[ $REPLY =~ '|' ]]; then
+      typeset -a altList=() altState=()
+      local IFS='|'
+
+      for pkg in $REPLY; do
+        altList+=("$pkg")
+        altState+=(0)
+      done
+
+      PS3="\e[1${C[y]}$PS3\e[0m Mutually exclusive packages - select one (^D to confirm):" inplaceSelectOne altList altState
+
+      index altState 1
+      REPLY=${altList[$INDEX]}
+      log a "\e[1m1\e[0m of \e[1m${#altList[@]}\e[0m packages selected: $REPLY"
+    fi
+
+    REPLY=${REPLY%%#*}
+    [[ $REPLY =~ :AUR$ ]] && aur+=(${REPLY%:AUR}) || core+=($REPLY)
+    let i++
+  done <"${CFG[base]}/$list.txt"
+
+  logWait a "Parsing \e[1m$list\e[0m" 'false'
+  logInfo "Found \e[1m$i\e[0m package(s) in $1"
+
+  (( $i > 0 ))
+}
+
+function parseHooks {
+  typeset -n n_hooks=$1
+
+  for glob in hooks/*; do
+    n_hooks+=("${glob#hooks/}")
+  done
+}
+
+# --------------------------------------------------------------- list selection
 
 function indexSelect {
   typeset -n state=$1 index=$2
@@ -273,20 +349,6 @@ function inplaceSelectOne {
   (( ${SELECTION:--1} >= 0 )) && arrSet state 0 && state[$SELECTION]=1
 }
 
-function preParse {
-  typeset -n base=$1 dir=$2
-
-  for glob in ${CFG[base]}/*; do
-    if [[ -d $glob ]]; then
-      glob="${glob#${CFG[base]}/}"
-      dir+=("$glob")
-    else
-      glob="${glob#${CFG[base]}/}"
-      base+=("${glob%.txt}")
-    fi
-  done
-}
-
 # Updates `pkgSelect` with user selection from package lists in `pkgBase`.
 function selectFromBase {
   typeset -n out=$1 sum=$2 pkgLists=$3 pkgState=$4
@@ -342,7 +404,7 @@ function selectFromDir {
   PS3="\e[1${C[g]}$PS3\e[0m Lists to install (^D to confirm): " inplaceSelect pkgLists pkgState
 
   if [[ ! ${pkgState[@]} =~ 1 ]]; then
-    logInfo "No list selected - \e[1${C[y]}skipping\e[0m $dir"
+    logInfo "No list selected - skipping $dir"
     return 1
   fi
 
@@ -351,48 +413,17 @@ function selectFromDir {
   done
 }
 
-function parsePkgList {
-  typeset -n core=$1 aur=$2
-  typeset list=$3
-  typeset -i i=0
+function selectHooks {
+  typeset -n out=$1 n_hooks=$2 n_hookState=$3
 
-  log a "Parsing \e[1m$list\e[0m"
-  while read; do
-    [[ $REPLY =~ ^\s*$ || $REPLY =~ ^\s*# ]] && continue
+  PS3="\e[1${C[g]}$PS3\e[0m Hooks to execute (^D to confirm): " inplaceSelect hooks hookState
 
-    # user selection between mutually exclusive packages
-    if [[ $REPLY =~ '|' ]]; then
-      typeset -a altList=() altState=()
-      local IFS='|'
-
-      for pkg in $REPLY; do
-        altList+=("$pkg")
-        altState+=(0)
-      done
-      PS3="\e[1${C[y]}$PS3\e[0m Mutually exclusive packages - select one (^D to confirm):" inplaceSelectOne altList altState
-      index altState 1
-      REPLY=${altList[$INDEX]}
-      log a "\e[1m1\e[0m of \e[1m${#altList[@]}\e[0m packages selected: $REPLY"
-    fi
-
-    REPLY=${REPLY%%#*}
-    [[ $REPLY =~ :AUR$ ]] && aur+=(${REPLY%:AUR}) || core+=($REPLY)
-    let i++
-  done <"${CFG[base]}/$list.txt"
-
-  logWait a "Parsing \e[1m$list\e[0m" 'false'
-  logInfo "Found \e[1m$i\e[0m package(s) in $1"
-
-  (( $i > 0 ))
+  for (( i=0; i<${#n_hooks[@]}; i++ )); do
+    (( ${n_hookState[$i]} == 1 )) && out+=("${n_hooks[$i]}")
+  done
 }
 
-function suExec {
-  su -c "$1" || {
-    typeset -i x=$?
-    (( $x == 1 )) && err 4  'failed to acquire elevated privileges'
-    (( $x > 0  )) && err $x "fatal: \e[0${C[r]}`<${CFG[logfile]}`\e[0m"
-  }
-}
+# ------------------------------------------------------ installation utilitites
 
 function aurutilsInstall {
   if command -v aur &>/dev/null; then
@@ -466,13 +497,35 @@ function install {
   read -r -d '' <<-EOF
 	  typeset -A CFG=(${CFG[@]@K})
 	  typeset -A C=(${C[@]@K})
-
+	
 	  pacman -S --noconfirm ${pkg[@]} &>${CFG[logfile]} &
 	  logWait y 'Installing \e[1m$i\e[0m package(s)' 'kill -0 \$!' 'wait \$!' \
 	    || exit 4
 	EOF
   log y 'Acquiring elevated privileges for package installation:'
   suExec "$REPLY"
+}
+
+function execHooks {
+  typeset -n n_hooks=$1 n_hookState=$2
+  typeset -a selected=()
+
+  if (( ${#n_hooks[@]} == 0 )); then
+    log r "No hooks found - \e[1${C[r]}skipping\e[0m"
+    return 1
+  fi
+
+  selectHooks selected $1 $2
+  if [[ ! ${n_hookState[@]} =~ 1 ]]; then
+    log y "No hooks selected - \e[1${C[y]}skipping hook execution\e[0m"
+    return 1
+  fi
+
+  log g "Running \e[1m${#selected[@]}\e[0m hook(s)..."
+  for h in "${selected[@]}"; do
+    logInfo "hook: \e[1m$h\e[0m"
+    bash hooks/$h
+  done
 }
 
 # ------------------------------------------------------------------------------
@@ -489,65 +542,74 @@ log a "Logfile created at \e[1m${CFG[logfile]:-}\e[0m"
 
 export -f err clean stripTermColor log logInfo logWait
 
-# --------------------------------------------------------------- list selection
+# ------------------------------------------------------- package list selection
 
 typeset -a pkgBase=() pkgBaseState=()
 typeset -a pkgDir=()
 typeset -a pkgSelect=() pkgCore=() pkgAur=()
 typeset -i listSum=0
 
-preParse        pkgBase      pkgDir
+parsePkg        pkgBase      pkgDir
 initializeState pkgBaseState pkgBase
 selectFromBase  pkgSelect    listSum pkgBase pkgBaseState
+
+IFS=,
+if (( ${#pkgDir[@]} == 1 )); then
+  log a "Found \e[1m${#pkgDir[@]}\e[0m package directory: ${pkgDir[*]}"
+elif (( ${#pkgDir[@]} > 1 )); then
+  log a "Found \e[1m${#pkgDir[@]}\e[0m package directories: ${pkgDir[*]}"
+fi
+IFS="${CFG[ifs]}"
 
 for dir in "${pkgDir[@]}"; do
   prompt g n "Install packages for \e[1m$dir\e[0m?" || continue
   selectFromDir pkgSelect listSum "$dir"
 done
 
-(( ${#pkgSelect[@]} == 0 )) \
-  && err 4 "no lists selected - \e[1${C[r]}aborting\e[0m"
+if (( ${#pkgSelect[@]} > 0 )); then
+  IFS=,
+  log a "\e[1m${#pkgSelect[@]}\e[0m of \e[1m$listSum\e[0m list(s) selected: ${pkgSelect[*]}"
+  IFS="${CFG[ifs]}"
 
-IFS=,
-log a "\e[1m${#pkgSelect[@]}\e[0m of \e[1m$listSum\e[0m list(s) selected: ${pkgSelect[*]}"
-IFS="${CFG[ifs]}"
+  for list in "${pkgSelect[@]}"; do
+    parsePkgList pkgCore pkgAur "$list"
+  done
+  log a "Found \e[1m${#pkgCore[@]}\e[0m packages in \e[1m${#pkgSelect[@]}\e[0m list(s)"
 
-for list in "${pkgSelect[@]}"; do
-  parsePkgList pkgCore pkgAur "$list"
-done
-log a "Found \e[1m${#pkgCore[@]}\e[0m packages in \e[1m${#pkgSelect[@]}\e[0m list(s)"
+  (( ${#pkgAur[@]} > 0 )) \
+    && log y 'AUR packages will be built and installed after core packages'
 
-# --------------------------------------------------------- package installation
+  read -r -d '' <<-EOF
+	  typeset -A CFG=(${CFG[@]@K})
+	  typeset -A C=(${C[@]@K})
+	
+	  pacman -Sy &>${CFG[logfile]} &
+	  logWait y 'Updating mirrors' 'kill -0 \$!' 'wait \$!' || exit 4
+	EOF
+  log y 'Acquiring elevated privileges for mirror update:'
+  suExec "$REPLY"
 
-(( ${#pkgAur[@]} > 0 )) \
-  && log y 'AUR packages will be built and installed after core packages'
+  install pkgCore
 
-read -r -d '' <<-EOF
-  typeset -A CFG=(${CFG[@]@K})
-  typeset -A C=(${C[@]@K})
-
-  pacman -Sy &>${CFG[logfile]} &
-  logWait y 'Updating mirrors' 'kill -0 \$!' 'wait \$!' || exit 4
-EOF
-log y 'Acquiring elevated privileges for mirror update:'
-suExec "$REPLY"
-
-install pkgCore
-if (( ${#pkgAur[@]} > 0 )); then
-  log a 'Installing AUR packages...'
-  aurutilsInstall
-  aurutilsConfigure
-  aurSync pkgAur
-  install pkgAur
+  if (( ${#pkgAur[@]} > 0 )); then
+    log a 'Installing AUR packages...'
+    aurutilsInstall
+    aurutilsConfigure
+    aurSync pkgAur
+    install pkgAur
+  fi
+else
+  log y "No lists selected - \e[1${C[y]}skipping package installation\e[0m"
 fi
 
 # ------------------------------------------------------ post-installation hooks
 
-log a 'All done - cleaning up'
+if prompt g n 'Run post-installation hooks?'; then
+  typeset -a hooks=() hookState=()
+  parseHooks      hooks
+  initializeState hookState hooks
+  # FIX: factor out of function -> ugly control flow
+  execHooks       hooks hookState
+fi
 
-# TODO: hooks
-# * doas configuration : permit nopass :wheel
-#   * if LT : permit nopass USER cmd brightnessctl
-# * clone repositories : dotfiles, scripts, g, zsh-syntax-highlighting
-# * stow dotfiles
-# * install fonts
+log a 'All done - cleaning up'
