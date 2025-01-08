@@ -54,11 +54,11 @@ function dep {
 
 function stripTermColor {
   for name in "$@"; do
-    typeset -n str=$name
-    printf -v str '%b' "$str"
-    str="${str//[^[:print:]]/}"
-    str="${str//\[[[:digit:]];[[:digit:]][[:digit:]];[[:digit:]];[[:digit:]]m/}"
-    str="${str//\[[[:digit:]]m/}"
+    typeset -n n_str=$name
+    printf -v n_str '%b' "$n_str"
+    n_str="${n_str//[^[:print:]]/}"
+    n_str="${n_str//\[[[:digit:]];[[:digit:]][[:digit:]];[[:digit:]];[[:digit:]]m/}"
+    n_str="${n_str//\[[[:digit:]]m/}"
   done
 }
 
@@ -132,11 +132,11 @@ function prompt {
 
 function index {
   typeset -ig INDEX=0
-  typeset -n arr=$1
+  typeset -n n_arr=$1
 
-  for (( i=0; i<${#arr[@]}; i++ )); do
+  for (( i=0; i<${#n_arr[@]}; i++ )); do
     INDEX=$i
-    [[ ${arr[$i]} == $2 ]] && return $i
+    [[ ${n_arr[$i]} == $2 ]] && return $i
   done
 
   INDEX=-1
@@ -144,9 +144,9 @@ function index {
 }
 
 function arrSet {
-  typeset -n arr=$1
-  for (( i=0; i<${#arr[@]}; i++ )); do
-    arr[$i]="$2"
+  typeset -n n_arr=$1
+  for (( i=0; i<${#n_arr[@]}; i++ )); do
+    n_arr[$i]="$2"
   done
 }
 
@@ -169,21 +169,21 @@ function suExec {
 
 # FIX: make more generic - use for hook-parsing as well
 function parsePkg {
-  typeset -n base=$1 dir=$2
+  typeset -n n_list=$1 n_dir=$2
 
   for glob in ${CFG[base]}/*; do
     if [[ -d $glob ]]; then
       glob="${glob#${CFG[base]}/}"
-      dir+=("$glob")
+      n_dir+=("$glob")
     else
       glob="${glob#${CFG[base]}/}"
-      base+=("${glob%.txt}")
+      n_list+=("${glob%.txt}")
     fi
   done
 }
 
 function parsePkgList {
-  typeset -n core=$1 aur=$2
+  typeset -n n_core=$1 n_aur=$2
   typeset list=$3
   typeset -i i=0
 
@@ -209,7 +209,7 @@ function parsePkgList {
     fi
 
     REPLY=${REPLY%%#*}
-    [[ $REPLY =~ :AUR$ ]] && aur+=(${REPLY%:AUR}) || core+=($REPLY)
+    [[ $REPLY =~ :AUR$ ]] && n_aur+=(${REPLY%:AUR}) || n_core+=($REPLY)
     let i++
   done <"${CFG[base]}/$list.txt"
 
@@ -230,22 +230,22 @@ function parseHooks {
 # --------------------------------------------------------------- list selection
 
 function indexSelect {
-  typeset -n state=$1 index=$2
+  typeset -n n_state=$1 n_index=$2
   typeset input="$3"
 
   # prevent assignment error in case REPLY is non-decimal number
-  printf '%d' "$input" &>/dev/null && index=$input
-  if (( $index <= 0 || $index > ${#state[@]} )); then
-    index=-1
+  printf '%d' "$input" &>/dev/null && n_index=$input
+  if (( $n_index <= 0 || $n_index > ${#n_state[@]} )); then
+    n_index=-1
     return 0
   fi
 
-  let index--
-  (( ${state[$index]} == 0 )) && state[$index]=1 || state[$index]=0
+  let n_index--
+  (( ${n_state[$n_index]} == 0 )) && n_state[$n_index]=1 || n_state[$n_index]=0
 }
 
 function rangeSelect {
-  typeset -n state=$1
+  typeset -n n_state=$1
   typeset range="$2"
   typeset -a bounds=("${range%-*}" "${range#*-}")
 
@@ -253,13 +253,13 @@ function rangeSelect {
   for (( i=0; i<${#bounds[@]}; i++ )); do
     if [[ -z ${bounds[$i]} ]] \
       || ! printf '%d' "${bounds[$i]}" &>/dev/null \
-      || (( ${bounds[$i]} <= 0 || ${bounds[$i]} > ${#state[@]} )); then
+      || (( ${bounds[$i]} <= 0 || ${bounds[$i]} > ${#n_state[@]} )); then
       return 0
     fi
   done
 
   for (( i=${bounds[0]}; i<=${bounds[1]}; i++ )); do
-    state[$(( $i-1 ))]=1
+    n_state[$(( $i-1 ))]=1
   done
 }
 
@@ -276,14 +276,15 @@ function rangeSelect {
 # The two special values "*" and "-" select / deselect all items.
 # Malformed inputs result in no-ops.
 function _inplaceSelect {
-  typeset -n items=$1 state=$2
+  typeset -n n_items=$1 n_state=$2
   typeset -i i=1
 
   # print to screen
-  for (( i=0; i<${#items[@]}; i++ )); do
-    (( ${state[$i]} == 0 )) \
-      && printf '%d) %s\n' $(( $i+1 )) "${items[$i]}" \
-      || printf '%d) \e[1%s%s\e[0m%s\n' $(( $i+1 )) "${C[b]}" "${PREFIX:-* }" "${items[$i]}"
+  for (( i=0; i<${#n_items[@]}; i++ )); do
+    (( ${n_state[$i]} == 0 )) \
+      && printf '%d) %s\n' $(( $i+1 )) "${n_items[$i]}" \
+      || printf '%d) \e[1%s%s\e[0m%s\n' \
+        $(( $i+1 )) "${C[b]}" "${PREFIX:-* }" "${n_items[$i]}"
   done
   printf -v PS3 '%b' "$PS3"
   # FIX: return produces additional screen line
@@ -302,10 +303,10 @@ function _inplaceSelect {
   fi
 
   if [[ $REPLY == \* ]]; then
-    arrSet state 1
+    arrSet n_state 1
     return 0
   elif [[ $REPLY == - ]]; then
-    arrSet state 0
+    arrSet n_state 0
     return 0
   fi
 
@@ -323,8 +324,8 @@ function _inplaceSelect {
 }
 
 function inplaceSelect {
-  typeset -n items=$1
-  typeset -i h=$(( ${#items[@]} + 1 ))
+  typeset -n n_items=$1 n_state=$2
+  typeset -i h=$(( ${#n_items[@]} + 1 ))
 
   log
   while :; do
@@ -334,60 +335,60 @@ function inplaceSelect {
 }
 
 function inplaceSelectOne {
-  typeset -n items=$1 state=$2
-  typeset -i h=$(( ${#items[@]} + 1 ))
-  arrSet state 0
-  state[0]=1
+  typeset -n n_items=$1 n_state=$2
+  typeset -i h=$(( ${#n_items[@]} + 1 ))
+  arrSet n_state 0
+  n_state[0]=1
 
   log
   while :; do
     SELECTONE=1 PS3="$PS3" _inplaceSelect $1 $2 || break
-    (( $SELECTION >= 0 )) && arrSet state 0 && state[$SELECTION]=1
+    (( $SELECTION >= 0 )) && arrSet n_state 0 && n_state[$SELECTION]=1
     printf "\b\e[${h}A\e[J"
   done
 
-  (( ${SELECTION:--1} >= 0 )) && arrSet state 0 && state[$SELECTION]=1
+  (( ${SELECTION:--1} >= 0 )) && arrSet n_state 0 && n_state[$SELECTION]=1
 }
 
 # Updates `pkgSelect` with user selection from package lists in `pkgBase`.
 function selectFromBase {
-  typeset -n out=$1 sum=$2 pkgLists=$3 pkgState=$4
-  sum+=${#pkgLists[@]}
+  typeset -n n_out=$1 n_sum=$2 n_items=$3 n_state=$4
+  n_sum+=${#n_items[@]}
 
   local IFS=,
-  log a "Found \e[1m${#pkgLists[@]}\e[0m package list(s): ${pkgLists[*]}"
+  log a "Found \e[1m${#n_items[@]}\e[0m package list(s): ${n_items[*]}"
 
-  index pkgLists core
-  pkgState[$INDEX]=1
+  index $3 core
+  n_state[$INDEX]=1
 
   if prompt g y 'Install machine specific packages?'; then
     case $MACHINE in
       dt|DT|desktop)
-        index pkgLists dt
-        pkgState[$INDEX]=1
+        index $3 dt
+        n_state[$INDEX]=1
         ;;
       lt|LT|laptop)
-        index pkgLists lt
-        pkgState[$INDEX]=1
+        index $3 lt
+        n_state[$INDEX]=1
         ;;
       *)
         logInfo 'could not determine host type from $MACHINE - using desktop'
-        index pkgLists dt
-        pkgState[$INDEX]=1
+        index $3 dt
+        n_state[$INDEX]=1
         ;;
     esac
   fi
 
-  PS3="\e[1${C[g]}$PS3\e[0m Lists to install (^D to confirm): " inplaceSelect pkgLists pkgState
+  PS3="\e[1${C[g]}$PS3\e[0m Lists to install (^D to confirm): " inplaceSelect $3 $4
 
-  for (( i=0; i<${#pkgLists[@]}; i++ )); do
-    (( ${pkgState[$i]} == 1 )) && out+=("${pkgLists[$i]}")
+  for (( i=0; i<${#n_items[@]}; i++ )); do
+    (( ${n_state[$i]} == 1 )) && n_out+=("${n_items[$i]}")
   done
 }
 
 # Updates `pkgSelect` with user selection from package lists in `CFG[base]/$1`.
 function selectFromDir {
-  typeset -n out=$1 sum=$2
+  typeset -n n_out=$1 n_sum=$2
   typeset dir=$3
   typeset -a pkgLists=() pkgState=()
 
@@ -396,7 +397,7 @@ function selectFromDir {
     pkgLists+=("${glob%.txt}")
   done
   initializeState pkgState pkgLists
-  sum+=${#pkgLists[@]}
+  n_sum+=${#pkgLists[@]}
 
   index pkgLists core
   (( $INDEX != -1 )) && pkgState[$INDEX]=1
@@ -409,17 +410,17 @@ function selectFromDir {
   fi
 
   for (( i=0; i<${#pkgLists[@]}; i++ )); do
-    (( ${pkgState[$i]} == 1 )) && out+=("$dir/${pkgLists[$i]}")
+    (( ${pkgState[$i]} == 1 )) && n_out+=("$dir/${pkgLists[$i]}")
   done
 }
 
 function selectHooks {
-  typeset -n out=$1 n_hooks=$2 n_hookState=$3
+  typeset -n n_out=$1 n_hooks=$2 n_hookState=$3
 
   PS3="\e[1${C[g]}$PS3\e[0m Hooks to execute (^D to confirm): " inplaceSelect hooks hookState
 
   for (( i=0; i<${#n_hooks[@]}; i++ )); do
-    (( ${n_hookState[$i]} == 1 )) && out+=("${n_hooks[$i]}")
+    (( ${n_hookState[$i]} == 1 )) && n_out+=("${n_hooks[$i]}")
   done
 }
 
@@ -471,34 +472,34 @@ function aurutilsConfigure {
 }
 
 function aurSync {
-  typeset -n pkg=$1
+  typeset -n n_pkg=$1
   export AURDEST=${CFG[aurroot]}/build AUR_PACMAN_AUTH=su
 
-  logWait a "Building ${#pkg[@]} packages" 'false'
-  aur sync --noview -rnC "${pkg[@]}" \
+  logWait a "Building ${#n_pkg[@]} packages" 'false'
+  aur sync --noview -rnC "${n_pkg[@]}" \
     || err 4 'failed to build one or more AUR packages'
 }
 
 function install {
-  typeset -n pkg=$1
+  typeset -n n_pkg=$1
   typeset -i i=0
 
   while read; do
     let i++
-  done < <(pacman --needed -Sp --print-format='%n' "${pkg[@]}")
+  done < <(pacman --needed -Sp --print-format='%n' "${n_pkg[@]}")
 
   if (( $i == 0 )); then
     log a 'All packages already installed, nothing to do'
     return 0
   fi
-  (( $i < ${#pkg[@]} )) \
-    && logInfo "\e[1m$(( ${#pkg[@]} - $i ))\e[0m of \e[1m${#pkg[@]}\e[0m packages already installed"
+  (( $i < ${#n_pkg[@]} )) \
+    && logInfo "\e[1m$(( ${#n_pkg[@]} - $i ))\e[0m of \e[1m${#n_pkg[@]}\e[0m packages already installed"
 
   read -r -d '' <<-EOF
 	  typeset -A CFG=(${CFG[@]@K})
 	  typeset -A C=(${C[@]@K})
 	
-	  pacman -S --noconfirm ${pkg[@]} &>${CFG[logfile]} &
+	  pacman -S --noconfirm ${n_pkg[@]} &>${CFG[logfile]} &
 	  logWait y 'Installing \e[1m$i\e[0m package(s)' 'kill -0 \$!' 'wait \$!' \
 	    || exit 4
 	EOF
@@ -507,16 +508,16 @@ function install {
 }
 
 function execHooks {
-  typeset -n n_hooks=$1 n_hookState=$2
+  typeset -n n_items=$1 n_state=$2
   typeset -a selected=()
 
-  if (( ${#n_hooks[@]} == 0 )); then
+  if (( ${#n_items[@]} == 0 )); then
     log r "No hooks found - \e[1${C[r]}skipping\e[0m"
     return 1
   fi
 
   selectHooks selected $1 $2
-  if [[ ! ${n_hookState[@]} =~ 1 ]]; then
+  if [[ ! ${n_state[@]} =~ 1 ]]; then
     log y "No hooks selected - \e[1${C[y]}skipping hook execution\e[0m"
     return 1
   fi
