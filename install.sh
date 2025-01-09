@@ -167,17 +167,17 @@ function suExec {
 
 # --------------------------------------------------------------- parsing
 
-# FIX: make more generic - use for hook-parsing as well
-function parsePkg {
-  typeset -n n_list=$1 n_dir=$2
+function parse {
+  typeset -n n_file=$2 n_dir=$3
+  typeset dir="${1%/}" trim="$4"
 
-  for glob in ${CFG[base]}/*; do
+  for glob in "$dir"/*; do
     if [[ -d $glob ]]; then
-      glob="${glob#${CFG[base]}/}"
+      glob="${glob#$dir/}"
       n_dir+=("$glob")
     else
-      glob="${glob#${CFG[base]}/}"
-      n_list+=("${glob%.txt}")
+      glob="${glob#$dir/}"
+      n_file+=("${glob%$trim}")
     fi
   done
 }
@@ -217,14 +217,6 @@ function parsePkgList {
   logInfo "Found \e[1m$i\e[0m package(s) in $1"
 
   (( $i > 0 ))
-}
-
-function parseHooks {
-  typeset -n n_hooks=$1
-
-  for glob in hooks/*; do
-    n_hooks+=("${glob#hooks/}")
-  done
 }
 
 # --------------------------------------------------------------- list selection
@@ -550,7 +542,7 @@ typeset -a pkgDir=()
 typeset -a pkgSelect=() pkgCore=() pkgAur=()
 typeset -i listSum=0
 
-parsePkg        pkgBase      pkgDir
+parse           ${CFG[base]} pkgBase pkgDir  '.txt'
 initializeState pkgBaseState pkgBase
 selectFromBase  pkgSelect    listSum pkgBase pkgBaseState
 
@@ -607,7 +599,7 @@ fi
 
 if prompt g n 'Run post-installation hooks?'; then
   typeset -a hooks=() hookState=()
-  parseHooks      hooks
+  parse           'hooks/'  hooks _
   initializeState hookState hooks
   # FIX: factor out of function -> ugly control flow
   execHooks       hooks hookState
