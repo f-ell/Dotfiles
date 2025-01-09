@@ -216,7 +216,7 @@ function parsePkgList {
   done <"${CFG[base]}/$list.txt"
 
   logWait c "Parsing \e[1m$list\e[0m" 'false'
-  logInfo "Found \e[1m$i\e[0m package(s) in $1"
+  logInfo "Found \e[1m$i\e[0m package(s) in $list"
 
   (( $i > 0 ))
 }
@@ -262,7 +262,7 @@ function rangeSelect {
 #   TOKEN  := SINGLE | RANGE
 #   SINGLE := INDEX
 #   RANGE  := INDEX-INDEX
-# where INDEX > 0 and INDEX <= number of items.
+# where 0 < INDEX <= number of items.
 #
 # RANGE performs an inclusive selection between two indices. The first index
 # should be smaller than or equal to the second index.
@@ -292,15 +292,15 @@ function _inplaceSelect {
   # handle selection
   typeset -ig SELECTION=0
   if (( ${SELECTONE:-0} == 1 )); then
-    indexSelect $2 SELECTION "$REPLY"
+    indexSelect ${!n_state} SELECTION "$REPLY"
     return 0
   fi
 
   if [[ $REPLY == \* ]]; then
-    arrSet n_state 1
+    arrSet ${!n_state} 1
     return 0
   elif [[ $REPLY == - ]]; then
-    arrSet n_state 0
+    arrSet ${!n_state} 0
     return 0
   fi
 
@@ -312,8 +312,8 @@ function _inplaceSelect {
   local IFS=,
   for field in $REPLY; do
     [[ $field =~ - ]] \
-      && rangeSelect $2 "$field"  \
-      || indexSelect $2 SELECTION "$field"
+      && rangeSelect ${!n_state} "$field"  \
+      || indexSelect ${!n_state} SELECTION "$field"
   done
 }
 
@@ -323,7 +323,7 @@ function inplaceSelect {
 
   log g
   while :; do
-    PS3="$PS3" _inplaceSelect $1 $2 || break
+    PS3="$PS3" _inplaceSelect ${!n_items} ${!n_state} || break
     printf "\b\e[${h}A\e[J"
   done
 }
@@ -331,17 +331,17 @@ function inplaceSelect {
 function inplaceSelectOne {
   typeset -n n_items=$1 n_state=$2
   typeset -i h=$(( ${#n_items[@]} + 1 ))
-  arrSet n_state 0
+  arrSet ${!n_state} 0
   n_state[0]=1
 
   log g
   while :; do
-    SELECTONE=1 PS3="$PS3" _inplaceSelect $1 $2 || break
-    (( $SELECTION >= 0 )) && arrSet n_state 0 && n_state[$SELECTION]=1
+    SELECTONE=1 PS3="$PS3" _inplaceSelect ${!n_items} ${!n_state} || break
+    (( $SELECTION >= 0 )) && arrSet ${!n_state} 0 && n_state[$SELECTION]=1
     printf "\b\e[${h}A\e[J"
   done
 
-  (( ${SELECTION:--1} >= 0 )) && arrSet n_state 0 && n_state[$SELECTION]=1
+  (( ${SELECTION:--1} >= 0 )) && arrSet ${!n_state} 0 && n_state[$SELECTION]=1
 }
 
 # Updates `pkgSelect` with user selection from package lists in `pkgBase`.
@@ -352,10 +352,10 @@ function selectFromBase {
   local IFS=,
   log c "Found \e[1m${#n_items[@]}\e[0m package list(s): ${n_items[*]}"
 
-  index $3 core
+  index ${!n_items} core
   n_state[$INDEX]=1
 
-  PS3="\e[1${C[g]}$PS3\e[0m Lists to install (^D to confirm): " inplaceSelect $3 $4
+  PS3="\e[1${C[g]}$PS3\e[0m Lists to install (^D to confirm): " inplaceSelect ${!n_items} ${!n_state}
 
   for (( i=0; i<${#n_items[@]}; i++ )); do
     (( ${n_state[$i]} == 1 )) && n_out+=("${n_items[$i]}")
@@ -494,7 +494,7 @@ function execHooks {
 
   log m "Found \e[1m${#n_items[@]}\e[0m hook(s)"
 
-  selectHooks selected $1 $2
+  selectHooks selected ${!n_items} ${!n_state}
   if [[ ! ${n_state[@]} =~ 1 ]]; then
     log y "No hooks selected - \e[1${C[y]}skipping hook execution\e[0m"
     return 1
@@ -578,7 +578,7 @@ if (( ${#pkgSelect[@]} > 0 )); then
 	  typeset -A C=(${C[@]@K})
 	
 	  pacman -Sy &>${CFG[logfile]} &
-	  logWait y 'Updating mirrors' 'kill -0 \$!' 'wait \$!' || exit 4
+	  logWait c 'Updating mirrors' 'kill -0 \$!' 'wait \$!' || exit 4
 	EOF
   log y 'Acquiring elevated privileges for mirror update:'
   suExec "$REPLY"
