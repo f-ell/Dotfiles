@@ -7,6 +7,7 @@ typeset -A CFG=(
   [aurroot]=/home/aur
   [base]=pkg
   [exec]="${0##*/}"
+  [hook]=hooks
   [ifs]="$IFS"
   [logps]=::
 )
@@ -15,7 +16,8 @@ typeset -A C=(
   [g]=';38;5;2m'
   [y]=';38;5;3m'
   [b]=';38;5;4m'
-  [a]=';38;5;6m'
+  [m]=';38;5;5m'
+  [c]=';38;5;6m'
 )
 PS3='==>'
 
@@ -63,7 +65,7 @@ function stripTermColor {
 }
 
 function log {
-  printf '\e[1%s%s\e[0m %b%s' "${C[${1:-a}]}" "${CFG[logps]}" "$2" "${N-$'\n'}" >&2
+  printf '\e[1%s%s\e[0m %b%s' "${C[${1:-c}]}" "${CFG[logps]}" "$2" "${N-$'\n'}" >&2
 }
 
 function logInfo {
@@ -95,11 +97,11 @@ function logWait {
   eval "$4"
   typeset -i x=$?
   if (( $x > 0 )); then
-    printf "\e[A\e[$(( ${lnLen} + 3 ))C \e[1${C[r]}Failed\e[0m\n"
+    printf "\e[A\e[$(( lnLen + 3 ))C \e[1${C[r]}Failed\e[0m\n"
     return $x
   fi
 
-  printf "\e[A\e[$(( ${lnLen} + 3 ))C \e[1${C[g]}Done\e[0m\n"
+  printf "\e[A\e[$(( lnLen + 3 ))C \e[1${C[g]}Done\e[0m\n"
 }
 
 function _prompt {
@@ -187,7 +189,7 @@ function parsePkgList {
   typeset list=$3
   typeset -i i=0
 
-  log a "Parsing \e[1m$list\e[0m"
+  log c "Parsing \e[1m$list\e[0m"
   while read; do
     [[ $REPLY =~ ^\s*$ || $REPLY =~ ^\s*# ]] && continue
 
@@ -205,7 +207,7 @@ function parsePkgList {
 
       index altState 1
       REPLY=${altList[$INDEX]}
-      log a "\e[1m1\e[0m of \e[1m${#altList[@]}\e[0m packages selected: $REPLY"
+      log c "\e[1m1\e[0m of \e[1m${#altList[@]}\e[0m packages selected: $REPLY"
     fi
 
     REPLY=${REPLY%%#*}
@@ -213,7 +215,7 @@ function parsePkgList {
     let i++
   done <"${CFG[base]}/$list.txt"
 
-  logWait a "Parsing \e[1m$list\e[0m" 'false'
+  logWait c "Parsing \e[1m$list\e[0m" 'false'
   logInfo "Found \e[1m$i\e[0m package(s) in $1"
 
   (( $i > 0 ))
@@ -251,7 +253,7 @@ function rangeSelect {
   done
 
   for (( i=${bounds[0]}; i<=${bounds[1]}; i++ )); do
-    n_state[$(( $i-1 ))]=1
+    n_state[$(( i-1 ))]=1
   done
 }
 
@@ -319,7 +321,7 @@ function inplaceSelect {
   typeset -n n_items=$1 n_state=$2
   typeset -i h=$(( ${#n_items[@]} + 1 ))
 
-  log
+  log g
   while :; do
     PS3="$PS3" _inplaceSelect $1 $2 || break
     printf "\b\e[${h}A\e[J"
@@ -332,7 +334,7 @@ function inplaceSelectOne {
   arrSet n_state 0
   n_state[0]=1
 
-  log
+  log g
   while :; do
     SELECTONE=1 PS3="$PS3" _inplaceSelect $1 $2 || break
     (( $SELECTION >= 0 )) && arrSet n_state 0 && n_state[$SELECTION]=1
@@ -348,28 +350,10 @@ function selectFromBase {
   n_sum+=${#n_items[@]}
 
   local IFS=,
-  log a "Found \e[1m${#n_items[@]}\e[0m package list(s): ${n_items[*]}"
+  log c "Found \e[1m${#n_items[@]}\e[0m package list(s): ${n_items[*]}"
 
   index $3 core
   n_state[$INDEX]=1
-
-  if prompt g y 'Install machine specific packages?'; then
-    case $MACHINE in
-      dt|DT|desktop)
-        index $3 dt
-        n_state[$INDEX]=1
-        ;;
-      lt|LT|laptop)
-        index $3 lt
-        n_state[$INDEX]=1
-        ;;
-      *)
-        logInfo 'could not determine host type from $MACHINE - using desktop'
-        index $3 dt
-        n_state[$INDEX]=1
-        ;;
-    esac
-  fi
 
   PS3="\e[1${C[g]}$PS3\e[0m Lists to install (^D to confirm): " inplaceSelect $3 $4
 
@@ -433,7 +417,7 @@ function aurutilsInstall {
 	
 	  (git clone --depth=1 https://github.com/aurutils/aurutils ${CFG[aur]} &>${CFG[logfile]} \
 	    && makepkg --dir=${CFG[aur]} -si &>${CFG[logfile]}) &
-	  logWait a 'Installing aurutils' 'kill -0 \$!' 'wait \$!' || exit 4
+	  logWait c 'Installing aurutils' 'kill -0 \$!' 'wait \$!' || exit 4
 	EOF
   suExec "$REPLY"
 }
@@ -442,7 +426,7 @@ function aurutilsConfigure {
   aur repo --list-repo &>/dev/null && return 0
 
   log y 'No local package repository found'
-  log a "Configuring new repository in ${CFG[aurroot]} ..."
+  log c "Configuring new repository in ${CFG[aurroot]} ..."
   [[ -d ${CFG[aurroot]} ]] && err 4 'target directory already exists'
 
   dep mkdir repo-add
@@ -467,7 +451,7 @@ function aurSync {
   typeset -n n_pkg=$1
   export AURDEST=${CFG[aurroot]}/build AUR_PACMAN_AUTH=su
 
-  logWait a "Building ${#n_pkg[@]} packages" 'false'
+  logWait c "Building ${#n_pkg[@]} packages" 'false'
   aur sync --noview -rnC "${n_pkg[@]}" \
     || err 4 'failed to build one or more AUR packages'
 }
@@ -481,7 +465,7 @@ function install {
   done < <(pacman --needed -Sp --print-format='%n' "${n_pkg[@]}")
 
   if (( $i == 0 )); then
-    log a 'All packages already installed, nothing to do'
+    log c 'All packages already installed, nothing to do'
     return 0
   fi
   (( $i < ${#n_pkg[@]} )) \
@@ -508,16 +492,28 @@ function execHooks {
     return 1
   fi
 
+  log m "Found \e[1m${#n_items[@]}\e[0m hook(s)"
+
   selectHooks selected $1 $2
   if [[ ! ${n_state[@]} =~ 1 ]]; then
     log y "No hooks selected - \e[1${C[y]}skipping hook execution\e[0m"
     return 1
   fi
 
-  log g "Running \e[1m${#selected[@]}\e[0m hook(s)..."
-  for h in "${selected[@]}"; do
-    logInfo "hook: \e[1m$h\e[0m"
-    bash hooks/$h
+  log c "Running \e[1m${#selected[@]}\e[0m hook(s)..."
+  for (( i=0; i<${#selected[@]}; i++ )); do
+    logInfo "hook $(( i+1 )): \e[1m${selected[$i]}\e[0m"
+
+    mapfile <${CFG[hook]}/${selected[$i]}
+
+    local IFS=
+    read -r -d '' <<-EOF
+		  typeset -A CFG=(${CFG[@]@K})
+		  typeset -A C=(${C[@]@K})
+		  ${MAPFILE[*]}
+		EOF
+
+    bash -c "$REPLY"
   done
 }
 
@@ -531,9 +527,10 @@ fi
 dep mktemp pacman su
 # using TMPDIR causes r/w-issues as root (fs.protected_regular)
 CFG[logfile]=`mktemp -p "${XDG_CACHE_HOME:-$HOME/.cache}" "${CFG[exec]}".log.XXXXXXXXXX`
-log a "Logfile created at \e[1m${CFG[logfile]:-}\e[0m"
+log c "Logfile created at \e[1m${CFG[logfile]:-}\e[0m"
+log
 
-export -f err clean stripTermColor log logInfo logWait
+export -f err clean stripTermColor log logInfo logWait suExec
 
 # ------------------------------------------------------- package list selection
 
@@ -548,9 +545,11 @@ selectFromBase  pkgSelect    listSum pkgBase pkgBaseState
 
 IFS=,
 if (( ${#pkgDir[@]} == 1 )); then
-  log a "Found \e[1m${#pkgDir[@]}\e[0m package directory: ${pkgDir[*]}"
+  log
+  log c "Found \e[1m${#pkgDir[@]}\e[0m package directory: ${pkgDir[*]}"
 elif (( ${#pkgDir[@]} > 1 )); then
-  log a "Found \e[1m${#pkgDir[@]}\e[0m package directories: ${pkgDir[*]}"
+  log
+  log c "Found \e[1m${#pkgDir[@]}\e[0m package directories: ${pkgDir[*]}"
 fi
 IFS="${CFG[ifs]}"
 
@@ -560,17 +559,19 @@ for dir in "${pkgDir[@]}"; do
 done
 
 if (( ${#pkgSelect[@]} > 0 )); then
+  log
   IFS=,
-  log a "\e[1m${#pkgSelect[@]}\e[0m of \e[1m$listSum\e[0m list(s) selected: ${pkgSelect[*]}"
+  log c "\e[1m${#pkgSelect[@]}\e[0m of \e[1m$listSum\e[0m list(s) selected: ${pkgSelect[*]}"
   IFS="${CFG[ifs]}"
 
   for list in "${pkgSelect[@]}"; do
     parsePkgList pkgCore pkgAur "$list"
   done
-  log a "Found \e[1m${#pkgCore[@]}\e[0m packages in \e[1m${#pkgSelect[@]}\e[0m list(s)"
+  log m "Found \e[1m${#pkgCore[@]}\e[0m packages in \e[1m${#pkgSelect[@]}\e[0m list(s)"
+  log
 
   (( ${#pkgAur[@]} > 0 )) \
-    && log y 'AUR packages will be built and installed after core packages'
+    && log m 'AUR packages will be built and installed after core packages'
 
   read -r -d '' <<-EOF
 	  typeset -A CFG=(${CFG[@]@K})
@@ -585,7 +586,7 @@ if (( ${#pkgSelect[@]} > 0 )); then
   install pkgCore
 
   if (( ${#pkgAur[@]} > 0 )); then
-    log a 'Installing AUR packages...'
+    log c 'Installing AUR packages...'
     aurutilsInstall
     aurutilsConfigure
     aurSync pkgAur
@@ -597,12 +598,13 @@ fi
 
 # ------------------------------------------------------ post-installation hooks
 
+log
 if prompt g n 'Run post-installation hooks?'; then
   typeset -a hooks=() hookState=()
-  parse           'hooks/'  hooks _
-  initializeState hookState hooks
+  parse           ${CFG[hook]} hooks _
+  initializeState hookState    hooks
   # FIX: factor out of function -> ugly control flow
   execHooks       hooks hookState
 fi
 
-log a 'All done - cleaning up'
+log c 'All done - cleaning up'
