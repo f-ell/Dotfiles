@@ -19,7 +19,7 @@ typeset -A C=(
   [m]=';38;5;5m'
   [c]=';38;5;6m'
 )
-PS3='==>'
+export PS3='==>'
 
 # TODO: documentation
 
@@ -69,7 +69,11 @@ function log {
 }
 
 function logInfo {
-  printf '   %b\n' "$1" >&2
+  if [[ -z ${C[$1]} ]]; then
+    printf '   %b\n' "$1" >&2
+  else
+    printf '   \e[1%s->\e[0m %b\n' "${C[$1]}" "$2" >&2
+  fi
 }
 
 # Waits for job to complete. Job status and exit code are checked with `eval`;
@@ -349,9 +353,6 @@ function selectFromBase {
   typeset -n n_out=$1 n_sum=$2 n_items=$3 n_state=$4
   n_sum+=${#n_items[@]}
 
-  local IFS=,
-  log c "Found \e[1m${#n_items[@]}\e[0m package list(s): ${n_items[*]}"
-
   index ${!n_items} core
   n_state[$INDEX]=1
 
@@ -530,7 +531,9 @@ CFG[logfile]=`mktemp -p "${XDG_CACHE_HOME:-$HOME/.cache}" "${CFG[exec]}".log.XXX
 log c "Logfile created at \e[1m${CFG[logfile]:-}\e[0m"
 log
 
-export -f err clean stripTermColor log logInfo logWait suExec
+# export all functions for use in subshells and hooks
+mapfile < <(declare -F)
+export -f ${MAPFILE[@]#declare -f* }
 
 # ------------------------------------------------------- package list selection
 
@@ -539,17 +542,22 @@ typeset -a pkgDir=()
 typeset -a pkgSelect=() pkgCore=() pkgAur=()
 typeset -i listSum=0
 
-parse           ${CFG[base]} pkgBase pkgDir  '.txt'
+parse           ${CFG[base]} pkgBase pkgDir '.txt'
 initializeState pkgBaseState pkgBase
-selectFromBase  pkgSelect    listSum pkgBase pkgBaseState
+
+IFS=,
+log m "Found \e[1m${#pkgBase[@]}\e[0m package list(s): ${pkgBase[*]}"
+IFS="${CFG[ifs]}"
+
+selectFromBase  pkgSelect listSum pkgBase pkgBaseState
 
 IFS=,
 if (( ${#pkgDir[@]} == 1 )); then
   log
-  log c "Found \e[1m${#pkgDir[@]}\e[0m package directory: ${pkgDir[*]}"
+  log m "Found \e[1m${#pkgDir[@]}\e[0m package directory: ${pkgDir[*]}"
 elif (( ${#pkgDir[@]} > 1 )); then
   log
-  log c "Found \e[1m${#pkgDir[@]}\e[0m package directories: ${pkgDir[*]}"
+  log m "Found \e[1m${#pkgDir[@]}\e[0m package directories: ${pkgDir[*]}"
 fi
 IFS="${CFG[ifs]}"
 
@@ -602,7 +610,7 @@ log
 if prompt g n 'Run post-installation hooks?'; then
   typeset -a hooks=() hookState=()
   parse           ${CFG[hook]} hooks _
-  initializeState hookState    hooks
+  initializeState hookState hooks
   # FIX: factor out of function -> ugly control flow
   execHooks       hooks hookState
 fi
