@@ -10,16 +10,6 @@ if [[ ! -d $HOME/dev ]]; then
   fi
 fi
 
-if [[ ! -d $HOME/dev/dotfiles ]]; then
-  logInfo c 'Cloning dotfiles into $HOME/dev/dotfiles'
-  dep git
-
-  if ! git clone --depth=1 https://gitlab.com/fell_/dotfiles "$HOME"/dev/dotfiles &>${CFG[logfile]}; then
-    logInfo r "Git fatal: \e[0${C[r]}`<${CFG[logfile]}`\e[0m"
-    exit 1
-  fi
-fi
-
 typeset -a packages=() packageState=() packageSelect=()
 parse           src _ packages
 initializeState packageState packages
