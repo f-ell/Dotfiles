@@ -16,7 +16,6 @@ filesystem
 findutils
 gawk
 gcc-libs
-gettext
 glibc
 grep
 gzip
@@ -35,7 +34,6 @@ xz
 
 ## selected packages from `base-devel`
 binutils
-debugedit
 fakeroot
 gcc
 groff
@@ -44,7 +42,6 @@ m4
 make
 patch
 pkgconf
-texinfo
 
 ## other
 curl

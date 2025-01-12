@@ -1,7 +1,8 @@
 # core packages
 ## audio stack
+easyeffects
+lsp-plugins
 noise-suppression-for-voice
-pavucontrol
 pipewire
 pipewire-audio
 pipewire-pulse
@@ -17,7 +18,7 @@ dunst
 eww:AUR
 feh
 gimp
-gtk-layer-shell
+gtk-layer-shell # required for eww on wayland
 kitty
 pdfjs
 python-adblock
