@@ -34,7 +34,7 @@ hyprwall() {
       [[ -z $2 || ! -f $2 ]] && { err hyprwall 'argument error'; return 1; }
       hyprctl hyprpaper unload "$2"
       ;;
-    set)
+    load)
       [[ -z $2 || ! -f $2 ]] && { err hyprwall 'argument error'; return 1; }
       hyprctl hyprpaper preload "$2" 1>/dev/null \
         && hyprctl hyprpaper wallpaper ,"$2"
@@ -68,6 +68,29 @@ pac() {
   fi
   [[ $1 =~ '^[cC]$' ]] && { pacman -Q | wc -l; return 0; }
   $root pacman -$1 ${@:2}
+}
+
+aur-remove() {
+  if (( $# == 0 )); then
+    err aur-remove 'no package provided'
+    return 1
+  fi
+
+  while read -r; do
+    typeset base="${REPLY%/*}"
+    repo-remove "$REPLY" "$@"
+
+    if [[ -z $base ]]; then
+      err aur-remove "\$base is empty, skipping clean for $REPLY"
+      continue
+    fi
+    paccache -c "$base" -rvk0 "$@" && printf '==> %s\n' 'cache clean'
+
+    for p in "$@"; do
+      rm "$base"/"$p"-*.pkg.tar.zst && printf '==> %s\n' 'package clean'
+      rm -rf "${base%/*}/build/$p" && printf '==> %s\n' 'build files clean'
+    done
+  done < <(aur repo --list-path)
 }
 
 ping() {
