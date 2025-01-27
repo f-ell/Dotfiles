@@ -1,0 +1,124 @@
+mpd_host = localhost
+mpd_port = 6600
+mpd_music_dir = ~/Music
+mpd_crossfade_time = 5
+
+playlist_disable_highlight_delay = 0
+
+## song format
+# %l - length
+# %f - filename
+# %F - full filepath
+# %D - directory
+# %a - artist
+# %A - album artist
+# %t - title
+# %b - album
+# %y - date
+# %n - track number (01/12 -> 01)
+# %N - full track info (01/12 -> 01/12)
+# %g - genre
+# %c - composer
+# %p - performer
+# %d - disc
+# %C - comment
+# %P - priority
+# $R - begin right alignment
+#
+# * tag-group: {...} only displays if all tags are present
+# * alternatives: |
+
+song_list_format = {%a - }{%t}|{%f}$R{$(magenta)%l$(end)}
+song_status_format = {{%a{ "%b"} - }{%t}}|{%f}
+song_library_format = {%n - }{%t}|{%f}
+alternative_header_first_line_format = $(black)$aqqu$/a$(end) {%t}|{%f} $(black)$atqq$/a$(end)
+alternative_header_second_line_format = {{$(yellow)%a$(end)}{ - %b}{ (%y)}}|{%D}
+
+now_playing_prefix = $(blue)
+now_playing_suffix = $(end)
+current_item_prefix = $(blue)$b $(end)
+current_item_suffix = ""
+selected_item_prefix = $(magenta)$b $(end)
+selected_item_suffix = ""
+current_item_inactive_column_prefix = $(white)$r$b
+current_item_inactive_column_suffix = $/b$/r$(end)
+browser_playlist_prefix = "$(red)p$(end) "
+modified_item_prefix = $(red)> $(end)
+song_window_title_format = {%a - }{%t}|{%f}
+
+# type, name, mtime, format, none
+browser_sort_mode = type
+browser_sort_format = {%a - }{%t}|{%f} {%l}
+
+## columns settings
+# (width<f>)[<color>]{tag<attributes><:name>}
+# * <f> sets fixed width instead of percentage
+* * attributes: r (right-aligned), E (no empty marker)
+# * tag-sequence: |
+song_columns_list_format = (32)[]{a} (48)[white]{t|f:Title} (8f)[magenta]{lr}
+
+execute_on_song_change = dunstify -u low -h string:x-dunst-stack-tag:mpd-track-change "Now playing: $(mpc --format '[[%artist% - ]%title%]|%file%' current)"
+# MPD_PLAYER_STATE is set to play, pause, stop
+execute_on_player_state_change = ""
+
+playlist_shorten_total_times = yes
+# classic, columns
+playlist_display_mode = columns
+browser_display_mode = columns
+
+discard_colors_if_item_is_selected = no
+show_duplicate_tags = yes
+incremental_seeking = yes
+seek_time = 1
+volume_change_step = 2
+
+progressbar_look = ---
+
+# classic, alternative
+user_interface = alternative
+
+default_find_mode = wrapped
+default_tag_editor_pattern = %n - %t
+
+header_visibility = yes
+statusbar_visibility = yes
+connected_message_on_startup = no
+titles_visibility = yes
+
+jump_to_now_playing_song_at_start = yes
+ask_before_clearing_playlists = yes
+
+display_bitrate = no
+display_remaining_time = no
+
+# none, basic, extended, perl
+regular_expressions = perl
+# enable regex search
+search_engine_default_search_mode = 2
+empty_tag_marker = <null>
+tags_separator = " | "
+
+external_editor = nvim
+use_console_editor = yes
+
+## colors
+empty_tag_color = white
+
+header_window_color = white
+state_line_color = white
+volume_color = white
+state_flags_color = yellow
+
+main_window_color = green
+color1 = white
+color2 = green
+
+progressbar_color = black
+progressbar_elapsed_color = blue:b
+statusbar_color = white
+statusbar_time_color = blue
+player_state_color = blue
+
+alternative_ui_separator_color = black
+window_border_color = yellow
+active_window_border = green

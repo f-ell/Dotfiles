@@ -16,6 +16,10 @@ minecraft-launcher:AUR
 steam
 
 ## multimedia
+mpc
+mpd
+mpd-mpris
+ncmpcpp
 spicetify-cli:AUR
 spotify:AUR
 vesktop-bin:AUR
