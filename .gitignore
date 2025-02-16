@@ -1,6 +1,5 @@
-# python
-**/__pycache__
-**/__init__.py
+# ncmpcpp
+**/ncmpcpp/error.log
 
 # qutebrowser
 **/qutebrowser/autoconfig.yml
