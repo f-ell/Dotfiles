@@ -2,7 +2,7 @@
 (defpoll time-ampm :interval '1s' :initial '?' `date +%p`)
 (defpoll time-date :interval '1s' :initial '?' `date +'%a. %d %B %Y'`)
 (defwindow time
-    :monitor 0
+    :monitor 1
     :geometry (geometry
         :x 100
         :y 100
@@ -26,7 +26,7 @@
 
 (defpoll sysinfo :interval '4s' :initial '' `./scripts/sysinfo.pl`)
 (defwindow sysinfo
-    :monitor 0
+    :monitor 1
     :geometry (geometry
         :x 100
         :y 100

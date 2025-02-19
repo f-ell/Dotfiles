@@ -1,5 +1,5 @@
 (defwindow bar-hypr
-    :monitor 'DP-2'
+    :monitor 0
     :geometry (geometry
         :x 0
         :y 0
