@@ -1,0 +1,15 @@
+[user]
+	email = nico@pareigis.de
+	name = Nico Pareigis
+
+[include]
+	path = ./credentials
+	path = ./gitcolors
+
+[push]
+  autoSetupRemote = true
+
+[diff]
+  context = 2
+  colorMoved = dimmed-zebra
+  colorMovedWS = ignore-all-space
