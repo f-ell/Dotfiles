@@ -2,7 +2,6 @@
 ## audio stack
 easyeffects
 lsp-plugins
-noise-suppression-for-voice
 pipewire
 pipewire-audio
 pipewire-pulse
@@ -15,15 +14,19 @@ gnu-free-fonts
 
 ## other
 dunst
+evolution
 eww:AUR
+pass
 feh
+ffmpeg
 gimp
+imagemagick
+lm_sensors
 pdfjs
-python-adblock
-qutebrowser
 rofi
 silicon
 ueberzug
+yazi
 zathura
 zathura-pdf-poppler
 zen-browser-bin:AUR

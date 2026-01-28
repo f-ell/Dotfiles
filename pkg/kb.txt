@@ -2,6 +2,8 @@
 qmk
 
 # zmk
+python
+python-pipx
 python-pyelftools
 python-setuptools
 python-west:AUR

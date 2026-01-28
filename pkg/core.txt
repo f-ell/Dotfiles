@@ -38,7 +38,6 @@ fakeroot
 gcc
 groff
 libtool
-m4
 make
 patch
 pkgconf
@@ -49,4 +48,5 @@ git
 man-db
 networkmanager
 opendoas
+plocate
 vim
