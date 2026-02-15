@@ -39,5 +39,7 @@ else
 fi
 
 if (( $set == 1 )); then
-  hyprctl hyprpaper wallpaper ,~/.wallpaper &>/dev/null
+  while read; do
+    hyprctl hyprpaper wallpaper "$REPLY","$HOME/.wallpaper",contain &>/dev/null
+  done < <(hyprctl -j monitors | jq -r '.[] | .name')
 fi
