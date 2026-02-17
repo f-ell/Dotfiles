@@ -10,8 +10,8 @@ keymap = [
   { on = "<C-u>",   run = "arrow -8",    desc = "Scroll 8 up" },
   { on = ["g","g"], run = "arrow -100%", desc = "Go to top" },
   { on = "G",       run = "arrow 100%",  desc = "Go to bottom" },
-  { on = "<A-j>",   run = "seek 8",      desc = "Scroll preview down" },
-  { on = "<A-k>",   run = "seek -8",     desc = "Scroll preview up" },
+  { on = "<C-f>",   run = "seek 8",      desc = "Scroll preview down" },
+  { on = "<C-b>",   run = "seek -8",     desc = "Scroll preview up" },
 
   { on = "q",       run = "quit",                               desc = "Quit" },
   { on = "<Esc>",   run = "escape",                             desc = "Escape" },
