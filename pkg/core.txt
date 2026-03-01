@@ -16,7 +16,6 @@ debugedit
 fakeroot
 flex
 gcc
-gettext
 groff
 libtool
 m4
