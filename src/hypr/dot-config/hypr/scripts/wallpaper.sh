@@ -40,6 +40,6 @@ fi
 
 if (( $set == 1 )); then
   while read; do
-    hyprctl hyprpaper wallpaper "$REPLY","$HOME/.wallpaper",contain &>/dev/null
+    hyprctl hyprpaper wallpaper "$REPLY","$HOME/.wallpaper",contain
   done < <(hyprctl -j monitors | jq -r '.[] | .name')
 fi
