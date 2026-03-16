@@ -222,6 +222,8 @@ zstyle ':completion:*' matcher-list 'm:{[:lower:]}={[:upper:]}' 'l:|=*'
 zstyle ':completion:*' keep-prefix true
 zstyle ':completion:*' verbose false
 
+zstyle ':completion:*:*:nvim:*' ignored-patterns '*.pdf'
+
 autoload -Uz compinit
 compinit -d "$XDG_CONFIG_HOME/zsh/zcomp"
 
