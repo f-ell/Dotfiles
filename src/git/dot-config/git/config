@@ -13,6 +13,8 @@
   context = 2
   colorMoved = dimmed-zebra
   colorMovedWS = ignore-all-space
+  external = difft --display side-by-side-show-both
+  tool = difftastic
 
 [init]
   defaultBranch = main

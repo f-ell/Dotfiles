@@ -1,6 +1,7 @@
 # packages for fully functional tty-environment
 btop
 debugedit # required for aur-utils
+difftastic
 eza
 fd
 jmtpfs:AUR
