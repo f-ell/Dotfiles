@@ -137,10 +137,10 @@ typeset -g _rc_ps1_chr="${${(f@)mapfile[$HOME/.prompt_char]}[0]:-\$}"
 typeset -gA _rc_ps1_cl=(
   [bld]=$'\e[1m'
   [clr]=$'\e[0m'
-  [chr]=$'\e[38;2;160;160;160m'
+  [chr]=$'\e[90m'
   [git]=$'\e[38;2;252;163;38m'
-  [err]=$'\e[38;2;230;126;128m'
-  [txt]=$'\e[38;2;211;198;170m'
+  [err]=$'\e[91m'
+  [txt]=$'\e[37m'
 )
 
 function _rc_ps1_set {
