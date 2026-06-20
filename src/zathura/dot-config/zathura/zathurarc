@@ -24,13 +24,13 @@ set window-width  800
 #############################
 
 set default-fg              '#3c464b'
-set default-bg              '#f2efdf'
+set default-bg              '#eae7d7'
 
 set inputbar-fg             '#3c464b'
-set inputbar-bg             '#edeada'
+set inputbar-bg             '#e3ded0'
 
 set statusbar-fg            '#3c464b'
-set statusbar-bg            '#edeada'
+set statusbar-bg            '#e3ded0'
 
 set notification-fg         '#3c464b'
 set notification-bg         '#8da101'
@@ -51,8 +51,8 @@ set completion-group-bg     '#fffbef'
 set completion-highlight-fg '#3c464b'
 set completion-highlight-bg '#8da101'
 
-set recolor-lightcolor      '#3c464b'
-set recolor-darkcolor       '#f2efdf'
+set recolor-lightcolor      '#f2efdf'
+set recolor-darkcolor       '#191b1d'
 
 set highlight-fg            '#f2efdf'
 set highlight-color         'rgba(58, 148, 197, 0.7)'
