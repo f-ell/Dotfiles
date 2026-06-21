@@ -11,21 +11,23 @@ wireplumber
 ## fonts
 adobe-source-code-pro-fonts
 gnu-free-fonts
+ttf-ibm-plex
+ttf-nerd-fonts-symbols-mono
 
 ## other
 dunst
 evolution
 eww:AUR
-pass
 feh
-ffmpeg
 gimp
 imagemagick
 lm_sensors
+pass
 pdfjs
 rofi
 silicon
 ueberzug
+vlc
 yazi
 zathura
 zathura-pdf-poppler

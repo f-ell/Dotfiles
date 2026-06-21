@@ -5,11 +5,6 @@ openrgb
 polychromatic:AUR # Pulls in necessary openrazer dependencies.
 ufw
 
-## gaming
-heroic-games-launcher-bin:AUR
-minecraft-launcher:AUR
-steam
-
 ## multimedia
 mpc
 mpd
@@ -17,5 +12,5 @@ mpd-mpris
 ncmpcpp
 spicetify-cli:AUR
 spotify:AUR
+steam
 vesktop-bin:AUR
-vlc

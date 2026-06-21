@@ -30,5 +30,6 @@ git
 man-db
 networkmanager
 opendoas
+pacutils # required for aur-utils
 plocate
 vim

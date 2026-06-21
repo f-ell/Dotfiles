@@ -1,6 +1,5 @@
 # packages for fully functional tty-environment
 btop
-debugedit # required for aur-utils
 difftastic
 eza
 fd
@@ -12,9 +11,9 @@ ntfs-3g
 openbsd-netcat
 openconnect
 pacman-contrib
-pacutils # required for aur-utils
 ripgrep
 stow
+tree-sitter-cli
 udisks2
 zf:AUR
 zsh

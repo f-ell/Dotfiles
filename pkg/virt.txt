@@ -1,0 +1,3 @@
+# Virtualisation
+dnsmasq
+virt-manager
