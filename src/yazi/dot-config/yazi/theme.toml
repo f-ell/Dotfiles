@@ -82,7 +82,7 @@ hovered = { fg = "magenta", underline = true }
 
 [which]
 cols            = 3
-mask            = { bg = "black" }
+mask            = { bg = "white" }
 cand            = { fg = "green" }
 rest            = { fg = "darkgray" }
 desc            = { fg = "gray" }

@@ -24,13 +24,13 @@ set window-width  800
 #############################
 
 set default-fg              '#3c464b'
-set default-bg              '#eae7d7'
+set default-bg              '#f4f0d9'
 
 set inputbar-fg             '#3c464b'
-set inputbar-bg             '#e3ded0'
+set inputbar-bg             '#efebd4'
 
 set statusbar-fg            '#3c464b'
-set statusbar-bg            '#e3ded0'
+set statusbar-bg            '#efebd4'
 
 set notification-fg         '#3c464b'
 set notification-bg         '#8da101'
