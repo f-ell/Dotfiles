@@ -1,19 +1,9 @@
 # desktop install
 ## drivers / peripherals
-nvidia
-openrazer-daemon
-openrazer-driver-dkms
+nvidia-open
 openrgb
-polychromatic:AUR
+polychromatic:AUR # Pulls in necessary openrazer dependencies.
 ufw
-
-## gaming
-dwarffortress
-gamemode
-heroic-games-launcher-bin:AUR
-lib32-gamemode
-minecraft-launcher:AUR
-steam
 
 ## multimedia
 mpc
@@ -22,5 +12,5 @@ mpd-mpris
 ncmpcpp
 spicetify-cli:AUR
 spotify:AUR
+steam
 vesktop-bin:AUR
-vlc

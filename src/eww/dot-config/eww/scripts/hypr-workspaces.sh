@@ -24,4 +24,4 @@ while IFS='>>' read -a REPLY; do
     createworkspace|destroyworkspace)  ;&
     openwindow|closewindow|movewindow) hypr-workspaces ;;
   esac
-done < <(socat $XDG_RUNTIME_DIR/hypr/$HYPRLAND_INSTANCE_SIGNATURE/.socket2.sock STDOUT 2>/dev/null)
+done < <(netcat -U $XDG_RUNTIME_DIR/hypr/$HYPRLAND_INSTANCE_SIGNATURE/.socket2.sock 2>/dev/null)

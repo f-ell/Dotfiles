@@ -5,13 +5,14 @@ set window-title-home-tilde 'true'
 set statusbar-basename 'true'
 
 set font 'Ellograph CF 10'
-set page-padding 4
+set page-h-padding 4
+set page-v-padding 4
 set show-recent 4
 set scroll-step 60
 set scroll-page-aware 'true'
 set search-hadjust 'false'
 
-set recolor
+# set recolor
 set recolor-keephue
 
 set statusbar-h-padding 10
@@ -22,39 +23,39 @@ set window-width  800
 
 #############################
 
-set default-fg              '#d3c6aa'
-set default-bg              '#2c363b'
+set default-fg              '#3c464b'
+set default-bg              '#f4f0d9'
 
-set inputbar-fg             '#d3c6aa'
-set inputbar-bg             '#323c41'
+set inputbar-fg             '#3c464b'
+set inputbar-bg             '#efebd4'
 
-set statusbar-fg            '#a7c080'
-set statusbar-bg            '#323c41'
+set statusbar-fg            '#3c464b'
+set statusbar-bg            '#efebd4'
 
-set notification-fg         '#323c41'
-set notification-bg         '#a7c080'
-set notification-warning-fg '#323c41'
-set notification-warning-bg '#dbbc7f'
-set notification-error-fg   '#323c41'
-set notification-error-bg   '#e67e80'
+set notification-fg         '#3c464b'
+set notification-bg         '#8da101'
+set notification-warning-fg '#3c464b'
+set notification-warning-bg '#dfa000'
+set notification-error-fg   '#3c464b'
+set notification-error-bg   '#f85552'
 
-set index-fg                '#d3c6aa'
-set index-bg                '#2c363b'
-set index-active-fg         '#323c41'
-set index-active-bg         '#7fbbb3'
+set index-fg                '#3c464b'
+set index-bg                '#f8f5e4'
+set index-active-fg         '#3c464b'
+set index-active-bg         '#8da101'
 
-set completion-fg           '#d3c6aa'
-set completion-bg           '#2c363b'
-set completion-group-fg     '#d699b6'
-set completion-group-bg     '#323c41'
-set completion-highlight-fg '#323c41'
-set completion-highlight-bg '#a7c080'
+set completion-fg           '#3c464b'
+set completion-bg           '#f8f5e4'
+set completion-group-fg     '#df69ba'
+set completion-group-bg     '#fffbef'
+set completion-highlight-fg '#3c464b'
+set completion-highlight-bg '#8da101'
 
-set recolor-lightcolor      '#323c41'
-set recolor-darkcolor       '#d3c6aa'
+set recolor-lightcolor      '#f2efdf'
+set recolor-darkcolor       '#191b1d'
 
-set highlight-fg            '#323c41'
-set highlight-color         'rgba(167, 192, 128, 0.7)'
-set highlight-active-color  'rgba(230, 126, 128, 0.7)'
+set highlight-fg            '#f2efdf'
+set highlight-color         'rgba(58, 148, 197, 0.7)'
+set highlight-active-color  'rgba(223, 105, 186, 0.7)'
 
 map <C-l> nohlsearch

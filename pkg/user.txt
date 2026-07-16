@@ -1,32 +1,19 @@
 # packages for fully functional tty-environment
-## core cli tooling
 btop
+difftastic
 eza
 fd
 jmtpfs:AUR
 jq
+man-pages
 neovim
 ntfs-3g
+openbsd-netcat
 openconnect
 pacman-contrib
-pacutils
-pass
-plocate
 ripgrep
 stow
+tree-sitter-cli
 udisks2
 zf:AUR
 zsh
-
-## languages / toolchains / build systems
-perl
-perl-par-packer
-python
-python-pip
-
-## other
-ffmpeg
-imagemagick
-isync
-lm_sensors
-yazi

@@ -4,8 +4,6 @@ hypridle
 hyprland
 hyprlock
 hyprpaper
-hyprpolkitagent-git:AUR
-way-displays:AUR
 
 ## utilities
 cliphist

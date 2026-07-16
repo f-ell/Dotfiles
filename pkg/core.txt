@@ -5,36 +5,16 @@ efibootmgr
 linux
 linux-firmware
 linux-headers
+base
 
-## selected packages from `base`
-archlinux-keyring
-bash
-bzip2
-coreutils
-file
-filesystem
-findutils
-gawk
-gcc-libs
-glibc
-grep
-gzip
-iproute2
-iputils
-licenses
-pacman
-pciutils
-procps-ng
-psmisc
-sed
-shadow
-tar
-util-linux
-xz
-
-## selected packages from `base-devel`
+## selected packages from `base-devel` (i.e. w/o sudo and dups from `base`)
+autoconf
+automake
 binutils
+bison
+debugedit
 fakeroot
+flex
 gcc
 groff
 libtool
@@ -42,6 +22,7 @@ m4
 make
 patch
 pkgconf
+texinfo
 
 ## other
 curl
@@ -49,4 +30,6 @@ git
 man-db
 networkmanager
 opendoas
+pacutils # required for aur-utils
+plocate
 vim

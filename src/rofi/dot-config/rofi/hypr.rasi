@@ -46,6 +46,7 @@ configuration {
   bg-2: #323c41;
   bg-3: #4a555b;
   green: #a7c080;
+  red: #e67e80;
 
   text-color:       @fg-2;
   border-color:     @green;
@@ -96,6 +97,15 @@ listview {
   spacing: 8px;
   border: 0px;
   scrollbar: false;
+}
+
+error-message {
+  padding: 20px;
+  text-color: @red;
+}
+
+textbox {
+  text-color: inherit;
 }
 
 element {
