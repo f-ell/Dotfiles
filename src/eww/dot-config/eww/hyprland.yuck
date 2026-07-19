@@ -38,7 +38,7 @@
 (defwidget hypr-workspaces []
     (box :orientation 'v' :class 'desktop'
         (for w in hypr-workspaces
-            (button :onclick {w.command} :class {w.state} {w.icon})
+            (button :onclick "hyprctl dispatch 'hl.dsp.focus({ workspace = ${w.id} })'" :class {w.state} {w.icon})
         )
     )
 )

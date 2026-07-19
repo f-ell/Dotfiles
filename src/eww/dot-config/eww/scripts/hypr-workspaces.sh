@@ -8,7 +8,6 @@ function hypr-workspaces() {
     id: .id,
     icon: .id,
     state: (if .id == $active then "focused" elif .windows? > 0 then "occupied" else "empty" end),
-    command: "hyprctl dispatch workspace \\\\(.id)"
   }
 EOF
 
