@@ -210,9 +210,15 @@ for _, category in pairs(binds) do
 end
 
 for _, ws in pairs(hl.get_workspaces()) do
+  if ws.special then
+    goto continue
+  end
+
   hl.bind('SUPER + ' .. ws.id, hl.dsp.focus({ workspace = ws.id }))
   hl.bind(
     'SUPER + SHIFT + ' .. ws.id,
     hl.dsp.window.move({ workspace = ws.id, follow = false })
   )
+
+  ::continue::
 end
