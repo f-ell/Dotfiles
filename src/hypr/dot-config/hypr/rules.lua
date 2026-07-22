@@ -14,7 +14,12 @@ local win_rules = {
 
   { match = { class = '^steam$' }, workspace = '6', no_initial_focus = true },
   {
-    match = { class = '^(discord|vesktop|Spotify)$' },
+    match = { class = '^steam_app_\\d+$' },
+    workspace = '6',
+    no_initial_focus = true,
+  },
+  {
+    match = { class = '^(discord|vesktop|spotify)$' },
     workspace = '7',
     no_initial_focus = true,
   },
