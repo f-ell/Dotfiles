@@ -100,7 +100,6 @@ hl.config({
     background_color = '#323d43',
 
     on_focus_under_fullscreen = 1,
-    exit_window_retains_fullscreen = true,
   },
 
   render = { direct_scanout = 2 },
