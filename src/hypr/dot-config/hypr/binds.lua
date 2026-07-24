@@ -65,10 +65,9 @@ local binds = {
           return hl.dsp.no_op()
         end
 
-        local layout = ws.tiled_layout
         hl.workspace_rule({
           workspace = tostring(ws.id),
-          layout = layout == 'monocle' and 'dwindle' or 'monocle',
+          layout = ws.tiled_layout == 'monocle' and LAYOUT or 'monocle',
         })
       end,
     },

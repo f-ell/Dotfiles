@@ -1,8 +1,12 @@
-require('rules')
-require('animations')
+LAYOUT = 'dwindle'
+
+require('env')
 require('autostart')
 require('binds')
-require('env')
+
+require('rules')
+require('layout')
+require('animations')
 
 hl.monitor({
   output = 'DP-2',
@@ -58,7 +62,7 @@ hl.config({
     resize_on_border = true,
     no_focus_fallback = true,
 
-    layout = 'dwindle',
+    layout = LAYOUT,
   },
 
   dwindle = {
