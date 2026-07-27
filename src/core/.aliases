@@ -41,18 +41,12 @@ aur-remove() {
   fi
 
   while read -r; do
-    typeset base="${REPLY%/*}"
+    paccache -c "${REPLY%/*}" -rvk0 "$@" && printf '==> pacman cache clean\n'
     repo-remove "$REPLY" "$@"
 
-    if [[ -z $base ]]; then
-      err aur-remove "\$base is empty, skipping clean for $REPLY"
-      continue
-    fi
-    paccache -c "$base" -rvk0 "$@" && printf '==> %s\n' 'cache clean'
-
     for p in "$@"; do
-      rm "$base"/"$p"-*.pkg.tar.zst && printf '==> %s\n' 'package clean'
-      rm -rf "${base%/*}/build/$p" && printf '==> %s\n' 'build files clean'
+      # Remove build directory; this leaves build files for dependencies intact.
+      rm -rf "${REPLY%/*/*}/build/$p" && printf '==> build files clean\n'
     done
   done < <(aur repo --list-path)
 }
