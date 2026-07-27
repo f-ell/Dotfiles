@@ -2,7 +2,7 @@ local function pcli(args)
   return string.format('polychromatic-cli -d mouse %s', args)
 end
 
-local commands = {
+local startup = {
   'systemctl --user start hyprland-session',
   'systemctl --user start hyprpolkitagent',
   'systemctl --user start hypridle',
@@ -21,12 +21,18 @@ local commands = {
   pcli('-z logo -o none'),
 }
 
+local shutdown = {
+  'systemctl --user stop hyprland-session && sleep 0.1',
+}
+
 hl.on('hyprland.start', function()
-  for _, cmd in pairs(commands) do
+  for _, cmd in pairs(startup) do
     hl.exec_cmd(cmd)
   end
 end)
 
 hl.on('hyprland.shutdown', function()
-  os.execute('systemctl --user stop hyprland-session && sleep 0.1')
+  for _, cmd in pairs(shutdown) do
+    hl.exec_cmd(cmd)
+  end
 end)

@@ -1,6 +1,7 @@
 ---@class (exact) Bind
 ---@field key string
 ---@field dsp function|HL.Dispatcher
+---@field opts HL.BindOptions?
 
 ---@param direction 'left'|'down'|'up'|'right'
 local function focus(direction)
@@ -101,34 +102,42 @@ local binds = {
     {
       key = 'SUPER + CONTROL + h',
       dsp = hl.dsp.window.resize({ x = -50, y = 0, relative = true }),
+      opts = { repeating = true },
     },
     {
       key = 'SUPER + CONTROL + j',
       dsp = hl.dsp.window.resize({ x = 0, y = 50, relative = true }),
+      opts = { repeating = true },
     },
     {
       key = 'SUPER + CONTROL + k',
       dsp = hl.dsp.window.resize({ x = 0, y = -50, relative = true }),
+      opts = { repeating = true },
     },
     {
       key = 'SUPER + CONTROL + l',
       dsp = hl.dsp.window.resize({ x = 50, y = 0, relative = true }),
+      opts = { repeating = true },
     },
     {
       key = 'SUPER + SHIFT + CONTROL + h',
       dsp = hl.dsp.window.resize({ x = 50, y = 0, relative = true }),
+      opts = { repeating = true },
     },
     {
       key = 'SUPER + SHIFT + CONTROL + j',
       dsp = hl.dsp.window.resize({ x = 0, y = -50, relative = true }),
+      opts = { repeating = true },
     },
     {
       key = 'SUPER + SHIFT + CONTROL + k',
       dsp = hl.dsp.window.resize({ x = 0, y = 50, relative = true }),
+      opts = { repeating = true },
     },
     {
       key = 'SUPER + SHIFT + CONTROL + l',
       dsp = hl.dsp.window.resize({ x = -50, y = 0, relative = true }),
+      opts = { repeating = true },
     },
   },
 
@@ -204,7 +213,7 @@ local binds = {
 
 for _, category in pairs(binds) do
   for _, bind in pairs(category) do
-    hl.bind(bind.key, bind.dsp)
+    hl.bind(bind.key, bind.dsp, bind.opts)
   end
 end
 
