@@ -73,6 +73,7 @@ local binds = {
       end,
     },
     { key = 'SUPER + mouse:272', dsp = hl.dsp.window.drag() },
+    -- FIX: resize only grabbed edge.
     { key = 'SUPER + mouse:273', dsp = hl.dsp.window.resize() },
   },
 
@@ -215,18 +216,4 @@ for _, category in pairs(binds) do
   for _, bind in pairs(category) do
     hl.bind(bind.key, bind.dsp, bind.opts)
   end
-end
-
-for _, ws in pairs(hl.get_workspaces()) do
-  if ws.special then
-    goto continue
-  end
-
-  hl.bind('SUPER + ' .. ws.id, hl.dsp.focus({ workspace = ws.id }))
-  hl.bind(
-    'SUPER + SHIFT + ' .. ws.id,
-    hl.dsp.window.move({ workspace = ws.id, follow = false })
-  )
-
-  ::continue::
 end

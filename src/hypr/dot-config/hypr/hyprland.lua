@@ -45,6 +45,20 @@ for _, r in pairs(ws_rules) do
     r.persistent = true
   end
   hl.workspace_rule(r)
+
+  if not r.workspace:match('^%d+$') then
+    goto continue
+  end
+
+  -- Workspace queries return no result at startup, such that the following must
+  -- be created differently from other bindings.
+  hl.bind('SUPER + ' .. r.workspace, hl.dsp.focus({ workspace = r.workspace }))
+  hl.bind(
+    'SUPER + SHIFT + ' .. r.workspace,
+    hl.dsp.window.move({ workspace = r.workspace, follow = false })
+  )
+
+  ::continue::
 end
 
 hl.config({
