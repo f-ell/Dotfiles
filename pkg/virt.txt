@@ -1,3 +1,5 @@
 # Virtualisation
 dnsmasq
 virt-manager
+qemu-base
+qemu-hw-usb-host

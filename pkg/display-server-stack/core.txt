@@ -24,6 +24,7 @@ imagemagick
 lm_sensors
 pass
 pdfjs
+resvg # used by yazi for SVG preview
 rofi
 silicon
 ueberzug
