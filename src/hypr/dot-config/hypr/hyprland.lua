@@ -5,8 +5,9 @@ require('autostart')
 require('binds')
 
 require('rules')
-require('layout')
 require('animations')
+
+require('layout')
 
 hl.monitor({
   output = 'DP-2',

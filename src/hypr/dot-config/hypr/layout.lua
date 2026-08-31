@@ -1,12 +1,17 @@
 ---@param count integer
 local function unmonocle_if_count(count)
-  return function()
+  ---@param win HL.Window
+  return function(win)
     local ws = hl.get_active_special_workspace() or hl.get_active_workspace()
     if ws == nil then
       hl.notification.create({
         text = 'Invalid workspace.',
         timeout = 3000,
       })
+      return
+    end
+
+    if win.workspace.id ~= ws.id then
       return
     end
 
